@@ -35,5 +35,11 @@ namespace API.Entities
         [Required]      
         public int bActive { get; set; }
 
+        [Required] 
+        public byte[] passwordHash { get; set; }
+
+        [Required] 
+        public byte[] passwordSalt { get; set; }
+
     }
 }
