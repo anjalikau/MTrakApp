@@ -1,31 +1,33 @@
-  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
   <div class="container">
-    <a class="navbar-brand" href="#">M Plus</a>
+    <a class="navbar-brand" routerLink="/Dashboard" routerLinkActive="active">M Plus</a>
 
-    <ul class="navbar-nav mr-auto" *ngIf="accountServices.currentUser$ | async">
-      <li class="nav-item">
-        <a class="nav-link" href="#">Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Lists</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Messages</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#" (click) = "logout()" >Logout</a>
-      </li>      
+    <ul class="navbar-nav mr-auto" >
+      <ng-container *ngIf="accountServices.currentUser$ | async">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/Home" routerLinkActive="active">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/UserCreation" routerLinkActive="active">User Management</a>
+        </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="#">Messages</a>
+        </li> -->
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="#" (click) = "logout()" >Logout</a>
+        </li>       -->
+      </ng-container>      
     </ul>
 
-    <div class="dropdown" *ngIf="accountServices.currentUser$ | async" dropdown>
-      <a class="dropdown-toggle text-light" dropdownToggle>Welcome user</a>
+    <div class="dropdown" *ngIf="(accountServices.currentUser$ | async) as user" dropdown>
+      <a class="dropdown-toggle text-light" dropdownToggle>Welcome {{user.userName | titlecase}} </a>
       <div class="dropdown-menu mt-3" *dropdownMenu>
         <a class="dropdown-item">Edit Profile</a>
         <div class="divider dropdown-divider"></div>
         <a class="dropdown-item" (click)="logout()">Logout</a>
       </div>
     </div>
-
+    
     <!-- <form *ngIf="(accountServices.currentUser$ | async) === null" #loginForm = "ngForm" class="form-inline mt-2 mt-md-0"
       (ngSubmit)="login()" autocomplete="off">      
       <input 
