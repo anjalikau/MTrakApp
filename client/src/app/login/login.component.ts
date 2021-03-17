@@ -21,9 +21,6 @@ export class LoginComponent implements OnInit {
       {
         //console.log(response);
         this.router.navigateByUrl('/Dashboard');
-      }, error => {
-        console.log(error);
-        this.toastr.error(error.error);
       });    
   }
 

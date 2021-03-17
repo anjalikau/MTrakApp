@@ -16,7 +16,11 @@
         <!-- <li class="nav-item">
           <a class="nav-link" href="#" (click) = "logout()" >Logout</a>
         </li>       -->
-      </ng-container>      
+      </ng-container>   
+      
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/errors" routerLinkActive="active">Errors</a>
+      </li>
     </ul>
 
     <div class="dropdown" *ngIf="(accountServices.currentUser$ | async) as user" dropdown>
