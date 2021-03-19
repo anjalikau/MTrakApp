@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210301112024_MasterCreate")]
+    [Migration("20210317120658_MasterCreate")]
     partial class MasterCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,6 +27,9 @@ namespace API.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Factory")
                         .IsRequired()
@@ -52,9 +55,17 @@ namespace API.Data.Migrations
                     b.Property<byte>("iCategoryLevel")
                         .HasColumnType("tinyint");
 
+                    b.Property<byte[]>("passwordHash")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("passwordSalt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
                     b.HasKey("idAgents");
 
-                    b.ToTable("MstrAgents");
+                    b.ToTable("Agents");
                 });
 
             modelBuilder.Entity("API.Entities.MstrBuyer", b =>
@@ -135,9 +146,6 @@ namespace API.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BuyersAutoIdx")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("varchar(200)");
 
@@ -147,18 +155,15 @@ namespace API.Data.Migrations
                     b.Property<int>("Link_ProductID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductsAutoIdx")
-                        .HasColumnType("int");
-
                     b.Property<string>("StyleName")
                         .IsRequired()
                         .HasColumnType("varchar(50)");
 
                     b.HasKey("AutoIdx");
 
-                    b.HasIndex("BuyersAutoIdx");
+                    b.HasIndex("Link_BuyerId");
 
-                    b.HasIndex("ProductsAutoIdx");
+                    b.HasIndex("Link_ProductID");
 
                     b.ToTable("Master.Style");
                 });
@@ -167,11 +172,15 @@ namespace API.Data.Migrations
                 {
                     b.HasOne("API.Entities.MstrBuyer", "Buyers")
                         .WithMany("Styles")
-                        .HasForeignKey("BuyersAutoIdx");
+                        .HasForeignKey("Link_BuyerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("API.Entities.MstrProduct", "Products")
                         .WithMany("Styles")
-                        .HasForeignKey("ProductsAutoIdx");
+                        .HasForeignKey("Link_ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

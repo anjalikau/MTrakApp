@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,8 +20,7 @@ namespace API.Entities
 
         [Required]
         [Column(TypeName = "varchar(5)")]
-        public string Factory { get; set; }
-        
+        public string Factory { get; set; }        
         
         [Column(TypeName = "varchar(50)")]
         public string cDescription { get; set; }
@@ -40,6 +40,8 @@ namespace API.Entities
 
         [Required] 
         public byte[] passwordSalt { get; set; }
+
+        public DateTime CreatedDateTime { get; set; } = DateTime.Now;
 
     }
 }

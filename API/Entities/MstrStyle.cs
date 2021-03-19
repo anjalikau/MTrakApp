@@ -12,11 +12,18 @@ namespace API.Entities
         [Column(TypeName = "varchar(50)")]
         public string StyleName { get; set; }
         [Column(TypeName = "varchar(200)")]
-        public string Description { get; set; }
-        public int Link_ProductID { get; set; }
-        public int Link_BuyerId { get; set; }
-        public virtual MstrProduct Products { get; set; }
-        public virtual MstrBuyer Buyers { get; set; }
+        public string Description { get; set; } 
 
+        [ForeignKey("Link_ProductID")]       
+        public MstrProduct Products { get; set; }     
+
+        [ForeignKey("Products")]   
+        public int Link_ProductID { get; set; }
+
+        [ForeignKey("Link_BuyerId")] 
+        public MstrBuyer Buyers { get; set; }
+
+        [ForeignKey("Buyers")] 
+        public int Link_BuyerId { get; set; }
     }
 }

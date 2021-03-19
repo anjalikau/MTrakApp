@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace API.Data.Migrations
 {
@@ -6,6 +7,28 @@ namespace API.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Agents",
+                columns: table => new
+                {
+                    idAgents = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    cAgentName = table.Column<string>(type: "varchar(20)", nullable: false),
+                    cPassword = table.Column<string>(type: "varchar(24)", nullable: false),
+                    Factory = table.Column<string>(type: "varchar(5)", nullable: false),
+                    cDescription = table.Column<string>(type: "varchar(50)", nullable: true),
+                    cEmail = table.Column<string>(type: "varchar(50)", nullable: true),
+                    iCategoryLevel = table.Column<byte>(type: "tinyint", nullable: false),
+                    bActive = table.Column<int>(nullable: false),
+                    passwordHash = table.Column<byte[]>(nullable: false),
+                    passwordSalt = table.Column<byte[]>(nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Agents", x => x.idAgents);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Master.Buyer",
                 columns: table => new
@@ -48,22 +71,16 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MstrAgents",
+                name: "Master.Season",
                 columns: table => new
                 {
-                    idAgents = table.Column<int>(nullable: false)
+                    AutoIdx = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    cAgentName = table.Column<string>(type: "varchar(20)", nullable: false),
-                    cPassword = table.Column<string>(type: "varchar(24)", nullable: false),
-                    Factory = table.Column<string>(type: "varchar(5)", nullable: false),
-                    cDescription = table.Column<string>(type: "varchar(50)", nullable: true),
-                    cEmail = table.Column<string>(type: "varchar(50)", nullable: true),
-                    iCategoryLevel = table.Column<byte>(type: "tinyint", nullable: false),
-                    bActive = table.Column<int>(nullable: false)
+                    Season = table.Column<string>(type: "varchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MstrAgents", x => x.idAgents);
+                    table.PrimaryKey("PK_Master.Season", x => x.AutoIdx);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,48 +92,49 @@ namespace API.Data.Migrations
                     StyleName = table.Column<string>(type: "varchar(50)", nullable: false),
                     Description = table.Column<string>(type: "varchar(200)", nullable: true),
                     Link_ProductID = table.Column<int>(nullable: false),
-                    Link_BuyerId = table.Column<int>(nullable: false),
-                    ProductsAutoIdx = table.Column<int>(nullable: true),
-                    BuyersAutoIdx = table.Column<int>(nullable: true)
+                    Link_BuyerId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Master.Style", x => x.AutoIdx);
                     table.ForeignKey(
-                        name: "FK_Master.Style_Master.Buyer_BuyersAutoIdx",
-                        column: x => x.BuyersAutoIdx,
+                        name: "FK_Master.Style_Master.Buyer_Link_BuyerId",
+                        column: x => x.Link_BuyerId,
                         principalTable: "Master.Buyer",
                         principalColumn: "AutoIdx",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Master.Style_Master.Product_ProductsAutoIdx",
-                        column: x => x.ProductsAutoIdx,
+                        name: "FK_Master.Style_Master.Product_Link_ProductID",
+                        column: x => x.Link_ProductID,
                         principalTable: "Master.Product",
                         principalColumn: "AutoIdx",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Master.Style_BuyersAutoIdx",
+                name: "IX_Master.Style_Link_BuyerId",
                 table: "Master.Style",
-                column: "BuyersAutoIdx");
+                column: "Link_BuyerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Master.Style_ProductsAutoIdx",
+                name: "IX_Master.Style_Link_ProductID",
                 table: "Master.Style",
-                column: "ProductsAutoIdx");
+                column: "Link_ProductID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Agents");
+
+            migrationBuilder.DropTable(
                 name: "Master.Division");
 
             migrationBuilder.DropTable(
-                name: "Master.Style");
+                name: "Master.Season");
 
             migrationBuilder.DropTable(
-                name: "MstrAgents");
+                name: "Master.Style");
 
             migrationBuilder.DropTable(
                 name: "Master.Buyer");

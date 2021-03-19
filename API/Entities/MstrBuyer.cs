@@ -20,6 +20,7 @@ namespace API.Entities
         [Required]
         [Column(TypeName = "varchar(20)")]
         public string CompanyShortName { get; set; }
+       
         public virtual ICollection<MstrStyle> Styles { get; set; }
 
     }

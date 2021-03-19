@@ -13,6 +13,7 @@ namespace API.Entities
         [Required]
         [Column(TypeName = "varchar(50)")]
         public string ProductName { get; set; }
+
         public virtual ICollection<MstrStyle> Styles { get; set; }
     }
 }
