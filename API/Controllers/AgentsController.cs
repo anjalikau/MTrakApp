@@ -31,7 +31,7 @@ namespace API.Controllers
             var users = await _userRepository.GetUsersAsync();
             var usersToReturn = _mapper.Map<IEnumerable<RegisterDto>>(users);
             return Ok(usersToReturn);
-        }
+        }        
 
         [HttpGet("{id}")]
         public async Task<ActionResult<RegisterDto>> GetUser(int id)

@@ -19,6 +19,27 @@ namespace API.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("API.Entities.MstrAgentLevel", b =>
+                {
+                    b.Property<byte>("AutoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte>("AgentLevel")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("LevelDescription")
+                        .IsRequired()
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<byte>("LevelPrority")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("AutoId");
+
+                    b.ToTable("Master.AgentLevel");
+                });
+
             modelBuilder.Entity("API.Entities.MstrAgents", b =>
                 {
                     b.Property<int>("idAgents")
@@ -32,6 +53,9 @@ namespace API.Data.Migrations
                     b.Property<string>("Factory")
                         .IsRequired()
                         .HasColumnType("varchar(5)");
+
+                    b.Property<int>("FactoryId")
+                        .HasColumnType("int");
 
                     b.Property<int>("bActive")
                         .HasColumnType("int");
@@ -63,7 +87,11 @@ namespace API.Data.Migrations
 
                     b.HasKey("idAgents");
 
-                    b.ToTable("Agents");
+                    b.HasIndex("FactoryId");
+
+                    b.HasIndex("iCategoryLevel");
+
+                    b.ToTable("Master.Agents");
                 });
 
             modelBuilder.Entity("API.Entities.MstrBuyer", b =>
@@ -103,6 +131,26 @@ namespace API.Data.Migrations
                     b.HasKey("AutoIdx");
 
                     b.ToTable("Master.Division");
+                });
+
+            modelBuilder.Entity("API.Entities.MstrFactory", b =>
+                {
+                    b.Property<int>("AutoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Factory")
+                        .IsRequired()
+                        .HasColumnType("varchar(5)");
+
+                    b.HasKey("AutoId");
+
+                    b.ToTable("Master.Factory");
                 });
 
             modelBuilder.Entity("API.Entities.MstrProduct", b =>
@@ -164,6 +212,21 @@ namespace API.Data.Migrations
                     b.HasIndex("Link_ProductID");
 
                     b.ToTable("Master.Style");
+                });
+
+            modelBuilder.Entity("API.Entities.MstrAgents", b =>
+                {
+                    b.HasOne("API.Entities.MstrFactory", "Factory_Link")
+                        .WithMany("Users")
+                        .HasForeignKey("FactoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.MstrAgentLevel", "Category_Link")
+                        .WithMany("Users")
+                        .HasForeignKey("iCategoryLevel")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("API.Entities.MstrStyle", b =>

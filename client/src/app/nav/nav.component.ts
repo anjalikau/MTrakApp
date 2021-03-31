@@ -12,6 +12,7 @@ import { User } from '../_models/user';
 })
 export class NavComponent implements OnInit {
   //model: any = {};
+  isCollapsed = false;
 
   constructor(public accountServices: AccountService,private router: Router) { }
 

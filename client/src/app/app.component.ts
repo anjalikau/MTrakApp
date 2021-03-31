@@ -12,26 +12,24 @@ export class AppComponent implements OnInit {
   title = 'MTrack';
   users: any;
 
-  constructor(private http: HttpClient, private accountService: AccountService) {}
+  constructor(private http: HttpClient, public accountServices: AccountService) {}
 
   ngOnInit() {
-   this.getUsers();
+   //this.getUsers();
    this.setCurrentUser();
   }
 
   setCurrentUser() {
     const user: User = JSON.parse(localStorage.getItem('user'));
-    this.accountService.setCurrentUser(user);
-    console.log(user);
+    this.accountServices.setCurrentUser(user);
+    //console.log(user);
   }
 
-  getUsers() {
-    this.http.get('https://localhost:5001/api/Agents').subscribe(response => {
-      this.users = response;
-    }, error =>{
-      console.log(error);
-    });
-  }
-
-
+  // getUsers() {
+  //   this.http.get('https://localhost:5001/api/Agents').subscribe(response => {
+  //     this.users = response;
+  //   }, error =>{
+  //     console.log(error);
+  //   });
+  // }
 }

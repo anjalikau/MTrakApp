@@ -15,8 +15,6 @@ namespace API.Interfaces
          Task<MstrAgents> GetUserByIdAsync(int id);
 
          Task<MstrAgents> GetUserByUsernameAsync(string username);
-
-
          
     }
 }

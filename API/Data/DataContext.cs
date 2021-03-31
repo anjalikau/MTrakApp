@@ -15,7 +15,8 @@ namespace API.Data
         public DbSet<MstrDivision> MstrDivision { get; set; }
         public DbSet<MstrProduct> MstrProduct { get; set; }
         //public DbSet<MstrStyle> MstrStyle { get; set; }
-        
+        public DbSet<MstrFactory> MstrFactory {get; set;}        
+        public DbSet<MstrAgentLevel> MstrAgentLevel {get; set;}
 
     }
 }

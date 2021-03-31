@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Entities
 {
-    [Table("Agents")]
+    [Table("Master.Agents")]
     public class MstrAgents
     {
         [Key]
@@ -26,11 +26,7 @@ namespace API.Entities
         public string cDescription { get; set; }
 
         [Column(TypeName = "varchar(50)")]
-        public string cEmail { get; set; }
-
-        [Required]
-        [Column(TypeName = "tinyint")]
-        public int iCategoryLevel { get; set; }  
+        public string cEmail { get; set; }       
 
         [Required]      
         public int bActive { get; set; }
@@ -42,6 +38,18 @@ namespace API.Entities
         public byte[] passwordSalt { get; set; }
 
         public DateTime CreatedDateTime { get; set; } = DateTime.Now;
+        
+        [ForeignKey("Factory_Link")] 
+        public int FactoryId { get; set; }
+
+        [ForeignKey("FactoryId")] 
+        public MstrFactory Factory_Link { get; set; }
+
+        [ForeignKey("Category_Link")] 
+        public int iCategoryLevel { get; set; }  
+
+        [ForeignKey("iCategoryLevel")] 
+        public MstrAgentLevel Category_Link { get; set; }
 
     }
 }

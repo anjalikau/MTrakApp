@@ -1,0 +1,75 @@
+
+    <!-- general form elements disabled -->
+    <div class="card card-default">
+        <div class="card-header">
+            <h3 class="card-title">Change Password</h3>
+        </div>
+        <form [formGroup]="pwChangeForm" autocomplete="off">
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-5">
+                    <!-- text input -->
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="cAgentName" />
+                            <label igxLabel for="cAgentName"> User Name</label>
+                        </igx-input-group>                       
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <button igxButton="icon" (click)="search()">
+                        <igx-icon >search</igx-icon>
+                    </button>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="password" formControlName="OldPassword" />
+                            <label igxLabel for="OldPassword"> Old Password</label>                                        
+                        </igx-input-group>
+                    </div>
+                </div>           
+            </div> 
+            <div class="row">
+                <div class="col-sm-6">
+                    <!-- text input -->
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="cPassword" />
+                            <label igxLabel for="cPassword"> New Password</label>                                        
+                        </igx-input-group>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="password" formControlName="confirmPassword" />
+                            <label igxLabel for="confirmPassword"> Confirm Password</label>                                        
+                        </igx-input-group>
+                    </div>
+                </div>           
+            </div> 
+            <div class="row" *ngIf="validationErrors.length > 0">
+                <ul class="text-danger text-left">
+                    <li *ngFor="let error of validationErrors">
+                        {{error}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="col-sm-5 offset-md-7">
+                <div class="button-sample">
+                    <button type="submit" igxButton="raised" 
+                        igxButtonBackground="#72da66" igxRipple>Change Password</button>
+                    <button type="button" igxButton="flat">New</button>
+                </div>
+            </div>
+        </div>
+        </form>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+

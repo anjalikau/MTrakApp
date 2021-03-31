@@ -4,7 +4,7 @@ namespace API.DTOs
 {
     public class LoginDto
     {
-        [Required]
+        [Required]        
         public string cAgentName { get; set; }
 
         [Required]

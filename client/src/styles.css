@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+body,.form-control,.btn {
+    font-size: 0.75rem;
+    line-height: 0.75;
+}
+
+.igx-input-group__input, .igx-input-group__textarea {
+    height: 1.5rem;
+    border-top: .12rem solid transparent;
+}
+
+.igx-input-group--box .igx-input-group__bundle-main, .igx-input-group--border .igx-input-group__bundle-main, .igx-input-group--indigo .igx-input-group__bundle-main, .igx-input-group--search .igx-input-group__bundle-main {
+    padding-top: 0.5rem;
+}
+
+.igx-checkbox__composite {
+    width: 1.2em;
+    height: 1.2em;
+    min-width: 1.2em;
+    border-width: .1.2em;    
+}
