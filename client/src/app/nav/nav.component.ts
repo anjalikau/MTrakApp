@@ -30,6 +30,7 @@ export class NavComponent implements OnInit {
 
   logout() {
     this.accountServices.logout();
+    this.accountServices.decodedToken = null;
     this.router.navigateByUrl('/');
   }
 

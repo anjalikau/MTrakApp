@@ -20,3 +20,30 @@ body,.form-control,.btn {
     min-width: 1.2em;
     border-width: .1.2em;    
 }
+
+[class*=sidebar-dark-] {
+    background-color: #366ca1;
+}
+
+/* .navbar-white {
+    background-color: #366ca1;
+    color: #1f2d3d;
+} */
+
+.navbar-light .navbar-nav .nav-link {
+    color: rgb(0 0 0);
+}
+
+[class*=sidebar-dark-] .sidebar a {
+    color: #ffffff;
+}
+
+.igx-grid__thead-title, .igx-grid__th, .igx-grid__td {   
+    padding: 0 0.9rem;
+    line-height: 0.8rem;
+}
+
+.igx-grid__thead-title, .igx-grid__th, .igx-grid__td {
+    padding: 0 0.5rem;
+    line-height: 0.9rem;
+}

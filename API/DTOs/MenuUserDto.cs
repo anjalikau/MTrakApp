@@ -1,0 +1,9 @@
+namespace API.DTOs
+{
+    public class MenuUserDto
+    {
+        public int AgentId { get; set; }
+        public int MenuId { get; set; }
+        public int CreUserID { get; set; }
+    }
+}

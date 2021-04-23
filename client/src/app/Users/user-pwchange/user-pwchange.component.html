@@ -4,7 +4,7 @@
         <div class="card-header">
             <h3 class="card-title">Change Password</h3>
         </div>
-        <form [formGroup]="pwChangeForm" autocomplete="off">
+        <form [formGroup]="pwChangeForm" (ngSubmit)="pwChangeForm.valid && changeUserPassword()" autocomplete="off">
         <!-- /.card-header -->
         <div class="card-body">
             <div class="row">
@@ -12,20 +12,20 @@
                     <!-- text input -->
                     <div class="form-group">
                         <igx-input-group>
-                            <input igxInput type="text" formControlName="cAgentName" />
+                            <input igxInput type="text" formControlName="cAgentName" (keyup)="clearPassword($event)" />
                             <label igxLabel for="cAgentName"> User Name</label>
                         </igx-input-group>                       
                     </div>
                 </div>
                 <div class="col-sm-1">
-                    <button igxButton="icon" (click)="search()">
+                    <button igxButton="icon" (click)="searchUserPassword()">
                         <igx-icon >search</igx-icon>
                     </button>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         <igx-input-group>
-                            <input igxInput type="password" formControlName="OldPassword" />
+                            <input igxInput type="text" formControlName="OldPassword" />
                             <label igxLabel for="OldPassword"> Old Password</label>                                        
                         </igx-input-group>
                     </div>
@@ -36,7 +36,7 @@
                     <!-- text input -->
                     <div class="form-group">
                         <igx-input-group>
-                            <input igxInput type="text" formControlName="cPassword" />
+                            <input igxInput type="password" formControlName="cPassword" />
                             <label igxLabel for="cPassword"> New Password</label>                                        
                         </igx-input-group>
                     </div>
@@ -61,9 +61,9 @@
         <div class="card-footer">
             <div class="col-sm-5 offset-md-7">
                 <div class="button-sample">
-                    <button type="submit" igxButton="raised" 
-                        igxButtonBackground="#72da66" igxRipple>Change Password</button>
-                    <button type="button" igxButton="flat">New</button>
+                    <button type="submit" [disabled]="!pwChangeForm.valid" igxButton="raised" 
+                    igxButtonBackground="#72da66" igxRipple>Save</button>
+                    <button type="button" (click)="resetForm()" igxButton="flat">New</button>
                 </div>
             </div>
         </div>

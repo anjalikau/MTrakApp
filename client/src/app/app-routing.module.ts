@@ -7,7 +7,8 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
-import { UserListComponent } from './Users/user-list/user-list.component';
+import { MenuListComponent } from './users/menu-list/menu-list.component';
+import { UserPermissionComponent } from './users/user-permission/user-permission.component';
 import { UserRegisterComponent } from './users/user-register/user-register.component';
 import { AuthGuard } from './_guards/auth.guard';
 
@@ -21,7 +22,8 @@ const routes: Routes = [
       {path:'Dashboard', component: DashboardComponent},
       {path:'Home', component: HomeComponent},
       {path:'UserRegister', component: UserRegisterComponent },
-      {path:'UserList', component: UserListComponent}
+      {path:'MenuList', component: MenuListComponent},
+      {path:'UserPermission', component: UserPermissionComponent}
     ]
   },  
   {path:'not-found', component: NotFoundComponent},

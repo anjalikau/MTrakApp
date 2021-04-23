@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,7 +19,7 @@ namespace API.Entities
         [Column(TypeName = "varchar(50)")]
         public string Description { get; set; }
 
-        public virtual ICollection<MstrAgents> Users { get; set; }
-
+        [DefaultValue(1)]
+        public int TimeZone { get; set; }
     }
 }

@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Controllers
+namespace API.Controllers.Master
 {
     [Authorize]
     public class AgentsController : BaseApiController
@@ -42,6 +42,7 @@ namespace API.Controllers
         [HttpGet("name/{username}")]
         public async Task<ActionResult<RegisterDto>> GetUserByName(string username)
         {
+            if (!await UserExists(username)) return BadRequest("User not exists");
             var user = await _userRepository.GetUserByUsernameAsync(username);
             return _mapper.Map<RegisterDto>(user);
         }

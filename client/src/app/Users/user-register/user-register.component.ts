@@ -4,7 +4,6 @@ import { IComboSelectionChangeEventArgs } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
 import { Factory } from 'src/app/_models/factory';
 import { UserLevel } from 'src/app/_models/userLevel';
-import { AccountService } from '_services/account.service';
 import { RegisterService } from '_services/register.service';
 
 @Component({
@@ -21,8 +20,8 @@ export class UserRegisterComponent implements OnInit {
   showPassword = false; 
   validationErrors: string[] = [];
   
-  constructor(private accountService: AccountService, private registerService: RegisterService
-    ,private toastr: ToastrService, private fb: FormBuilder) { }
+  constructor(private registerService: RegisterService ,private toastr: ToastrService
+      , private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.initilizeForm();
@@ -69,15 +68,16 @@ export class UserRegisterComponent implements OnInit {
   register() {
     this.registerForm.get('factoryId').setValue(this.registerForm.get('factoryId').value[0]);
     this.registerForm.get('iCategoryLevel').setValue(this.registerForm.get('iCategoryLevel').value[0]);
-    console.log(this.registerForm.value);
-    this.accountService.userRegister(this.registerForm.value).subscribe(response => {
+
+    //console.log(this.registerForm.value);
+    this.registerService.userRegister(this.registerForm.value).subscribe(() => {
       this.toastr.success("User Registered Successfully !!!");
       this.registerForm.reset();
       //console.log(response);
       //this.cancel();
     },error => {
       this.validationErrors = error;
-      console.log(error);
+      //console.log(error);
       //this.toastr.error(error.error);      
     })
   }
@@ -97,7 +97,9 @@ export class UserRegisterComponent implements OnInit {
   }
 
   /// CANCEL THE USER REGISTRATION
-  cancelRegister(){
+  cancelRegister() {
     this.registerForm.reset();
   }
+
+  
 }

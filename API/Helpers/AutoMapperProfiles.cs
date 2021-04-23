@@ -17,9 +17,9 @@ namespace API.Helpers
             // CreateMap<RegisterDto,MstrAgents>();            
             CreateMap<MstrFactory , FactoryDto>();
             CreateMap<MstrAgentLevel , UserLevelDto>();
-            CreateMap<RegisterDto,MstrAgents>();
+            CreateMap<RegisterDto, MstrAgents>();
             CreateMap<UserUpdateDto, MstrAgents>();
-            
+            CreateMap<MstrAgents , PermitedUserDto>();
         }
     }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { AccountService } from '_services/account.service';
+import { AdminService } from '_services/admin.service';
 import { User } from '../_models/user';
 
 @Component({
@@ -13,7 +13,8 @@ export class LoginComponent implements OnInit {
   model: any = {};
   users: any;
 
-  constructor(public accountServices: AccountService, private router: Router,private toastr: ToastrService) { }
+  constructor(public accountServices: AccountService, private router: Router
+      ,private adminService: AdminService) { }
 
   ngOnInit(): void {
   }
@@ -24,16 +25,23 @@ export class LoginComponent implements OnInit {
         //console.log(response);
         this.setCurrentUser();
         this.router.navigateByUrl('/Dashboard');
+        //console.log(this.accountServices.decodedToken?.unique_name);
       });    
   }
 
   setCurrentUser() {
     const user: User = JSON.parse(localStorage.getItem('user'));
     this.accountServices.setCurrentUser(user);
+    this.getAuthMenuList();
     //console.log(user);
   }
 
-
+  getAuthMenuList() {    
+    this.adminService.getAuthMenuList().subscribe(response => {
+      const menus = response;
+      localStorage.setItem('menus', JSON.stringify(menus));
+    });
+  }
   
 
 }

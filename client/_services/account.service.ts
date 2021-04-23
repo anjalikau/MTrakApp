@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from 'src/app/_models/user';
@@ -12,6 +13,8 @@ export class AccountService {
   baseUrl = environment.apiUrl;
   private currentUserSource = new ReplaySubject<User>(1);
   currentUser$ = this.currentUserSource.asObservable();
+  jwtHelper = new JwtHelperService();
+  decodedToken: any;
 
   constructor(private http: HttpClient) { }
 
@@ -20,24 +23,28 @@ export class AccountService {
       map((response: User) => {
         const user = response;
         if(user) {
+          localStorage.setItem('token', user.token);
           localStorage.setItem('user', JSON.stringify(user));
           this.currentUserSource.next(user);
+          this.decodedToken = this.jwtHelper.decodeToken(user.token);
+          //console.log(this.decodedToken);
+          //this.currentUser = user.user;
         }
         //return user;
       })
     );
-  }
+  }  
 
-  userRegister(model: any){
-    return this.http.post(this.baseUrl + 'account/register', model).pipe(
-      map((user: User) => {
-        if(user) {
-        //localStorage.setItem('user',JSON.stringify(user));
-        //this.currentUserSource.next(user);
-        }
-      })
-    );
-    }
+  // userRegister(model: any){
+  //   return this.http.post(this.baseUrl + 'account/register', model).pipe(
+  //     map((user: User) => {
+  //       if(user) {
+  //       //localStorage.setItem('user',JSON.stringify(user));
+  //       //this.currentUserSource.next(user);
+  //       }
+  //     })
+  //   );
+  //   }
 
 
   setCurrentUser(user: User){
@@ -46,6 +53,7 @@ export class AccountService {
 
   logout() {
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
     this.currentUserSource.next(null);
   }
 

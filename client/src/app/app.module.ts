@@ -10,9 +10,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { UserDetailComponent } from './users/user-detail/user-detail.component'
-import { UserListComponent } from './Users/user-list/user-list.component';
 import { SharedModule } from './_modules/shared.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
@@ -22,26 +19,28 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { MainsidebarComponent } from './mainsidebar/mainsidebar.component';
 import { FooterComponent } from './footer/footer.component';
 import { UserRegisterComponent } from './users/user-register/user-register.component';
-import { IgxCheckboxModule, IgxComboModule, IgxDatePickerModule, IgxIconModule, IgxInputGroupModule } from 'igniteui-angular';
-import { TextInputComponent } from './_forms/text-input/text-input.component';
+import { IgxCheckboxModule, IgxComboModule, IgxDatePickerModule, IgxGridModule, IgxIconModule, IgxInputGroupModule, IgxTabsModule } 
+from 'igniteui-angular';
 import { UserPwchangeComponent } from './users/user-pwchange/user-pwchange.component';
+import { MenuListComponent } from './users/menu-list/menu-list.component';
+import { UserPermissionComponent } from './users/user-permission/user-permission.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     HomeComponent,
-    LoginComponent,   
-    RegisterComponent,    
-    UserListComponent,
-    UserDetailComponent,
+    LoginComponent,     
     DashboardComponent,
     TestErrorsComponent,
     NotFoundComponent,
     ServerErrorComponent,
     MainsidebarComponent,
     FooterComponent,    
-    UserRegisterComponent, TextInputComponent, UserPwchangeComponent    
+    UserRegisterComponent, 
+    UserPwchangeComponent, 
+    MenuListComponent, 
+    UserPermissionComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +55,9 @@ import { UserPwchangeComponent } from './users/user-pwchange/user-pwchange.compo
     IgxDatePickerModule,
     IgxComboModule,
     IgxInputGroupModule,
-    IgxCheckboxModule
+    IgxCheckboxModule,
+    IgxGridModule,
+    IgxTabsModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi:true}

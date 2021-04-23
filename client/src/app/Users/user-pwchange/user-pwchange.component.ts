@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Member } from 'src/app/_models/member';
 import { AccountService } from '_services/account.service';
 import { RegisterService } from '_services/register.service';
 
@@ -12,9 +13,10 @@ import { RegisterService } from '_services/register.service';
 export class UserPwchangeComponent implements OnInit {
   pwChangeForm: FormGroup;
   validationErrors: string[] = [];
+  user: Member;
 
-  constructor(private accountService: AccountService, private registerService: RegisterService
-    ,private toastr: ToastrService, private fb: FormBuilder) { }
+  constructor( private registerService: RegisterService ,private toastr: ToastrService
+      , private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.initilizeForm();
@@ -23,7 +25,7 @@ export class UserPwchangeComponent implements OnInit {
   initilizeForm() {
     this.pwChangeForm = this.fb.group ({
       cAgentName: ['', Validators.required],
-      OldPassword: ['', Validators.required],
+      OldPassword: [],
       cPassword: ['', [Validators.required , Validators.minLength(4), Validators.maxLength(10)]],
       confirmPassword: ['', [Validators.required , this.matchValues('cPassword')] ]   
     })
@@ -38,11 +40,37 @@ export class UserPwchangeComponent implements OnInit {
       return control?.value === control?.parent?.controls[matchTo].value
       ? null : {isMatching: true}
     }
+  }  
+
+  changeUserPassword() {
+    var userName = this.pwChangeForm.get('cAgentName').value;
+    this.user = Object.assign({}, this.pwChangeForm.value);
+    this.registerService.changeUserPassword(userName, this.user).subscribe(() =>{
+      this.toastr.success("Password changed Successfully !!!");
+      this.pwChangeForm.reset();
+    }, error => {
+      this.validationErrors = error;      
+    });
   }
 
-  search() {
-    console.log('ok');
+  searchUserPassword() {
+    var userName = this.pwChangeForm.get('cAgentName').value;
+    this.pwChangeForm.get('OldPassword').setValue('');
+    this.registerService.getUserByName(userName).subscribe((member) => {
+      // console.log(member["cPassword"]);
+      this.pwChangeForm.get('OldPassword').setValue(member["cPassword"])
+    },error => {
+      //console.log(error);
+      this.validationErrors = error;
+    })
   }
 
+  resetForm() {
+    this.pwChangeForm.reset();
+  }
+ 
+  clearPassword(event: any) {
+    this.pwChangeForm.get('OldPassword').setValue('');
+  }
 
 }
