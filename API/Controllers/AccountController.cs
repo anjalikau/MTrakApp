@@ -27,7 +27,7 @@ namespace API.Controllers
 
         [Authorize]
         [HttpPost("register")]
-        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
+        public async Task<ActionResult> Register(RegisterDto registerDto)
         {
             if (await UserExists(registerDto.cAgentName)) return BadRequest("Username is taken");
 
@@ -48,12 +48,7 @@ namespace API.Controllers
             
             _context.MstrAgents.Add(user);
             await _context.SaveChangesAsync();
-
-            return new UserDto
-            {
-                UserName = user.cAgentName,
-                Token = _tokenService.CreateToken(user)
-            };
+            return Ok();
         }
 
         [HttpPost("login")]
