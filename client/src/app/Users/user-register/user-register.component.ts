@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { IComboSelectionChangeEventArgs } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
-import { Factory } from 'src/app/_models/factory';
+import { SysModule } from 'src/app/_models/SysModule';
 import { UserLevel } from 'src/app/_models/userLevel';
 import { RegisterService } from '_services/register.service';
 
@@ -14,7 +14,7 @@ import { RegisterService } from '_services/register.service';
 export class UserRegisterComponent implements OnInit {
   //@Input() usersFromHomeComponent: any;//get from parent
   //@Output() cancelRegister = new EventEmitter();// sent to parent 
-  factory : Factory[];
+  sysModules : SysModule[];
   userLevel: UserLevel[];
   registerForm: FormGroup;
   showPassword = false; 
@@ -25,7 +25,7 @@ export class UserRegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.initilizeForm();
-    this.LoadFactories();
+    this.LoadModules();
     this.LoadUserLevel();
   }
 
@@ -40,7 +40,7 @@ export class UserRegisterComponent implements OnInit {
       cAgentName: ['', Validators.required],
       cPassword: ['', [Validators.required , Validators.minLength(4), Validators.maxLength(10)]],
       confirmPassword: ['', [Validators.required, this.matchValues('cPassword')]],
-      factoryId: ['', Validators.required],
+      //factoryId: ['', Validators.required],
       iCategoryLevel: ['', Validators.required],
       cDescription: [],
       cEmail: []
@@ -66,7 +66,7 @@ export class UserRegisterComponent implements OnInit {
   }
 
   register() {
-    this.registerForm.get('factoryId').setValue(this.registerForm.get('factoryId').value[0]);
+    //this.registerForm.get('factoryId').setValue(this.registerForm.get('factoryId').value[0]);
     this.registerForm.get('iCategoryLevel').setValue(this.registerForm.get('iCategoryLevel').value[0]);
 
     //console.log(this.registerForm.value);
@@ -82,10 +82,10 @@ export class UserRegisterComponent implements OnInit {
     })
   }
 
-  /// LOADS User PERMITED FACTRIES
-  LoadFactories() {
-    this.registerService.getFactories().subscribe(factories => {
-      this.factory = factories;
+  //// LOADS SYSTEM MODULES
+  LoadModules() {
+    this.registerService.getSysModules().subscribe(modules => {
+      this.sysModules = modules;
     })
   }  
 

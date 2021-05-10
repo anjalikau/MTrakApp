@@ -76,13 +76,16 @@ export class UserPermissionComponent implements OnInit {
   }
 
   GetButtonPermission() {    
-    this.authMenus = JSON.parse(localStorage.getItem('menus'));     
+    this.authMenus = JSON.parse(localStorage.getItem('menus'));    
+    //console.log(this.authMenus); 
+    if(this.authMenus != null) {
     if(this.authMenus.filter(x => x.menuName == 'Save Menu Permission' && x.mType == 'B').length > 0) {
       this.saveButton = true;
     }
     if(this.authMenus.filter(x => x.menuName == 'Delete Menu Permission' && x.mType == 'B').length > 0) {
       this.removeButton = true;
     }
+  }
     //console.log(this.saveButton);
   }
 
@@ -169,5 +172,7 @@ export class UserPermissionComponent implements OnInit {
     this.permitMenus = [];
     this.nPermitMenus = [];   
   }
+
+ 
 
 }

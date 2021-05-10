@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -24,6 +23,12 @@ from 'igniteui-angular';
 import { UserPwchangeComponent } from './users/user-pwchange/user-pwchange.component';
 import { MenuListComponent } from './users/menu-list/menu-list.component';
 import { UserPermissionComponent } from './users/user-permission/user-permission.component';
+import { ModuleRegisterComponent } from './users/module-register/module-register.component';
+import { MasterSizeComponent } from './master/master-size/master-size.component';
+import { MasterColorComponent } from './master/master-color/master-color.component';
+import { MasterColorCardComponent } from './master/master-color-card/master-color-card.component';
+import { MasterSizeCardComponent } from './master/master-size-card/master-size-card.component';
+
 
 @NgModule({
   declarations: [
@@ -40,7 +45,7 @@ import { UserPermissionComponent } from './users/user-permission/user-permission
     UserRegisterComponent, 
     UserPwchangeComponent, 
     MenuListComponent, 
-    UserPermissionComponent
+    UserPermissionComponent, ModuleRegisterComponent, MasterSizeComponent, MasterColorComponent, MasterColorCardComponent, MasterSizeCardComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +63,7 @@ import { UserPermissionComponent } from './users/user-permission/user-permission
     IgxCheckboxModule,
     IgxGridModule,
     IgxTabsModule
+    
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi:true}

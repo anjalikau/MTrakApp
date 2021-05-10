@@ -1,0 +1,61 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Master Size Card</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="sizeCrdForm" (ngSubmit)="sizeCrdForm.valid" autocomplete="off">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <igx-input-group>
+                                <input igxInput type="text" formControlName="Name" />
+                                <label igxLabel for="Name"> Name</label>
+                            </igx-input-group>
+                        </div>
+                    </div>
+
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <button type="button" [disabled]="!sizeCrdForm.valid" class="btn btn-block btn-success" (click)="saveSizeCard()">Save</button>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-block btn-default" (click)="clearControls()">New</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <igx-grid #sizeCGrid [data]="sCardList" [autoGenerate]="false" [paging]="true" [rowEditable]="false" 
+                        [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="400px" displayDensity="compact"
+                        [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
+                        [rowSelection]="'Single'">
+
+                        <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                            <ng-template igxCell let-cell="cell">
+                                <button igxButton="icon" class="fab-compact" (click)="onEdit($event,cell.cellID)">
+                                    <!-- (click)="onEdit($event,cell.cellID)" -->
+                                    <igx-icon family="material">edit</igx-icon>
+                                </button>
+                            </ng-template>
+                        </igx-column>
+                        <igx-column [field]="'name'" [header]="'Name'" [resizable]="true" [dataType]="'string'"
+                            [sortable]="true">
+                        </igx-column>
+                        
+                    </igx-grid>
+                </div>
+
+            </form>
+        </div>
+        <div class="modal-footer justify-content-between">
+        </div>
+    </div>
+    <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->

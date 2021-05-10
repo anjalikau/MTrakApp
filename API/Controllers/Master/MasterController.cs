@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
@@ -6,6 +7,7 @@ using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers.Master
 {
@@ -14,49 +16,28 @@ namespace API.Controllers.Master
     {
         private readonly IMasterRepository _masterRepository;
         private readonly IMapper _mapper;
-        public MasterController(IMasterRepository masterRepository, IMapper mapper)
+        private readonly IApplicationCartonDbContext _context;
+        public MasterController(IMasterRepository masterRepository, IMapper mapper, IApplicationCartonDbContext context)
         {
             _mapper = mapper;
+            _context = context;
             _masterRepository = masterRepository;
         }
-        
-        [HttpGet("Factory")]
-        public async Task<ActionResult<IEnumerable<FactoryDto>>> GetFactories()
-        {
-            var factories = await _masterRepository.FactoriesAsync();
-            var factoryToReturn = _mapper.Map<IEnumerable<FactoryDto>>(factories);
-            return Ok(factoryToReturn);
-        }
 
-        [HttpGet("AuthMenus/{id}")]
-        public async Task<ActionResult<IEnumerable<MenuJoinList>>> GetAuthMenuList(int id)
+        [AllowAnonymous]
+        [HttpPost("AuthMenus")]
+        public async Task<ActionResult<IEnumerable<MenuJoinList>>> GetAuthMenuList(UserDto userDto)
         {
-            var menuList = await _masterRepository.GetAuthMenuListAsync(id);
+            var menuList = await _masterRepository.GetAuthMenuListAsync(userDto);
             return Ok(menuList);
-        }
-
-        [HttpGet("AgentLevel/{id}")]
-        public async Task<ActionResult<IEnumerable<UserLevelDto>>> GetAgentLevel(int id)
-        {
-            var levels = await _masterRepository.AgentLevelsAsync(id);
-            var levelToReturn = _mapper.Map<IEnumerable<UserLevelDto>>(levels);
-            return Ok(levelToReturn);
-        }
+        }        
 
         [HttpGet("Menulist")]
         public async Task<ActionResult<IEnumerable<MenuJoinList>>> GetMenuList()
         {
             var menuList = await _masterRepository.GetMenuListAsync();
             return Ok(menuList);
-        }
-
-        [HttpGet("Users/{id}")]
-        public async Task<ActionResult<IEnumerable<PermitedUserDto>>> GetPermittedUser(int id) 
-        {
-            var userList = await _masterRepository.GetPermitedAgentsAsync(id);
-            var usersToReturn = _mapper.Map<IEnumerable<PermitedUserDto>>(userList);
-            return Ok(usersToReturn);
-        }
+        }        
 
         [HttpGet("UserMenus/{id}")]
         public async Task<ActionResult<IEnumerable<UserMenuList>>> GetUserMenuList(int id)
@@ -64,5 +45,90 @@ namespace API.Controllers.Master
             var menuList = await _masterRepository.GetUserMenuList(id);
             return Ok(menuList);
         }
+
+        [HttpPost("Loc/SetDefault")]
+        public async Task<IActionResult> SetDefaultLocation(MstrUserLocation userLoc)
+        {
+             var result = await _masterRepository.SetDefaultLocationAsync(userLoc);
+             return Ok(result);
+        }
+
+        [HttpGet("ColorCard")]
+        public async Task<IActionResult> GetColorCard()
+        {
+            var result = await _context.MstrColorCard.ToListAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("SizeCard")]
+        public async Task<IActionResult> GetSizeCard()
+        {
+            var result = await _context.MstrSizeCard.ToListAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("Size/{id}")]
+        public async Task<IActionResult> GetSize(int id)
+        {
+            var result = await _context.MstrSize.Where(e => e.LinkSizeCard == id).ToListAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("Color/{id}")]
+        public async Task<IActionResult> GetColor(int id)
+        { 
+            var result = await _context.MstrColor.Where(e => e.LinkColorCard == id).ToListAsync();        
+            return Ok(result);
+        }
+
+        [HttpPost("ColorCard")]
+        public async Task<ActionResult> SaveColorCard(MstrColorCard colorCard)
+        {           
+            var result = await _masterRepository.SaveColorCardAsync(colorCard); 
+            return Ok(result);
+        }
+
+        [HttpPost("SizeCard")]
+        public async Task<ActionResult> SaveSizeCard(MstrSizeCard sizeCard)
+        {
+            var result = await _masterRepository.SaveSizeCardAsync(sizeCard);
+            return Ok(result);
+        }
+
+        [HttpPost("Size")]
+        public async Task<ActionResult> SaveSize(MstrSize size)
+        {
+            var result = await _masterRepository.SaveSizeAsync(size);
+            return Ok(result);
+        }
+
+        [HttpPost("Color")]
+        public async Task<ActionResult> SaveColor(MstrColor color)
+        {
+            var result = await _masterRepository.SaveColorAsync(color);
+            return Ok(result);
+        }
+
+        // private async Task<bool> ColorExists(MstrColor color)
+        // {
+        //     return await _context.MstrColor
+        //         .AnyAsync(x => x.Name.ToLower() == color.Name.ToLower() && x.Code.ToLower() == color.Code.ToLower());
+        // }
+
+        // private async Task<bool> SizeExists(MstrSize size)
+        // {
+        //     return await _context.MstrSize
+        //         .AnyAsync(x => x.Name.ToLower() == size.Name.ToLower() && x.Code.ToLower() == size.Code.ToLower());
+        // }
+
+        // private async Task<bool> SizeCardExists(string sizeCard)
+        // {
+        //     return await _context.MstrSizeCard.AnyAsync(x => x.Name.ToLower() == sizeCard.ToLower());
+        // }
+        // private async Task<bool> ColorCardExists(string colorCard)
+        // {
+        //     return await _context.MstrColorCard.AnyAsync(x => x.Name.ToLower() == colorCard.ToLower());
+        // }
+        
     }
 }

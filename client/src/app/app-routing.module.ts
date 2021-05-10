@@ -7,6 +7,8 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
+import { MasterColorComponent } from './master/master-color/master-color.component';
+import { MasterSizeComponent } from './master/master-size/master-size.component';
 import { MenuListComponent } from './users/menu-list/menu-list.component';
 import { UserPermissionComponent } from './users/user-permission/user-permission.component';
 import { UserRegisterComponent } from './users/user-register/user-register.component';
@@ -23,7 +25,9 @@ const routes: Routes = [
       {path:'Home', component: HomeComponent},
       {path:'UserRegister', component: UserRegisterComponent },
       {path:'MenuList', component: MenuListComponent},
-      {path:'UserPermission', component: UserPermissionComponent}
+      {path:'UserPermission', component: UserPermissionComponent},
+      {path:'MasterColor', component: MasterColorComponent},
+      {path:'MasterSize', component: MasterSizeComponent}
     ]
   },  
   {path:'not-found', component: NotFoundComponent},

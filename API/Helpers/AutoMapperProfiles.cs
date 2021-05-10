@@ -1,6 +1,7 @@
 using System.Linq;
 using API.DTOs;
 using API.Entities;
+using API.Entities.Admin;
 using AutoMapper;
 
 namespace API.Helpers
@@ -15,7 +16,7 @@ namespace API.Helpers
                 // .ForMember(dest => dest.FactoryId , opt => 
                 //     opt.MapFrom(mst => mst.Factory_Link.AutoId))  
             // CreateMap<RegisterDto,MstrAgents>();            
-            CreateMap<MstrFactory , FactoryDto>();
+            CreateMap<MstrLocation , LocationDto>();
             CreateMap<MstrAgentLevel , UserLevelDto>();
             CreateMap<RegisterDto, MstrAgents>();
             CreateMap<UserUpdateDto, MstrAgents>();

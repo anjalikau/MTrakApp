@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -5,6 +6,7 @@ using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
 using API.Entities;
+using API.Entities.Admin;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -15,10 +17,10 @@ namespace API.Controllers.Admin
 {
     public class AccountController : BaseApiController
     {
-        private readonly DataContext _context;
+        private readonly IApplicationAdminDbContext _context;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
-        public AccountController(DataContext context, ITokenService tokenService, IMapper mapper)
+        public AccountController(IApplicationAdminDbContext context, ITokenService tokenService, IMapper mapper)
         {
             _mapper = mapper;
             _tokenService = tokenService;
@@ -35,20 +37,45 @@ namespace API.Controllers.Admin
 
             using var hmac = new HMACSHA512();
 
-            var facName = await GetFactoryName(registerDto.FactoryId);
-           
+            //var moduleName = await GetFactoryName(registerDto.SysModuleId);           
             user.cAgentName = registerDto.cAgentName;
-            user.Factory = facName.ToString();
             user.iCategoryLevel = registerDto.iCategoryLevel;
-            user.bActive = 1;
-            user.FactoryId = registerDto.FactoryId;
+            user.bActive = true;
             user.cPassword = registerDto.cPassword;
             user.passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.cPassword));
-            user.passwordSalt = hmac.Key;
+            user.passwordSalt = hmac.Key;     
             
             _context.MstrAgents.Add(user);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(default);           
+
             return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("RegModule")]
+        public async Task<ActionResult> RegisterModule(List<MstrAgentModule> userModule)
+        {
+            var saveExists = false;
+
+              foreach (var item in userModule)
+              {
+                  if(await UserModuleExists(item))
+                  {
+                    continue;
+                  }
+                  else
+                  {
+                    _context.MstrAgentModule.Add(item);
+                    saveExists = true;
+                  }
+              } 
+
+            if (saveExists) 
+                await _context.SaveChangesAsync(default);
+            else 
+                return BadRequest("User Module Exists");
+
+              return Ok(); 
         }
 
         [HttpPost("login")]
@@ -67,21 +94,35 @@ namespace API.Controllers.Admin
                 if (computedHash[i] != user.passwordHash[i]) return Unauthorized("Invalid Password");
             }
 
+            int userId = int.Parse(user.idAgents.ToString());
+            int moduleId = int.Parse(loginDto.ModuleId.ToString());
+
+            var usermod = await _context.MstrAgentModule
+                    .SingleOrDefaultAsync(x => x.UserId == userId && x.SysModuleId == moduleId);
+
+            if(usermod == null) return Unauthorized("Invalid Module");           
+
             return new UserDto
             {
+                ModuleId = usermod.SysModuleId,
                 UserId = user.idAgents,
                 UserName = user.cAgentName,
                 Token = _tokenService.CreateToken(user)
             };
         }
 
-        private async Task<string> GetFactoryName(int id)
+        // private async Task<string> GetFactoryName(int id)
+        // {
+        //     var factory = await _context.MstrFactory
+        //             .Where(x => x.AutoId == id)
+        //             .Select(p => new {p.Factory})
+        //             .SingleOrDefaultAsync();
+        //     return factory.Factory;
+        // }
+
+        private async Task<bool> UserModuleExists(MstrAgentModule userModule)
         {
-            var factory = await _context.MstrFactory
-                    .Where(x => x.AutoId == id)
-                    .Select(p => new {p.Factory})
-                    .SingleOrDefaultAsync();
-            return factory.Factory;
+            return await _context.MstrAgentModule.AnyAsync(x => x.UserId == userModule.UserId && x.SysModuleId == userModule.SysModuleId);
         }
 
         private async Task<bool> UserExists(string username)

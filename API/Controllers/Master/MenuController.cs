@@ -13,20 +13,19 @@ namespace API.Controllers.Master
     [Authorize]
     public class MenuController : BaseApiController
     {
-        private readonly DataContext _context;
+        //private readonly IApplicationCartonDbContext _context;
         private readonly IMasterRepository _masterRepository;
-        public MenuController(DataContext context, IMasterRepository masterRepository)
+        public MenuController(IMasterRepository masterRepository)
         {
             _masterRepository = masterRepository;
-            _context = context;
+            //_context = context;
         }
 
         [HttpPost("MenuSave")]
         public async Task<IActionResult> SaveMenuList(MenuListDto menuListDto)
         {
             var result = await _masterRepository.SaveMenuListAsync(menuListDto);
-            return Ok(result);
-             
+            return Ok(result);             
         }
 
         [HttpPost("MenuUserSave")]

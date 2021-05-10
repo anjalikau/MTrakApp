@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using API.Entities;
+using API.Entities.Admin;
 
 namespace API.Interfaces
 {
     public interface IUserRepository
     {
-         void Update(MstrAgents user);
+         //void Update(MstrAgents user);
 
          Task<bool> SaveAllAsync();
 
@@ -15,6 +15,12 @@ namespace API.Interfaces
          Task<MstrAgents> GetUserByIdAsync(int id);
 
          Task<MstrAgents> GetUserByUsernameAsync(string username);
+
+         Task<IEnumerable<SystemModule>> GetModuleAsync();
+
+         Task<IEnumerable<MstrAgentLevel>> AgentLevelsAsync(int agentid);
+
+         Task<IEnumerable<MstrAgents>> GetPermitedAgentsAsync(int agentid);
          
     }
 }

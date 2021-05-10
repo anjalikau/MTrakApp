@@ -2,20 +2,24 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
+using API.Entities.Admin;
 
 namespace API.Interfaces
 {
     public interface IMasterRepository    
-    {
-        Task<IEnumerable<MstrFactory>> FactoriesAsync();
-        Task<IEnumerable<MstrAgentLevel>> AgentLevelsAsync(int agentid);
+    {        
         Task<IEnumerable<MenuJoinList>> GetMenuListAsync();
-        Task<int> SaveMenuListAsync(MenuListDto menuListDto);
-        Task<IEnumerable<MstrAgents>> GetPermitedAgentsAsync(int agentid);
+        Task<int> SaveMenuListAsync(MenuListDto menuListDto);        
         Task<IEnumerable<UserMenuList>> GetUserMenuList(int userId);
         Task<int> SaveUserMenuListAsync(List<MenuUserDto> menuList);
         Task<int> DeleteUserMenuListAsync(List<MenuUserDto> menuList);
-        Task<IEnumerable<MenuJoinList>> GetAuthMenuListAsync(int agentid);
+        Task<IEnumerable<MenuJoinList>> GetAuthMenuListAsync(UserDto userDto);
         //Task<IEnumerable<ResultSet>> SaveMenuListAsync(MenuListDto menuListDto);
+        Task<MstrUserLocation> GetDefaultLocForUser(int userId);
+        Task<int> SetDefaultLocationAsync(MstrUserLocation userLoc);
+        Task<int> SaveColorCardAsync(MstrColorCard mstrccard);
+        Task<int> SaveSizeCardAsync(MstrSizeCard mstrscard);
+        Task<int> SaveSizeAsync(MstrSize mstrSize);
+        Task<int> SaveColorAsync(MstrColor mstrColor);
     }
 }

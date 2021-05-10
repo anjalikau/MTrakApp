@@ -17,77 +17,80 @@
                 <label class="col-sm-1">User Name </label>
                 <div class="col-sm-2">
                     <igx-combo id="users" class="combo" displayKey="cAgentName" valueKey="idAgents"
-                        [itemsMaxHeight]="250" [data]="permitUsers" placeholder="User Name" 
-                        (onSelectionChange)='LoadMenusEvent($event)'
-                        (onSelectionChange)="singleSelection($event)" formControlName="Agent"
-                        searchPlaceholder="Search...">
+                        [itemsMaxHeight]="250" [data]="permitUsers" placeholder="User Name"
+                        (onSelectionChange)='LoadMenusEvent($event)' (onSelectionChange)="singleSelection($event)"
+                        formControlName="Agent" searchPlaceholder="Search...">
                     </igx-combo>
                 </div>
                 <div class="col-sm-2">
-                    <button igxButton="outlined" (click)="ClearControls()" >New</button>
+                    <button igxButton="outlined" (click)="ClearControls()">New</button>
                 </div>
-            </div>     
+            </div>
             <div class="form-group row">
                 <div class="col-sm-5">
                     <h4>Permitted Menu</h4>
                 </div>
                 <div class="col-sm-1">
-                    <button type="button" igxButton="raised" (click)="DeleteUserMenuList()" 
-                        igxButtonBackground ="#e14166" [disabled]="(this.PermitMgrid.selectedRows.length==0 || !removeButton)" igxRipple>Remove</button>
+                    <button type="button" igxButton="raised" (click)="DeleteUserMenuList()"
+                        igxButtonBackground="#e14166"
+                        [disabled]="(this.PermitMgrid.selectedRows.length==0 || !removeButton)"
+                        igxRipple>Remove</button>
                 </div>
                 <div class="col-sm-5">
                     <h4>Not-Permitted Menu</h4>
                 </div>
                 <div class="col-sm-1">
-                    <button type="button" igxButton="raised" (click)="SaveUserMenuList()" 
-                    igxButtonBackground="#72da66" igxRipple [disabled]="this.Menugrid.selectedRows.length==0 || !saveButton">Add</button>
+                    <button type="button" igxButton="raised" (click)="SaveUserMenuList()" igxButtonBackground="#72da66"
+                        igxRipple [disabled]="this.Menugrid.selectedRows.length==0 || !saveButton">Add</button>
                 </div>
             </div>
 
             <div class="form-group row">
                 <div class="col-sm-6">
-                    
-                    <igx-grid #PermitMgrid [data]="permitMenus" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
-                    [primaryKey]="'menuId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
-                    height="400px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
-                    [allowAdvancedFiltering]="true" [rowSelection]="'multiple'">
 
-                    <igx-column [field]="'groupName'" [header]="'Group Name'" [resizable]="true" [dataType]="'string'"
-                        [sortable]="true">
-                    </igx-column>
-                    <igx-column [field]="'mType'" [header]="'Type'" [resizable]="true" [dataType]="'string'"
-                        [sortable]="true">
-                    </igx-column>
-                    <igx-column [field]="'menuName'" [header]="'Menu Name'" [resizable]="true" [dataType]="'string'"
-                        [sortable]="true">
-                    </igx-column>
-                    <igx-column [field]="'menuDescription'" [header]="'Description'" [resizable]="true"
-                        [dataType]="'string'" [sortable]="true">
-                    </igx-column>
-                </igx-grid>
+                    <igx-grid #PermitMgrid [data]="permitMenus" [autoGenerate]="false" [paging]="true"
+                        [rowEditable]="false" [primaryKey]="'menuId'" cellSelection="none"
+                        (onColumnResized)="onResize($event)" [perPage]="10" height="400px" displayDensity="compact"
+                        [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
+                        [rowSelection]="'multiple'">
+
+                        <igx-column [field]="'groupName'" [header]="'Group Name'" [resizable]="true"
+                            [dataType]="'string'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'mType'" [header]="'Type'" [resizable]="true" [dataType]="'string'"
+                            [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'menuName'" [header]="'Menu Name'" [resizable]="true" [dataType]="'string'"
+                            [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'menuDescription'" [header]="'Description'" [resizable]="true"
+                            [dataType]="'string'" [sortable]="true">
+                        </igx-column>
+                    </igx-grid>
                 </div>
 
-                <div class="col-sm-6">                    
-                    <igx-grid #Menugrid [data]="nPermitMenus" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
-                    [primaryKey]="'menuId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
-                    height="400px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
-                    [allowAdvancedFiltering]="true" [rowSelection]="'multiple'">
+                <div class="col-sm-6">
+                    <igx-grid #Menugrid [data]="nPermitMenus" [autoGenerate]="false" [paging]="true"
+                        [rowEditable]="false" [primaryKey]="'menuId'" cellSelection="none"
+                        (onColumnResized)="onResize($event)" [perPage]="10" height="400px" displayDensity="compact"
+                        [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
+                        [rowSelection]="'multiple'">
 
-                    <igx-column [field]="'groupName'" [header]="'Group Name'" [resizable]="true" [dataType]="'string'"
-                        [sortable]="true">
-                    </igx-column>
-                    <igx-column [field]="'mType'" [header]="'Type'" [resizable]="true" [dataType]="'string'"
-                        [sortable]="true">
-                    </igx-column>
-                    <igx-column [field]="'menuName'" [header]="'Menu Name'" [resizable]="true" [dataType]="'string'"
-                        [sortable]="true">
-                    </igx-column>
-                    <igx-column [field]="'menuDescription'" [header]="'Description'" [resizable]="true"
-                        [dataType]="'string'" [sortable]="true">
-                    </igx-column>
-                </igx-grid>
+                        <igx-column [field]="'groupName'" [header]="'Group Name'" [resizable]="true"
+                            [dataType]="'string'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'mType'" [header]="'Type'" [resizable]="true" [dataType]="'string'"
+                            [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'menuName'" [header]="'Menu Name'" [resizable]="true" [dataType]="'string'"
+                            [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'menuDescription'" [header]="'Description'" [resizable]="true"
+                            [dataType]="'string'" [sortable]="true">
+                        </igx-column>
+                    </igx-grid>
                 </div>
-               
+
             </div>
         </div>
     </form>

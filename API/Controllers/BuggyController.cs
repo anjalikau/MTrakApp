@@ -1,6 +1,7 @@
 using System;
 using API.Data;
 using API.Entities;
+using API.Entities.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,8 +9,8 @@ namespace API.Controllers
 {
     public class BuggyController : BaseApiController
     {
-        private readonly DataContext _context;
-        public BuggyController(DataContext context)
+        private readonly ApplicationAdminDbContext _context;
+        public BuggyController(ApplicationAdminDbContext context)
         {
             _context = context;
         }

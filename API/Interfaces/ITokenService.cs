@@ -1,4 +1,5 @@
 using API.Entities;
+using API.Entities.Admin;
 
 namespace API.Interfaces
 {

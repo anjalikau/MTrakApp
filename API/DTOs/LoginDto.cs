@@ -3,11 +3,9 @@ using System.ComponentModel.DataAnnotations;
 namespace API.DTOs
 {
     public class LoginDto
-    {
-        [Required]        
-        public string cAgentName { get; set; }
-
-        [Required]
+    {               
+        public string cAgentName { get; set; }       
         public string cPassword { get; set; }
+         public int ModuleId { get; set; }
     }
 }

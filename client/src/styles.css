@@ -5,6 +5,11 @@ body,.form-control,.btn {
     line-height: 0.75;
 }
 
+/* option {
+    
+    padding: 5px 5px 5px;
+} */
+
 .igx-input-group__input, .igx-input-group__textarea {
     height: 1.5rem;
     border-top: .12rem solid transparent;

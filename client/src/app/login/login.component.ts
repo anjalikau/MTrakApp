@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AccountService } from '_services/account.service';
 import { AdminService } from '_services/admin.service';
+import { RegisterService } from '_services/register.service';
+import { SysModule } from '../_models/SysModule';
 import { User } from '../_models/user';
 
 @Component({
@@ -10,23 +13,54 @@ import { User } from '../_models/user';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  loginForm: FormGroup;
   model: any = {};
+  sysModules: SysModule[];
   users: any;
+  submitted = false;
 
-  constructor(public accountServices: AccountService, private router: Router
-      ,private adminService: AdminService) { }
+  constructor(public accountServices: AccountService, private router: Router ,private fb: FormBuilder
+      ,private adminService: AdminService , private registerService: RegisterService) { }
 
   ngOnInit(): void {
+    this.initilizeForm();
+    //console.log(this.accountServices.currentUser$);
+    this.LoadModules();
   }
 
+  initilizeForm() {
+    this.loginForm = this.fb.group ({
+      ModuleId: ['', Validators.required ],
+      cAgentName: ['', [Validators.required , Validators.maxLength(20)]],
+      cPassword: ['',[Validators.required , Validators.maxLength(24)]]
+    })
+  } 
+
+  // convenience getter for easy access to form fields
+  get f() { return this.loginForm.controls; }
+
   login() {
-    this.accountServices.login(this.model).subscribe(response =>
+    this.submitted = true;
+    if (this.loginForm.invalid) {
+      return;
+    }
+    else {
+        //console.log(this.model["ModuleId"]);
+      var obj = {
+        "ModuleId" : parseInt(this.loginForm.get('ModuleId').value[0]),
+        "cAgentName" : this.loginForm.get('cAgentName').value,
+        "cPassword" : this.loginForm.get('cPassword').value
+      }
+      
+      //console.log(obj);
+      this.accountServices.login(obj).subscribe(response =>
       {
         //console.log(response);
         this.setCurrentUser();
         this.router.navigateByUrl('/Dashboard');
         //console.log(this.accountServices.decodedToken?.unique_name);
-      });    
+      });   
+    }     
   }
 
   setCurrentUser() {
@@ -43,5 +77,14 @@ export class LoginComponent implements OnInit {
     });
   }
   
+  LoadModules() {
+    this.registerService.getSysModules().subscribe(modules => {
+      this.sysModules = modules;
+      //console.log(modules);
+    })
+  }  
+
+ 
+
 
 }

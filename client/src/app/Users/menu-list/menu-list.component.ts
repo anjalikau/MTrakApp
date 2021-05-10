@@ -31,6 +31,7 @@ export class MenuListComponent implements OnInit {
   //public selectionMode = "Single";
   @ViewChild("Menugrid", { static: true }) 
   public Menugrid: IgxGridComponent;
+  
 
   constructor(public registerService: RegisterService,private fb: FormBuilder, private accountService: AccountService
       , public adminService: AdminService , private toastr: ToastrService ) { 
@@ -143,8 +144,7 @@ export class MenuListComponent implements OnInit {
     const selectedRowData = this.Menugrid.data.filter((record) => {
         return record.autoIdx == ids;
     });
-
-    //console.log(selectedRowData[0]);
+ 
     this.menuListForm.get('menuName').setValue(selectedRowData[0]["menuName"]);
     this.menuListForm.get('menuDescription').setValue(selectedRowData[0]["menuDescription"]);
     this.menuListForm.get('autoIdx').setValue(selectedRowData[0]["autoIdx"]);

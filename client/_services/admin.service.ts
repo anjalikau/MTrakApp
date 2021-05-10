@@ -3,9 +3,11 @@ import { Injectable } from '@angular/core';
 import { MenuList } from 'src/app/_models/menuList';
 import { MenuUser } from 'src/app/_models/menuUser';
 import { PermitUser } from 'src/app/_models/permitUser';
+import { UserLocation } from 'src/app/_models/userLocation';
 import { environment } from 'src/environments/environment';
 
 var usertoken: any;
+//console.log(localStorage);
 if (localStorage.length > 0) {
   usertoken = JSON.parse(localStorage.getItem('user')).token;
   //console.log(usertoken);
@@ -26,8 +28,13 @@ export class AdminService {
   constructor(private http: HttpClient) { }
 
   getAuthMenuList(){
-    var userId = JSON.parse(localStorage.getItem('user')).userId;
-    return this.http.get<MenuList[]>(this.baseUrl + 'Master/AuthMenus/' + userId , httpOptions);
+    //var userId = JSON.parse(localStorage.getItem('user')).userId;
+    var model = {
+      "UserId" : JSON.parse(localStorage.getItem('user')).userId,
+      "ModuleId" : JSON.parse(localStorage.getItem('user')).moduleId
+    };
+
+    return this.http.post<MenuList[]>(this.baseUrl + 'Master/AuthMenus' , model );
   }
 
   saveMenuList(model: any) {
@@ -40,7 +47,7 @@ export class AdminService {
 
   getPermitedUsers() {
     var userId = JSON.parse(localStorage.getItem('user')).userId;
-    return this.http.get<PermitUser[]>(this.baseUrl + 'Master/Users/' + userId , httpOptions);
+    return this.http.get<PermitUser[]>(this.baseUrl + 'Agents/Users/' + userId , httpOptions);
   }
 
   getUserMenuList(userId) {
@@ -54,5 +61,9 @@ export class AdminService {
 
   deleteUserMenuList(model: any) {
     return this.http.post(this.baseUrl + 'Menu/MenuUserDelete' , model , httpOptions);
+  }
+
+  SetDefaultLocation(userLoc: UserLocation) {
+    return this.http.post(this.baseUrl + 'Master/Loc/SetDefault', userLoc , httpOptions);
   }
 }

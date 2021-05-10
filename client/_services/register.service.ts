@@ -1,9 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ThrowStmt } from '@angular/compiler';
 import { Injectable } from '@angular/core';
-import { Factory } from 'src/app/_models/factory';
+import { DelUserModule } from 'src/app/_models/delUserModule';
 import { Member } from 'src/app/_models/member';
-import { MenuList } from 'src/app/_models/menuList';
+import { SysModule } from 'src/app/_models/SysModule';
 import { UserLevel } from 'src/app/_models/userLevel';
+import { UserModule } from 'src/app/_models/userModule';
 import { environment } from 'src/environments/environment';
 
 var usertoken: any;
@@ -38,22 +40,44 @@ export class RegisterService {
     return this.http.get<Member[]>(this.baseUrl + 'Agents/name/' + userName , httpOptions);
   }
 
-  getFactories() {
-    return this.http.get<Factory[]>(this.baseUrl + 'Master/Factory' , httpOptions);
+  getLocation(id: number) {
+    return this.http.get<Location[]>(this.baseUrl + 'Agents/Location/'+ id , httpOptions);
   }
 
   userRegister(model: any) {
      return this.http.post(this.baseUrl + 'account/register', model, httpOptions);
   }
 
+  moduleRegister(module: UserModule[]) {
+    return this.http.post(this.baseUrl + 'account/regModule', module, httpOptions);
+ }
+
   getUserLevel() {
     var userId = JSON.parse(localStorage.getItem('user')).userId;
     console.log(httpOptions);
-    return this.http.get<UserLevel[]>(this.baseUrl + 'Master/AgentLevel/' + userId , httpOptions);
+    return this.http.get<UserLevel[]>(this.baseUrl + 'Agents/AgentLevel/' + userId , httpOptions);
   }
 
   changeUserPassword(userName: string , user: Member) {
     return this.http.put(this.baseUrl + 'Agents/' + userName , user , httpOptions);
-  }  
+  } 
+  
+  getSysModules() {
+    return this.http.get<SysModule[]>(this.baseUrl + 'Agents/Module' );
+  }
+
+  getUserModule(id: number) {
+    return this.http.get<UserModule[]>(this.baseUrl + 'Agents/Users/Module/' + id , httpOptions);
+  }
+
+  saveUserModule(userModule: UserModule[]) {
+    return this.http.post(this.baseUrl + 'Agents/UserModSave' , userModule, httpOptions)
+  }
+
+  deleteUserModule(userModule: DelUserModule) {
+    return this.http.post(this.baseUrl + 'Agents/UserModDelete' , userModule, httpOptions)
+  }
+
+ 
 
   }
