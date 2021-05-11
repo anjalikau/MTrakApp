@@ -40,8 +40,8 @@ export class RegisterService {
     return this.http.get<Member[]>(this.baseUrl + 'Agents/name/' + userName , httpOptions);
   }
 
-  getLocation(id: number) {
-    return this.http.get<Location[]>(this.baseUrl + 'Agents/Location/'+ id , httpOptions);
+  getLocation(model: any) {
+    return this.http.post<Location[]>(this.baseUrl + 'Agents/Location/' , model , httpOptions);
   }
 
   userRegister(model: any) {

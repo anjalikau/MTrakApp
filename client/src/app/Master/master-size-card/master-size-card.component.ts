@@ -57,6 +57,8 @@ export class MasterSizeCardComponent implements OnInit {
   }
 
   saveSizeCard() {    
+    this.sizeCrdForm.get('Name').setValue(this.sizeCrdForm.get('Name').value.trim());
+
     this.masterService.saveSizeCard(this.sizeCrdForm.value).subscribe((result) => {    
       if (result == 1) {
         this.toastr.success("Size Card save Successfully !!!");
@@ -94,6 +96,46 @@ export class MasterSizeCardComponent implements OnInit {
    
     this.sizeCrdForm.get('Name').setValue(selectedRowData[0]["name"]);
     this.sizeCrdForm.get('AutoId').setValue(selectedRowData[0]["autoId"]);
+  }
+
+  Deactive(cellValue,cellId) { 
+    const id = cellId.rowID; 
+    var obj = {
+      "createUserId" : this.user.userId,
+      "autoId": id,
+      "isActive" : false      
+    }
+    this.deactiveSizeCard(obj,"Deactive");    
+  }
+
+  Active(cellValue,cellId) {
+    const id = cellId.rowID; 
+    var obj = {
+      "createUserId" : this.user.userId,
+      "autoId": id,
+      "isActive" : true      
+    }
+    this.deactiveSizeCard(obj,"Active");    
+  }
+
+  deactiveSizeCard(obj,status) {
+     //console.log(obj);
+     this.masterService.deactiveSizeCard(obj).subscribe((result) => {    
+      if (result == 1) {
+        this.toastr.success("Size Card " + status + " Successfully !!!");
+        this.loadSizeCard();
+      } else if (result == 2) {
+        this.toastr.success("Size Card " + status + " Successfully !!!");
+        this.loadSizeCard();
+      } else if (result == -1) {
+        this.toastr.warning("Size Card already in use !!!");
+      } else {
+        this.toastr.warning("Contact Admin. Error No:- " + result.toString());
+      } 
+      //this.triggerEvent();      
+    }, error => {
+      this.validationErrors = error;
+    }) 
   }
 
 }

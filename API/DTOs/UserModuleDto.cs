@@ -6,6 +6,8 @@ namespace API.DTOs
         public int UserId { get; set; }                
         public int LocationId { get; set; }
         public int SysModuleId { get; set; }
+        public int CompanyId { get; set; }
+        public string CompanyName { get; set; }
         public int UserModId { get; set; }
         public int UserLocId { get; set; }
         public string ModuleName { get; set; }

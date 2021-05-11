@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using API.DTOs;
+using API.Entities;
 using API.Entities.Admin;
 using API.Interfaces;
 using AutoMapper;
@@ -41,12 +42,12 @@ namespace API.Controllers.Admin
             return Ok(usersToReturn);
         }
 
-        [HttpGet("Location/{id}")]
-        public async Task<ActionResult<IEnumerable<LocationDto>>> GetLocation(int id)
+        [HttpPost("Location")]
+        public async Task<ActionResult<IEnumerable<LocationDto>>> GetLocation(MstrLocation loc)
         {
-            var factories = await _adminRepository.GetLocationAsync(id);
-            var factoryToReturn = _mapper.Map<IEnumerable<LocationDto>>(factories);
-            return Ok(factoryToReturn);
+            var location = await _adminRepository.GetLocationAsync(loc);
+            var locationToReturn = _mapper.Map<IEnumerable<LocationDto>>(location);
+            return Ok(locationToReturn);
         }
 
         [HttpGet("name/{username}")]

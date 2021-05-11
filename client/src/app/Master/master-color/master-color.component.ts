@@ -96,8 +96,8 @@ export class MasterColorComponent implements OnInit {
     var obj = {
       "createUserId": this.user.userId,
       "linkColorCard" : this.masterColor.get('LinkColorCard').value[0],
-      "code" : this.masterColor.get('Code').value,
-      "name" : this.masterColor.get('Name').value,
+      "code" : this.masterColor.get('Code').value.trim(),
+      "name" : this.masterColor.get('Name').value.trim(),
       "autoId" : this.masterColor.get('AutoId').value
     }
 

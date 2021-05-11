@@ -23,7 +23,8 @@ namespace API.Interfaces
         DbSet<MstrSizeCard> MstrSizeCard {get; set;}
         DbSet<MstrColor> MstrColor {get; set;}
         DbSet<MstrSize> MstrSize {get; set;}
-        DbSet<MstrUserLocation> MstrUserLocation { get;  set;  }
+        DbSet<MstrUserLocation> MstrUserLocation { get;  set; }
+        DbSet<MstrCompany> MstrCompany { get;  set; }
 
     }
 }

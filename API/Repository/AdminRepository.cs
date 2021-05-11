@@ -16,13 +16,17 @@ namespace API.Repository
         {
         }
 
-        public async Task<IEnumerable<MstrLocation>> GetLocationAsync(int sysModuleId)
+        public async Task<IEnumerable<MstrLocation>> GetLocationAsync(MstrLocation loc)
         {
             IEnumerable<MstrLocation> locationList;
-            var values = new { SysModuleId = sysModuleId };
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("SysModuleId", loc.SysModuleId);
+            para.Add("CompanyId", loc.CompanyId);
+            //var values = new { SysModuleId = loc.SysModuleId };
 
             locationList = await DbConnection.QueryAsync<MstrLocation>("spSysModuleGetLocation"
-            , values, commandType: CommandType.StoredProcedure);
+            , para, commandType: CommandType.StoredProcedure);
             return locationList;
         } 
 
@@ -44,10 +48,11 @@ namespace API.Repository
             dt.Columns.Add("UserId", typeof(int));
             dt.Columns.Add("SysModuleId", typeof(int));
             dt.Columns.Add("LocationId", typeof(int));
+            dt.Columns.Add("CompanyId", typeof(int));
 
             foreach (var item in userModuleDTO)
             {
-                dt.Rows.Add(item.UserId,item.SysModuleId,item.LocationId);
+                dt.Rows.Add(item.UserId,item.SysModuleId,item.LocationId,item.CompanyId);
             }            
 
             para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);

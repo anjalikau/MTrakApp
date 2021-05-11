@@ -20,21 +20,23 @@
 
                     <div class="col-md-1">
                         <div class="form-group">
-                            <button type="button" [disabled]="!sizeCrdForm.valid" class="btn btn-block btn-success" (click)="saveSizeCard()">Save</button>
+                            <button type="button" [disabled]="!sizeCrdForm.valid" class="btn btn-block btn-success"
+                                (click)="saveSizeCard()">Save</button>
                         </div>
                     </div>
                     <div class="col-md-1">
                         <div class="form-group">
-                            <button type="button" class="btn btn-block btn-default" (click)="clearControls()">New</button>
+                            <button type="button" class="btn btn-block btn-default"
+                                (click)="clearControls()">New</button>
                         </div>
                     </div>
 
                 </div>
                 <div class="row">
-                    <igx-grid #sizeCGrid [data]="sCardList" [autoGenerate]="false" [paging]="true" [rowEditable]="false" 
-                        [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="400px" displayDensity="compact"
-                        [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
-                        [rowSelection]="'Single'">
+                    <igx-grid #sizeCGrid [data]="sCardList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+                        [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
+                        height="400px" displayDensity="compact" [allowFiltering]="true"
+                        [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
 
                         <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
                             <ng-template igxCell let-cell="cell">
@@ -47,7 +49,24 @@
                         <igx-column [field]="'name'" [header]="'Name'" [resizable]="true" [dataType]="'string'"
                             [sortable]="true">
                         </igx-column>
-                        
+                        <igx-column [field]="'isActive'" [width]="'100px'" [header]="'IsActive'" [resizable]="true"
+                            [dataType]="'boolean'" [sortable]="true">
+                        </igx-column>
+                        <igx-column field="isActive" header="Active/Deactive" [width]="'150px'">
+                            <ng-template igxCell let-cell="cell">
+                                <div *ngIf="!cell.value; then thenBlock else elseBlock"></div>
+                                <ng-template #thenBlock>
+                                    <button class="btn btn-block btn-sm btn-success" type="button" (click)="Active($event ,cell.cellID)">
+                                        Active
+                                    </button>
+                                </ng-template>
+                                <ng-template #elseBlock>
+                                    <button class="btn btn-block btn-sm btn-warning" type="button" (click)="Deactive($event ,cell.cellID)">
+                                        Deactive
+                                    </button>
+                                </ng-template>
+                            </ng-template>
+                        </igx-column>
                     </igx-grid>
                 </div>
 

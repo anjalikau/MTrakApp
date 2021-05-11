@@ -218,6 +218,37 @@ namespace API.Repository
 
             return para.Get<int>("Result");
         }
+
+        public async Task<int> DeactiveSizeCardAsync(MstrSizeCard mstrscard)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("SizeCardId" , mstrscard.AutoId);
+            para.Add("IsActive" , mstrscard.IsActive);
+            para.Add("UserId", mstrscard.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrSizeCardDeactive", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<int> DeactiveColorCardAsync(MstrColorCard mstrccard)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("ColorCardId" , mstrccard.AutoId);
+            para.Add("IsActive", mstrccard.IsActive);
+            para.Add("UserId", mstrccard.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrColorCardDeactive", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
       
     }
 }

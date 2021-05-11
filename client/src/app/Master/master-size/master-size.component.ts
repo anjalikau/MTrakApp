@@ -90,13 +90,16 @@ export class MasterSizeComponent implements OnInit {
     this.LoadSizeCard();
   }
 
-  saveColor() { 
+  saveSize() { 
     var sizeCard = this.mstrSize.get('LinkSizeCard').value[0];
+    // var code = this.mstrSize.get('Code').value;
+    // var name = this.mstrSize.get('Name').value;
+
     var obj = {
       "createUserId": this.user.userId,
       "linkSizeCard" : sizeCard,
-      "code" :  this.mstrSize.get('Code').value,
-      "name" : this.mstrSize.get('Name').value,
+      "code" : this.mstrSize.get('Code').value.trim() ,
+      "name" : this.mstrSize.get('Name').value.trim(),
       "autoId" : this.mstrSize.get('AutoId').value
     }
 

@@ -23,7 +23,8 @@ namespace API.Data
         public DbSet<MstrSizeCard> MstrSizeCard { get;  set ; }
         public DbSet<MstrColor> MstrColor { get;  set;  }
         public DbSet<MstrSize> MstrSize { get;  set;  }
-        public DbSet<MstrUserLocation> MstrUserLocation { get;  set;  }
+        public DbSet<MstrUserLocation> MstrUserLocation { get;  set; }
+        public DbSet<MstrCompany> MstrCompany { get;  set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,6 +35,10 @@ namespace API.Data
                 a.Property(e => e.AutoId).HasColumnType("tinyint");
             });
             modelBuilder.Entity<MstrSizeCard>(a => {
+                a.HasKey(a => a.AutoId);
+                a.Property(e => e.AutoId).HasColumnType("tinyint");
+            });
+            modelBuilder.Entity<MstrCompany>(a => {
                 a.HasKey(a => a.AutoId);
                 a.Property(e => e.AutoId).HasColumnType("tinyint");
             });

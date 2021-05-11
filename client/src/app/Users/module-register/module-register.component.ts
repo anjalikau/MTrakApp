@@ -2,12 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
+import { Company } from 'src/app/_models/company';
 import { DelUserModule } from 'src/app/_models/delUserModule';
 import { PermitUser } from 'src/app/_models/permitUser';
 import { SysModule } from 'src/app/_models/SysModule';
 import { UserLocation } from 'src/app/_models/userLocation';
 import { UserModule } from 'src/app/_models/userModule';
 import { AdminService } from '_services/admin.service';
+import { MasterService } from '_services/master.service';
 import { RegisterService } from '_services/register.service';
 
 @Component({
@@ -19,6 +21,7 @@ export class ModuleRegisterComponent implements OnInit {
   userList: PermitUser[];
   UserModList: UserModule[];
   locations: Location[];
+  company: Company[];
   moduleList: SysModule[];
   moduleForm: FormGroup;
   delobj: DelUserModule;
@@ -32,7 +35,7 @@ export class ModuleRegisterComponent implements OnInit {
   public Modulegrid: IgxGridComponent;
 
   constructor(private fb: FormBuilder, private registerServices: RegisterService , private toastr: ToastrService
-        ,private adminServices: AdminService ) { }
+        ,private adminServices: AdminService , private masterServices: MasterService) { }
 
   ngOnInit(): void {
     this.initilizeForm();
@@ -45,7 +48,8 @@ export class ModuleRegisterComponent implements OnInit {
     this.moduleForm = this.fb.group ({
       UserId: ['', Validators.required],     
       SysModuleId: ['', Validators.required ],
-      LocationId: ['', Validators.required ]      
+      LocationId: ['', Validators.required ],
+      CompanyId: ['' , Validators.required]      
     })    
   }
 
@@ -62,6 +66,15 @@ export class ModuleRegisterComponent implements OnInit {
     }    
   }
 
+  LoadCompany(event) {
+    for(const item of event.added) {
+      /// loads locations
+      this.masterServices.getCompany(item).subscribe(comp => {
+        this.company = comp        
+      })     
+    }
+  }
+
   LoadModules() {
     this.registerServices.getSysModules().subscribe(modules => {
       this.moduleList = modules
@@ -75,10 +88,14 @@ export class ModuleRegisterComponent implements OnInit {
   }
 
   LoadLocation(event) {
-    //console.log(event.added[0]);
+    //console.log(event.added[0]);    
     for(const item of event.added) {
+      var obj = {
+        "SysModuleId" : this.moduleForm.get('SysModuleId').value[0],
+        "CompanyId" : item 
+      }
       /// loads locations
-      this.registerServices.getLocation(item).subscribe(loc => {
+      this.registerServices.getLocation(obj).subscribe(loc => {
         this.locations = loc        
       })     
     }
@@ -94,6 +111,7 @@ export class ModuleRegisterComponent implements OnInit {
   LoadUserModule(userId) {    
     this.registerServices.getUserModule(userId).subscribe( modList => {
       this.UserModList = modList;
+      //console.log(this.UserModList);
     })
   }
 
@@ -102,18 +120,19 @@ export class ModuleRegisterComponent implements OnInit {
     var modelList = [];
     var locList = this.moduleForm.get('LocationId').value;
     var userId = this.moduleForm.get('UserId').value[0];
+    var CompanyId = this.moduleForm.get('CompanyId').value[0];
 
     locList.forEach(loc => {
       var data = {
         "UserId" : userId,
         "SysModuleId" : this.moduleForm.get('SysModuleId').value[0],
-        "LocationId" : loc
+        "LocationId" : loc,
+        "CompanyId": CompanyId
       }
       modelList.push(data);
     });
 
-    //console.log(modelList);
-
+    ////console.log(modelList);
     this.registerServices.saveUserModule(modelList).subscribe(result => {
       if (result == 1) {
         this.toastr.success("Module assign Successfully !!!"); 
@@ -164,6 +183,7 @@ export class ModuleRegisterComponent implements OnInit {
   }
 
   clearControls() {
+    this.moduleForm.get('CompanyId').setValue('');
     this.moduleForm.get('SysModuleId').setValue('');
     this.moduleForm.get('LocationId').setValue('');
   }

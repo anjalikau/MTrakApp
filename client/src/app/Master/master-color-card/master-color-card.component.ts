@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
+import { Stats } from 'node:fs';
 import { MasterCard } from 'src/app/_models/masterCard';
 import { User } from 'src/app/_models/user';
 import { AccountService } from '_services/account.service';
@@ -15,6 +16,7 @@ import { MasterService } from '_services/master.service';
 export class MasterColorCardComponent implements OnInit {
   MstrColorCrd: FormGroup;
   user: User;
+  deactiveObj: MasterCard;
   CCardList: MasterCard[];
   validationErrors: string[] = [];
 
@@ -58,6 +60,8 @@ export class MasterColorCardComponent implements OnInit {
   }
 
   SaveColorCard() {    
+    this.MstrColorCrd.get('Name').setValue(this.MstrColorCrd.get('Name').value.trim());
+
     this.masterService.saveColorCard(this.MstrColorCrd.value).subscribe((result) => {    
       if (result == 1) {
         this.toastr.success("Color Card save Successfully !!!");
@@ -69,6 +73,46 @@ export class MasterColorCardComponent implements OnInit {
         this.cancelMenuList();
       } else if (result == -1) {
         this.toastr.warning("Color Card already exists !!!");
+      } else {
+        this.toastr.warning("Contact Admin. Error No:- " + result.toString());
+      } 
+      //this.triggerEvent();      
+    }, error => {
+      this.validationErrors = error;
+    }) 
+  }
+
+  Deactive(cellValue,cellId) { 
+    const id = cellId.rowID; 
+    var obj = {
+      "createUserId" : this.user.userId,
+      "autoId": id,
+      "isActive" : false      
+    }
+    this.deactiveColorCard(obj,"Deactive");    
+  }
+
+  Active(cellValue,cellId) { 
+    const id = cellId.rowID; 
+    var obj = {
+      "createUserId" : this.user.userId,
+      "autoId": id,
+      "isActive" : true      
+    }
+    this.deactiveColorCard(obj,"Active");    
+  }
+
+  deactiveColorCard(obj,status) {
+    //console.log(obj);
+    this.masterService.deactiveColorCard(obj).subscribe((result) => {    
+      if (result == 1) {
+        this.toastr.success("Color Card " + status + " Successfully !!!");
+        this.LoadColorCard();
+      } else if (result == 2) {
+        this.toastr.success("Color Card " + status + " Successfully !!!");
+        this.LoadColorCard();
+      } else if (result == -1) {
+        this.toastr.warning("Color Card already in use !!!");
       } else {
         this.toastr.warning("Contact Admin. Error No:- " + result.toString());
       } 

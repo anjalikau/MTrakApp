@@ -17,7 +17,18 @@
                 <label>System Module</label>
                 <igx-combo #combo class="combo" displayKey="moduleName" valueKey="autoId" [itemsMaxHeight]="250"
                     [data]="moduleList" placeholder="System Module" (onSelectionChange)="singleSelection($event)"
-                    (onSelectionChange)="LoadLocation($event)" formControlName="SysModuleId"
+                    formControlName="SysModuleId" (onSelectionChange)="LoadCompany($event)"
+                    searchPlaceholder="Search...">
+                </igx-combo>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label> Company </label>
+                <igx-combo #combo class="combo" displayKey="companyName" valueKey="autoId" [itemsMaxHeight]="250"
+                    [data]="company" placeholder="Company" (onSelectionChange)="singleSelection($event)"
+                    (onSelectionChange)="LoadLocation($event)" formControlName="CompanyId"
                     searchPlaceholder="Search...">
                 </igx-combo>
             </div>
@@ -54,6 +65,9 @@
                 [allowAdvancedFiltering]="true" [rowSelection]="'single'">
 
                 <igx-column [field]="'moduleName'" [header]="'Module Name'" [resizable]="true" [dataType]="'string'"
+                    [sortable]="true">
+                </igx-column>
+                <igx-column [field]="'companyName'" [header]="'Company'" [resizable]="true" [dataType]="'string'"
                     [sortable]="true">
                 </igx-column>
                 <igx-column [field]="'description'" [header]="'Location'" [resizable]="true" [dataType]="'string'"

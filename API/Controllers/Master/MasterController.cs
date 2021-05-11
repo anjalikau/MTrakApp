@@ -67,6 +67,13 @@ namespace API.Controllers.Master
             return Ok(result);
         }
 
+        [HttpGet("Company/{id}")]
+        public async Task<IActionResult> GetCompany(int id)
+        {
+            var result = await _context.MstrCompany.ToListAsync();
+            return Ok(result);
+        }
+
         [HttpGet("Size/{id}")]
         public async Task<IActionResult> GetSize(int id)
         {
@@ -85,6 +92,20 @@ namespace API.Controllers.Master
         public async Task<ActionResult> SaveColorCard(MstrColorCard colorCard)
         {           
             var result = await _masterRepository.SaveColorCardAsync(colorCard); 
+            return Ok(result);
+        }
+
+        [HttpPost("ColorCard/Deactive")]
+        public async Task<ActionResult> DeactiveColorCard(MstrColorCard colorCard)
+        {           
+            var result = await _masterRepository.DeactiveColorCardAsync(colorCard); 
+            return Ok(result);
+        }
+
+        [HttpPost("SizeCard/Deactive")]
+        public async Task<ActionResult> DeactiveSizeCard(MstrSizeCard sizeCard)
+        {           
+            var result = await _masterRepository.DeactiveSizeCardAsync(sizeCard); 
             return Ok(result);
         }
 

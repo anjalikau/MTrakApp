@@ -21,5 +21,7 @@ namespace API.Interfaces
         Task<int> SaveSizeCardAsync(MstrSizeCard mstrscard);
         Task<int> SaveSizeAsync(MstrSize mstrSize);
         Task<int> SaveColorAsync(MstrColor mstrColor);
+        Task<int> DeactiveSizeCardAsync(MstrSizeCard mstrscard);
+        Task<int> DeactiveColorCardAsync(MstrColorCard mstrccard);
     }
 }

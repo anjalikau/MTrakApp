@@ -7,7 +7,7 @@ namespace API.Interfaces
 {
     public interface IAdminRepository
     {
-         Task<IEnumerable<MstrLocation>> GetLocationAsync(int sysModuleId);
+         Task<IEnumerable<MstrLocation>> GetLocationAsync(MstrLocation loc);
          Task<int> SaveUserModule(List<UserModuleDto> userModuleDto);
          Task<int> DeleteUserModule(DeleteuserModDto deleteModDto);
          Task<IEnumerable<UserModuleDto>> GetUserModuleAsync(int userId);
