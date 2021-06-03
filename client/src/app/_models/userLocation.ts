@@ -1,4 +1,7 @@
 export interface UserLocation {
-    userId: number;
-    autoId: number;
+    locationId: number;
+    companyId: number;
+    location: string;
+    companyName: string;
+    isDefault: boolean;
 }

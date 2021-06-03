@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
 using API.Entities;
+using API.Entities.Admin;
 using API.Interfaces;
 using Dapper;
 using Microsoft.Data.SqlClient;
@@ -26,6 +27,19 @@ namespace API.Repository
             //var values = new { SysModuleId = loc.SysModuleId };
 
             locationList = await DbConnection.QueryAsync<MstrLocation>("spSysModuleGetLocation"
+            , para, commandType: CommandType.StoredProcedure);
+            return locationList;
+        } 
+
+        public async Task<IEnumerable<UserLocationDto>> GetUserLocAsync(MstrAgentModule userMod)
+        {
+            IEnumerable<UserLocationDto> locationList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("SysModuleId", userMod.SysModuleId);
+            para.Add("UserId", userMod.UserId);
+            
+            locationList = await DbConnection.QueryAsync<UserLocationDto>("spSysModuleGetUserLoc"
             , para, commandType: CommandType.StoredProcedure);
             return locationList;
         } 

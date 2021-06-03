@@ -26,6 +26,7 @@ namespace API.Extensions
             services.AddScoped<IMasterRepository, MasterRepository>(); 
             services.AddScoped<ITestRepository, TestRepository>(); 
             services.AddScoped<IAdminRepository,AdminRepository>();
+            services.AddScoped<ISalesRepository,SalesRepository>();
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);            
 
             ////---------=========== QUERY WITH EF ===============-----------  

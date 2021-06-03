@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
+using API.Entities.Admin;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -17,27 +18,37 @@ namespace API.Controllers.Master
         private readonly IMasterRepository _masterRepository;
         private readonly IMapper _mapper;
         private readonly IApplicationCartonDbContext _context;
-        public MasterController(IMasterRepository masterRepository, IMapper mapper, IApplicationCartonDbContext context)
+        public MasterController(IMasterRepository masterRepository, IApplicationCartonDbContext context , IMapper mapper)
         {
             _mapper = mapper;
             _context = context;
             _masterRepository = masterRepository;
         }
 
-        [AllowAnonymous]
-        [HttpPost("AuthMenus")]
-        public async Task<ActionResult<IEnumerable<MenuJoinList>>> GetAuthMenuList(UserDto userDto)
-        {
-            var menuList = await _masterRepository.GetAuthMenuListAsync(userDto);
-            return Ok(menuList);
-        }        
+        
+        // [HttpPost("AuthMenus")]
+        // public async Task<ActionResult<IEnumerable<MenuJoinList>>> GetAuthMenuList(UserDto userDto)
+        // {
+        //     var menuList = await _masterRepository.GetAuthMenuListAsync(userDto);
+        //     return Ok(menuList);
+        // }        
 
         [HttpGet("Menulist")]
         public async Task<ActionResult<IEnumerable<MenuJoinList>>> GetMenuList()
         {
             var menuList = await _masterRepository.GetMenuListAsync();
             return Ok(menuList);
-        }        
+        }   
+
+        // [HttpPost("User/Location")]
+        // public async Task<ActionResult<IEnumerable<MstrUserLocation>>> GetUserLoction(MstrAgentModule userMod)
+        // {
+        //     var loc = _context.MstrUserLocation.Include(x => x.Location).AsNoTracking().ToList();
+        //     return Ok(loc);
+        //     // var location = await _adminRepository.GetUserLocAsync(userMod);
+        //     // var locationToReturn = _mapper.Map<IEnumerable<UserLocationDto>>(location);
+        //     // return Ok(locationToReturn);
+        // }     
 
         [HttpGet("UserMenus/{id}")]
         public async Task<ActionResult<IEnumerable<UserMenuList>>> GetUserMenuList(int id)
@@ -128,6 +139,106 @@ namespace API.Controllers.Master
         {
             var result = await _masterRepository.SaveColorAsync(color);
             return Ok(result);
+        }
+
+        [HttpGet("Articles")]
+        public async Task<IActionResult> GetArticles()
+        {
+            var articleList = await _context.MstrArticle.ToListAsync();
+            return Ok(articleList);
+        }
+
+        [HttpGet("Customer/{locId}")]
+        public async Task<IActionResult> GetCustomer(int locId)
+        {
+            var customerList = await _context.MstrCustomerHeader
+                .Where(x => x.LocationId == locId).ToListAsync();
+            return Ok(customerList);
+        }
+
+        [HttpGet("CustomerDt/{id}")]
+        public async Task<IActionResult> GetCustomerDet(int id)
+        {
+            var customerList = await _context.MstrCustomerDetails
+                    .Where(x => x.CustomerId == id).ToListAsync();
+            return Ok(customerList);
+        }
+
+        [HttpGet("ArtiColor/{id}")]
+        public async Task<IActionResult> GetArticleColor(int id)
+        {            
+            var colorList = await _masterRepository.GetArticlColorAsync(id);
+            return Ok(colorList);
+        }
+
+        [HttpGet("ArtiSize/{id}")]
+        public async Task<IActionResult> GetArticleSize(int id)
+        {            
+            var sizeList = await _masterRepository.GetArticlSizeAsync(id);
+            return Ok(sizeList);
+        }
+
+        [HttpPost("Editunits")]
+        public async Task<ActionResult> saveUnits(MstrUnits units)
+        {
+            var result = await _masterRepository.SaveUnitAsync(units);
+            return Ok(result);
+        }
+
+        [HttpPost("SaveProcess")]
+        public async Task<ActionResult> saveProcess(MstrProcess MstrProcess)
+        {
+            var result = await _masterRepository.SaveProcessAsync(MstrProcess);
+            return Ok(result);
+        }
+
+        [HttpPost("SaveStoreSite")]
+        public async Task<ActionResult> saveStoreSite(MstrStoreSite MstrStoreSite)
+        {
+            var result = await _masterRepository.SaveStoresiteAsync(MstrStoreSite);
+            return Ok(result);
+        }
+
+        [HttpGet("Units")]
+        public async Task<IActionResult> GetUnit()
+        {
+            var result = await _context.MstrUnits.ToListAsync();
+            return Ok(result);            
+        }
+
+        [HttpGet("MasterLocation")]
+        public async Task<IActionResult> GetMstrLocation()
+        {
+            var result = await _context.MstrLocation.ToListAsync();
+            return Ok(result);            
+        }
+
+        [HttpGet("Storesite")]
+        public async Task<IActionResult> GetStoresite()
+        {
+            var result = await _context.MstrStoreSite.ToListAsync();
+            return Ok(result);            
+        }
+
+        [HttpGet("Process")]
+        public async Task<IActionResult> GetProcess()
+        {
+            var result = await _context.MstrProcess.ToListAsync();
+            return Ok(result);            
+        }
+       
+        [HttpPost("saveunits")]
+        public async Task<ActionResult> Register(MstrUnitsDto MstrUnitsDto)
+        {
+            var user = _mapper.Map<MstrUnits>(MstrUnitsDto);
+
+            user.Code = MstrUnitsDto.Code;
+            user.Name = MstrUnitsDto.Name; 
+            
+            _context.MstrUnits.Add(user);
+            await _context.SaveChangesAsync(default);           
+
+            return Ok();
         }
 
         // private async Task<bool> ColorExists(MstrColor color)

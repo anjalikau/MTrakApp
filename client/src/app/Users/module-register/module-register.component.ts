@@ -208,10 +208,10 @@ export class ModuleRegisterComponent implements OnInit {
       "autoId" : selectedRowData[0]["userLocId"]
     }
 
-    this.defObj = Object.assign({}, obj);
+    //this.defObj = Object.assign({}, obj);
     //console.log(this.defObj);
 
-    this.adminServices.SetDefaultLocation(this.defObj).subscribe(result => {
+    this.adminServices.SetDefaultLocation(obj).subscribe(result => {
       if (result == 1) {
         this.toastr.success("Default location set Successfully !!!"); 
         this.LoadUserModule(userId);

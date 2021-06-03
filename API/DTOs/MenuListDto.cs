@@ -14,6 +14,5 @@ namespace API.DTOs
         public int AgentLevelId { get; set; }
         public int LevelPrority { get; set; }
         public string LevelDescription { get; set; }
-        public int ? AgentId { get; set; }
-    }
+        public int ? AgentId { get; set; }    }
 }

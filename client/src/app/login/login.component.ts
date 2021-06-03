@@ -52,7 +52,6 @@ export class LoginComponent implements OnInit {
         "cPassword" : this.loginForm.get('cPassword').value
       }
       
-      //console.log(obj);
       this.accountServices.login(obj).subscribe(response =>
       {
         //console.log(response);
@@ -66,16 +65,16 @@ export class LoginComponent implements OnInit {
   setCurrentUser() {
     const user: User = JSON.parse(localStorage.getItem('user'));
     this.accountServices.setCurrentUser(user);
-    this.getAuthMenuList();
+    //this.getAuthMenuList();
     //console.log(user);
   }
 
-  getAuthMenuList() {    
-    this.adminService.getAuthMenuList().subscribe(response => {
-      const menus = response;
-      localStorage.setItem('menus', JSON.stringify(menus));
-    });
-  }
+  // getAuthMenuList() {    
+  //   this.adminService.getAuthMenuList().subscribe(response => {
+  //     const menus = response;
+  //     localStorage.setItem('menus', JSON.stringify(menus));
+  //   });
+  // }
   
   LoadModules() {
     this.registerService.getSysModules().subscribe(modules => {

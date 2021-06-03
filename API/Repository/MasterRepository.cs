@@ -22,16 +22,28 @@ namespace API.Repository
              _context = context;
         }
 
-        public async Task<IEnumerable<MenuJoinList>> GetAuthMenuListAsync(UserDto userDto)
+        public async Task<IEnumerable<PermitMenuDto>> GetAuthMenuListAsync(UserDto userDto)
         {
-            IEnumerable<MenuJoinList> menuJoinList = Enumerable.Empty<MenuJoinList>();
-            var AgentId = new SqlParameter("AgentId", userDto.UserId);
+            IEnumerable<PermitMenuDto> menuList = Enumerable.Empty<PermitMenuDto>();
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AgentId" , userDto.UserId);
 
             if (userDto.ModuleId == 1) {
-                string StoredProc = "exec spMenuListAuthorize @AgentId";
-                return await _context.MenuJoinList.FromSqlRaw(StoredProc , AgentId).ToListAsync();
+               return menuList = await DbConnection.QueryAsync<PermitMenuDto>("spMenuListAuthorize" , para
+                    , commandType: CommandType.StoredProcedure);
             }
-            return menuJoinList;
+            
+            return menuList;
+
+            // IEnumerable<MenuListDto> menuList = Enumerable.Empty<MenuListDto>();
+            // var AgentId = new SqlParameter("AgentId", userDto.UserId);
+
+            // if (userDto.ModuleId == 1) {
+            //     string StoredProc = "exec spMenuListAuthorize @AgentId";
+            //     return await _context.Database.(StoredProc , AgentId).ToListAsync();
+            // }
+            // return menuList;
         }        
 
         public async Task<IEnumerable<MenuJoinList>> GetMenuListAsync()
@@ -248,6 +260,81 @@ namespace API.Repository
 
             return para.Get<int>("Result");
         }
+
+        public async Task<IEnumerable<MstrColor>> GetArticlColorAsync(int articleId)
+        {   
+            IEnumerable<MstrColor> coloList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("ArticleId" , articleId);
+            //para.Add("LocationId", articleDto.LocationId);
+
+            coloList = await DbConnection.QueryAsync<MstrColor>("spMstrArticleColorGet" , para
+                    , commandType: CommandType.StoredProcedure);
+            
+            return coloList;
+        } 
+
+         public async Task<IEnumerable<MstrSize>> GetArticlSizeAsync(int articleId)
+        {   
+            IEnumerable<MstrSize> sizeList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("ArticleId" , articleId);
+            //para.Add("LocationId", articleDto.LocationId);
+
+            sizeList = await DbConnection.QueryAsync<MstrSize>("spMstrArticleSizeGet" , para
+                    , commandType: CommandType.StoredProcedure);
+            
+            return sizeList;
+        } 
+
+           public async Task<int> SaveUnitAsync(MstrUnits mstrUnits)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , mstrUnits.AutoId);
+            para.Add("Code", mstrUnits.Code.ToUpper());
+            para.Add("Name", mstrUnits.Name);
+            para.Add("UserId", mstrUnits.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrUnitsSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+        public async Task<int> SaveProcessAsync(MstrProcess masterProcess)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , masterProcess.AutoId);
+            para.Add("Process", masterProcess.Process);
+            para.Add("UserId", masterProcess.CreateUserId);
+            para.Add("LocationId", masterProcess.LocationId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrProcessSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+        public async Task<int> SaveStoresiteAsync(MstrStoreSite masterStoreSite)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , masterStoreSite.AutoId);
+            para.Add("Code", masterStoreSite.SiteCode);
+            para.Add("Name", masterStoreSite.SiteName);
+            para.Add("UserId", masterStoreSite.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrStoresiteSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+              
 
       
     }

@@ -55,7 +55,7 @@
 
           </ul>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="adminGroup" >
           <!--menu-open-->
           <a href="#" class="nav-link">
             <i class="nav-icon fas fa-user-shield"></i>
@@ -64,15 +64,15 @@
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="userReg" >
             <li class="nav-item">
-              <a class="nav-link" routerLink="/UserRegister" routerLinkActive="active">
+              <a  class="nav-link " routerLink="/UserRegister" routerLinkActive="active" >
                 <i class="far fa-circle nav-icon"></i>
                 <p>User Register</p>
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="menuList">
             <li class="nav-item">
               <a class="nav-link" routerLink="/MenuList" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -80,7 +80,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="userPermit">
             <li class="nav-item">
               <a class="nav-link" routerLink="/UserPermission" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -89,7 +89,7 @@
             </li>
           </ul>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="masterGroup" >
           <!--menu-open-->
           <a href="#" class="nav-link">
             <i class="nav-icon fas fa-cog"></i>
@@ -98,7 +98,7 @@
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="mstrSize" >
             <li class="nav-item">
               <a class="nav-link" routerLink="/MasterSize" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -106,7 +106,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="mstrColor" >
             <li class="nav-item">
               <a class="nav-link" routerLink="/MasterColor" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -114,26 +114,50 @@
               </a>
             </li>
           </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/MasterUnits" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Master Units</p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/MasterStoresite" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Master Site</p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/MasterProess" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Master Process</p>
+              </a>
+            </li>
+          </ul>        
+        </li>
+        <li class="nav-item" *ngIf="salesGroup">
+          <!--menu-open-->
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-file-invoice"></i>
+            <p>
+              Orders
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview" *ngIf="salesOrder">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/SalesOrder" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Sales Order</p>
+              </a>
+            </li>
+          </ul>       
         
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/UserDetails" routerLinkActive="active">
-            <i class="nav-icon fas fa-th"></i>
-            <p>
-              Widgets
-              <span class="right badge badge-danger">New</span>
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/not-found" routerLinkActive="active">
-            <i class="nav-icon far fa-image"></i>
-            <p>
-              Gallery
-            </p>
-          </a>
-        </li>
-
+        </li> 
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

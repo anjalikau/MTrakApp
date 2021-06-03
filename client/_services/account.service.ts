@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Console } from 'node:console';
 import { ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from 'src/app/_models/user';
@@ -23,6 +24,7 @@ export class AccountService {
       map((response: User) => {
         const user = response;
         if(user) {
+          //console.log(user);
           localStorage.setItem('token', user.token);
           localStorage.setItem('user', JSON.stringify(user));
           this.currentUserSource.next(user);
@@ -42,7 +44,7 @@ export class AccountService {
   logout() {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    localStorage.removeItem('menus');
+    //localStorage.removeItem('menus');
     this.currentUserSource.next(null);
   }
 

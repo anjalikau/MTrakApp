@@ -109,9 +109,11 @@ export class UserPermissionComponent implements OnInit {
     var menuList =[];
 
     selectedRows.forEach(menuId => {      
-      var data = {"AgentId" : SelUserId,
-            "MenuId" : menuId,
-            "CreUserID" : this.user.userId};
+      var data = {
+        "AgentId" : SelUserId,
+        "MenuId" : menuId,
+        "CreUserID" : this.user.userId
+      };
 
       menuList.push(data);
     });
@@ -173,6 +175,7 @@ export class UserPermissionComponent implements OnInit {
     this.nPermitMenus = [];   
   }
 
+ 
  
 
 }

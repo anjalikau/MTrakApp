@@ -18,7 +18,7 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { MainsidebarComponent } from './mainsidebar/mainsidebar.component';
 import { FooterComponent } from './footer/footer.component';
 import { UserRegisterComponent } from './users/user-register/user-register.component';
-import { IgxCheckboxModule, IgxComboModule, IgxDatePickerModule, IgxGridModule, IgxIconModule, IgxInputGroupModule, IgxTabsModule } 
+import { IgxActionStripModule, IgxAvatarModule, IgxCheckboxModule, IgxComboModule, IgxDatePickerModule, IgxGridModule, IgxIconModule, IgxInputGroupModule, IgxMaskModule, IgxTabsModule, IgxTooltipModule } 
 from 'igniteui-angular';
 import { UserPwchangeComponent } from './users/user-pwchange/user-pwchange.component';
 import { MenuListComponent } from './users/menu-list/menu-list.component';
@@ -28,6 +28,11 @@ import { MasterSizeComponent } from './master/master-size/master-size.component'
 import { MasterColorComponent } from './master/master-color/master-color.component';
 import { MasterColorCardComponent } from './master/master-color-card/master-color-card.component';
 import { MasterSizeCardComponent } from './master/master-size-card/master-size-card.component';
+import { DatePipe } from '@angular/common';
+import { SalesOrderComponent } from './transaction/sales-order/sales-order.component';
+import { MasterStoresiteComponent } from './master/master-storesite/master-storesite.component';
+import { MasterUnitsComponent } from './master/master-units/master-units.component';
+import { MasterProcessComponent } from './master/master-process/master-process.component';
 
 
 @NgModule({
@@ -45,7 +50,16 @@ import { MasterSizeCardComponent } from './master/master-size-card/master-size-c
     UserRegisterComponent, 
     UserPwchangeComponent, 
     MenuListComponent, 
-    UserPermissionComponent, ModuleRegisterComponent, MasterSizeComponent, MasterColorComponent, MasterColorCardComponent, MasterSizeCardComponent
+    UserPermissionComponent, 
+    ModuleRegisterComponent, 
+    MasterSizeComponent, 
+    MasterColorComponent, 
+    MasterColorCardComponent, 
+    MasterSizeCardComponent, 
+    SalesOrderComponent,
+    MasterStoresiteComponent,
+    MasterUnitsComponent,
+    MasterProcessComponent
   ],
   imports: [
     BrowserModule,
@@ -62,10 +76,14 @@ import { MasterSizeCardComponent } from './master/master-size-card/master-size-c
     IgxInputGroupModule,
     IgxCheckboxModule,
     IgxGridModule,
-    IgxTabsModule
-    
+    IgxTabsModule,
+    IgxMaskModule,
+    IgxActionStripModule,
+    IgxAvatarModule,
+    IgxTooltipModule    
   ],
   providers: [
+    DatePipe,
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi:true}
   ],
   bootstrap: [AppComponent]

@@ -27,15 +27,15 @@ export class AdminService {
 
   constructor(private http: HttpClient) { }
 
-  getAuthMenuList(){
-    //var userId = JSON.parse(localStorage.getItem('user')).userId;
-    var model = {
-      "UserId" : JSON.parse(localStorage.getItem('user')).userId,
-      "ModuleId" : JSON.parse(localStorage.getItem('user')).moduleId
-    };
+  // getAuthMenuList(){
+  //   //var userId = JSON.parse(localStorage.getItem('user')).userId;
+  //   var model = {
+  //     "UserId" : JSON.parse(localStorage.getItem('user')).userId,
+  //     "ModuleId" : JSON.parse(localStorage.getItem('user')).moduleId
+  //   };
 
-    return this.http.post<MenuList[]>(this.baseUrl + 'Master/AuthMenus' , model );
-  }
+  //   return this.http.post<MenuList[]>(this.baseUrl + 'Master/AuthMenus' , model );
+  // }
 
   saveMenuList(model: any) {
     return this.http.post(this.baseUrl + 'Menu/MenuSave' , model , httpOptions);
@@ -63,7 +63,7 @@ export class AdminService {
     return this.http.post(this.baseUrl + 'Menu/MenuUserDelete' , model , httpOptions);
   }
 
-  SetDefaultLocation(userLoc: UserLocation) {
+  SetDefaultLocation(userLoc: any) {
     return this.http.post(this.baseUrl + 'Master/Loc/SetDefault', userLoc , httpOptions);
   }
 }

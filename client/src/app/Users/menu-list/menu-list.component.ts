@@ -76,7 +76,8 @@ export class MenuListComponent implements OnInit {
 
   LoadMenuGroup() {
     var data = [{ 'groupDesc': 'Admin','groupName': 'Admin'},
-                { 'groupDesc': 'Master' , 'groupName': 'Master'}];
+                { 'groupDesc': 'Master' , 'groupName': 'Master'},
+                { 'groupDesc': 'Sales' , 'groupName': 'Sales'}];
     this.menuGroup = data;  
     //console.log(data);  
   }

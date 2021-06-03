@@ -13,7 +13,7 @@ namespace API.Interfaces
         Task<IEnumerable<UserMenuList>> GetUserMenuList(int userId);
         Task<int> SaveUserMenuListAsync(List<MenuUserDto> menuList);
         Task<int> DeleteUserMenuListAsync(List<MenuUserDto> menuList);
-        Task<IEnumerable<MenuJoinList>> GetAuthMenuListAsync(UserDto userDto);
+        Task<IEnumerable<PermitMenuDto>> GetAuthMenuListAsync(UserDto userDto);
         //Task<IEnumerable<ResultSet>> SaveMenuListAsync(MenuListDto menuListDto);
         Task<MstrUserLocation> GetDefaultLocForUser(int userId);
         Task<int> SetDefaultLocationAsync(MstrUserLocation userLoc);
@@ -23,5 +23,10 @@ namespace API.Interfaces
         Task<int> SaveColorAsync(MstrColor mstrColor);
         Task<int> DeactiveSizeCardAsync(MstrSizeCard mstrscard);
         Task<int> DeactiveColorCardAsync(MstrColorCard mstrccard);
+        Task<IEnumerable<MstrColor>> GetArticlColorAsync(int articleId);
+        Task<IEnumerable<MstrSize>> GetArticlSizeAsync(int articleId);
+        Task<int> SaveUnitAsync(MstrUnits mstrUnits);
+        Task<int> SaveProcessAsync(MstrProcess mstrProcess);
+        Task<int> SaveStoresiteAsync(MstrStoreSite mstrStoreSite);
     }
 }

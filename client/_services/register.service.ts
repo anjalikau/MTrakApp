@@ -1,10 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ThrowStmt } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { DelUserModule } from 'src/app/_models/delUserModule';
 import { Member } from 'src/app/_models/member';
 import { SysModule } from 'src/app/_models/SysModule';
 import { UserLevel } from 'src/app/_models/userLevel';
+import { UserLocation } from 'src/app/_models/userLocation';
 import { UserModule } from 'src/app/_models/userModule';
 import { environment } from 'src/environments/environment';
 
@@ -41,7 +41,11 @@ export class RegisterService {
   }
 
   getLocation(model: any) {
-    return this.http.post<Location[]>(this.baseUrl + 'Agents/Location/' , model , httpOptions);
+    return this.http.post<Location[]>(this.baseUrl + 'Agents/Location' , model , httpOptions);
+  }
+
+  getUserLocation(model: any) {
+    return this.http.post<UserLocation[]>(this.baseUrl + 'Agents/User/Location' , model , httpOptions);
   }
 
   userRegister(model: any) {

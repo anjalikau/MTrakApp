@@ -8,7 +8,11 @@ import { TestErrorsComponent } from './errors/test-errors/test-errors.component'
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { MasterColorComponent } from './master/master-color/master-color.component';
+import { MasterProcessComponent } from './master/master-process/master-process.component';
 import { MasterSizeComponent } from './master/master-size/master-size.component';
+import { MasterStoresiteComponent } from './master/master-storesite/master-storesite.component';
+import { MasterUnitsComponent } from './master/master-units/master-units.component';
+import { SalesOrderComponent } from './transaction/sales-order/sales-order.component';
 import { MenuListComponent } from './users/menu-list/menu-list.component';
 import { UserPermissionComponent } from './users/user-permission/user-permission.component';
 import { UserRegisterComponent } from './users/user-register/user-register.component';
@@ -21,13 +25,17 @@ const routes: Routes = [
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
     children: [
-      {path:'Dashboard', component: DashboardComponent},
+      {path:'Dashboard', component: DashboardComponent },
       {path:'Home', component: HomeComponent},
       {path:'UserRegister', component: UserRegisterComponent },
       {path:'MenuList', component: MenuListComponent},
       {path:'UserPermission', component: UserPermissionComponent},
       {path:'MasterColor', component: MasterColorComponent},
-      {path:'MasterSize', component: MasterSizeComponent}
+      {path:'MasterSize', component: MasterSizeComponent},
+      {path:'SalesOrder', component: SalesOrderComponent},
+      {path:'MasterUnits', component: MasterUnitsComponent},
+      {path:'MasterStoresite', component: MasterStoresiteComponent},
+      {path:'MasterProess', component: MasterProcessComponent}
     ]
   },  
   {path:'not-found', component: NotFoundComponent},

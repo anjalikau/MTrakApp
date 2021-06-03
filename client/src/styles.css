@@ -52,3 +52,13 @@ body,.form-control,.btn {
     padding: 0 0.5rem;
     line-height: 0.9rem;
 }
+
+.dropdown-menu {
+    font-size: 0.75rem;
+    min-width: 12rem;
+}
+
+
+/* .brand-link {
+    line-height: 1.2;
+} */

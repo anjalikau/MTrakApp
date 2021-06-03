@@ -25,6 +25,14 @@ namespace API.Interfaces
         DbSet<MstrSize> MstrSize {get; set;}
         DbSet<MstrUserLocation> MstrUserLocation { get;  set; }
         DbSet<MstrCompany> MstrCompany { get;  set; }
+        DbSet<MstrArticle> MstrArticle { get;  set; }
+        DbSet<MstrArticleColor> MstrArticleColor { get;  set; }
+        DbSet<MstrArticleSize> MstrArticleSize { get;  set; }
+        DbSet<MstrCustomerHeader> MstrCustomerHeader { get;  set; }
+        DbSet<MstrCustomerDetails> MstrCustomerDetails { get;  set; }
+        DbSet<MstrUnits> MstrUnits { get;  set ; }       
+        DbSet<MstrStoreSite> MstrStoreSite { get;  set ; }
+        DbSet<MstrProcess> MstrProcess { get;  set ; }
 
     }
 }

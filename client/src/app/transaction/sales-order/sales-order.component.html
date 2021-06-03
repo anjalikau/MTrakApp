@@ -1,0 +1,363 @@
+<div class="card card-default">
+    <!-- <div class="card-header">
+        <h3 class="card-title">Sales Order</h3>       
+    </div> -->
+    
+    <div class="card-body">
+        <!-- SALES ORDER HEADER -->
+        <form [formGroup]="soHeaderForm" autocomplete="off">
+            <div class="row">
+                <div class="col-11">
+                  <h6 class="bg-secondary">
+                    <!-- <i class="fas fa-file-alt"></i>  -->
+                    Sales Order Header                    
+                  </h6>
+                </div>
+                <div class="col-1">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success mr-3" [disabled]="!soHeaderForm.valid" (click)="saveSalesOrder()" > 
+                            <i class="fas fa-save"></i>
+                        </button>                        
+                        <button type="button" class="btn btn-default" (click)="refreshSalesOrder()">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- /.col -->
+              </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <!-- <igx-input-group>
+                            <input igxInput type="text" formControlName="orderRef" />
+                            <label igxLabel for="orderRef"> Sales Order Ref</label>
+                            <button>
+                                <igx-icon>phone</igx-icon>
+                            </button>                            
+                        </igx-input-group> -->
+                        <igx-input-group type="search">
+                            <input #input1 igxInput placeholder="Sales Order Ref" formControlName="orderRef" (keyup)="onKey($event)" />                            
+                            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''">
+                                <igx-icon>clear</igx-icon>
+                            </igx-suffix>
+                            <igx-prefix (click)="loadSalesOrderDt()">
+                                <igx-icon>search</igx-icon>
+                            </igx-prefix>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="customerRef" />
+                            <label igxLabel for="customerRef"> Customer Ref</label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Customer </label>
+                        <igx-combo #customer id="customer" class="combo" displayKey="name" valueKey="autoId"
+                            [itemsMaxHeight]="250" [data]="customerList" placeholder="Customer"
+                            (onSelectionChange)="singleSelection($event)" (onSelectionChange)="LoadCustomerDt($event)"
+                            formControlName="customerId" searchPlaceholder="Search...">
+                        </igx-combo>                         
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Merchant </label>
+                        <igx-combo #merchant id="merchant" class="combo" displayKey="name" valueKey="autoId"
+                            [itemsMaxHeight]="250" [data]="customerDtList" placeholder="Merchant"
+                            (onSelectionChange)="singleSelection($event)" 
+                            formControlName="customerDtId" searchPlaceholder="Search...">
+                        </igx-combo>                          
+                    </div>
+                </div>              
+
+                <div class="col-md-2">  
+                    <div class="group">
+                        <igx-date-picker id="delDate" formControlName="delDate">
+                        <label igxLabel>Del. Date</label>
+                        </igx-date-picker>
+                    </div>
+                </div>
+
+                <div class="col-md-2">  
+                    <div class="group">
+                        <igx-date-picker id="trnsDate" formControlName="trnsDate">
+                        <label igxLabel>Trns. Date</label>
+                        </igx-date-picker>
+                    </div>
+                </div>              
+            </div>
+        </form>
+      
+        <!-- SALES ORDER ITEMS -->
+        <form [formGroup]="soItemForm" autocomplete="off">
+            <div class="row">
+                <div class="col-12">
+                    <h6 class="bg-secondary">
+                        <!-- <i class="fas fa-file-alt"></i>  -->
+                        Sales Order Item               
+                    </h6>
+                </div>
+                <!-- /.col -->
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group" *ngIf="showArticle">
+                        <label>Article </label>
+                        <igx-combo #cmbarticle class="combo" displayKey="name" valueKey="autoId"
+                            [itemsMaxHeight]="250" [data]="articleList" placeholder="Article"
+                            (onSelectionChange)="singleSelection($event)" (onSelectionChange)="LoadColor($event)"
+                            (onSelectionChange)="LoadSize($event)" formControlName="articleId" searchPlaceholder="Search...">
+                        </igx-combo>
+                    </div>
+
+                    <div class="form-group" *ngIf="!showArticle" >
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="articleId" />
+                            <label igxLabel for="articleId"> Article </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+        
+                <div class="col-md-3">
+                    <div class="form-group" *ngIf="showColor">
+                        <label>Color </label>
+                        <igx-combo #cmbcolor class="combo" displayKey="name" valueKey="autoId" [itemsMaxHeight]="250"
+                            [data]="colorList" placeholder="Color" (onSelectionChange)="singleSelection($event)"
+                            formControlName="colorId" searchPlaceholder="Search...">
+                        </igx-combo>
+                    </div>
+
+                    <div class="form-group" *ngIf="!showColor" >
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="colorId" />
+                            <label igxLabel for="colorId"> Color </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+        
+                <div class="col-md-2">
+                    <div class="form-group" *ngIf="showSize">
+                        <label>Size </label>
+                        <igx-combo #cmbsize class="combo" displayKey="name" valueKey="autoId" [itemsMaxHeight]="250"
+                            [data]="sizeList" placeholder="Size" (onSelectionChange)="singleSelection($event)"
+                            formControlName="sizeId" searchPlaceholder="Search...">
+                        </igx-combo>
+                    </div>
+
+                    <div class="form-group" *ngIf="!showSize" >
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="sizeId" />
+                            <label igxLabel for="sizeId"> Size </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+        
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="qty" />
+                            <label igxLabel for="qty"> Qty </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+        
+                <div class="col-sm-1 offset-sm-2">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success mr-3" [disabled]="!soItemForm.valid" (click)="addItemRow()">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button type="button" class="btn btn-default" (click)="clearItemControls()" >
+                            <i class="fas fa-broom"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="row">                                 
+                <igx-grid #itemGrid [data]="soItemList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+                    [primaryKey]="'itemId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
+                    height="300px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
+                    [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
+                    <igx-column field="status" [width]="'120px'" [selectable]="false" [sortable]="false" [resizable]="false" [editable]="false">
+                        <ng-template igxCell let-cell="cell">
+                            <div *ngIf="cell.value; then completeBlock else elseBlock"></div>
+                            <ng-template #completeBlock>
+                                <button igxButton="icon" class="fab-compact" [disabled]="'true'">
+                                    <igx-icon fontSet="material" style="color:green">arrow_drop_down_circle</igx-icon>
+                                </button>
+                            </ng-template>
+                            <ng-template #elseBlock>
+                                <button igxButton="icon" class="fab-compact" (click)="onAddItemToDelivery($event,cell.cellID)">
+                                    <igx-icon fontSet="material"  style="color:mediumvioletred">arrow_drop_down_circle</igx-icon>
+                                </button>
+                            </ng-template>
+                            <!-- <button igxButton="icon" class="fab-compact" (click)="onAddItemToDelivery($event,cell.cellID)">
+                                <igx-icon family="material">arrow_circle_down</igx-icon>
+                            </button> -->
+                            <button igxButton="icon" class="fab-compact" (click)="onItemEdit($event,cell.cellID)">
+                                <igx-icon family="material">edit</igx-icon>
+                            </button>                         
+                            <button igxButton="icon" class="fab-compact"  (click)="onItemDelete($event,cell.cellID)">
+                                <igx-icon family="material">delete</igx-icon>
+                            </button>
+                        </ng-template>
+                    </igx-column>            
+                    <igx-column [field]="'article'" [header]="'Article'" [resizable]="true" [dataType]="'string'" [sortable]="true" [editable]="false">
+                    </igx-column>
+                    <igx-column [field]="'color'" [header]="'Color'" [resizable]="true" [dataType]="'string'" [sortable]="true" [editable]="false">
+                    </igx-column>
+                    <igx-column [field]="'size'" [header]="'Size'" [resizable]="true" [dataType]="'string'" [sortable]="true" [editable]="false">
+                    </igx-column>
+                    <igx-column [field]="'qty'" [header]="'Qty'" [resizable]="true" [dataType]="'number'" [sortable]="true" [editable]="true">
+                    </igx-column>
+                    <igx-column [field]="'costRef'" [header]="'Cost. Ref'" [resizable]="true" [dataType]="'string'" [sortable]="true" [editable]="false">
+                    </igx-column>
+                    <igx-column [field]="'isIntendCreated'" [header]="'Intend Created'" [resizable]="true" [dataType]="'boolean'" [sortable]="true" [editable]="false">
+                    </igx-column>                    
+                    <!-- <igx-column field="status" header="C/NC" [width]="'120px'">
+                        <ng-template igxCell let-cell="cell">
+                            <div *ngIf="cell.value; then completeBlock else elseBlock"></div>
+                            <ng-template #completeBlock>
+                                <button igxButton="icon">
+                                    <igx-icon fontSet="material" style="color:green">check_circle</igx-icon>
+                                </button>
+                            </ng-template>
+                            <ng-template #elseBlock>
+                                <button igxButton="icon">
+                                    <igx-icon fontSet="material"  style="color:mediumvioletred">check_circle</igx-icon>
+                                </button>
+                            </ng-template>
+                        </ng-template>
+                    </igx-column>      -->
+                </igx-grid>
+            </div>        
+        </form> 
+
+        <br>
+        <!-- SALES ORDER ITEMS -->
+        <form [formGroup]="soDeliveyForm" autocomplete="off" >
+            <div class="row">
+                <div class="col-12">
+                    <h6 class="bg-secondary">
+                        <!-- <i class="fas fa-file-alt"></i>  -->
+                        Delivery Breakdown
+                    </h6>
+                </div>
+                <!-- /.col -->
+            </div>
+            <div class="row">        
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="deliveryRef" />
+                            <label igxLabel for="deliveryRef"> Del. Ref </label>
+                        </igx-input-group>
+                        <!-- <label>Del. Ref </label>
+                        <igx-combo #deliveryRef class="combo" displayKey="delRef" valueKey="delRef" searchPlaceholder="Search..."
+                            [itemsMaxHeight]="250" [data]="delRef" placeholder="Delivery Ref" (onSelectionChange)="singleSelection($event)" 
+                            formControlName="deliveryRef" >
+                        </igx-combo> -->
+                    </div>
+                </div>
+        
+                <div class="col-md-2">  
+                    <div class="group">
+                        <igx-date-picker id="deliveryDate" formControlName="deliveryDate">
+                        <label igxLabel>Del. Date</label>
+                        </igx-date-picker>
+                    </div>
+                </div>
+        
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="article" />
+                            <label igxLabel for="article"> Article </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+        
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="color" />
+                            <label igxLabel for="color"> Color </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+        
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="size" />
+                            <label igxLabel for="size"> Size </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+        
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="qty" />
+                            <label igxLabel for="qty"> Qty </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+        
+                <div class="col-sm-1">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success mr-3" [disabled]="!soDeliveyForm.valid" (click)="addDeliveryItemRow()">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button type="button" class="btn btn-default" (click)="clearDeliveryControls()">
+                            <i class="fas fa-broom"></i>
+                        </button>
+                    </div>
+                </div>        
+            </div>
+        
+            <div class="row">
+                <igx-grid #deliveryGrid [data]="soDelivList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+                    [primaryKey]="'deliveryId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
+                    height="400px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
+                    [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
+                    <igx-column [width]="'100px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                        <ng-template igxCell let-cell="cell">
+                            <button igxButton="icon" class="fab-compact" (click)="onDeliveryDelete($event,cell.cellID)">
+                                <igx-icon family="material">delete</igx-icon>
+                            </button>
+                            <button igxButton="icon" class="fab-compact" (click)="onDeliveryEdit($event,cell.cellID)">
+                                <igx-icon family="material">edit</igx-icon>
+                            </button>
+                        </ng-template>
+                    </igx-column> 
+                          
+                    <igx-column [field]="'deliveryRef'" [header]="'Delivery Ref'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                    </igx-column>
+                    <igx-column [field]="'deliveryDate'" [header]="'Delivery Date'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                    </igx-column>            
+                    <igx-column [field]="'article'" [header]="'Article'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                    </igx-column>
+                    <igx-column [field]="'color'" [header]="'Color'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                    </igx-column>
+                    <igx-column [field]="'size'" [header]="'Size'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                    </igx-column>
+                    <igx-column [field]="'qty'" [header]="'Qty'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                    </igx-column>                             
+                </igx-grid>
+            </div>
+        
+        </form>
+
+    </div>
+</div>
+
+

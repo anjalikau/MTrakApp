@@ -20,11 +20,15 @@ namespace API.Controllers.Admin
         private readonly IApplicationAdminDbContext _context;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
-        public AccountController(IApplicationAdminDbContext context, ITokenService tokenService, IMapper mapper)
+        private readonly IMasterRepository _masterRepository;
+
+        public AccountController(IApplicationAdminDbContext context, ITokenService tokenService, IMapper mapper
+            , IMasterRepository masterRepository)
         {
             _mapper = mapper;
             _tokenService = tokenService;
             _context = context;
+            _masterRepository = masterRepository;
         }
 
         [Authorize]
@@ -81,6 +85,7 @@ namespace API.Controllers.Admin
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
+            IEnumerable<PermitMenuDto> menuList = Enumerable.Empty<PermitMenuDto>();
             var user = await _context.MstrAgents
                 .SingleOrDefaultAsync(x => x.cAgentName == loginDto.cAgentName);
 
@@ -100,14 +105,24 @@ namespace API.Controllers.Admin
             var usermod = await _context.MstrAgentModule
                     .SingleOrDefaultAsync(x => x.UserId == userId && x.SysModuleId == moduleId);
 
-            if(usermod == null) return Unauthorized("Invalid Module");           
+            if(usermod == null) return Unauthorized("Invalid Module");   
+            else {
+                /// GET PERMITED MENU LIST FOR LOGGED USER
+                UserDto userDto = new UserDto();
+
+                userDto.UserId = user.idAgents ;
+                userDto.ModuleId = usermod.SysModuleId;
+
+                menuList = await _masterRepository.GetAuthMenuListAsync(userDto);
+            }     
 
             return new UserDto
             {
                 ModuleId = usermod.SysModuleId,
                 UserId = user.idAgents,
                 UserName = user.cAgentName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                permitMenus = menuList
             };
         }
 

@@ -50,6 +50,14 @@ namespace API.Controllers.Admin
             return Ok(locationToReturn);
         }
 
+        [HttpPost("User/Location")]
+        public async Task<ActionResult<IEnumerable<UserLocationDto>>> GetUserLoction(MstrAgentModule userMod)
+        {
+            var location = await _adminRepository.GetUserLocAsync(userMod);
+            var locationToReturn = _mapper.Map<IEnumerable<UserLocationDto>>(location);
+            return Ok(locationToReturn);
+        }
+
         [HttpGet("name/{username}")]
         public async Task<ActionResult<RegisterDto>> GetUserByName(string username)
         {
@@ -119,7 +127,6 @@ namespace API.Controllers.Admin
             var moduleList = await _adminRepository.GetUserModuleAsync(id);
             return Ok(moduleList);
         }
-
 
         [HttpPost("UserModSave")]
         public async Task<IActionResult> SaveUserModule(List<UserModuleDto> userModList)
