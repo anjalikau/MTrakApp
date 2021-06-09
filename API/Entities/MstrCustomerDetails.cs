@@ -19,6 +19,6 @@ namespace API.Entities
         public DateTime ? CreateDateTime { get; set; }
         public int ? UpdateUserId { get; set; }
         public DateTime ? UpdateDateTime { get; set; }
-        public MstrCustomerHeader MstrCustomerHeader { get; set; }
+        public virtual MstrCustomerHeader MstrCustomerHeader { get; set; }
     }
 }

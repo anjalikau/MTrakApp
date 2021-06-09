@@ -16,12 +16,12 @@ namespace API.Entities
         public int iCategoryLevel { get; set; }
 
         [ForeignKey("iCategoryLevel")]
-        public MstrAgentLevel Level { get; set; }
+        public virtual MstrAgentLevel Level { get; set; }
 
         [ForeignKey("MenuList")]
         public int MenuID { get; set; }
 
         [ForeignKey("MenuID")]
-        public MstrMenuList MenuList { get; set; }
+        public virtual MstrMenuList MenuList { get; set; }
     }
 }

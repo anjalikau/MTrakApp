@@ -21,7 +21,7 @@ namespace API.Entities
         public int LinkColorCard { get; set; }
 
         [ForeignKey("LinkColorCard")] 
-        public MstrColorCard ColorCard {get; set;}
+        public virtual MstrColorCard ColorCard {get; set;}
 
         public int ? CreateUserId { get; set; }
 

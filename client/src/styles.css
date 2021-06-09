@@ -58,6 +58,18 @@ body,.form-control,.btn {
     min-width: 12rem;
 }
 
+label:not(.form-check-label):not(.custom-file-label) {
+    font-weight: 400;
+}
+
+.input-group-text {
+    font-size: 0.75rem;
+}
+
+.custom-select {
+    font-size: 0.75rem;
+}
+
 
 /* .brand-link {
     line-height: 1.2;

@@ -16,9 +16,9 @@ namespace API.Entities.Admin
         public int SysModuleId { get; set; }
 
         [ForeignKey("UserId")] 
-        public MstrAgents User { get; set; }
+        public virtual MstrAgents User { get; set; }
 
         [ForeignKey("SysModuleId")] 
-        public SystemModule sysModule { get; set; }
+        public virtual SystemModule sysModule { get; set; }
     }
 }

@@ -16,8 +16,8 @@ namespace API.Entities
         public DateTime CreateDateTime { get; set; }
         public int UpdateUserId { get; set; }
         public DateTime UpdateDateTime { get; set; }
-        public MstrArticle MstrArticle { get; set; }
-        public MstrSize MstrSize { get; set; }
-        public MstrLocation MstrLocation { get; set; }
+        public virtual MstrArticle MstrArticle { get; set; }
+        public virtual MstrSize MstrSize { get; set; }
+        public virtual MstrLocation MstrLocation { get; set; }
     }
 }

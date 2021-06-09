@@ -19,7 +19,7 @@ namespace API.Entities
         public DateTime ? CreateDateTime { get; set; }
         public int ? UpdateUserId { get; set; }
         public DateTime ? UpdateDateTime { get; set; }
-        public MstrLocation Location { get; set; }
+        public virtual MstrLocation Location { get; set; }
 
     }
 }

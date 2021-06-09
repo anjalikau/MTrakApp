@@ -26,7 +26,7 @@ namespace API.Entities
         public int LocationId { get; set; }
 
         [ForeignKey("LocationId")] 
-        public MstrUserLocation UserLocation {get; set;}
+        public virtual MstrUserLocation UserLocation {get; set;}
     }
 
 }

@@ -16,12 +16,12 @@ namespace API.Extensions
         {
             string AdminconnectionString = config.GetConnectionString("AdminDbConnection");
             string CartonconnectionString =  config.GetConnectionString("CartonDbConnection"); 
-
+            
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IApplicationAdminDbContext>(provider => provider.GetService<ApplicationAdminDbContext>());
             services.AddScoped<IApplicationCartonDbContext>(provider => provider.GetService<ApplicationCartonDbContext>());
             // Inject the factory
-            services.AddTransient<IDbConnectionFactory, DapperDbConenctionFactory>();            
-            services.AddScoped<ITokenService, TokenService>();
+            services.AddTransient<IDbConnectionFactory, DapperDbConenctionFactory>();
             services.AddScoped<IUserRepository, UserRepository>(); 
             services.AddScoped<IMasterRepository, MasterRepository>(); 
             services.AddScoped<ITestRepository, TestRepository>(); 
@@ -33,11 +33,13 @@ namespace API.Extensions
 
             services.AddDbContext<ApplicationAdminDbContext>(options =>
             {
+                options.UseLazyLoadingProxies();
                 options.UseSqlServer(AdminconnectionString);
             });
 
             services.AddDbContext<ApplicationCartonDbContext>(options =>
             {
+                options.UseLazyLoadingProxies();
                 options.UseSqlServer(CartonconnectionString);
             });
 

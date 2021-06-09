@@ -205,7 +205,7 @@
                             <button igxButton="icon" class="fab-compact" (click)="onItemEdit($event,cell.cellID)">
                                 <igx-icon family="material">edit</igx-icon>
                             </button>                         
-                            <button igxButton="icon" class="fab-compact"  (click)="onItemDelete($event,cell.cellID)">
+                            <button igxButton="icon" class="fab-compact" (click)="openItemDialog($event,cell.cellID)">
                                 <igx-icon family="material">delete</igx-icon>
                             </button>
                         </ng-template>
@@ -331,7 +331,7 @@
                     [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
                     <igx-column [width]="'100px'" [selectable]="false" [sortable]="false" [resizable]="false">
                         <ng-template igxCell let-cell="cell">
-                            <button igxButton="icon" class="fab-compact" (click)="onDeliveryDelete($event,cell.cellID)">
+                            <button igxButton="icon" class="fab-compact" (click)="openDelivDialog($event,cell.cellID)">
                                 <igx-icon family="material">delete</igx-icon>
                             </button>
                             <button igxButton="icon" class="fab-compact" (click)="onDeliveryEdit($event,cell.cellID)">
@@ -360,4 +360,10 @@
     </div>
 </div>
 
-
+<igx-dialog #dialog title="Confirmation"
+    leftButtonLabel="Cancel"
+    (onLeftButtonSelect)="dialog.close()"
+    rightButtonLabel="OK"
+    (onRightButtonSelect)="onDialogOKSelected($event)"
+    message="Are you sure you want to delete the record ?">
+</igx-dialog>

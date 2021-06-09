@@ -16,8 +16,8 @@ namespace API.Entities
         public string Location { get; set; }
         public string Description { get; set; }
         public int TimeZone { get; set; }
-        public SystemModule SysModule { get; set; }
-        public MstrCompany MstrCompany {get; set;}
+        public virtual SystemModule SysModule { get; set; }
+        public virtual MstrCompany MstrCompany {get; set;}
 
     }
 }

@@ -26,6 +26,7 @@ namespace API.DTOs
         public string DeliveryRef { get; set; }
         public DateTime DeliveryDate { get; set; }
         public int DelQty { get; set; }
+        public bool JobCreated { get; set; }
  
     }
 }

@@ -324,7 +324,7 @@ namespace API.Repository
             DynamicParameters para = new DynamicParameters();
 
             para.Add("AutoId" , masterStoreSite.AutoId);
-            para.Add("Code", masterStoreSite.SiteCode);
+            para.Add("Code", masterStoreSite.SiteCode.ToUpper());
             para.Add("Name", masterStoreSite.SiteName);
             para.Add("UserId", masterStoreSite.CreateUserId);
             para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 

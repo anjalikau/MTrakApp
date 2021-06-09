@@ -16,7 +16,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/client",
+            "outputPath": "dist/client",//"../API/wwwroot",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -26,11 +26,12 @@
               "src/favicon.ico",
               "src/assets"
             ],
+            "allowedCommonJsDependencies": ["lodash"],
             "styles": [
               //"node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/admin-lte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css",
               "node_modules/bootswatch/dist/cosmo/bootstrap.css",
-              //"node_modules/font-awesome/css/font-awesome.css",
+              //"node_modules/font-awesome/css/font-awesome.css",              
               "node_modules/ngx-toastr/toastr.css",
               "node_modules/admin-lte/plugins/fontawesome-free/css/all.min.css",
               "node_modules/admin-lte/dist/css/adminlte.min.css",
@@ -64,7 +65,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
+                  "maximumWarning": "4mb",
                   "maximumError": "5mb"
                 },
                 {

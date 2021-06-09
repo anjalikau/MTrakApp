@@ -16,16 +16,14 @@ export class NavComponent implements OnInit {
   isCollapsed = false;
   userLoc: UserLocation[];
   user: User;
-  public selectedNoValueKey: number[];
-  
+  public selectedNoValueKey: number[]; 
 
   @ViewChild('navMenu') navMenu: ElementRef<HTMLElement>;
 
   constructor(private accountServices: AccountService , private registerServices: RegisterService
       ,private router: Router) { }
 
-  ngOnInit(): void {
-    
+  ngOnInit(): void {    
     this.loadUserLocation();
   }
 

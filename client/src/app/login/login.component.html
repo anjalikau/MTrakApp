@@ -28,13 +28,27 @@
 
           <form [formGroup]="loginForm" (ngSubmit)="login()" autocomplete="off">
             <!-- *ngIf="(accountServices.currentUser$ | async) === null" #loginForm="ngForm" -->
-            <div class="form-group mb-3">
+            <!-- <div class="form-group mb-3">
               <label for="Sysmodule">Module </label>
               <select class="form-control" id="Sysmodule" formControlName="ModuleId" name="Sysmodule"
                 [ngClass]="{ 'is-invalid': submitted && f.ModuleId.errors }" autofocus>
                 <option *ngFor="let module of sysModules" [value]="module.autoId">
                   {{module.moduleName}}
                 </option>
+              </select>
+              <div *ngIf="submitted && f.ModuleId.errors" class="invalid-feedback">
+                <div *ngIf="f.ModuleId.errors.required">Module is required</div>
+              </div>
+            </div> -->
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="Sysmodule">Module</label>
+              </div>
+              <select class="custom-select" id="Sysmodule" formControlName="ModuleId" name="Sysmodule"
+              [ngClass]="{ 'is-invalid': submitted && f.ModuleId.errors }" autofocus>
+                <option *ngFor="let module of sysModules" [value]="module.autoId">
+                  {{module.moduleName}}
+                </option>                
               </select>
               <div *ngIf="submitted && f.ModuleId.errors" class="invalid-feedback">
                 <div *ngIf="f.ModuleId.errors.required">Module is required</div>

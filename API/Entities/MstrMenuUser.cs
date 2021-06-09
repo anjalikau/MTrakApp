@@ -17,9 +17,9 @@ namespace API.Entities
         public int MenuId { get; set; }
 
         [ForeignKey("UserId")] 
-        public MstrAgents User { get; set; }
+        public virtual MstrAgents User { get; set; }
 
         [ForeignKey("MenuId")] 
-        public MstrMenuList Menu { get; set; }
+        public virtual MstrMenuList Menu { get; set; }
     }
 }

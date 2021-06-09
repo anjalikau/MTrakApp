@@ -11,6 +11,6 @@ namespace API.Entities
         public int UserId { get; set; }        
         public int LocationId { get; set; }
         public bool IsDefault { get; set; }
-        public MstrLocation Location { get; set; }
+        public virtual MstrLocation Location { get; set; }
     }
 }

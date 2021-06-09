@@ -21,7 +21,7 @@ namespace API.Entities
         public int LinkSizeCard { get; set; }
 
         [ForeignKey("LinkSizeCard")] 
-        public MstrSizeCard SizeCard {get; set;}
+        public virtual MstrSizeCard SizeCard {get; set;}
 
         public int ? CreateUserId { get; set; }
 

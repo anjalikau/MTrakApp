@@ -52,6 +52,8 @@ namespace API.Data
             });
             modelBuilder.Entity<MstrCustomerDetails>()
                 .Ignore(c => c.MstrCustomerHeader);
+            modelBuilder.Entity<MstrCustomerHeader>()
+                .Ignore(c => c.Location);
             // modelBuilder.Entity<MstrColor>(a => {
             //     a.HasKey(a => a.LinkColorCard);                
             //     a.Property(e => e.LinkColorCard).HasColumnType("tinyint");

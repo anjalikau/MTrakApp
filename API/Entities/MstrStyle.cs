@@ -15,13 +15,13 @@ namespace API.Entities
         public string Description { get; set; } 
 
         [ForeignKey("Link_ProductID")]       
-        public MstrProduct Products { get; set; }     
+        public virtual MstrProduct Products { get; set; }     
 
         [ForeignKey("Products")]   
         public int Link_ProductID { get; set; }
 
         [ForeignKey("Link_BuyerId")] 
-        public MstrBuyer Buyers { get; set; }
+        public virtual MstrBuyer Buyers { get; set; }
 
         [ForeignKey("Buyers")] 
         public int Link_BuyerId { get; set; }

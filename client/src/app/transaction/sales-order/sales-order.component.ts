@@ -5,6 +5,7 @@ import {
   IComboSelectionChangeEventArgs,
   IgxColumnComponent,
   IgxComboComponent,
+  IgxDialogComponent,
   IgxGridComponent,
 } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
@@ -15,6 +16,7 @@ import { CustomerHd } from 'src/app/_models/customerHd';
 import { Size } from 'src/app/_models/size';
 import { User } from 'src/app/_models/user';
 import { AccountService } from '_services/account.service';
+import { ConfirmationDialogService } from '_services/confirmation-dialog.service';
 import { MasterService } from '_services/master.service';
 import { SalesorderService } from '_services/salesorder.service';
 
@@ -43,7 +45,8 @@ export class SalesOrderComponent implements OnInit {
   showArticle: boolean = true;
   showColor: boolean = true;
   showSize: boolean = true;
-  //isNewSO: boolean = true;
+  btnStatus: string = '';
+  rowId: number = 0;
 
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -67,6 +70,8 @@ export class SalesOrderComponent implements OnInit {
   public customer: IgxComboComponent;
   @ViewChild('merchant', { read: IgxComboComponent })
   public merchant: IgxComboComponent;
+  @ViewChild('dialog', { read: IgxDialogComponent })
+  public dialog: IgxDialogComponent;
 
   constructor(
     private accountService: AccountService,
@@ -74,19 +79,20 @@ export class SalesOrderComponent implements OnInit {
     private datePipe: DatePipe,
     private toastr: ToastrService,
     private salesOrderServices: SalesorderService,
-    private masterServices: MasterService
+    private masterServices: MasterService,
+    private confirmationDialogService: ConfirmationDialogService
   ) {}
 
   ngOnInit(): void {
-    this.initilizeForm();  
-    this.soDeliveyForm.disable();  
+    this.initilizeForm();
+    this.soDeliveyForm.disable();
     this.getSalesOrderRefNo();
     this.LoadCustomer();
     this.LoadArticle();
     //this.LoadDelRef();
   }
 
-  initilizeForm() {   
+  initilizeForm() {
     var date: Date = new Date(Date.now());
     this.accountService.currentUser$.forEach((element) => {
       this.user = element;
@@ -136,11 +142,11 @@ export class SalesOrderComponent implements OnInit {
   }
 
   //// ORDER REFERANCE NO KEY UP EVENT
-  onKey(event: any) { 
+  onKey(event: any) {
     this.soDeliveyForm.disable();
     var date: Date = new Date(Date.now());
 
-    this.soHeaderForm.get('headerId').setValue(0);    
+    this.soHeaderForm.get('headerId').setValue(0);
     this.soHeaderForm.get('customerRef').setValue('');
     this.soHeaderForm.get('customerId').setValue('');
     this.soHeaderForm.get('customerDtId').setValue('');
@@ -152,7 +158,7 @@ export class SalesOrderComponent implements OnInit {
     this.clearDeliveryControls();
 
     this.soItemList = [];
-    this.soDelivList = []; 
+    this.soDelivList = [];
   }
 
   getSalesOrderRefNo() {
@@ -165,7 +171,7 @@ export class SalesOrderComponent implements OnInit {
 
   LoadCustomer() {
     var user: User = JSON.parse(localStorage.getItem('user'));
-    //console.log(user); 
+    //console.log(user);
     var locationId = user.locationId;
     this.masterServices.getCustomer(locationId).subscribe((customer) => {
       this.customerList = customer;
@@ -228,28 +234,42 @@ export class SalesOrderComponent implements OnInit {
     } else {
       //// ADD NEW ITEM ENTRY
       itemId = this.findMaxItemId(this.itemGrid.data) + 1;
-      console.log(itemId);
+      //console.log(itemId);
       //itemId = this.itemGrid.dataLength + 1;
       var articleId = this.soItemForm.get('articleId').value[0];
       var colorId = this.soItemForm.get('colorId').value[0];
       var sizeId = this.soItemForm.get('sizeId').value[0];
 
-      var obj = {
-        itemId: itemId,
-        sizeId: sizeId,
-        size: this.cmbsize.value,
-        colorId: colorId,
-        color: this.cmbcolor.value,
-        saleOrderId: 0,
-        articleId: articleId,
-        article: this.cmbarticle.value,
-        costingId: 0,
-        costRef: ' ',
-        qty: qty,
-        isIntendCreated: false,
-        status: false,
-      };
-      this.itemGrid.addRow(obj);
+      //// CHECK IF IT IS EXISTING ITEM DETAILS
+      const ItemRowData = this.itemGrid.data.filter((record) => {
+        return (
+          record.articleId == articleId &&
+          record.colorId == colorId &&
+          record.sizeId == sizeId
+        );
+      });
+
+      if (ItemRowData.length > 0) {
+        this.toastr.warning('record added already !!!');
+        return;
+      } else {
+        var obj = {
+          itemId: itemId,
+          sizeId: sizeId,
+          size: this.cmbsize.value,
+          colorId: colorId,
+          color: this.cmbcolor.value,
+          saleOrderId: 0,
+          articleId: articleId,
+          article: this.cmbarticle.value,
+          costingId: 0,
+          costRef: ' ',
+          qty: qty,
+          isIntendCreated: false,
+          status: false,
+        };
+        this.itemGrid.addRow(obj);
+      }
     }
     this.clearItemControls();
   }
@@ -325,7 +345,10 @@ export class SalesOrderComponent implements OnInit {
   /// Item delete event
   onItemDelete(event, cellId) {
     //console.log(cellId.rowID);
+
     const ids = cellId.rowID;
+    this.rowId = 0;
+    this.btnStatus = '';
     const selectedRowData = this.itemGrid.data.filter((record) => {
       return record.itemId == ids;
     });
@@ -368,15 +391,25 @@ export class SalesOrderComponent implements OnInit {
   onDeliveryDelete(event, cellId) {
     //console.log(cellId.rowID);
     const rowIndex = cellId.rowID;
-    ///// update the status of the item details
+    this.rowId = 0;
+    this.btnStatus = '';
+
     const selectedRowData = this.deliveryGrid.data.filter((record) => {
-      return record.deliveryId == rowIndex;
+      return record.deliveryId == rowIndex && record.jobCreated == false;
     });
 
-    var itemId = parseInt(selectedRowData[0]['itemId']);
-    this.itemGrid.updateCell(false, itemId, 'status');
+    //console.log(selectedRowData);
 
-    this.deliveryGrid.deleteRow(rowIndex);
+    if (selectedRowData.length == 0) {
+      this.toastr.warning('Delete fail. Job already created !!!');
+    } else {
+      ///// update the status of the item details
+      var itemId = parseInt(selectedRowData[0]['itemId']);
+      this.itemGrid.updateCell(false, itemId, 'status');
+
+      /// DELETE DELVERY RECORDS
+      this.deliveryGrid.deleteRow(rowIndex);
+    }
   }
 
   onDeliveryEdit(event, cellId) {
@@ -386,22 +419,25 @@ export class SalesOrderComponent implements OnInit {
       return record.deliveryId == ids;
     });
 
-    console.log(selectedRowData[0]);
-    var trasDate: Date = new Date(selectedRowData[0]['deliveryDate']);
+    if (selectedRowData[0]['jobCreated'] == true) {
+      this.toastr.warning('Edit fail. Job already created !!!');
+    } else {
+      //console.log(selectedRowData[0]);
+      var trasDate: Date = new Date(selectedRowData[0]['deliveryDate']);
 
-    this.soDeliveyForm
-      .get('deliveryId')
-      .setValue(selectedRowData[0]['deliveryId']);
-    this.soDeliveyForm.get('itemId').setValue(selectedRowData[0]['itemId']);
-    this.soDeliveyForm.get('article').setValue(selectedRowData[0]['article']);
-    this.soDeliveyForm
-      .get('deliveryRef')
-      .setValue(selectedRowData[0]['deliveryRef']);
-    this.soDeliveyForm.get('deliveryDate').setValue(trasDate);
-    this.soDeliveyForm.get('color').setValue(selectedRowData[0]['color']);
-    this.soDeliveyForm.get('size').setValue(selectedRowData[0]['size']);
-    this.soDeliveyForm.get('qty').setValue(selectedRowData[0]['qty']);
-
+      this.soDeliveyForm
+        .get('deliveryId')
+        .setValue(selectedRowData[0]['deliveryId']);
+      this.soDeliveyForm.get('itemId').setValue(selectedRowData[0]['itemId']);
+      this.soDeliveyForm.get('article').setValue(selectedRowData[0]['article']);
+      this.soDeliveyForm
+        .get('deliveryRef')
+        .setValue(selectedRowData[0]['deliveryRef']);
+      this.soDeliveyForm.get('deliveryDate').setValue(trasDate);
+      this.soDeliveyForm.get('color').setValue(selectedRowData[0]['color']);
+      this.soDeliveyForm.get('size').setValue(selectedRowData[0]['size']);
+      this.soDeliveyForm.get('qty').setValue(selectedRowData[0]['qty']);
+    }
     //this.deliveryRef.setSelectedItem(selectedRowData[0]['deliveryRef'], true);
     // this.cmbcolor.setSelectedItem(selectedRowData[0]["color"], true);
     // this.cmbsize.setSelectedItem(selectedRowData[0]["size"], true);
@@ -418,7 +454,7 @@ export class SalesOrderComponent implements OnInit {
       return record.itemId == ids;
     });
 
-    console.log(selectedRowData[0]['colorId']);
+    //console.log(selectedRowData[0]['colorId']);
     this.soItemForm.get('itemId').setValue(selectedRowData[0]['itemId']);
     this.soItemForm.get('articleId').setValue(selectedRowData[0]['article']);
     this.soItemForm.get('colorId').setValue(selectedRowData[0]['color']);
@@ -510,6 +546,7 @@ export class SalesOrderComponent implements OnInit {
           deliveryRef: deliveryRef,
           deliveryDate: delFormatDate,
           qty: parseInt(qty),
+          jobCreated: false,
         };
 
         this.deliveryGrid.addRow(obj);
@@ -528,7 +565,7 @@ export class SalesOrderComponent implements OnInit {
         maxValue = arr[i].deliveryId;
       }
     }
-    console.log(maxValue);
+    //console.log(maxValue);
     return maxValue;
   }
 
@@ -541,7 +578,7 @@ export class SalesOrderComponent implements OnInit {
         maxValue = arr[i].itemId;
       }
     }
-    console.log(maxValue);
+    //console.log(maxValue);
     return maxValue;
   }
 
@@ -611,13 +648,13 @@ export class SalesOrderComponent implements OnInit {
         salesOrderList.push(deliverydata);
       });
 
-      console.log(salesOrderList);
+      //console.log(salesOrderList);
       // // //console.log(JSON.stringify(menuList));
 
       this.salesOrderServices
         .saveSalesOrder(salesOrderList)
         .subscribe((result) => {
-          console.log(result);
+          //console.log(result);
           if (result['result'] == 1) {
             this.toastr.success('Sales Order save Successfully !!!');
             this.soHeaderForm.get('headerId').setValue(result['SOHeaderId']);
@@ -639,8 +676,8 @@ export class SalesOrderComponent implements OnInit {
     this.clearDeliveryControls();
     this.clearItemControls();
     this.soItemList = [];
-    this.soDelivList = []; 
-    
+    this.soDelivList = [];
+
     this.soDeliveyForm.enable();
     //// validate sales order number is exists
     if (this.soHeaderForm.get('orderRef').value != '') {
@@ -721,7 +758,7 @@ export class SalesOrderComponent implements OnInit {
 
               ///// ========= SET SALES ORDER DELIVERY BREAKDOWN ================
               //var delvDate: Date = new Date(this.datePipe.transform(orderDt[index]["deliveryDate"],"yyyy-MM-dd"));
-
+              //console.log(orderDt[index]);
               var orderDeliv = {
                 deliveryId: orderDt[index]['soDelId'],
                 sizeId: orderDt[index]['sizeId'],
@@ -737,6 +774,7 @@ export class SalesOrderComponent implements OnInit {
                   'yyyy-MM-dd'
                 ),
                 qty: orderDt[index]['delQty'],
+                jobCreated: orderDt[index]['jobCreated'],
               };
 
               soSavedDelList.push(orderDeliv);
@@ -790,7 +828,7 @@ export class SalesOrderComponent implements OnInit {
     this.soDeliveyForm.disable();
     var date: Date = new Date(Date.now());
 
-    this.soHeaderForm.get('headerId').setValue(0);    
+    this.soHeaderForm.get('headerId').setValue(0);
     this.soHeaderForm.get('customerRef').setValue('');
     this.soHeaderForm.get('customerId').setValue('');
     this.soHeaderForm.get('customerDtId').setValue('');
@@ -803,7 +841,25 @@ export class SalesOrderComponent implements OnInit {
     this.clearDeliveryControls();
 
     this.soItemList = [];
-    this.soDelivList = []; 
+    this.soDelivList = [];
   }
 
+  openItemDialog(event, cellId) {
+    this.rowId = cellId;
+    this.btnStatus = 'I';
+    this.dialog.open();
+  }
+
+  openDelivDialog(event, cellId) {
+    this.rowId = cellId;
+    this.btnStatus = 'D';
+    this.dialog.open();
+  }
+
+  public onDialogOKSelected(event) {
+    event.dialog.close();
+    //console.log(this.rowId);
+    if (this.btnStatus == 'I') this.onItemDelete(event, this.rowId);
+    else if (this.btnStatus == 'D') this.onDeliveryDelete(event, this.rowId);
+  }
 }

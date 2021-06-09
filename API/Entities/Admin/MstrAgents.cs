@@ -42,7 +42,7 @@ namespace API.Entities.Admin
         public int iCategoryLevel { get; set; }  
 
         [ForeignKey("iCategoryLevel")] 
-        public MstrAgentLevel Category_Link { get; set; }
+        public virtual MstrAgentLevel Category_Link { get; set; }
         public virtual ICollection<MstrMenuList> Menus { get; set; }
 
     }

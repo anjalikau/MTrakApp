@@ -18,7 +18,7 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { MainsidebarComponent } from './mainsidebar/mainsidebar.component';
 import { FooterComponent } from './footer/footer.component';
 import { UserRegisterComponent } from './users/user-register/user-register.component';
-import { IgxActionStripModule, IgxAvatarModule, IgxCheckboxModule, IgxComboModule, IgxDatePickerModule, IgxGridModule, IgxIconModule, IgxInputGroupModule, IgxMaskModule, IgxTabsModule, IgxTooltipModule } 
+import { IgxActionStripModule, IgxAvatarModule, IgxCheckboxModule, IgxComboModule, IgxDatePickerModule, IgxDialogModule, IgxGridModule, IgxIconModule, IgxInputGroupModule, IgxMaskModule, IgxTabsModule, IgxTooltipModule } 
 from 'igniteui-angular';
 import { UserPwchangeComponent } from './users/user-pwchange/user-pwchange.component';
 import { MenuListComponent } from './users/menu-list/menu-list.component';
@@ -33,6 +33,7 @@ import { SalesOrderComponent } from './transaction/sales-order/sales-order.compo
 import { MasterStoresiteComponent } from './master/master-storesite/master-storesite.component';
 import { MasterUnitsComponent } from './master/master-units/master-units.component';
 import { MasterProcessComponent } from './master/master-process/master-process.component';
+import { ConfirmationDialogService } from '_services/confirmation-dialog.service';
 
 
 @NgModule({
@@ -80,11 +81,13 @@ import { MasterProcessComponent } from './master/master-process/master-process.c
     IgxMaskModule,
     IgxActionStripModule,
     IgxAvatarModule,
-    IgxTooltipModule    
+    IgxTooltipModule,
+    IgxDialogModule   
   ],
   providers: [
     DatePipe,
-    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi:true}
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi:true},
+    ConfirmationDialogService
   ],
   bootstrap: [AppComponent]
 })

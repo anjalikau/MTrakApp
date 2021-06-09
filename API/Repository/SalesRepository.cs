@@ -40,7 +40,6 @@ namespace API.Repository
             
             return salOrderList;
         } 
-
         
         public async Task<ReturnDto> SaveSalesOrderAsync(List<SalesOrderRecDto> salesOrder)
         {
