@@ -8,9 +8,18 @@ namespace API.Entities
     public class MstrArticle
     {
         [Key]
-        public int AutoId { get; set; }
-        public string Name { get; set; }
-        public string Code { get; set; }
+        public long AutoId { get; set; }
+        public string ArticleName { get; set; }
+        public string StockCode { get; set; }
+        public string Description1 { get; set; }
+        public string Description2 { get; set; }
+        public int ProTypeId {get;set;}
+        public int SubCatId {get;set;}
+        public int ItemType {get;set;}
+        public double BoardLength {get;set;}
+        public double BoardWidth {get;set;}
+        public int QtyInStock {get;set;}
+        public DateTime PODate {get;set;}  
         public int MaterialId { get; set; }
         public int CategoryId { get; set; }
         public int UnitId { get; set; }

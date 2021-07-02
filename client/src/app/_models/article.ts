@@ -1,7 +1,5 @@
 export interface Article {
-    autoId: number;
-    name: string;
-    code?: string;
+    autoId: number; 
     materialId?: number;
     categoryId?: number;
     unitId?: number;
@@ -9,6 +7,22 @@ export interface Article {
     width?: number;
     height?: number;
     createUserId?: number;
-    createDateTime?: string;
+    createDateTime?: string;    
+    articleName: string;
+    stockCode: string;
+    description1: string;
+    description2: string;
+    proTypeId: number;
+    subCatId: number;
+    catCode: string;
+    materialCode: string;
+    rodTypeCode: string;
+    subCatCode: string;
+    unitCode: string;
+    // itemType: number;
+    // boardLength: number;
+    // boardWidth: number;
+    // qtyInStock: number;
+    // pODate: string;   
 }
 

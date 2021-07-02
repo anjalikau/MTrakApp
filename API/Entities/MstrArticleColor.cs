@@ -9,7 +9,7 @@ namespace API.Entities
     {
         [Key]
         public int AutoId { get; set; }        
-        public int ArticleId { get; set; }
+        public long ArticleId { get; set; }
         public int ColorId { get; set; }
         public int LocationId { get; set; }
         public int CreateUserId { get; set; }

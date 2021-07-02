@@ -7,11 +7,20 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
+import { CustomerHeaderComponent } from './master/customer/customer-header/customer-header.component';
+import { CustomerTabComponent } from './master/customer/customer-tab/customer-tab.component';
+import { MasterBrandComponent } from './master/master-brand/master-brand.component';
+import { MasterBrandcodeComponent } from './master/master-brandcode/master-brandcode.component';
+import { MasterCategoryComponent } from './master/master-category/master-category.component';
 import { MasterColorComponent } from './master/master-color/master-color.component';
+import { MasterCustomerdetailsComponent } from './master/master-customerdetails/master-customerdetails.component';
+import { MasterCustomerheaderComponent } from './master/master-customerheader/master-customerheader.component';
+import { MasterMaterialtypeComponent } from './master/master-materialtype/master-materialtype.component';
 import { MasterProcessComponent } from './master/master-process/master-process.component';
 import { MasterSizeComponent } from './master/master-size/master-size.component';
 import { MasterStoresiteComponent } from './master/master-storesite/master-storesite.component';
 import { MasterUnitsComponent } from './master/master-units/master-units.component';
+import { JobCreationComponent } from './transaction/job-creation/job-creation.component';
 import { SalesOrderComponent } from './transaction/sales-order/sales-order.component';
 import { MenuListComponent } from './users/menu-list/menu-list.component';
 import { UserPermissionComponent } from './users/user-permission/user-permission.component';
@@ -31,11 +40,17 @@ const routes: Routes = [
       {path:'MenuList', component: MenuListComponent},
       {path:'UserPermission', component: UserPermissionComponent},
       {path:'MasterColor', component: MasterColorComponent},
-      {path:'MasterSize', component: MasterSizeComponent},
-      {path:'SalesOrder', component: SalesOrderComponent},
+      {path:'MasterSize', component: MasterSizeComponent},      
       {path:'MasterUnits', component: MasterUnitsComponent},
       {path:'MasterStoresite', component: MasterStoresiteComponent},
-      {path:'MasterProess', component: MasterProcessComponent}
+      {path:'MasterProess', component: MasterProcessComponent},
+      {path:'MasterBrand', component: MasterBrandComponent},
+      {path:'MasterBrandCode', component: MasterBrandcodeComponent},
+      {path:'MasterMaterialtype', component: MasterMaterialtypeComponent},
+      {path:'MasterCategory', component: MasterCategoryComponent},
+      {path:'MasterCustomer', component: CustomerTabComponent},
+      {path:'SalesOrder', component: SalesOrderComponent},
+      {path:'Job', component: JobCreationComponent},
     ]
   },  
   {path:'not-found', component: NotFoundComponent},

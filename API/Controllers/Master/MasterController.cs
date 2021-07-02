@@ -25,7 +25,7 @@ namespace API.Controllers.Master
             _masterRepository = masterRepository;
         }
 
-        
+        #region "MenuList"
         // [HttpPost("AuthMenus")]
         // public async Task<ActionResult<IEnumerable<MenuJoinList>>> GetAuthMenuList(UserDto userDto)
         // {
@@ -57,6 +57,11 @@ namespace API.Controllers.Master
             return Ok(menuList);
         }
 
+        #endregion "MenuList"
+
+
+        #region "UserLocation"
+
         [HttpPost("Loc/SetDefault")]
         public async Task<IActionResult> SetDefaultLocation(MstrUserLocation userLoc)
         {
@@ -64,38 +69,29 @@ namespace API.Controllers.Master
              return Ok(result);
         }
 
-        [HttpGet("ColorCard")]
-        public async Task<IActionResult> GetColorCard()
-        {
-            var result = await _context.MstrColorCard.ToListAsync();
-            return Ok(result);
-        }
+        #endregion "UserLocation"
 
-        [HttpGet("SizeCard")]
-        public async Task<IActionResult> GetSizeCard()
-        {
-            var result = await _context.MstrSizeCard.ToListAsync();
-            return Ok(result);
-        }
 
-        [HttpGet("Company/{id}")]
-        public async Task<IActionResult> GetCompany(int id)
-        {
-            var result = await _context.MstrCompany.ToListAsync();
-            return Ok(result);
-        }
-
-        [HttpGet("Size/{id}")]
-        public async Task<IActionResult> GetSize(int id)
-        {
-            var result = await _context.MstrSize.Where(e => e.LinkSizeCard == id).ToListAsync();
-            return Ok(result);
-        }
+        #region "Color"
 
         [HttpGet("Color/{id}")]
         public async Task<IActionResult> GetColor(int id)
         { 
             var result = await _context.MstrColor.Where(e => e.LinkColorCard == id).ToListAsync();        
+            return Ok(result);
+        }
+
+        [HttpPost("Color")]
+        public async Task<ActionResult> SaveColor(MstrColor color)
+        {
+            var result = await _masterRepository.SaveColorAsync(color);
+            return Ok(result);
+        }
+
+        [HttpGet("ColorCard")]
+        public async Task<IActionResult> GetColorCard()
+        {
+            var result = await _context.MstrColorCard.ToListAsync();
             return Ok(result);
         }
 
@@ -110,6 +106,25 @@ namespace API.Controllers.Master
         public async Task<ActionResult> DeactiveColorCard(MstrColorCard colorCard)
         {           
             var result = await _masterRepository.DeactiveColorCardAsync(colorCard); 
+            return Ok(result);
+        }
+
+        #endregion "Color"
+
+
+        #region "Size"
+
+        [HttpGet("SizeCard")]
+        public async Task<IActionResult> GetSizeCard()
+        {
+            var result = await _context.MstrSizeCard.ToListAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("Size/{id}")]
+        public async Task<IActionResult> GetSize(int id)
+        {
+            var result = await _context.MstrSize.Where(e => e.LinkSizeCard == id).ToListAsync();
             return Ok(result);
         }
 
@@ -134,34 +149,61 @@ namespace API.Controllers.Master
             return Ok(result);
         }
 
-        [HttpPost("Color")]
-        public async Task<ActionResult> SaveColor(MstrColor color)
+        #endregion "Size"
+
+
+        #region "Company"
+
+        [HttpGet("Company/{id}")]
+        public async Task<IActionResult> GetCompany(int id)
         {
-            var result = await _masterRepository.SaveColorAsync(color);
+            var result = await _context.MstrCompany.ToListAsync();
             return Ok(result);
         }
+
+        #endregion "Company"
+
+
+        #region  "Article"
 
         [HttpGet("Articles")]
         public async Task<IActionResult> GetArticles()
         {
-            var articleList = await _context.MstrArticle.ToListAsync();
+            var articleList = await _context.MstrArticle
+                .Join(_context.MstrCategory, a => a.CategoryId , c => c.AutoId
+                    , (a, c) => new { a , c })
+                .Join(_context.MstrMaterialType , am => am.a.MaterialId , m => m.AutoId
+                    ,(am , m) => new {am , m })
+                .Join (_context.MstrUnits , au => au.am.a.UnitId , u => u.AutoId ,
+                    (au , u) => new { au , u })
+                .Join(_context.MstrProductType , ap => ap.au.am.a.ProTypeId , p => p.AutoId,
+                    (ap , p) => new { ap , p})
+                .Join(_context.MstrProductSubCat, aps => aps.ap.au.am.a.SubCatId , s => s.AutoId , 
+                    ( aps , s) => 
+                    new 
+                    {
+                        autoId = aps.ap.au.am.a.AutoId,
+                        unitCode = aps.ap.u.Code,
+                        materialCode = aps.ap.au.m.Code,
+                        catCode = aps.ap.au.am.c.Code,
+                        prodTypeCode = aps.p.ProdTypeCode,
+                        subCatCode = s.ProdSubCatCode,
+                        unitId = aps.ap.au.am.a.UnitId,
+                        materialId = aps.ap.au.am.a.MaterialId,
+                        categoryId = aps.ap.au.am.a.CategoryId,
+                        proTypeId = aps.ap.au.am.a.ProTypeId,
+                        subCatId = aps.ap.au.am.a.SubCatId,
+                        articleName = aps.ap.au.am.a.ArticleName,
+                        stockCode = aps.ap.au.am.a.StockCode,
+                        height = aps.ap.au.am.a.Height,
+                        width = aps.ap.au.am.a.Width,
+                        length = aps.ap.au.am.a.Length,
+                        description1 = aps.ap.au.am.a.Description1,
+                        description2 = aps.ap.au.am.a.Description2
+                    })
+                .ToListAsync();
+                
             return Ok(articleList);
-        }
-
-        [HttpGet("Customer/{locId}")]
-        public async Task<IActionResult> GetCustomer(int locId)
-        {
-            var customerList = await _context.MstrCustomerHeader
-                .Where(x => x.LocationId == locId).ToListAsync();
-            return Ok(customerList);
-        }
-
-        [HttpGet("CustomerDt/{id}")]
-        public async Task<IActionResult> GetCustomerDet(int id)
-        {
-            var customerList = await _context.MstrCustomerDetails
-                    .Where(x => x.CustomerId == id).ToListAsync();
-            return Ok(customerList);
         }
 
         [HttpGet("ArtiColor/{id}")]
@@ -178,24 +220,140 @@ namespace API.Controllers.Master
             return Ok(sizeList);
         }
 
+        #endregion "Article"
+
+
+        #region "CustomerHeader"
+
+        [HttpGet("Customer/{locId}")]
+        public async Task<IActionResult> GetCustomer(int locId)
+        {
+            var customerList = await _context.MstrCustomerHeader
+                .Where(x => x.LocationId == locId)
+                .Select(x => new {x.ShortCode , x.Name , x.AutoId})
+                .ToListAsync();
+            return Ok(customerList);
+        }
+
+        [HttpGet("CustomerHeader")]
+        public async Task<IActionResult> GetCustomerHeader()
+        {
+            var result = await _context.MstrCustomerHeader.ToListAsync();
+            return Ok(result);
+        } 
+
+        [HttpPost("CustHdDeactive")]
+        public async Task<ActionResult> DeactiveCustomerHeader(MstrCustomerHeader mstrCustomerHeader)
+        {           
+            var result = await _masterRepository.DeactiveCustomerHdAsync(mstrCustomerHeader); 
+            return Ok(result);
+        }
+
+        [HttpPost("SaveCustomerHd")]
+        public async Task<ActionResult> SaveCustomerHeader(MstrCustomerHeader MstrCustomerHeader)
+        {
+            var result = await _masterRepository.SaveCustomerHdAsync(MstrCustomerHeader);
+            return Ok(result);
+        }        
+
+        #endregion "CustomerHeader"
+
+
+        #region "CustomerDetail"       
+
+        // [HttpGet("CustomerDt/{id}")]
+        // public async Task<IActionResult> GetCustomerDetails(int id)
+        // { 
+        //     var result = await _context.MstrCustomerDetails.Where(e => e.CustomerId == id).ToListAsync();        
+        //     return Ok(result);
+        // }        
+
+        [HttpGet("CustomerDt/{id}")]
+        public async Task<IActionResult> GetCustomerDet(int id)
+        {
+            var customerList = await _context.MstrCustomerLocation
+                    .Where(x => x.CustomerId == id)
+                    .Select(x => new {x.ShortCode , x.Name , x.AutoId})
+                    .ToListAsync();
+            return Ok(customerList);
+        }       
+
+        [HttpPost("CustomerDt/Deactive")]
+        public async Task<ActionResult> DeactiveCustomerDetails(MstrCustomerLocation customerLoc)
+        {           
+            var result = await _masterRepository.DeactiveCustomerDtAsync(customerLoc); 
+            return Ok(result);
+        }        
+         
+        [HttpPost("SaveCustomerDt")]
+        public async Task<ActionResult> saveCustomerDetails(MstrCustomerLocation customerLoc)
+        {
+            var result = await _masterRepository.SaveCustomerDtAsync(customerLoc);
+            return Ok(result);
+        }  
+        
+        #endregion "CustomerDetail"
+
+
+        #region "CustomerUser"
+
+        [HttpGet("CustomerUser/{id}")]
+        public async Task<IActionResult> GetCustomerUser(int id)
+        {
+            var customerList = await _context.MstrCustomerUsers
+                    .Where(x => x.CustomerId == id)
+                    .Select(x => new {Name = x.Title + ' ' + x.FirstName +' ' + x.LastName , x.AutoId})
+                    .ToListAsync();
+            return Ok(customerList);
+        }    
+
+        #endregion "CustomerUser"
+
+
+        #region "CustomerCurrency"
+
+        [HttpGet("Currency/{id}")]
+        public async Task<IActionResult> GetCusCurrency(int id)
+        {
+            var currencyList = await _context.MstrCustomerCurrency
+                .Where(x => x.CustomerId == id)
+                .Join(_context.MstrCurrency, m => m.CurrencyId, c => c.AutoId
+                    , (m, c) =>
+                    new
+                    {
+                        CurrencyId = m.CurrencyId,
+                        Code = c.Code
+                    })                
+                .ToListAsync();
+          
+            return Ok(currencyList);
+        }        
+
+        #endregion "CustomerCurrency"
+
+
+        #region "CustomerDivision"
+
+        [HttpGet("CusDivision/{id}")]
+        public async Task<IActionResult> GetCustomerDivision(int id)
+        {
+            var divisionList = await _context.MstrCustomerDivision
+                .Where(x => x.CustomerId == id)
+                .Select(x => new {x.Details , x.AutoId})
+                .ToListAsync();
+
+            return Ok(divisionList);
+        }
+
+        #endregion "CustomerDivision"
+
+
+        #region "Unit"
+
         [HttpPost("Editunits")]
         public async Task<ActionResult> saveUnits(MstrUnits units)
         {
             var result = await _masterRepository.SaveUnitAsync(units);
-            return Ok(result);
-        }
-
-        [HttpPost("SaveProcess")]
-        public async Task<ActionResult> saveProcess(MstrProcess MstrProcess)
-        {
-            var result = await _masterRepository.SaveProcessAsync(MstrProcess);
-            return Ok(result);
-        }
-
-        [HttpPost("SaveStoreSite")]
-        public async Task<ActionResult> saveStoreSite(MstrStoreSite MstrStoreSite)
-        {
-            var result = await _masterRepository.SaveStoresiteAsync(MstrStoreSite);
             return Ok(result);
         }
 
@@ -206,27 +364,6 @@ namespace API.Controllers.Master
             return Ok(result);            
         }
 
-        [HttpGet("MasterLocation")]
-        public async Task<IActionResult> GetMstrLocation()
-        {
-            var result = await _context.MstrLocation.ToListAsync();
-            return Ok(result);            
-        }
-
-        [HttpGet("Storesite")]
-        public async Task<IActionResult> GetStoresite()
-        {
-            var result = await _context.MstrStoreSite.ToListAsync();
-            return Ok(result);            
-        }
-
-        [HttpGet("Process")]
-        public async Task<IActionResult> GetProcess()
-        {
-            var result = await _context.MstrProcess.ToListAsync();
-            return Ok(result);            
-        }
-       
         [HttpPost("saveunits")]
         public async Task<ActionResult> Register(MstrUnitsDto MstrUnitsDto)
         {
@@ -240,6 +377,210 @@ namespace API.Controllers.Master
 
             return Ok();
         }
+
+        #endregion "Unit"
+
+
+        #region "Process"
+
+        [HttpPost("SaveProcess")]
+        public async Task<ActionResult> saveProcess(MstrProcess MstrProcess)
+        {
+            var result = await _masterRepository.SaveProcessAsync(MstrProcess);
+            return Ok(result);
+        }
+
+        [HttpGet("Process")]
+        public async Task<IActionResult> GetProcess()
+        {
+            var result = await _context.MstrProcess.ToListAsync();
+            return Ok(result);            
+        }
+
+        #endregion "Process"
+
+
+        #region "StoreSite"
+
+        [HttpPost("SaveStoreSite")]
+        public async Task<ActionResult> saveStoreSite(MstrStoreSite MstrStoreSite)
+        {
+            var result = await _masterRepository.SaveStoresiteAsync(MstrStoreSite);
+            return Ok(result);
+        }
+
+        [HttpGet("Storesite")]
+        public async Task<IActionResult> GetStoresite()
+        {
+            var result = await _context.MstrStoreSite.ToListAsync();
+            return Ok(result);            
+        }
+
+       #endregion "StoreSite"
+
+
+        #region  "Location"
+
+        [HttpGet("MasterLocation")]
+        public async Task<IActionResult> GetMstrLocation()
+        {
+            var result = await _context.MstrLocation.ToListAsync();
+            return Ok(result);            
+        }  
+
+        #endregion "Location"
+
+
+        #region "Category"
+
+        [HttpPost("SaveCategory")]
+        public async Task<ActionResult> saveCategory(MstrCategory Category)
+        {
+            var result = await _masterRepository.SaveCategoryAsync(Category);
+            return Ok(result);
+        }   
+
+        [HttpGet("Category")]
+        public async Task<IActionResult> GetCategory()
+        {
+            var result = await _context.MstrCategory.ToListAsync();
+            return Ok(result);            
+        } 
+
+        #endregion "Category"   
+
+
+        #region "MaterialType"   
+
+        [HttpGet("MaterialType")]
+        public async Task<IActionResult> GetMaterialType()
+        {
+            var result = await _context.MstrMaterialType.ToListAsync();
+            return Ok(result);            
+        }
+
+        [HttpPost("SaveMaterialType")]
+        public async Task<ActionResult> SaveMaterialType(MstrMaterialType MaterialType)
+        {
+            var result = await _masterRepository.SaveMaterialTypeAsync(MaterialType);
+            return Ok(result);
+        }
+
+        #endregion "MaterialType"
+
+
+        #region "Brand"
+
+        [HttpGet("Brand")]
+        public async Task<IActionResult> GetBrand()
+        {
+            var result = await _context.MstrBrand.ToListAsync();
+            return Ok(result);            
+        }
+
+        [HttpPost("SaveBrand")]
+        public async Task<ActionResult> saveProcess(MstrBrand MstrBrand)
+        {
+            var result = await _masterRepository.SaveBrandAsync(MstrBrand);
+            return Ok(result);
+        }
+        
+        [HttpGet("BrandCode")]
+        public async Task<IActionResult> GetBrandCode()
+        {
+            var result = await _context.MstrBrandCode.ToListAsync();
+            return Ok(result);            
+        }
+
+        [HttpGet("BrandCode/{id}")]
+        public async Task<IActionResult> GetBrandCode(int id)
+        { 
+            var result = await _context.MstrBrandCode.Where(e => e.BrandId == id).ToListAsync();        
+            return Ok(result);
+        }
+
+        [HttpPost("SaveBrandCode")]
+        public async Task<ActionResult> saveProcess(MstrBrandCode MstrBrandCode)
+        {
+            var result = await _masterRepository.SaveBrandCodeAsync(MstrBrandCode);
+            return Ok(result);
+        }
+
+        #endregion "Brand"
+      
+
+        #region "SalesCategory"
+
+        [HttpGet("SalesCat")]
+        public async Task<IActionResult> GetSalesCategory()
+        {
+            var customerList = await _context.MstrSalesCategory
+                    .Select(x => new {x.Name , x.Code , x.AutoId})
+                    .ToListAsync();
+            return Ok(customerList);
+        }   
+
+        #endregion "SalesCategory"     
+
+
+        #region "PaymentTerms"
+
+        [HttpGet("PayTerms")]
+        public async Task<IActionResult> GetPaymentTerms()
+        {
+            var payTermList = await _context.MstrPaymentTerm
+                .Select(x => new {x.Name , x.Code , x.AutoId})
+                .ToListAsync();
+          
+            return Ok(payTermList);
+        }
+
+        #endregion "PaymentTerms" 
+
+
+        #region "Countries"
+
+        [HttpGet("Countries")]
+        public async Task<IActionResult> GetCountries()
+        {
+            var countryList = await _context.MstrCountries
+                .Select(x => new {x.Name , x.Code , x.AutoId})
+                .ToListAsync();
+          
+            return Ok(countryList);
+        }
+
+        #endregion "Countries"
+
+
+        #region "Currency"
+
+        [HttpGet("Currency")]
+        public async Task<IActionResult> GetCurrency()
+        {
+            var currencyList = await _context.MstrCurrency
+            .Select(x => new {x.AutoId , x.Code , x.Name})
+            .ToListAsync();
+
+            return Ok(currencyList);
+        }
+
+        #endregion "Currency"
+
+
+        #region "SalesAgent"
+
+        [HttpGet("SalesAgent")]
+        public async Task<IActionResult> GetSalesAgent()
+        {
+            var agentList = await _context.MstrSalesAgent
+                .Select(x => new {x.Name , x.AutoId})
+                .ToListAsync();
+
+            return Ok(agentList);
+        }
+
+        #endregion "SalesAgent"
 
         // private async Task<bool> ColorExists(MstrColor color)
         // {

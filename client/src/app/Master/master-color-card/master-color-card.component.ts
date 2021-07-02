@@ -1,9 +1,8 @@
-import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
-import { Stats } from 'node:fs';
-import { MasterCard } from 'src/app/_models/masterCard';
+import { Card } from 'src/app/_models/card';
 import { User } from 'src/app/_models/user';
 import { AccountService } from '_services/account.service';
 import { MasterService } from '_services/master.service';
@@ -16,8 +15,8 @@ import { MasterService } from '_services/master.service';
 export class MasterColorCardComponent implements OnInit {
   MstrColorCrd: FormGroup;
   user: User;
-  deactiveObj: MasterCard;
-  CCardList: MasterCard[];
+  deactiveObj: Card;
+  CCardList: Card[];
   validationErrors: string[] = [];
 
   public col: IgxColumnComponent;
@@ -25,7 +24,6 @@ export class MasterColorCardComponent implements OnInit {
   public nWidth: string;
   @ViewChild("MstrCCgrid", { static: true }) 
   public MstrCCgrid: IgxGridComponent;
-  //public event: EventEmitter<any> = new EventEmitter();
   
   constructor(private fb: FormBuilder, private accountService: AccountService, private masterService: MasterService
       , private toastr: ToastrService) { }

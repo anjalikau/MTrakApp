@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DelUserModule } from 'src/app/_models/delUserModule';
 import { Member } from 'src/app/_models/member';
-import { SysModule } from 'src/app/_models/SysModule';
+import { SysModule } from 'src/app/_models/sysModule';
 import { UserLevel } from 'src/app/_models/userLevel';
 import { UserLocation } from 'src/app/_models/userLocation';
 import { UserModule } from 'src/app/_models/userModule';

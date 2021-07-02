@@ -15,8 +15,19 @@ namespace API.DTOs
         public int ColorId { get; set; }
         public int SaleOrderId { get; set; }
         public int ArticleId { get; set; }
-        public int CostingId { get; set; }
-        public int Qty { get; set; }
+        public int CostingId { get; set; }   
+        public int CustomerLocId {get;set;}
+        public int CustomerUserId {get;set;}
+        public int SalesCategoryId {get;set;}
+        public int CurrencyId {get;set;}
+        public int CountryId {get;set;}
+        public int PaymentTermId {get;set;}
+        public int SalesAgentId {get;set;}
+        public bool IsChargeable {get;set;}
+        public int BillToId {get;set;}
+        public DateTime TrnsDate { get; set; }
+        public int Qty { get; set; }        
+        public int price { get; set; }
         public bool IsIntendCreated { get; set; }
         public int SOItemDtId { get; set; }
         public string DeliveryRef { get; set; }

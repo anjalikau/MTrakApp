@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
 import { Color } from 'src/app/_models/color';
-import { MasterCard } from 'src/app/_models/masterCard';
+import { Card } from 'src/app/_models/card';
 import { User } from 'src/app/_models/user';
 import { AccountService } from '_services/account.service';
 import { MasterService } from '_services/master.service';
@@ -16,7 +16,7 @@ import { MasterService } from '_services/master.service';
 })
 export class MasterColorComponent implements OnInit {
   masterColor: FormGroup;
-  ColorCardList: MasterCard[];
+  ColorCardList: Card[];
   ColorList: Color[];
   user: User;
   saveobj: Color;

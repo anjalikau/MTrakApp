@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
-import { MasterCard } from 'src/app/_models/masterCard';
+import { Card } from 'src/app/_models/card';
 import { User } from 'src/app/_models/user';
 import { AccountService } from '_services/account.service';
 import { MasterService } from '_services/master.service';
@@ -15,7 +15,7 @@ import { MasterService } from '_services/master.service';
 export class MasterSizeCardComponent implements OnInit {
   sizeCrdForm: FormGroup;
   user: User;
-  sCardList: MasterCard[];
+  sCardList: Card[];
   validationErrors: string[] = [];
 
   public col: IgxColumnComponent;

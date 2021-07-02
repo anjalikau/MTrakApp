@@ -319,6 +319,7 @@ namespace API.Repository
 
             return para.Get<int>("Result");
         }
+
         public async Task<int> SaveStoresiteAsync(MstrStoreSite masterStoreSite)
         {
             DynamicParameters para = new DynamicParameters();
@@ -334,7 +335,141 @@ namespace API.Repository
 
             return para.Get<int>("Result");
         }
+
+        public async Task<int> DeactiveCustomerHdAsync(MstrCustomerHeader mstrCustomerHeader)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoID" , mstrCustomerHeader.AutoId);
+            para.Add("bActive", mstrCustomerHeader.bActive);
+            para.Add("UserId", mstrCustomerHeader.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrCustomerHeaderDeactive", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+        
+        public async Task<int> DeactiveCustomerDtAsync(MstrCustomerLocation MstrCustomerDetails)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , MstrCustomerDetails.AutoId);
+            para.Add("bActive", MstrCustomerDetails.bActive);
+            para.Add("UserId", MstrCustomerDetails.CreateUserId);
+             para.Add("Name", MstrCustomerDetails.Name);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrCustomerDetailsDeactive", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+               
+        public async Task<int> SaveCustomerHdAsync(MstrCustomerHeader mstrCustomerHeader)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , mstrCustomerHeader.AutoId);
+            para.Add("Name", mstrCustomerHeader.Name);
+            para.Add("Address", mstrCustomerHeader.Address);
+            para.Add("Email", mstrCustomerHeader.Email);
+            para.Add("Tel", mstrCustomerHeader.Tel);
+            para.Add("LocationId", mstrCustomerHeader.LocationId);
+            para.Add("UserId", mstrCustomerHeader.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrCustomerHeaderSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
               
+        public async Task<int> SaveCustomerDtAsync(MstrCustomerLocation mstrCustomerDetails)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , mstrCustomerDetails.AutoId);
+            para.Add("Name", mstrCustomerDetails.Name);
+            para.Add("Address", mstrCustomerDetails.Address);
+            para.Add("Email", mstrCustomerDetails.Email);
+            para.Add("Tel", mstrCustomerDetails.Tel);
+            para.Add("CustomerId", mstrCustomerDetails.CustomerId);
+            para.Add("UserId", mstrCustomerDetails.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrCustomerDetailsSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<int> SaveMaterialTypeAsync(MstrMaterialType MstrMaterialType)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , MstrMaterialType.AutoId);
+            para.Add("Code", MstrMaterialType.Code.ToUpper());
+            para.Add("Name", MstrMaterialType.Name);
+            para.Add("UserId", MstrMaterialType.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrMeterialTypeSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+        
+        public async Task<int> SaveCategoryAsync(MstrCategory MstrCategory)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , MstrCategory.AutoId);
+            para.Add("Code", MstrCategory.Code.ToUpper());
+            para.Add("Name", MstrCategory.Name);
+            para.Add("UserId", MstrCategory.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrCategorySave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<int> SaveBrandAsync(MstrBrand MstrBrand)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , MstrBrand.AutoId);
+            para.Add("Name", MstrBrand.Name);
+            para.Add("UserId", MstrBrand.CreateUserId);
+            para.Add("LocationId", MstrBrand.LocationId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrBrandSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<int> SaveBrandCodeAsync(MstrBrandCode MstrBrandCode)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , MstrBrandCode.AutoId);
+            para.Add("Name", MstrBrandCode.Name);
+            para.Add("UserId", MstrBrandCode.CreateUserId);
+            para.Add("BrandId", MstrBrandCode.BrandId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrBrandCodeSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        
 
       
     }

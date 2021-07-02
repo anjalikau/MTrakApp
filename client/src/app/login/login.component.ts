@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AccountService } from '_services/account.service';
 import { AdminService } from '_services/admin.service';
 import { RegisterService } from '_services/register.service';
-import { SysModule } from '../_models/SysModule';
+import { SysModule } from '../_models/sysModule';
 import { User } from '../_models/user';
 
 @Component({

@@ -6,7 +6,7 @@ import { User } from 'src/app/_models/user';
 import { Size } from 'src/app/_models/size';
 import { AccountService } from '_services/account.service';
 import { MasterService } from '_services/master.service';
-import { MstrStoreSite } from 'src/app/_models/mstrStoreSite';
+import { StoreSite } from 'src/app/_models/storeSite';
 
 
 @Component({
@@ -17,10 +17,10 @@ import { MstrStoreSite } from 'src/app/_models/mstrStoreSite';
 export class MasterStoresiteComponent implements OnInit {
 
   mstrStoresite: FormGroup;
-  sizeStoreSiteList: MstrStoreSite[];
+  sizeStoreSiteList: StoreSite[];
   sizeList: Size[];
   user: User;
-  saveobj: MstrStoreSite;
+  saveobj: StoreSite;
   validationErrors: string[] = [];
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -50,7 +50,7 @@ export class MasterStoresiteComponent implements OnInit {
 
     this.saveobj = Object.assign({}, obj);
     //console.log(this.saveobj);
-    this.masterService.SaveStoreSite(this.saveobj).subscribe((result) => {    
+    this.masterService.saveStoreSite(this.saveobj).subscribe((result) => {    
       if (result == 1) {
         this.toastr.success("Site save Successfully !!!");
         this.LoadUnits();

@@ -8,7 +8,12 @@ namespace API.Interfaces
     public interface ISalesRepository
     {
          Task<TransSalesOrderHd> GetSalesOrderRefAsync();
-         Task<ReturnDto> SaveSalesOrderAsync(List<SalesOrderRecDto> salesOrder);
+         Task<ReturnDto> SaveSalesOrderAsync(List<SalesOrderDeliveryDto> salesOrder);
          Task<IEnumerable<SalesOrderRetDto>> GetSalesOrderAsync(string SORefNo);
+         Task<IEnumerable<PendingOrderItemsDto>> GetPendOrderItemsAsync(int custometId);
+         Task<IEnumerable<PendingDelivOrderDto>> GetPendDelivOrderAsync(PendingOrderItemsDto items);
+         Task<RefNumDto> GetJobRefNumberAsync();
+         Task<ReturnDto> SaveJobCardAsync(List<TransJobDetail> trnsJob);
+         Task<IEnumerable<ReturnJobCardDto>> GetJobCardDetailsAsync(string jobNo);
     }
 }

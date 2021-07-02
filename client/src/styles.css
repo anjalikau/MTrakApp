@@ -2,9 +2,21 @@
 
 body,.form-control,.btn {
     font-size: 0.75rem;
-    line-height: 0.75;
+    line-height: 1.2;
+}
+.modal-body {
+    padding: 0.7rem;
 }
 
+.igx-input-group__bundle {
+    padding-top: 1rem;
+}
+.modal-header {
+    padding: 0.75rem;
+}
+.card-body {
+    padding: 0.75rem;
+}
 /* option {
     
     padding: 5px 5px 5px;
@@ -70,6 +82,9 @@ label:not(.form-check-label):not(.custom-file-label) {
     font-size: 0.75rem;
 }
 
+element.style {
+    height: 47px;
+}
 
 /* .brand-link {
     line-height: 1.2;

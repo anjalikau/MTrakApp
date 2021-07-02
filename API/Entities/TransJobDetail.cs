@@ -14,7 +14,6 @@ namespace API.Entities
         public int SODelivDtId { get; set; }
         public int OrderQty { get; set; }
         public int JobQty { get; set; }
-        public int Qty { get; set; }
         public int ? CreateUserId { get; set; }
         public DateTime ? CreateDateTime { get; set; } = DateTime.Now;
         public int ? UpdateUserId { get; set; }

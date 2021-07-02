@@ -39,4 +39,28 @@ export class SalesorderService {
     return this.http.post(this.baseUrl + 'SalesOrder/SOSave' , model , httpOptions);
   }
 
+  getPendOrderItems(id: number) {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/JobPedItems/' + id , httpOptions)
+  }
+
+  getPendDelivOrder(model: any) {
+    return this.http.post<any>(this.baseUrl + 'SalesOrder/JobPedOrders' , model , httpOptions);
+  }
+
+  getJobRefNumber() {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/JobNo' , httpOptions);
+  }
+
+  getCostComination(model: any) {
+    return this.http.post<any>(this.baseUrl + 'SalesOrder/CostComb' , model , httpOptions);
+  }
+
+  saveJobCard(model: any) {
+    return this.http.post(this.baseUrl + 'SalesOrder/SaveJob' , model , httpOptions);
+  }
+
+  getJobCardDetails(id: number) {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/JobCard/' + id , httpOptions);
+  }
+
 }

@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Company } from 'src/app/_models/company';
 import { DelUserModule } from 'src/app/_models/delUserModule';
 import { PermitUser } from 'src/app/_models/permitUser';
-import { SysModule } from 'src/app/_models/SysModule';
+import { SysModule } from 'src/app/_models/sysModule';
 import { UserLocation } from 'src/app/_models/userLocation';
 import { UserModule } from 'src/app/_models/userModule';
 import { AdminService } from '_services/admin.service';

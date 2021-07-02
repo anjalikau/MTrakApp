@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { IComboSelectionChangeEventArgs } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
-import { SysModule } from 'src/app/_models/SysModule';
+import { SysModule } from 'src/app/_models/sysModule';
 import { UserLevel } from 'src/app/_models/userLevel';
 import { RegisterService } from '_services/register.service';
 

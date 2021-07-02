@@ -27,6 +27,16 @@ namespace API.Interfaces
         Task<IEnumerable<MstrSize>> GetArticlSizeAsync(int articleId);
         Task<int> SaveUnitAsync(MstrUnits mstrUnits);
         Task<int> SaveProcessAsync(MstrProcess mstrProcess);
-        Task<int> SaveStoresiteAsync(MstrStoreSite mstrStoreSite);
+        Task<int> SaveStoresiteAsync(MstrStoreSite mstrStoreSite);        
+        Task<int> SaveMaterialTypeAsync(MstrMaterialType MstrMaterialType);
+        Task<int> SaveCategoryAsync(MstrCategory MstrCategory);
+        Task<int> SaveBrandCodeAsync(MstrBrandCode MstrBrandCode);
+        Task<int> SaveBrandAsync(MstrBrand MstrBrand);
+        Task<int> DeactiveCustomerHdAsync(MstrCustomerHeader mstrCustomerHeader);        
+        Task<int> SaveCustomerHdAsync(MstrCustomerHeader MstrCustomerHeader);
+        Task<int> SaveCustomerDtAsync(MstrCustomerLocation MstrCustomerDetails);
+        Task<int> DeactiveCustomerDtAsync(MstrCustomerLocation mstrCustomerDetails);
+
+
     }
 }

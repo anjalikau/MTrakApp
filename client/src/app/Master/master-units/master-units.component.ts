@@ -6,7 +6,7 @@ import { User } from 'src/app/_models/user';
 import { Size } from 'src/app/_models/size';
 import { AccountService } from '_services/account.service';
 import { MasterService } from '_services/master.service';
-import { MstrUnits } from 'src/app/_models/mstrUnits';
+import { Units } from 'src/app/_models/units';
 
 
 @Component({
@@ -16,10 +16,10 @@ import { MstrUnits } from 'src/app/_models/mstrUnits';
 })
 export class MasterUnitsComponent implements OnInit {
   mstrUnits: FormGroup;
-  sizeUnitList: MstrUnits[];
+  sizeUnitList: Units[];
   sizeList: Size[];
   user: User;
-  saveobj: MstrUnits;
+  saveobj: Units;
   validationErrors: string[] = [];
   public col: IgxColumnComponent;
   public pWidth: string;

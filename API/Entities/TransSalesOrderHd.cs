@@ -11,13 +11,23 @@ namespace API.Entities
         public int AutoId { get; set; }
         public string OrderRef { get; set; }
         public string CustomerRef { get; set; }
-        public int CustomerId { get; set; }
-        public int CustomerDtId { get; set; }
+        public int CustomerId { get; set; }       
+        public int CustomerLocId {get;set;}
+        public int CustomerUserId {get;set;}
+        public int SalesCategoryId {get;set;}
+        public int CurrencyId {get;set;}
+        public int CountryId {get;set;}
+        public int PaymentTermId {get;set;}
+        public long ArticleId {get;set;}
+        public int SalesAgentId {get;set;}
+        public bool IsChargeable {get;set;}
+        public int CustomerDivId {get;set;}
         public DateTime TrnsDate { get; set; }
         public DateTime DelDate { get; set; }
         public int ? CreateUserId { get; set; }
         public DateTime ? CreateDateTime { get; set; } = DateTime.Now;
         public int ? UpdateUserId { get; set; }
         public DateTime ? UpdateDateTime { get; set; } 
+        public virtual MstrCustomerHeader MstrCustomerHeader { get; set; }
     }
 }

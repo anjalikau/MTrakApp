@@ -102,7 +102,7 @@
             <li class="nav-item">
               <a class="nav-link" routerLink="/MasterSize" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Master Size</p>
+                <p>Size</p>
               </a>
             </li>
           </ul>
@@ -110,7 +110,7 @@
             <li class="nav-item">
               <a class="nav-link" routerLink="/MasterColor" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Master Color</p>
+                <p>Color</p>
               </a>
             </li>
           </ul>
@@ -118,7 +118,7 @@
             <li class="nav-item">
               <a class="nav-link" routerLink="/MasterUnits" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Master Units</p>
+                <p>Units</p>
               </a>
             </li>
           </ul>
@@ -126,7 +126,7 @@
             <li class="nav-item">
               <a class="nav-link" routerLink="/MasterStoresite" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Master Site</p>
+                <p>Store Site</p>
               </a>
             </li>
           </ul>
@@ -134,10 +134,43 @@
             <li class="nav-item">
               <a class="nav-link" routerLink="/MasterProess" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Master Process</p>
+                <p>Process</p>
               </a>
             </li>
-          </ul>        
+          </ul> 
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/MasterBrandCode" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Brand</p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/MasterMaterialtype" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Material type</p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/MasterCategory" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Category</p>
+              </a>
+            </li>
+          </ul>
+         
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/MasterCustomer" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Customer</p>
+              </a>
+            </li>
+          </ul>       
         </li>
         <li class="nav-item" *ngIf="salesGroup">
           <!--menu-open-->
@@ -153,6 +186,15 @@
               <a class="nav-link" routerLink="/SalesOrder" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Sales Order</p>
+              </a>
+            </li>
+          </ul> 
+          
+          <ul class="nav nav-treeview" *ngIf="salesOrder">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/Job" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Job Card</p>
               </a>
             </li>
           </ul>       

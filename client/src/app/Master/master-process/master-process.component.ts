@@ -6,7 +6,7 @@ import { User } from 'src/app/_models/user';
 import { Size } from 'src/app/_models/size';
 import { AccountService } from '_services/account.service';
 import { MasterService } from '_services/master.service';
-import { MstrProcess } from 'src/app/_models/mstrProcess';
+import { Process } from 'src/app/_models/process';
 
 @Component({
   selector: 'app-master-process',
@@ -15,10 +15,10 @@ import { MstrProcess } from 'src/app/_models/mstrProcess';
 })
 export class MasterProcessComponent implements OnInit {
   mstrProcess: FormGroup;
-  sizeProcessList: MstrProcess[];
+  sizeProcessList: Process[];
   sizeList: Size[];
   user: User;
-  saveobj: MstrProcess;
+  saveobj: Process;
   validationErrors: string[] = [];
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -49,7 +49,7 @@ export class MasterProcessComponent implements OnInit {
       "LocationId" : user.locationId
     }
    
-    this.masterService.SaveProcess(obj).subscribe((result) => {    
+    this.masterService.saveProcess(obj).subscribe((result) => {    
       if (result == 1) {
         this.toastr.success("Process save Successfully !!!");
         this.LoadUnits();

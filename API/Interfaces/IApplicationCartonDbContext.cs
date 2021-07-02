@@ -29,10 +29,28 @@ namespace API.Interfaces
         DbSet<MstrArticleColor> MstrArticleColor { get;  set; }
         DbSet<MstrArticleSize> MstrArticleSize { get;  set; }
         DbSet<MstrCustomerHeader> MstrCustomerHeader { get;  set; }
-        DbSet<MstrCustomerDetails> MstrCustomerDetails { get;  set; }
+        DbSet<MstrCustomerLocation> MstrCustomerLocation { get;  set; }
         DbSet<MstrUnits> MstrUnits { get;  set ; }       
         DbSet<MstrStoreSite> MstrStoreSite { get;  set ; }
         DbSet<MstrProcess> MstrProcess { get;  set ; }
+        DbSet<MstrBrand> MstrBrand { get;  set ; }
+        DbSet<MstrBrandCode> MstrBrandCode { get;  set ; }
+        DbSet<MstrMaterialType> MstrMaterialType { get;  set ; }
+        DbSet<MstrCategory> MstrCategory { get;  set ; }
+        DbSet<TransCostHeader> TransCostHeader { get;  set ; }
+        DbSet<MstrCombination> MstrCombination { get;  set ; }
+        DbSet<MstrCustomerUsers> MstrCustomerUsers { get;  set ; }
+        DbSet<MstrSalesCategory> MstrSalesCategory { get;  set ; }
+        DbSet<MstrCustomerCurrency> MstrCustomerCurrency { get;  set ; }
+        DbSet<MstrCurrency> MstrCurrency { get;  set ; }        
+        DbSet<MstrCountries> MstrCountries { get;  set ; }
+        DbSet<MstrPaymentTerm> MstrPaymentTerm { get;  set ; }
+        DbSet<MstrProductType> MstrProductType { get;  set ; }
+        DbSet<MstrProductGroup> MstrProductGroup { get;  set ; }
+        DbSet<MstrProductSubCat> MstrProductSubCat { get;  set ; }
+        DbSet<MstrProductionDefinition> MstrProdDefinition { get;  set ; }
+        DbSet<MstrSalesAgent> MstrSalesAgent { get;  set ; }
+        DbSet<MstrCustomerDivision> MstrCustomerDivision { get;  set ; }
 
     }
 }

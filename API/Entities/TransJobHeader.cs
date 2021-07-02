@@ -9,12 +9,18 @@ namespace API.Entities
     {
         [Key]
         public int AutoId { get; set; }
+        public string JobNo { get; set; }
         public int CustomerId { get; set; }
         public int ArticleId { get; set; }
         public int ColorId { get; set; }
         public int SizeId { get; set; }
-        public int Qty { get; set; }
+        public int TotQty { get; set; }
+        public int PlanQty { get; set; }
+        public DateTime PlanDate { get; set; }
         public int LocationId { get; set; }
+        public int CombinId { get; set; }
+        public DateTime JobDate { get; set; }
+        public int DelivLocationId { get; set; }
         public int ? CreateUserId { get; set; }
         public DateTime ? CreateDateTime { get; set; } = DateTime.Now;
         public int ? UpdateUserId { get; set; }
@@ -24,6 +30,7 @@ namespace API.Entities
         public virtual MstrColor Color {get; set;}
         public virtual MstrSize Size {get; set;}
         public virtual MstrLocation Location {get; set;}
+        public virtual MstrCombination Combination {get; set;}
 
     }
 }

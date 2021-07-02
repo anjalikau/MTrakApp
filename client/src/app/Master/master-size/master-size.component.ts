@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
-import { MasterCard } from 'src/app/_models/masterCard';
+import { Card } from 'src/app/_models/card';
 import { Size } from 'src/app/_models/size';
 import { User } from 'src/app/_models/user';
 import { AccountService } from '_services/account.service';
@@ -15,7 +15,7 @@ import { MasterService } from '_services/master.service';
 })
 export class MasterSizeComponent implements OnInit {
   mstrSize: FormGroup;
-  sizeCardList: MasterCard[];
+  sizeCardList: Card[];
   sizeList: Size[];
   user: User;
   saveobj: Size;

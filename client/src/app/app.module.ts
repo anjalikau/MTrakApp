@@ -18,7 +18,7 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { MainsidebarComponent } from './mainsidebar/mainsidebar.component';
 import { FooterComponent } from './footer/footer.component';
 import { UserRegisterComponent } from './users/user-register/user-register.component';
-import { IgxActionStripModule, IgxAvatarModule, IgxCheckboxModule, IgxComboModule, IgxDatePickerModule, IgxDialogModule, IgxGridModule, IgxIconModule, IgxInputGroupModule, IgxMaskModule, IgxTabsModule, IgxTooltipModule } 
+import { IgxActionStripModule, IgxAvatarModule, IgxCardModule, IgxCheckboxModule, IgxComboModule, IgxDatePickerModule, IgxDialogModule, IgxDividerModule, IgxGridModule, IgxIconModule, IgxInputGroupModule, IgxMaskModule, IgxTabsModule, IgxTooltipModule } 
 from 'igniteui-angular';
 import { UserPwchangeComponent } from './users/user-pwchange/user-pwchange.component';
 import { MenuListComponent } from './users/menu-list/menu-list.component';
@@ -33,8 +33,24 @@ import { SalesOrderComponent } from './transaction/sales-order/sales-order.compo
 import { MasterStoresiteComponent } from './master/master-storesite/master-storesite.component';
 import { MasterUnitsComponent } from './master/master-units/master-units.component';
 import { MasterProcessComponent } from './master/master-process/master-process.component';
-import { ConfirmationDialogService } from '_services/confirmation-dialog.service';
-
+import { JobCreationComponent } from './transaction/job-creation/job-creation.component';
+import { MasterBrandComponent } from './master/master-brand/master-brand.component';
+import { MasterBrandcodeComponent } from './master/master-brandcode/master-brandcode.component';
+import { MasterMaterialtypeComponent } from './master/master-materialtype/master-materialtype.component';
+import { MasterCategoryComponent } from './master/master-category/master-category.component';
+import { MasterCustomerheaderComponent } from './master/master-customerheader/master-customerheader.component';
+import { MasterCustomerdetailsComponent } from './master/master-customerdetails/master-customerdetails.component';
+import { GridWithTransactionsComponent } from './transaction/grid-with-transactions/grid-with-transactions.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CustomerTabComponent } from './master/customer/customer-tab/customer-tab.component';
+import { CustomerHeaderComponent } from './master/customer/customer-header/customer-header.component';
+import { CustomerDetailComponent } from './master/customer/customer-detail/customer-detail.component';
+import { CustomerUserComponent } from './master/customer/customer-user/customer-user.component';
+import { CustomerAddressComponent } from './master/customer/customer-address/customer-address.component';
+import { CustomerBrandComponent } from './master/customer/customer-brand/customer-brand.component';
+import { CustomerDivisionComponent } from './master/customer/customer-division/customer-division.component';
+import { CustomerCurrencyComponent } from './master/customer/customer-currency/customer-currency.component';
+import { CustomerDefaultComponent } from './master/customer/customer-default/customer-default.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +76,24 @@ import { ConfirmationDialogService } from '_services/confirmation-dialog.service
     SalesOrderComponent,
     MasterStoresiteComponent,
     MasterUnitsComponent,
-    MasterProcessComponent
+    MasterProcessComponent,
+    JobCreationComponent,
+    MasterBrandComponent,
+    MasterBrandcodeComponent,
+    MasterMaterialtypeComponent,
+    MasterCategoryComponent,
+    MasterCustomerheaderComponent,
+    MasterCustomerdetailsComponent,
+    GridWithTransactionsComponent,
+    CustomerTabComponent,
+    CustomerHeaderComponent,
+    CustomerDetailComponent,
+    CustomerUserComponent,
+    CustomerAddressComponent,
+    CustomerBrandComponent,
+    CustomerDivisionComponent,
+    CustomerCurrencyComponent,
+    CustomerDefaultComponent
   ],
   imports: [
     BrowserModule,
@@ -82,13 +115,15 @@ import { ConfirmationDialogService } from '_services/confirmation-dialog.service
     IgxActionStripModule,
     IgxAvatarModule,
     IgxTooltipModule,
-    IgxDialogModule   
+    IgxDialogModule,
+    IgxCardModule,
+	  IgxDividerModule   
   ],
   providers: [
     DatePipe,
-    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi:true},
-    ConfirmationDialogService
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi:true}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }
