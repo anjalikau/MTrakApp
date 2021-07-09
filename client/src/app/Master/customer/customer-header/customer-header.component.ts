@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxComboComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerHd } from 'src/app/_models/customerHd';
@@ -10,7 +11,7 @@ import { MasterService } from '_services/master.service';
 @Component({
   selector: 'app-customer-header',
   templateUrl: './customer-header.component.html',
-  styleUrls: ['./customer-header.component.css']
+  styleUrls: ['./customer-header.component.css'],
 })
 export class CustomerHeaderComponent implements OnInit {
   customerHdForm: FormGroup;
@@ -22,15 +23,23 @@ export class CustomerHeaderComponent implements OnInit {
   public col: IgxColumnComponent;
   public pWidth: string;
   public nWidth: string;
+  isEditMode: boolean = false;
+  formTitle: string = "New Customer";
 
-  @ViewChild("customerHdGrid", { static: true })
+  @ViewChild('customerHdGrid', { static: true })
   public customerHdGrid: IgxGridComponent;
 
   @ViewChild('country', { read: IgxComboComponent })
   public country: IgxComboComponent;
+  @ViewChild('currency', { read: IgxComboComponent })
+  public currency: IgxComboComponent;
 
-  constructor(private fb: FormBuilder, private accountService: AccountService, private masterService: MasterService
-    , private toastr: ToastrService) { }
+  constructor(
+    private fb: FormBuilder,
+    private accountService: AccountService,
+    private masterService: MasterService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.initilizeForm();
@@ -40,28 +49,35 @@ export class CustomerHeaderComponent implements OnInit {
   }
 
   initilizeForm() {
-    this.accountService.currentUser$.forEach(element => {
+    this.accountService.currentUser$.forEach((element) => {
       this.user = element;
+      //console.log(this.user.userId);
     });
 
     this.customerHdForm = this.fb.group({
       autoId: [0],
       userId: this.user.userId,
-      shortCode:[''],
-      customerId: [''],
-      city: [''],
+      shortCode: ['', [Validators.required, Validators.maxLength(20)]],
+      customerId: ['', [Validators.required, Validators.maxLength(20)]],
+      city: ['', Validators.maxLength(30)],
       countryId: [''],
-      currencyId: [''],
+      currencyId: ['', Validators.required],
       name: ['', [Validators.required, Validators.maxLength(200)]],
-      address: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.maxLength(50)]],
-      phone: ['', [Validators.required, Validators.maxLength(10)]],
-      vatNo:[''],
-      taxNo:[''],
-      tinNo:[''],
-      zipPostalCode: [''],
-      creditDays: [''],
-    })
+      address: [''],
+      email: ['', [Validators.maxLength(30), Validators.email]],
+      phone: [
+        '',
+        [
+          Validators.maxLength(15),
+          Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$'),
+        ],
+      ],
+      vatNo: ['', Validators.maxLength(20)],
+      taxNo: ['', Validators.maxLength(20)],
+      tinNo: ['', Validators.maxLength(20)],
+      zipPostalCode: ['', Validators.maxLength(20)],
+      creditDays: [0],
+    });
   }
 
   //// ALOW SINGLE SILECTION ONLY COMBO EVENT
@@ -71,130 +87,213 @@ export class CustomerHeaderComponent implements OnInit {
     }
   }
 
-  loadCurrency(){
-    this.masterService.getCurrency().subscribe(curr => {
-      this.currencyList = curr
+  loadCurrency() {
+    this.masterService.getCurrency().subscribe((curr) => {
+      this.currencyList = curr;
     });
   }
 
-  loadCountries(){
-    this.masterService.getCountries().subscribe(country => {
-      this.countryList = country
-    })
+  loadCountries() {
+    this.masterService.getCountries().subscribe((country) => {
+      this.countryList = country;
+    });
   }
 
   public onResize(event) {
     this.col = event.column;
     this.pWidth = event.prevWidth;
     this.nWidth = event.newWidth;
-
   }
 
   loadCustomerheader() {
-    this.masterService.getCustomerHeader().subscribe(cardList => {
-      this.customerHdList = cardList;
-    })
+    var user: User = JSON.parse(localStorage.getItem('user'));
+    this.masterService.getCustomerHdAll(user.locationId).subscribe((cusList) => {
+      this.customerHdList = cusList;
+    });
   }
 
   saveCustomerHd() {
+    var user: User = JSON.parse(localStorage.getItem('user'));
+    //console.log(this.customerHdForm.get('countryId').value);
+
     var obj = {
-      "createUserId": this.user.userId,
-      "Name": this.customerHdForm.get('Name').value.trim(),
-      "autoId": this.customerHdForm.get('AutoId').value,
-      "Address": this.customerHdForm.get('Address').value.trim(),
-      "Email": this.customerHdForm.get('Email').value.trim(),
-      "Tel": this.customerHdForm.get('Tel').value.trim(),
-      "LocationId": 1,
-    }
+      createUserId: this.user.userId,
+      name: this.customerHdForm.get('name').value == undefined ? '' : this.customerHdForm.get('name').value.trim(),
+      autoId: this.customerHdForm.get('autoId').value,
+      address:
+        this.customerHdForm.get('address').value == undefined
+          ? ''
+          : this.customerHdForm.get('address').value.trim(),
+      email:
+        this.customerHdForm.get('email').value == undefined
+          ? ''
+          : this.customerHdForm.get('email').value.trim(),
+      tel:
+        this.customerHdForm.get('phone').value == undefined
+          ? ''
+          : this.customerHdForm.get('phone').value.trim(),
+      shortCode: this.customerHdForm.get('shortCode').value.trim(),
+      customerId: this.customerHdForm.get('customerId').value.trim(),
+      city:
+        this.customerHdForm.get('city').value == undefined
+          ? ''
+          : this.customerHdForm.get('city').value.trim(),
+      countryId:
+        this.customerHdForm.get('countryId').value == null
+          ? 0
+          : this.customerHdForm.get('countryId').value[0],
+      currencyId: this.customerHdForm.get('currencyId').value[0],
+      vatNo:
+        this.customerHdForm.get('vatNo').value == undefined
+          ? ''
+          : this.customerHdForm.get('vatNo').value.trim(),
+      taxNo:
+        this.customerHdForm.get('taxNo').value == undefined
+          ? ''
+          : this.customerHdForm.get('taxNo').value.trim(),
+      tinNo:
+        this.customerHdForm.get('tinNo').value == undefined
+          ? ''
+          : this.customerHdForm.get('tinNo').value.trim(),
+      zipPostalCode:
+        this.customerHdForm.get('zipPostalCode').value == undefined
+          ? ''
+          : this.customerHdForm.get('zipPostalCode').value.trim(),
+      creditDays:
+        this.customerHdForm.get('creditDays').value == null
+          ? 0
+          : this.customerHdForm.get('creditDays').value,
+      locationId: user.locationId,
+    };
 
-    this.masterService.saveCustomerHeader(obj).subscribe((result) => {
-      if (result == 1) {
-        this.toastr.success("Customer save Successfully !!!");
-        this.loadCustomerheader();
-        this.cancelCustomerHd();
-      } else if (result == 2) {
-        this.toastr.success("Customer update Successfully !!!");
-        this.loadCustomerheader();
-        this.cancelCustomerHd();
-      } else if (result == -1) {
-        this.toastr.warning("Customer already exists !!!");
-      } else {
-        this.toastr.warning("Contact Admin. Error No:- " + result.toString());
+    //console.log(obj);
+
+    this.masterService.saveCustomerHeader(obj).subscribe(
+      (result) => {
+        //console.log(result);
+        if (result == 1) {
+          this.toastr.success('Customer save successfully !!!');
+          this.loadCustomerheader();
+          this.clearCustomerHd();
+        } else if (result == 2) {
+          this.toastr.success('Customer update successfully !!!');
+          this.loadCustomerheader();
+          //this.clearCustomerHd();
+        } else if (result == -1) {
+          this.toastr.warning('Customer already exists !!!');
+        } else {
+          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+        }
+      },
+      (error) => {
+        this.validationErrors = error;
       }
-
-    }, error => {
-      this.validationErrors = error;
-    })
+    );
   }
 
   deactive(cellValue, cellId) {
     const id = cellId.rowID;
-    const selectedRowData = this.customerHdGrid.data.filter((record) => {
-      return record.autoId == id;
-    });
-    const name = (selectedRowData[0]["name"]);
-    var obj = {
-      "createUserId": this.user.userId,
-      "autoId": id,
-      "bActive": false,
-      "Name": name
-    }
+    // const selectedRowData = this.customerHdGrid.data.filter((record) => {
+    //   return record.autoId == id;
+    // });
 
-    this.deactiveCustomer(obj, "Deactive");
+    var obj = {
+      createUserId: this.user.userId,
+      autoId: id,
+      bActive: false,
+    };
+    this.deactiveCustomer(obj, 'Deactive');
   }
 
   active(cellValue, cellId) {
     const id = cellId.rowID;
-    const selectedRowData = this.customerHdGrid.data.filter((record) => {
-      return record.autoId == id;
-    });
-    const name = (selectedRowData[0]["name"]);
+    // const selectedRowData = this.customerHdGrid.data.filter((record) => {
+    //   return record.autoId == id;
+    // });
+
     var obj = {
-      "createUserId": this.user.userId,
-      "autoId": id,
-      "bActive": true,
-      "Name": name
-    }
-    this.deactiveCustomer(obj, "Active");
+      createUserId: this.user.userId,
+      autoId: id,
+      bActive: true,
+    };
+    this.deactiveCustomer(obj, 'Active');
   }
 
   deactiveCustomer(obj, status) {
-    this.masterService.deactiveCustomerHeader(obj).subscribe((result) => {
-      if (result == 1) {
-        this.toastr.success("Customer " + status + " Successfully !!!");
-        this.loadCustomerheader();
-      } else if (result == 2) {
-        this.toastr.success("Customer " + status + " Successfully !!!");
-        this.loadCustomerheader();
-      } else if (result == -1) {
-        this.toastr.warning("Can't Deactive! Customer Have Datails !");
-      } else {
-        this.toastr.warning("Contact Admin. Error No:- " + result.toString());
+    this.masterService.deactiveCustomerHeader(obj).subscribe(
+      (result) => {
+        if (result == 1) {
+          this.toastr.success('Customer ' + status + ' Successfully !!!');
+          this.loadCustomerheader();
+        } else if (result == 2) {
+          this.toastr.success('Customer ' + status + ' Successfully !!!');
+          this.loadCustomerheader();
+        } else if (result == -1) {
+          this.toastr.warning("Can't Deactive! Customer Have Datails !");
+        } else {
+          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+        }
+      },
+      (error) => {
+        this.validationErrors = error;
       }
-
-    }, error => {
-      this.validationErrors = error;
-    })
+    );
   }
 
-  cancelCustomerHd() {
+  clearCustomerHd() {
+    this.isEditMode = false;
     this.customerHdForm.reset();
-    this.customerHdForm.get('AutoId').setValue(0);
-    this.customerHdForm.get('CreateUserId').setValue(this.user.userId);
+    this.customerHdForm.get('autoId').setValue(0);
+    this.customerHdForm.get('userId').setValue(this.user.userId);
+
+    /// enabled fileds
+    this.customerHdForm.get('name').enable();
+    this.customerHdForm.get('shortCode').enable();
+    this.customerHdForm.get('currencyId').enable();
+    this.customerHdForm.get('customerId').enable();
+    this.formTitle = "New Customer";
   }
 
+  onEditCustomerHd(event, cellId) {
+    this.clearCustomerHd();
+    this.isEditMode = true;
+    //console.log(this.customerHdGrid.data);
 
-  onEdit(event, cellId) {
     const ids = cellId.rowID;
     const selectedRowData = this.customerHdGrid.data.filter((record) => {
       return record.autoId == ids;
     });
 
-    this.customerHdForm.get('Name').setValue(selectedRowData[0]["name"]);
-    this.customerHdForm.get('AutoId').setValue(selectedRowData[0]["autoId"]);
-    this.customerHdForm.get('Address').setValue(selectedRowData[0]["address"]);
-    this.customerHdForm.get('Email').setValue(selectedRowData[0]["email"]);
-    this.customerHdForm.get('Tel').setValue(selectedRowData[0]["tel"]);
-  }
+    this.formTitle = "Update Customer";
+    //console.log(selectedRowData);
+    this.customerHdForm.get('name').setValue(selectedRowData[0]['name']);
+    this.customerHdForm.get('autoId').setValue(selectedRowData[0]['autoId']);
+    this.customerHdForm.get('address').setValue(selectedRowData[0]['address']);
+    this.customerHdForm.get('email').setValue(selectedRowData[0]['email']);
+    this.customerHdForm.get('phone').setValue(selectedRowData[0]['tel']);
+    this.customerHdForm
+      .get('shortCode')
+      .setValue(selectedRowData[0]['shortCode']);
+    this.customerHdForm
+      .get('customerId')
+      .setValue(selectedRowData[0]['customerID']);
+    this.customerHdForm.get('city').setValue(selectedRowData[0]['city']);
+    this.customerHdForm.get('vatNo').setValue(selectedRowData[0]['vatNo']);
+    this.customerHdForm.get('taxNo').setValue(selectedRowData[0]['taxNo']);
+    this.customerHdForm.get('tinNo').setValue(selectedRowData[0]['tinNo']);
+    this.customerHdForm
+      .get('zipPostalCode')
+      .setValue(selectedRowData[0]['zipPostalCode']);
+    this.customerHdForm
+      .get('creditDays')
+      .setValue(selectedRowData[0]['creditDays']);
+    this.currency.setSelectedItem(selectedRowData[0]['currencyId'], true);
+    this.country.setSelectedItem(selectedRowData[0]['countryId'], true);
 
+    /// disabled fileds
+    this.customerHdForm.get('name').disable();
+    this.customerHdForm.get('shortCode').disable();
+    this.customerHdForm.get('currencyId').disable();
+    this.customerHdForm.get('customerId').disable();
+  }
 }

@@ -13,8 +13,6 @@ import { MasterBrandComponent } from './master/master-brand/master-brand.compone
 import { MasterBrandcodeComponent } from './master/master-brandcode/master-brandcode.component';
 import { MasterCategoryComponent } from './master/master-category/master-category.component';
 import { MasterColorComponent } from './master/master-color/master-color.component';
-import { MasterCustomerdetailsComponent } from './master/master-customerdetails/master-customerdetails.component';
-import { MasterCustomerheaderComponent } from './master/master-customerheader/master-customerheader.component';
 import { MasterMaterialtypeComponent } from './master/master-materialtype/master-materialtype.component';
 import { MasterProcessComponent } from './master/master-process/master-process.component';
 import { MasterSizeComponent } from './master/master-size/master-size.component';

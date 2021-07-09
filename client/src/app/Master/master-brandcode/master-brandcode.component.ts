@@ -61,7 +61,9 @@ export class MasterBrandcodeComponent implements OnInit {
   }
 
   LoadBrand() {
-    this.masterService.getBrand().subscribe(cardList => {
+    var user: User = JSON.parse(localStorage.getItem('user'));
+
+    this.masterService.getBrand(user.locationId).subscribe(cardList => {
       this.Brand = cardList;
     })
   }
@@ -87,11 +89,11 @@ export class MasterBrandcodeComponent implements OnInit {
   saveBrandCode() {
     var brandid = this.brandCodeForm.get('BrandId').value[0];
     var obj = {
-      "createUserId": this.user.userId,
-      "BrandId": this.brandCodeForm.get('BrandId').value[0],
-      "name": this.brandCodeForm.get('Name').value.trim(),
-      "autoId": this.brandCodeForm.get('AutoId').value
-    }
+      createUserId: this.user.userId,
+      BrandId: this.brandCodeForm.get('BrandId').value[0],
+      name: this.brandCodeForm.get('Name').value.trim(),
+      autoId: this.brandCodeForm.get('AutoId').value,
+    };
 
     this.saveobj = Object.assign({}, obj);
     this.masterService.saveBrandCode(this.saveobj).subscribe((result) => {

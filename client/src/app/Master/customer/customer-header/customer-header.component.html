@@ -1,54 +1,45 @@
 <div class="card-header">
     <h3 class="card-title">Customer Header</h3>
-    <div class="card-tools">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalHeaderNew">
-            <i class="fas fa-plus-circle"></i>
+    <div class="card-tools">       
+        <button igxButton="icon" class="fab-compact" (click)="clearCustomerHd()" data-toggle="modal" data-target="#modalHeaderNew">
+            <igx-icon family="material">add_box</igx-icon>
         </button>
     </div>
 </div>
 
 <div class="card-body">
+    <!-- <div class="row">
+        <div class="col-md-1 offset-11">
+            <button igxButton="icon" class="fab-compact" (click)="clearCustomerHd()" data-toggle="modal" data-target="#modalHeaderNew">
+                <igx-icon family="material">add_box</igx-icon>
+            </button>
+        </div>
+    </div> -->
     <div class="row">
         <igx-grid #customerHdGrid [data]="customerHdList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
             [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
             height="500px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
             [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
 
-            <igx-column [width]="'100px'" field="bActive"  [selectable]="false" [sortable]="false" [resizable]="false">
+            <igx-column [width]="'100px'" field="bActive" [header]="' '"  [selectable]="false" [sortable]="false" [resizable]="false">
                 <ng-template igxCell let-cell="cell">
-                    <button igxButton="icon" class="fab-compact" (click)="onEdit($event,cell.cellID)">
+                    <button igxButton="icon" class="fab-compact" (click)="onEditCustomerHd($event,cell.cellID)" data-toggle="modal" 
+                        data-target="#modalHeaderNew" [disabled]="!cell.value">
                         <igx-icon family="material">edit</igx-icon>
                     </button>
                     <div *ngIf="!cell.value; then thenBlock else elseBlock"></div>
                     <ng-template #thenBlock>
                         <button igxButton="icon" class="fab-compact" (click)="active($event ,cell.cellID)">
-                            <igx-icon family="material">toggle_off</igx-icon>
+                            <igx-icon class="icon-red" family="material">toggle_off</igx-icon>
                         </button>
                     </ng-template>
                     <ng-template #elseBlock>
                         <button igxButton="icon" class="fab-compact" (click)="deactive($event ,cell.cellID)">
-                            <igx-icon family="material">toggle_on</igx-icon>
+                            <igx-icon class="icon-green" family="material">toggle_on</igx-icon>
                         </button>
                     </ng-template>
                 </ng-template>
             </igx-column>
-            <!-- <igx-column field="bActive" header="Active/Deactive" [width]="'150px'">
-                <ng-template igxCell let-cell="cell">
-                    <div *ngIf="!cell.value; then thenBlock else elseBlock"></div>
-                    <ng-template #thenBlock>
-                        <button class="btn btn-block btn-sm btn-success" type="button"
-                            (click)="active($event ,cell.cellID)">
-                            Active
-                        </button>
-                    </ng-template>
-                    <ng-template #elseBlock>
-                        <button class="btn btn-block btn-sm btn-warning" type="button"
-                            (click)="deactive($event ,cell.cellID)">
-                            Deactive
-                        </button>
-                    </ng-template>
-                </ng-template>
-            </igx-column> -->
             <igx-column [field]="'shortCode'" [header]="'Short Code'" [resizable]="true" [dataType]="'string'" [sortable]="true">
             </igx-column>
             <igx-column [field]="'customerID'" [header]="'CustomerID'" [resizable]="true" [dataType]="'string'" [sortable]="true">
@@ -59,17 +50,17 @@
             </igx-column>
             <igx-column [field]="'email'" [header]="'Email'" [resizable]="true" [dataType]="'string'" [sortable]="true">
             </igx-column>
-            <igx-column [field]="'tel'" [header]="'Tel'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+            <igx-column [field]="'tel'" [header]="'Tel'" [resizable]="true" [dataType]="'string'" [sortable]="true">
             </igx-column>
-            <igx-column [field]="'city'" [header]="'City'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+            <igx-column [field]="'city'" [header]="'City'" [resizable]="true" [dataType]="'string'" [sortable]="true">
             </igx-column>
-            <igx-column [field]="'vATNo'" [header]="'VAT#'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+            <igx-column [field]="'vATNo'" [header]="'VAT#'" [resizable]="true" [dataType]="'string'" [sortable]="true">
             </igx-column>
-            <igx-column [field]="'taxNo'" [header]="'TaxNo'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+            <igx-column [field]="'taxNo'" [header]="'TaxNo'" [resizable]="true" [dataType]="'string'" [sortable]="true">
             </igx-column>
-            <igx-column [field]="'tinNo'" [header]="'TinNo'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+            <igx-column [field]="'tinNo'" [header]="'TinNo'" [resizable]="true" [dataType]="'string'" [sortable]="true">
             </igx-column>
-            <igx-column [field]="'zipPostalCode'" [header]="'ZipPostalCode'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+            <igx-column [field]="'zipPostalCode'" [header]="'ZipPostalCode'" [resizable]="true" [dataType]="'string'" [sortable]="true">
             </igx-column>
             <igx-column [field]="'creditDays'" [header]="'CreditDays'" [resizable]="true" [dataType]="'number'" [sortable]="true">
             </igx-column>
@@ -84,7 +75,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Customer Header</h5>
+                <h5 class="modal-title"> {{formTitle}} </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -124,9 +115,9 @@
                                     <igx-input-group>
                                         <input igxInput type="text" formControlName="address" />
                                         <label igxLabel for="address"> Address</label>
-                                        <igx-suffix>
+                                        <!-- <igx-suffix>
                                             <igx-icon>home</igx-icon>
-                                        </igx-suffix>
+                                        </igx-suffix> -->
                                     </igx-input-group>
                                 </div>
                             </div>
@@ -193,7 +184,7 @@
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <igx-input-group>
-                                        <input igxInput type="number" formControlName="vatNo" />
+                                        <input igxInput type="text" formControlName="vatNo" />
                                         <label igxLabel for="vatNo"> VAT No</label>
                                     </igx-input-group>
                                 </div>
@@ -202,7 +193,7 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <igx-input-group>
-                                        <input igxInput type="number" formControlName="taxNo" />
+                                        <input igxInput type="text" formControlName="taxNo" />
                                         <label igxLabel for="taxNo"> Tax No </label>
                                     </igx-input-group>
                                 </div>
@@ -211,7 +202,7 @@
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <igx-input-group>
-                                        <input igxInput type="number" formControlName="tinNo" />
+                                        <input igxInput type="text" formControlName="tinNo" />
                                         <label igxLabel for="tinNo"> TIN No </label>
                                     </igx-input-group>
                                 </div>
@@ -220,7 +211,7 @@
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <igx-input-group>
-                                        <input igxInput type="number" formControlName="zipPostalCode" />
+                                        <input igxInput type="text" formControlName="zipPostalCode" />
                                         <label igxLabel for="zipPostalCode"> Zip Postal Code </label>
                                     </igx-input-group>
                                 </div>
@@ -240,10 +231,10 @@
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default mr-3" (click)="cancelCustomerHd()"> 
+                    <button type="button" class="btn btn-default mr-3" (click)="clearCustomerHd()" [disabled]="isEditMode" > 
                         <i class="fas fa-broom"></i> </button>
                     <button type="button" class="btn btn-success" [disabled]="!customerHdForm.valid" (click)="saveCustomerHd()">
-                        <i class="fas fa-plus"></i> </button>
+                        <i class="fas fa-save"></i> </button>
                 </div>                
             </div>
         </div>

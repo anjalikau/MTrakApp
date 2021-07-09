@@ -32,10 +32,20 @@ namespace API.Interfaces
         Task<int> SaveCategoryAsync(MstrCategory MstrCategory);
         Task<int> SaveBrandCodeAsync(MstrBrandCode MstrBrandCode);
         Task<int> SaveBrandAsync(MstrBrand MstrBrand);
-        Task<int> DeactiveCustomerHdAsync(MstrCustomerHeader mstrCustomerHeader);        
+        Task<int> DeactiveCustomerHdAsync(MstrCustomerHeader mstrCustomerHeader);   
+        Task<IEnumerable<ReturnCustomerHdDto>> GetCustomerHdAllAsync(int LocId);     
         Task<int> SaveCustomerHdAsync(MstrCustomerHeader MstrCustomerHeader);
-        Task<int> SaveCustomerDtAsync(MstrCustomerLocation MstrCustomerDetails);
-        Task<int> DeactiveCustomerDtAsync(MstrCustomerLocation mstrCustomerDetails);
+        Task<int> SaveCustomerLocAsync(MstrCustomerLocation customerLocation);
+        Task<int> SaveCustomerUserAsync(MstrCustomerUsers customerUser);
+        Task<int> DeactiveCustomerUserAsync(MstrCustomerUsers cusUser);
+        Task<int> SaveCustomerBrandAsync(MstrCustomerBrand customerBrand);
+        Task<int> DeleteCusCurrencyAsync(MstrCustomerCurrency customerCurrency);
+        Task<int> SaveCustomerCurrencyAsync(MstrCustomerCurrency customercurrency);
+        Task<int> SaveCusAddressAsync(MstrCustomerAddressList cusAddressList);
+        Task<int> DeleteCusBrandAsync(MstrCustomerBrand customerBrand);
+        Task<IEnumerable<ReturnCustomerAddDto>> GetCustomerAddressAsync(int customerId);
+        Task<int> SaveCustomerDivisionAsync(MstrCustomerDivision cusDivision);
+        // Task<int> DeactiveCusLocAsync(MstrCustomerLocation mstrCustomerDetails);
 
 
     }

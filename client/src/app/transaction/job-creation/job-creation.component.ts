@@ -9,7 +9,7 @@ import {
   IgxGridComponent
 } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
-import { CustomerDt } from 'src/app/_models/customerDt';
+import { CustomerLoc } from 'src/app/_models/customerLoc';
 import { CustomerHd } from 'src/app/_models/customerHd';
 import { User } from 'src/app/_models/user';
 import { AccountService } from '_services/account.service';
@@ -31,7 +31,7 @@ export class JobCreationComponent implements OnInit {
   colorList: any[];
   sizeList: any[];
   customerList: CustomerHd[];
-  customerDtList: CustomerDt[];
+  customerDtList: CustomerLoc[];
   pendOrderList: any[];
   jobOrderList: any[];
   isInvalid: boolean = false;
@@ -170,7 +170,7 @@ export class JobCreationComponent implements OnInit {
 
   //// LOADS CUSTOMER DELIVERY LOCATION
   loadCustomerDt(customerId) {    
-    this.masterServices.getCustomerDt(customerId).subscribe((customerDt) => {
+    this.masterServices.getCustomerLocation(customerId).subscribe((customerDt) => {
       this.customerDtList = customerDt;
       //this.cmbcusDelLoc.open();
     },(err) => console.error(err),

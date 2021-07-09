@@ -12,7 +12,7 @@ import {
 import { ToastrService } from 'ngx-toastr';
 import { Article } from 'src/app/_models/article';
 import { Color } from 'src/app/_models/color';
-import { CustomerDt } from 'src/app/_models/customerDt';
+import { CustomerLoc } from 'src/app/_models/customerLoc';
 import { CustomerHd } from 'src/app/_models/customerHd';
 import { Size } from 'src/app/_models/size';
 import { User } from 'src/app/_models/user';
@@ -39,7 +39,7 @@ export class SalesOrderComponent implements OnInit {
   soItemList: any[];
   user: User;
   customerList: CustomerHd[];
-  customerDtList: CustomerDt[];
+  customerDtList: CustomerLoc[];
   customerUserList: any[];
   customerCurrList: any[];
   salesCatList: any[];
@@ -56,14 +56,14 @@ export class SalesOrderComponent implements OnInit {
   btnStatus: string = '';
   rowId: number = 0;
   customerUserId: number;
-  currencyId: number;
+  cusCurrencyId: number;
   customerDivId: number;
   articleId: number = 0;
   isJobCreated: boolean = false;
   //isIntentCreated: boolean = false;
   cuslocationId: number = 0;
   cusUserId: number = 0;
-  cusCurrencyId: number = 0;
+  cuscusCurrencyId: number = 0;
   cusDivisionId: number = 0;
 
   public col: IgxColumnComponent;
@@ -159,7 +159,7 @@ export class SalesOrderComponent implements OnInit {
       customerUserId: [''],
       salesCategoryId: [''],
       salesAgentId: [''],
-      currencyId: [''],
+      cusCurrencyId: [''],
       countryId: [''],
       paymentTermId: [''],
       customerDivId: [''],
@@ -238,7 +238,7 @@ export class SalesOrderComponent implements OnInit {
       this.soHeaderForm.get('customerUserId').setValue('');
       this.soHeaderForm.get('salesCategoryId').setValue('');
       this.soHeaderForm.get('salesAgentId').setValue('');
-      this.soHeaderForm.get('currencyId').setValue('');
+      this.soHeaderForm.get('cusCurrencyId').setValue('');
       this.soHeaderForm.get('countryId').setValue('');
       this.soHeaderForm.get('paymentTermId').setValue('');
       this.soHeaderForm.get('customerDivId').setValue('');
@@ -307,7 +307,7 @@ export class SalesOrderComponent implements OnInit {
   loadCustomerDt(event) {
     for (const item of event.added) {
       /// loads CUSTOMER LOACTION
-      this.masterServices.getCustomerDt(item).subscribe(
+      this.masterServices.getCustomerLocation(item).subscribe(
         (customerDt) => {
           this.customerDtList = customerDt;
         },
@@ -316,8 +316,6 @@ export class SalesOrderComponent implements OnInit {
         // The 3rd callback handles the "complete" event.
         () => {
           // console.log('location');
-          // this.location.setSelectedItem(1,true);
-          // this.location.triggerCheck();
         }
       );
 
@@ -333,9 +331,7 @@ export class SalesOrderComponent implements OnInit {
       //console.log(this.customerCurrList);
 
       //// LOADS CUSTOMER DIVISION
-      this.masterServices
-        .getCustomerDivision(item)
-        .subscribe((customerDivi) => {
+      this.masterServices.getCustomerDivision(item).subscribe((customerDivi) => {
           this.divisionList = customerDivi;
         });
       //console.log(this.divisionList);
@@ -381,14 +377,9 @@ export class SalesOrderComponent implements OnInit {
     var articleId = selectedRowData[0]['autoId'];
     //console.log(selectedRowData);
     this.articleForm.get('articleId').setValue(selectedRowData[0]['autoId']);
-    this.articleForm
-      .get('articleName')
-      .setValue(selectedRowData[0]['articleName']);
-    this.articleForm
-      .get('articleDes1')
-      .setValue(selectedRowData[0]['description1']);
-    this.articleForm
-      .get('articleDes2')
+    this.articleForm.get('articleName').setValue(selectedRowData[0]['articleName']);
+    this.articleForm.get('articleDes1').setValue(selectedRowData[0]['description1']);
+    this.articleForm.get('articleDes2')
       .setValue(selectedRowData[0]['description2']);
     this.articleForm
       .get('articleCode')
@@ -893,7 +884,7 @@ export class SalesOrderComponent implements OnInit {
         customerId: this.soHeaderForm.get('customerId').value[0],
         customerUserId: this.soHeaderForm.get('customerUserId').value[0],
         salesCategoryId: this.soHeaderForm.get('salesCategoryId').value[0],
-        currencyId: this.soHeaderForm.get('currencyId').value[0],
+        cusCurrencyId: this.soHeaderForm.get('cusCurrencyId').value[0],
         countryId: this.soHeaderForm.get('countryId').value[0],
         paymentTermId: this.soHeaderForm.get('paymentTermId').value[0],
         salesAgentId: this.soHeaderForm.get('salesAgentId').value[0],
@@ -1026,7 +1017,7 @@ export class SalesOrderComponent implements OnInit {
                 //this.soHeaderForm.get('customerId').setValue(orderDt[index]["customerId"]);
                 //this.soHeaderForm.get('customerLocId').setValue(orderDt[index]["customerLocId"]);
                 this.cuslocationId = orderDt[index]['customerLocId'];
-                this.cusCurrencyId = orderDt[index]['currencyId'];
+                this.cuscusCurrencyId = orderDt[index]['cusCurrencyId'];
                 this.cusDivisionId = orderDt[index]['customerDivId'];
                 this.cusUserId = orderDt[index]['customerUserId'];
 
@@ -1055,7 +1046,7 @@ export class SalesOrderComponent implements OnInit {
                   true
                 );
                 this.currency.setSelectedItem(
-                  orderDt[index]['currencyId'],
+                  orderDt[index]['cusCurrencyId'],
                   true
                 );
                 this.division.setSelectedItem(
@@ -1190,7 +1181,7 @@ export class SalesOrderComponent implements OnInit {
     setTimeout(() => {
       //console.log("pending");
       this.location.setSelectedItem(this.cuslocationId, true);
-      this.currency.setSelectedItem(this.cusCurrencyId, true);
+      this.currency.setSelectedItem(this.cuscusCurrencyId, true);
       this.division.setSelectedItem(this.cusDivisionId, true);
       this.users.setSelectedItem(this.cusUserId, true);
     }, 2000);
@@ -1248,7 +1239,7 @@ export class SalesOrderComponent implements OnInit {
     this.soHeaderForm.get('customerUserId').setValue('');
     this.soHeaderForm.get('salesCategoryId').setValue('');
     this.soHeaderForm.get('salesAgentId').setValue('');
-    this.soHeaderForm.get('currencyId').setValue('');
+    this.soHeaderForm.get('cusCurrencyId').setValue('');
     this.soHeaderForm.get('countryId').setValue('');
     this.soHeaderForm.get('paymentTermId').setValue('');
     this.soHeaderForm.get('customerDivId').setValue('');

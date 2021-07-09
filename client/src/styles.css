@@ -89,3 +89,11 @@ element.style {
 /* .brand-link {
     line-height: 1.2;
 } */
+
+.icon-red {
+    color: rgb(197, 13, 99);
+}
+
+.icon-green {
+    color: rgb(71, 218, 83);
+}

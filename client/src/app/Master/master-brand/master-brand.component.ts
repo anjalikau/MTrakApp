@@ -51,18 +51,21 @@ export class MasterBrandComponent implements OnInit {
   }
 
   loadBrand() {
-    this.masterService.getBrand().subscribe(cardList => {
+    var user: User = JSON.parse(localStorage.getItem('user'));
+
+    this.masterService.getBrand(user.locationId).subscribe(cardList => {
       this.brandList = cardList;
     })
   }
 
   saveBrand() {
     var obj = {
-      "createUserId": this.user.userId,
-      "Name": this.brandForm.get('Name').value.trim(),
-      "autoId": this.brandForm.get('AutoId').value,
-      "LocationId": 1,
-    }
+      createUserId: this.user.userId,
+      Name: this.brandForm.get('Name').value.trim(),
+      autoId: this.brandForm.get('AutoId').value,
+      LocationId: 1,
+    };
+    
     this.masterService.saveBrand(obj).subscribe((result) => {
       if (result == 1) {
         this.toastr.success("Brand save Successfully !!!");

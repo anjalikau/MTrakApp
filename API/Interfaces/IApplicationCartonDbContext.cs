@@ -51,6 +51,8 @@ namespace API.Interfaces
         DbSet<MstrProductionDefinition> MstrProdDefinition { get;  set ; }
         DbSet<MstrSalesAgent> MstrSalesAgent { get;  set ; }
         DbSet<MstrCustomerDivision> MstrCustomerDivision { get;  set ; }
-
+        DbSet<MstrCustomerBrand> MstrCustomerBrand { get;  set ; }
+        DbSet<MstrAddressType> MstrAddressType { get;  set ; }
+        DbSet<MstrCustomerAddressList> MstrCustomerAddressList { get;  set ; }
     }
 }

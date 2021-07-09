@@ -38,19 +38,17 @@ import { MasterBrandComponent } from './master/master-brand/master-brand.compone
 import { MasterBrandcodeComponent } from './master/master-brandcode/master-brandcode.component';
 import { MasterMaterialtypeComponent } from './master/master-materialtype/master-materialtype.component';
 import { MasterCategoryComponent } from './master/master-category/master-category.component';
-import { MasterCustomerheaderComponent } from './master/master-customerheader/master-customerheader.component';
-import { MasterCustomerdetailsComponent } from './master/master-customerdetails/master-customerdetails.component';
 import { GridWithTransactionsComponent } from './transaction/grid-with-transactions/grid-with-transactions.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CustomerTabComponent } from './master/customer/customer-tab/customer-tab.component';
 import { CustomerHeaderComponent } from './master/customer/customer-header/customer-header.component';
-import { CustomerDetailComponent } from './master/customer/customer-detail/customer-detail.component';
 import { CustomerUserComponent } from './master/customer/customer-user/customer-user.component';
 import { CustomerAddressComponent } from './master/customer/customer-address/customer-address.component';
 import { CustomerBrandComponent } from './master/customer/customer-brand/customer-brand.component';
 import { CustomerDivisionComponent } from './master/customer/customer-division/customer-division.component';
 import { CustomerCurrencyComponent } from './master/customer/customer-currency/customer-currency.component';
 import { CustomerDefaultComponent } from './master/customer/customer-default/customer-default.component';
+import { CustomerLocationsComponent } from './master/customer/customer-locations/customer-locations.component';
 
 @NgModule({
   declarations: [
@@ -82,18 +80,16 @@ import { CustomerDefaultComponent } from './master/customer/customer-default/cus
     MasterBrandcodeComponent,
     MasterMaterialtypeComponent,
     MasterCategoryComponent,
-    MasterCustomerheaderComponent,
-    MasterCustomerdetailsComponent,
     GridWithTransactionsComponent,
     CustomerTabComponent,
     CustomerHeaderComponent,
-    CustomerDetailComponent,
     CustomerUserComponent,
     CustomerAddressComponent,
     CustomerBrandComponent,
     CustomerDivisionComponent,
     CustomerCurrencyComponent,
-    CustomerDefaultComponent
+    CustomerDefaultComponent,
+    CustomerLocationsComponent
   ],
   imports: [
     BrowserModule,

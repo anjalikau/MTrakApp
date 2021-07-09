@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Article } from 'src/app/_models/article';
 import { Color } from 'src/app/_models/color';
 import { Company } from 'src/app/_models/company';
-import { CustomerDt } from 'src/app/_models/customerDt';
+import { CustomerLoc } from 'src/app/_models/customerLoc';
 import { CustomerHd } from 'src/app/_models/customerHd';
 import { Size } from 'src/app/_models/size';
 import { environment } from 'src/environments/environment';
@@ -15,6 +15,12 @@ import { StoreSite } from 'src/app/_models/storeSite';
 import { Process } from 'src/app/_models/process';
 import { Brand } from 'src/app/_models/brand';
 import { BrandCode } from 'src/app/_models/brandCode';
+import { CustomerCurrency } from 'src/app/_models/customerCurrency';
+import { CustomerBrand } from 'src/app/_models/CustomerBrand';
+import { CustomerUser } from 'src/app/_models/customerUser';
+import { AddressType } from 'src/app/_models/AddressType';
+import { CustomerAddressList } from 'src/app/_models/customerAddressList';
+import { CustomerDivision } from 'src/app/_models/customerDivision';
 
 var usertoken: any;
 if (localStorage.length > 0) {
@@ -40,24 +46,38 @@ export class MasterService {
     return this.http.get<Company[]>(this.baseUrl + 'Master/Company/' + moduleId , httpOptions);
   }
 
+  //#region "Size"
+
   getSizeCard() {
     return this.http.get<Card[]>(this.baseUrl + 'Master/SizeCard' , httpOptions);
-  }
-
-  getColorCard() {
-    return this.http.get<Card[]>(this.baseUrl + 'Master/ColorCard' , httpOptions);
   }
 
   getSize(sizeCardId: number) {
     return this.http.get<Size[]>(this.baseUrl + 'Master/Size/' + sizeCardId , httpOptions);
   }
 
-  getColor(colorCardId: number) {
-    return this.http.get<Color[]>(this.baseUrl + 'Master/Color/' + colorCardId , httpOptions);
-  }
-
   saveSizeCard(sizeCard: Card) {
     return this.http.post(this.baseUrl + 'Master/SizeCard' , sizeCard , httpOptions);
+  }
+  
+  saveColor(color: Color) {
+    return this.http.post(this.baseUrl + 'Master/Color' , color, httpOptions);
+  }
+
+  deactiveSizeCard(model: any) {
+    return this.http.post(this.baseUrl + 'Master/SizeCard/Deactive' , model , httpOptions);
+  }
+
+  //#endregion "Size"
+
+  //#region "Color"
+
+  getColorCard() {
+    return this.http.get<Card[]>(this.baseUrl + 'Master/ColorCard' , httpOptions);
+  }
+
+  getColor(colorCardId: number) {
+    return this.http.get<Color[]>(this.baseUrl + 'Master/Color/' + colorCardId , httpOptions);
   }
 
   saveColorCard(colorCard: Card) {
@@ -68,56 +88,40 @@ export class MasterService {
     return this.http.post(this.baseUrl + 'Master/Size' , size , httpOptions);
   }
 
-  saveColor(color: Color) {
-    return this.http.post(this.baseUrl + 'Master/Color' , color, httpOptions);
-  }
-
   deactiveColorCard(model: any) {
     return this.http.post(this.baseUrl + 'Master/ColorCard/Deactive' , model, httpOptions);
   }
 
-  deactiveSizeCard(model: any) {
-    return this.http.post(this.baseUrl + 'Master/SizeCard/Deactive' , model , httpOptions);
-  }
+  //#endregion "Color"
+  
+  //#region "ArticleColor"
 
   getArticleColor(id: number) {
     return this.http.get<Color[]>(this.baseUrl + 'Master/ArtiColor/' + id , httpOptions);
   }
 
-  getArticleSize(id: number) {
+  //#endregion "ArticleColor"
+ 
+   //#region "ArticleSize"
+
+   getArticleSize(id: number) {
     return this.http.get<Size[]>(this.baseUrl + 'Master/ArtiSize/' + id , httpOptions);
   }
 
-  getCustomer(locId: number) {
-    return this.http.get<CustomerHd[]>(this.baseUrl + 'Master/Customer/' + locId , httpOptions);
-  }
+  //#endregion "ArticleSize"
 
-  getCustomerDt(customerId: number) {
-    return this.http.get<CustomerDt[]>(this.baseUrl + 'Master/CustomerDt/' + customerId , httpOptions);
-  }
+  //#region "Article"
 
   getArticles() {
     return this.http.get<Article[]>(this.baseUrl + 'Master/Articles' , httpOptions);    
   }
 
+  //#endregion "Article"
+
+  //#region "Units"
+
   getUnits() {
     return this.http.get<Units[]>(this.baseUrl + 'Master/Units' , httpOptions);
-  }
-
-  getStoreSite() {
-    return this.http.get<StoreSite[]>(this.baseUrl + 'Master/Storesite' , httpOptions);
-  }
-  
-  getProcess() {
-    return this.http.get<Process[]>(this.baseUrl + 'Master/Process' , httpOptions);
-  }
-
-  saveProcess(model: any) {
-    return this.http.post(this.baseUrl + 'Master/SaveProcess', model, httpOptions);
-  }
-
-  saveStoreSite(model: any) {
-    return this.http.post(this.baseUrl + 'Master/SaveStoreSite', model, httpOptions);
   }
 
   saveUnits(model: any) {
@@ -128,24 +132,61 @@ export class MasterService {
     return this.http.post(this.baseUrl + 'Master/Editunits' , units, httpOptions);
   }
 
-  getCategory() {
-    return this.http.get<Category[]>(this.baseUrl + 'Master/Category' , httpOptions);
+  //#endregion "Units"
+
+  //#region  "StoreSite"
+
+  getStoreSite() {
+    return this.http.get<StoreSite[]>(this.baseUrl + 'Master/Storesite' , httpOptions);
   }
 
-  getMaterialType() {
-    return this.http.get<MaterialType[]>(this.baseUrl + 'Master/MaterialType' , httpOptions);
+  saveStoreSite(model: any) {
+    return this.http.post(this.baseUrl + 'Master/SaveStoreSite', model, httpOptions);
+  }
+
+  //#endregion "StoreSite"
+  
+  //#region "Process"
+
+  getProcess() {
+    return this.http.get<Process[]>(this.baseUrl + 'Master/Process' , httpOptions);
+  }
+
+  saveProcess(model: any) {
+    return this.http.post(this.baseUrl + 'Master/SaveProcess', model, httpOptions);
+  }
+
+  //#endregion "Process"
+  
+  //#region "Category"
+
+  getCategory() {
+    return this.http.get<Category[]>(this.baseUrl + 'Master/Category' , httpOptions);
   }
 
   saveCategory(model: any) {
     return this.http.post(this.baseUrl + 'Master/SaveCategory', model, httpOptions);
   }
 
+  //#endregion "Category"
+  
+  //#region "MaterialType"
+  
+
+  getMaterialType() {
+    return this.http.get<MaterialType[]>(this.baseUrl + 'Master/MaterialType' , httpOptions);
+  }  
+
   saveMaterialType(model: any) {
     return this.http.post(this.baseUrl + 'Master/SaveMaterialType', model, httpOptions);
   }
 
-  getBrand() {
-    return this.http.get<Brand[]>(this.baseUrl + 'Master/Brand' , httpOptions);
+  //#endregion "MaterialType"
+
+  //#region "Brand / Brand Code"
+
+  getBrand(locId: number) {
+    return this.http.get<Brand[]>(this.baseUrl + 'Master/Brand/' + locId , httpOptions);
   }
 
   getBrandCode(brandId: number) {
@@ -160,56 +201,168 @@ export class MasterService {
     return this.http.post(this.baseUrl + 'Master/SaveBrandCode', model, httpOptions);
   }
 
-  getCustomerHeader() {
-    return this.http.get<CustomerHd[]>(this.baseUrl + 'Master/CustomerHeader' , httpOptions);
+  //#endregion "Brand / Brand Code"
+
+  //#region "AddressType"
+
+  getAddressType() {
+    return this.http.get<AddressType[]>(this.baseUrl + 'Master/AddressType', httpOptions)
   }
+
+  //#endregion "AddressType"
+
+  //#region "Customer Header" 
+
+  getCustomer(locId: number) {
+    return this.http.get<CustomerHd[]>(this.baseUrl + 'Master/Customer/' + locId , httpOptions);
+  }
+
+  getCustomerHdAll(LocId: number) {
+    return this.http.get<CustomerHd[]>(this.baseUrl + 'Master/CustomerHd/All/' + LocId , httpOptions);
+  } 
 
   saveCustomerHeader(model: any) {
     return this.http.post(this.baseUrl + 'Master/SaveCustomerHd', model, httpOptions);
-  }
-
-  getCustomerDetails(CustomerId: number) {
-    return this.http.get<CustomerDt[]>(this.baseUrl + 'Master/CustomerDt/' + CustomerId , httpOptions);
-  }
-
-  saveCustomerDetails(model: any) {
-    return this.http.post(this.baseUrl + 'Master/SaveCustomerDt', model, httpOptions);
   }
 
   deactiveCustomerHeader(model: any) {
     return this.http.post(this.baseUrl + 'Master/CustHdDeactive' , model , httpOptions);
   }
 
-  getCustomerUser(id: number) {
-    return this.http.get<any>(this.baseUrl + 'Master/CustomerUser/' + id , httpOptions);
+  //#endregion "Customer Header"
+
+  //#region "Customer Location"
+
+  getCustomerLocation(CustomerId: number) {
+    return this.http.get<CustomerLoc[]>(this.baseUrl + 'Master/CustomerLoc/' + CustomerId , httpOptions);
   }
+
+  saveCustomerLocation(model: any) {
+    return this.http.post(this.baseUrl + 'Master/SaveCustomerLoc', model, httpOptions);
+  }
+
+ //#endregion "Customer Location"
+
+  //#region  "Customer Division"
+
+  getCustomerDivision(customerId) {
+    return this.http.get<any>(this.baseUrl + 'Master/CusDivision/' + customerId , httpOptions);
+  }
+
+  saveCustomerDivision(cusDivision: CustomerDivision) {
+    return this.http.post(this.baseUrl + 'Master/SaveCusDivision' , cusDivision, httpOptions);
+  }
+
+  //#endregion "Customer Division"
+
+  //#region "Customer Address"
+
+  saveCustomerAddress(cusAddress: CustomerAddressList) {
+    return this.http.post(this.baseUrl + 'Master/SaveCusAddress' , cusAddress, httpOptions);
+  }
+
+  getCustomerAddressList(customerId: number) {
+    return this.http.get<any[]>(this.baseUrl + 'Master/CusAddress/' + customerId, httpOptions);
+  }
+
+  //#endregion "Customer Address"
+  
+  //#region "Customer User"
+
+  getCustomerUser(customerId: number) {
+    return this.http.get<any>(this.baseUrl + 'Master/CustomerUser/' + customerId , httpOptions);
+  }
+
+  getCustomerUserAll(customerId: number) {
+    return this.http.get<any>(this.baseUrl + 'Master/CustomerUser/All/' + customerId , httpOptions);
+  }
+
+  saveCustomerUser(cusUser: CustomerUser) {
+    return this.http.post(this.baseUrl + 'Master/SaveCusUser' , cusUser, httpOptions);
+  }
+
+  deactiveCustomerUser(cusUser: any) {
+    return this.http.post(this.baseUrl + 'Master/CusUser/Deactive' , cusUser , httpOptions);
+  }
+
+  //#endregion "Customer User"
+
+  //#region "Customer Brand"
+
+  getCustomerBrand(customerId: number) {
+    return this.http.get<any>(this.baseUrl + 'Master/CusBrand/' + customerId , httpOptions);
+  }
+
+  saveCustomerBrand(customerBrand: CustomerBrand) {
+    return this.http.post(this.baseUrl + 'Master/Save/CusBrand' , customerBrand , httpOptions);
+  }
+
+  deleteCustomerBrand(customerBrand: CustomerBrand) {
+    return this.http.post(this.baseUrl + 'Master/Delete/CusBrand' , customerBrand , httpOptions);
+  }
+
+  //#endregion "Customer Brand"
+
+  //#region "Customer Currency"
+
+  getCustomCurrency(id: number) {
+    return this.http.get<any>(this.baseUrl + 'Master/CusCurrency/' + id , httpOptions);
+  }
+
+  saveCustomerCurrency(cusCurrency: CustomerCurrency) {
+    return this.http.post(this.baseUrl + 'Master/SaveCusCurrency/' , cusCurrency  , httpOptions);
+  }
+
+  deleteCustomerCurrency(cusCurrency: any) {
+    return this.http.post(this.baseUrl + 'Master/DeleteCusCurrency/' , cusCurrency  , httpOptions);
+  }
+
+  //#endregion "Customer Currency"
+
+  //#region  "Sales Category"
 
   getSalesCategory() {
     return this.http.get<any>(this.baseUrl + 'Master/SalesCat' , httpOptions);
   }
 
-  getCustomCurrency(id: number) {
-    return this.http.get<any>(this.baseUrl + 'Master/Currency/' + id , httpOptions);
-  }
+  //#endregion "Sales Category"
+
+  //#region  "Payment Terms"
 
   getPaymentTerms() {
     return this.http.get<any>(this.baseUrl + 'Master/PayTerms' , httpOptions);
   }
 
+  //#endregion "Payment Terms"
+
+  //#region  "Sales Agent"
+
   getSalesAgent() {
      return this.http.get<any>(this.baseUrl + 'Master/SalesAgent' , httpOptions);
   }
+
+  //#endregion "Sales Agent"
+
+  //#region  "Countries"
 
   getCountries() {
     return this.http.get<any>(this.baseUrl + 'Master/Countries' , httpOptions);
   }
 
+  //#endregion "Countries"
+
+  //#region "Currency"
+
   getCurrency() {
     return this.http.get<any>(this.baseUrl + 'Master/Currency' , httpOptions);
   }
 
-  getCustomerDivision(customerId) {
-    return this.http.get<any>(this.baseUrl + 'Master/CusDivision/' + customerId , httpOptions);
-  }
+  //#endregion "Currency"
+
+ 
+
+  // getCustomerDt(customerId: number) {
+  //   return this.http.get<CustomerDt[]>(this.baseUrl + 'Master/CustomerDt/' + customerId , httpOptions);
+  // }
 
 }

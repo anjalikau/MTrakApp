@@ -96,7 +96,7 @@ namespace API.Repository
                         , item.SalesOrderHd.CustomerUserId
                         , item.SalesOrderHd.SalesCategoryId
                         , item.SalesOrderHd.SalesAgentId
-                        , item.SalesOrderHd.CurrencyId
+                        , item.SalesOrderHd.CusCurrencyId
                         , item.SalesOrderHd.CountryId
                         , item.SalesOrderHd.PaymentTermId
                         , item.SalesOrderHd.CustomerDivId
@@ -221,7 +221,7 @@ namespace API.Repository
                 if (item.JobHeader != null)
                 {
                     JobHeader.Rows.Add(
-                        item.JobHeader.JobNo
+                        item.JobHeader.JobNo.Trim()
                         , item.JobHeader.CustomerId
                         , item.JobHeader.ArticleId
                         , item.JobHeader.ColorId

@@ -1,8 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Article } from 'src/app/_models/article';
-import { CustomerDt } from 'src/app/_models/customerDt';
-import { CustomerHd } from 'src/app/_models/customerHd';
 import { SalesOrder } from 'src/app/_models/salesOrder';
 import { environment } from 'src/environments/environment';
 

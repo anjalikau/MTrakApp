@@ -51,6 +51,9 @@ namespace API.Data
         public DbSet<MstrProductionDefinition> MstrProdDefinition { get;  set ; }
         public DbSet<MstrSalesAgent> MstrSalesAgent { get;  set ; }
         public DbSet<MstrCustomerDivision> MstrCustomerDivision { get;  set ; }
+        public DbSet<MstrCustomerBrand> MstrCustomerBrand { get;  set ; }
+        public DbSet<MstrAddressType> MstrAddressType { get;  set ; }
+        public DbSet<MstrCustomerAddressList> MstrCustomerAddressList { get;  set ; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

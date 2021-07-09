@@ -15,7 +15,7 @@ namespace API.Entities
         public int CustomerLocId {get;set;}
         public int CustomerUserId {get;set;}
         public int SalesCategoryId {get;set;}
-        public int CurrencyId {get;set;}
+        public int CusCurrencyId {get;set;}
         public int CountryId {get;set;}
         public int PaymentTermId {get;set;}
         public long ArticleId {get;set;}
