@@ -10,10 +10,10 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label> Customer </label>
-                        <igx-combo #customerB id="customerId" class="combo" displayKey="name" valueKey="autoId"
+                        <igx-combo #customerB id="customerBId" class="combo" displayKey="name" valueKey="autoId"
                             [itemsMaxHeight]="250" [data]="customerList" placeholder="Customer"
                             (onSelectionChange)="singleSelection($event)" (onSelectionChange)="onCustomerSelect($event)"
-                            formControlName="customerId" searchPlaceholder="Search...">
+                            formControlName="customerBId" searchPlaceholder="Search...">
                         </igx-combo>
                     </div>
                 </div>

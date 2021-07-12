@@ -53,7 +53,7 @@ export class CustomerBrandComponent implements OnInit {
       autoId: [0],
       userId: this.user.userId,
       brandId: ['', [Validators.required]],
-      customerId: ['', [Validators.required]]      
+      customerBId: ['', [Validators.required]]      
     });
   }
 
@@ -106,11 +106,11 @@ export class CustomerBrandComponent implements OnInit {
 
     /// reset fileds
     this.custBrandForm.get('brandId').reset();
-    this.custBrandForm.get('customerId').enable();
+    this.custBrandForm.get('customerBId').enable();
   }
 
   saveCustomerBrand() {
-    var customerId = this.custBrandForm.get('customerId').value[0];
+    var customerId = this.custBrandForm.get('customerBId').value[0];
     var obj = {
       createUserId: this.user.userId,
       brandId: this.custBrandForm.get('brandId').value[0],
@@ -154,7 +154,7 @@ export class CustomerBrandComponent implements OnInit {
     //console.log(selectedRowData);
     this.custBrandForm.get('autoId').setValue(selectedRowData[0]['autoId']);
     this.brand.setSelectedItem(selectedRowData[0]['brandId'], true);
-    this.custBrandForm.get('customerId').disable();
+    this.custBrandForm.get('customerBId').disable();
   }
 
 }

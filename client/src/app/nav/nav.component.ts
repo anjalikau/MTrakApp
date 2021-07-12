@@ -24,7 +24,7 @@ export class NavComponent implements OnInit {
       ,private router: Router) { }
 
   ngOnInit(): void {    
-    this.loadUserLocation();
+    this.loadUserLocation();    
   }
 
   // login() {
