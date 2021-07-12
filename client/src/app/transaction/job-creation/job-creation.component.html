@@ -130,7 +130,7 @@
                         <label>Combination </label>
                         <igx-combo #cmbcombination id="combination" class="combo" displayKey="combination" valueKey="combinId"
                             [itemsMaxHeight]="250" [data]="combinationList" placeholder="Combination"
-                            (onSelectionChange)="singleSelection($event)" formControlName="combinId"
+                            (onSelectionChange)="singleSelection($event)" (onSelectionChange)="clearGridView($event)" formControlName="combinId"
                             searchPlaceholder="Search...">
                         </igx-combo>
                     </div>

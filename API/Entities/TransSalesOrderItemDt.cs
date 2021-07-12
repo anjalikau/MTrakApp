@@ -8,10 +8,10 @@ namespace API.Entities
     public class TransSalesOrderItemDt
     {
         [Key]
-        public int AutoId { get; set; }
+        public long AutoId { get; set; }
         public int SizeId { get; set; }
         public int ColorId { get; set; }
-        public int SaleHeaderId { get; set; }
+        public long SaleHeaderId { get; set; }
         public int ArticleId { get; set; }
         public int CostingId { get; set; }
         public int ArticleColorSizeId { get; set; }

@@ -8,9 +8,9 @@ namespace API.Entities
     public class TransSalesOrderDeliveryDt
     {
         [Key]
-        public int AutoId { get; set; }
-        public int SOItemDtId { get; set; }        
-        public int SaleHeaderId { get; set; }
+        public long AutoId { get; set; }
+        public long SOItemDtId { get; set; }        
+        public long SaleHeaderId { get; set; }
         public string DeliveryRef { get; set; }
         public DateTime DeliveryDate { get; set; }
         public int ArticleColorSizeId { get; set; }

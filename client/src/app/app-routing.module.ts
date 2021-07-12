@@ -18,6 +18,7 @@ import { MasterProcessComponent } from './master/master-process/master-process.c
 import { MasterSizeComponent } from './master/master-size/master-size.component';
 import { MasterStoresiteComponent } from './master/master-storesite/master-storesite.component';
 import { MasterUnitsComponent } from './master/master-units/master-units.component';
+import { FacProdOrderComponent } from './transaction/fac-prod-order/fac-prod-order.component';
 import { JobCreationComponent } from './transaction/job-creation/job-creation.component';
 import { SalesOrderComponent } from './transaction/sales-order/sales-order.component';
 import { MenuListComponent } from './users/menu-list/menu-list.component';
@@ -49,6 +50,7 @@ const routes: Routes = [
       {path:'MasterCustomer', component: CustomerTabComponent},
       {path:'SalesOrder', component: SalesOrderComponent},
       {path:'Job', component: JobCreationComponent},
+      {path:'FPO', component: FacProdOrderComponent}
     ]
   },  
   {path:'not-found', component: NotFoundComponent},

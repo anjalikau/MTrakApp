@@ -188,8 +188,13 @@ export class JobCreationComponent implements OnInit {
     });
   }
 
+  clearGridView(event) {
+    this.pendOrderList = [];
+  }
+
   getCostCombination(event) {
-    this.combinationList = [];
+    this.combinationList = [];  
+    this.pendOrderList = [];  
     this.jobHeaderForm.get('combinId').setValue('');
 
     for (const item of event.added) {
@@ -223,6 +228,8 @@ export class JobCreationComponent implements OnInit {
   // }
 
   loadPendArticle(event) {
+    this.pendOrderList = [];
+
     for (const item of event.added) {
       this.salesOrderServices.getPendOrderItems(item).subscribe((itemList) => {
         this.pendItems = itemList;
@@ -235,6 +242,7 @@ export class JobCreationComponent implements OnInit {
 
   loadPendColor(event) {
     this.colorList = [];
+    this.pendOrderList = [];
     this.jobHeaderForm.get('colorId').setValue('');
     this.jobHeaderForm.get('sizeId').setValue('');
     this.jobHeaderForm.get('description').setValue('');
@@ -253,6 +261,7 @@ export class JobCreationComponent implements OnInit {
 
   loadPendSize(event) {
     this.sizeList = [];
+    this.pendOrderList = [];
     this.jobHeaderForm.get('sizeId').setValue('');
     for (const item of event.added) {
       var sizeList = this.pendItems.filter((x) => x.articleId == item);
@@ -267,7 +276,8 @@ export class JobCreationComponent implements OnInit {
   }
 
   loadPendDelivOrders() {
-    console.log(this.jobHeaderForm.get('headerId').value);
+    this.pendOrderList = [];
+    // console.log(this.jobHeaderForm.get('headerId').value);
     if (this.jobHeaderForm.get('headerId').value == 0) {
       var obj = {
         customerId: this.jobHeaderForm.get('customerId').value[0],
@@ -286,8 +296,7 @@ export class JobCreationComponent implements OnInit {
       };
     }
 
-    console.log(obj);
-
+    // console.log(obj);
     this.salesOrderServices.getPendDelivOrder(obj).subscribe((orderList) => {
       this.pendOrderList = orderList;
     });

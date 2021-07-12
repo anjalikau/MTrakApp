@@ -54,6 +54,11 @@ namespace API.Data
         public DbSet<MstrCustomerBrand> MstrCustomerBrand { get;  set ; }
         public DbSet<MstrAddressType> MstrAddressType { get;  set ; }
         public DbSet<MstrCustomerAddressList> MstrCustomerAddressList { get;  set ; }
+        public DbSet<MstrStatus> MstrStatus { get;  set ; }
+        public DbSet<TransFtyProductionOrder> TransFtyProductionOrder { get;  set ; }
+        public DbSet<TransFtyProductionOrderDt> TransFtyProductionOrderDt { get;  set ; }
+        public DbSet<TransFtyProductionProcessOrder> TransFtyProdProcessOrder { get;  set ; }        
+        public DbSet<TransFtyProductionProcessOrderDt> TransFtyProdProcessOrderDt { get;  set ; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -97,5 +97,19 @@ namespace API.Controllers.Transaction
             return Ok(result);
         }
 
+        [HttpGet("FPO/JobList")]
+        public async Task<IActionResult> GetFPOPendingJobs() 
+        {
+            var jobList = await _salesRepository.GetFPOPendingJobsAsync();
+            return Ok(jobList);
+        }
+
+        [HttpGet("FPO/JobList/{id}")]
+        public async Task<IActionResult> GetFPOPendingJobDt(int id) 
+        {
+            var jobList = await _salesRepository.GetFPOPendingJobDtAsync(id);
+            return Ok(jobList);
+        }
+
     }
 }

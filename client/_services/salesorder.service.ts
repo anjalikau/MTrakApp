@@ -60,4 +60,12 @@ export class SalesorderService {
     return this.http.get<any>(this.baseUrl + 'SalesOrder/JobCard/' + id , httpOptions);
   }
 
+  getFPOPendingJobs() {
+    return this.http.get<any[]>(this.baseUrl + 'SalesOrder/FPO/JobList' , httpOptions);
+  }
+
+  getFPOPendingJobDt(jobId: number) {
+    return this.http.get<any[]>(this.baseUrl + 'SalesOrder/FPO/JobList/' + jobId , httpOptions);
+  }
+
 }

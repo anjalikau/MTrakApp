@@ -38,7 +38,6 @@ import { MasterBrandComponent } from './master/master-brand/master-brand.compone
 import { MasterBrandcodeComponent } from './master/master-brandcode/master-brandcode.component';
 import { MasterMaterialtypeComponent } from './master/master-materialtype/master-materialtype.component';
 import { MasterCategoryComponent } from './master/master-category/master-category.component';
-import { GridWithTransactionsComponent } from './transaction/grid-with-transactions/grid-with-transactions.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CustomerTabComponent } from './master/customer/customer-tab/customer-tab.component';
 import { CustomerHeaderComponent } from './master/customer/customer-header/customer-header.component';
@@ -49,6 +48,7 @@ import { CustomerDivisionComponent } from './master/customer/customer-division/c
 import { CustomerCurrencyComponent } from './master/customer/customer-currency/customer-currency.component';
 import { CustomerDefaultComponent } from './master/customer/customer-default/customer-default.component';
 import { CustomerLocationsComponent } from './master/customer/customer-locations/customer-locations.component';
+import { FacProdOrderComponent } from './transaction/fac-prod-order/fac-prod-order.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +80,6 @@ import { CustomerLocationsComponent } from './master/customer/customer-locations
     MasterBrandcodeComponent,
     MasterMaterialtypeComponent,
     MasterCategoryComponent,
-    GridWithTransactionsComponent,
     CustomerTabComponent,
     CustomerHeaderComponent,
     CustomerUserComponent,
@@ -89,7 +88,8 @@ import { CustomerLocationsComponent } from './master/customer/customer-locations
     CustomerDivisionComponent,
     CustomerCurrencyComponent,
     CustomerDefaultComponent,
-    CustomerLocationsComponent
+    CustomerLocationsComponent,
+    FacProdOrderComponent
   ],
   imports: [
     BrowserModule,

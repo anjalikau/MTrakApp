@@ -8,7 +8,7 @@ namespace API.Entities
     public class TransJobHeader
     {
         [Key]
-        public int AutoId { get; set; }
+        public long AutoId { get; set; }
         public string JobNo { get; set; }
         public int CustomerId { get; set; }
         public int ArticleId { get; set; }

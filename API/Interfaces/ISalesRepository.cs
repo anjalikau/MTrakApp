@@ -15,5 +15,7 @@ namespace API.Interfaces
          Task<RefNumDto> GetJobRefNumberAsync();
          Task<ReturnDto> SaveJobCardAsync(List<TransJobDetail> trnsJob);
          Task<IEnumerable<ReturnJobCardDto>> GetJobCardDetailsAsync(string jobNo);
+         Task<IEnumerable<TransJobHeader>> GetFPOPendingJobsAsync();
+         Task<IEnumerable<PendJobDetailsDto>> GetFPOPendingJobDtAsync(int JobId);
     }
 }

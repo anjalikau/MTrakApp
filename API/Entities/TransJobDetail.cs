@@ -8,10 +8,10 @@ namespace API.Entities
     public class TransJobDetail
     {
         [Key]
-        public int AutoId { get; set; }
-        public int JobHeaderId { get; set; }
-        public int SOItemDtId { get; set; }
-        public int SODelivDtId { get; set; }
+        public long AutoId { get; set; }
+        public long JobHeaderId { get; set; }
+        public long SOItemDtId { get; set; }
+        public long SODelivDtId { get; set; }
         public int OrderQty { get; set; }
         public int JobQty { get; set; }
         public int ? CreateUserId { get; set; }

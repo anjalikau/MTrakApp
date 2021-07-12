@@ -252,6 +252,28 @@ namespace API.Repository
 
             return result;
         }
+
+        public async Task<IEnumerable<TransJobHeader>> GetFPOPendingJobsAsync()
+        {
+            IEnumerable<TransJobHeader> jobList;
+            //DynamicParameters para = new DynamicParameters();
+
+            jobList = await DbConnection.QueryAsync<TransJobHeader>("spFtyProdOrderGetPendJobs" , null
+                    , commandType: CommandType.StoredProcedure);
+            return jobList;
+        }
+
+        public async Task<IEnumerable<PendJobDetailsDto>> GetFPOPendingJobDtAsync(int JobId)
+        {
+            IEnumerable<PendJobDetailsDto> jobList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("JobId" , JobId);  
+
+            jobList = await DbConnection.QueryAsync<PendJobDetailsDto>("spFtyProdOrderGetPendJobDt" , para
+                    , commandType: CommandType.StoredProcedure);
+            return jobList;
+        }
         
 
     }

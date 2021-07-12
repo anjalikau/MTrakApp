@@ -8,7 +8,7 @@ namespace API.Entities
     public class TransSalesOrderHd
     {
         [Key]
-        public int AutoId { get; set; }
+        public long AutoId { get; set; }
         public string OrderRef { get; set; }
         public string CustomerRef { get; set; }
         public int CustomerId { get; set; }       

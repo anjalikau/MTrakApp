@@ -54,5 +54,11 @@ namespace API.Interfaces
         DbSet<MstrCustomerBrand> MstrCustomerBrand { get;  set ; }
         DbSet<MstrAddressType> MstrAddressType { get;  set ; }
         DbSet<MstrCustomerAddressList> MstrCustomerAddressList { get;  set ; }
+        DbSet<MstrStatus> MstrStatus { get;  set ; }
+        DbSet<TransFtyProductionOrder> TransFtyProductionOrder { get;  set ; }
+        DbSet<TransFtyProductionOrderDt> TransFtyProductionOrderDt { get;  set ; }
+        DbSet<TransFtyProductionProcessOrder> TransFtyProdProcessOrder { get;  set ; }        
+        DbSet<TransFtyProductionProcessOrderDt> TransFtyProdProcessOrderDt { get;  set ; }
+
     }
 }
