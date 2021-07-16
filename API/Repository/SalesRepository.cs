@@ -22,7 +22,7 @@ namespace API.Repository
         public async Task<TransSalesOrderHd> GetSalesOrderRefAsync()
         {
             TransSalesOrderHd SOHeader;
-            SOHeader = await DbConnection.QueryFirstAsync<TransSalesOrderHd>("spSalesOrderGetCustRef", null
+            SOHeader = await DbConnection.QueryFirstAsync<TransSalesOrderHd>("spTransSalesOrderGetCustRef", null
                 , commandType: CommandType.StoredProcedure);
 
             return SOHeader;
@@ -35,7 +35,7 @@ namespace API.Repository
 
             para.Add("SORefNo" , SORefNo);
 
-            salOrderList = await DbConnection.QueryAsync<SalesOrderRetDto>("spSalesOrderGetSODetails" , para
+            salOrderList = await DbConnection.QueryAsync<SalesOrderRetDto>("spTransSalesOrderGetSODetails" , para
                     , commandType: CommandType.StoredProcedure);
             
             return salOrderList;
@@ -133,7 +133,7 @@ namespace API.Repository
             para.Add("SOItem", SOItem.AsTableValuedParameter("SOItemType"));
             para.Add("SODelivery", SODelivery.AsTableValuedParameter("SODeliveryType"));
 
-            var result = await DbConnection.QueryFirstOrDefaultAsync<ReturnDto>("spSalesOrderSave", para
+            var result = await DbConnection.QueryFirstOrDefaultAsync<ReturnDto>("spTransSalesOrderSave", para
                 , commandType: CommandType.StoredProcedure);            
 
             return result;
@@ -146,7 +146,7 @@ namespace API.Repository
 
             para.Add("CustomerId" , custometId);
 
-            PendItemList = await DbConnection.QueryAsync<PendingOrderItemsDto>("spJobCardGetPendingItems" , para
+            PendItemList = await DbConnection.QueryAsync<PendingOrderItemsDto>("spTransJobCardGetPendingItems" , para
                     , commandType: CommandType.StoredProcedure);
             
             return PendItemList;
@@ -163,16 +163,20 @@ namespace API.Repository
             para.Add("ColorId" , items.ColorId);
             para.Add("SizeId" , items.SizeId);
 
-            PendDelivList = await DbConnection.QueryAsync<PendingDelivOrderDto>("spJobCardGetPendingOrders" , para
+            PendDelivList = await DbConnection.QueryAsync<PendingDelivOrderDto>("spTransJobCardGetPendingOrders" , para
                     , commandType: CommandType.StoredProcedure);
             
             return PendDelivList;
         }
 
-        public async Task<RefNumDto> GetJobRefNumberAsync()
+        public async Task<RefNumDto> GetRefNumberAsync(string TransType)
         {
-            RefNumDto refNum;           
-            refNum = await DbConnection.QuerySingleAsync<RefNumDto>("spJobCardGetJobNo" , null
+            RefNumDto refNum;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("TransType" , TransType); 
+
+            refNum = await DbConnection.QuerySingleAsync<RefNumDto>("spTransGetRefNumber" , para
                     , commandType: CommandType.StoredProcedure);
             return refNum;
         }
@@ -184,11 +188,10 @@ namespace API.Repository
 
             para.Add("JobNo" , jobNo);  
 
-            jobCardDto = await DbConnection.QueryAsync<ReturnJobCardDto>("spJobCardGetSavedJobs" , para
+            jobCardDto = await DbConnection.QueryAsync<ReturnJobCardDto>("spTransJobCardGetSavedJobs" , para
                     , commandType: CommandType.StoredProcedure);
             return jobCardDto;
         }
-
 
         public async Task<ReturnDto> SaveJobCardAsync(List<TransJobDetail> trnsJob)
         {
@@ -247,22 +250,20 @@ namespace API.Repository
             para.Add("JobHeaderDT", JobHeader.AsTableValuedParameter("JobHeaderType"));
             para.Add("JobDetailDT", JobDetails.AsTableValuedParameter("JobDetailType"));
 
-            var result = await DbConnection.QueryFirstOrDefaultAsync<ReturnDto>("spJobCardSave", para
+            var result = await DbConnection.QueryFirstOrDefaultAsync<ReturnDto>("spTransJobCardSave", para
                 , commandType: CommandType.StoredProcedure);            
 
             return result;
         }
-
         public async Task<IEnumerable<TransJobHeader>> GetFPOPendingJobsAsync()
         {
             IEnumerable<TransJobHeader> jobList;
             //DynamicParameters para = new DynamicParameters();
 
-            jobList = await DbConnection.QueryAsync<TransJobHeader>("spFtyProdOrderGetPendJobs" , null
+            jobList = await DbConnection.QueryAsync<TransJobHeader>("spTransFtyProdOrderGetPendJobs" , null
                     , commandType: CommandType.StoredProcedure);
             return jobList;
         }
-
         public async Task<IEnumerable<PendJobDetailsDto>> GetFPOPendingJobDtAsync(int JobId)
         {
             IEnumerable<PendJobDetailsDto> jobList;
@@ -270,11 +271,87 @@ namespace API.Repository
 
             para.Add("JobId" , JobId);  
 
-            jobList = await DbConnection.QueryAsync<PendJobDetailsDto>("spFtyProdOrderGetPendJobDt" , para
+            jobList = await DbConnection.QueryAsync<PendJobDetailsDto>("spTransFtyProdOrderGetPendJobDt" , para
                     , commandType: CommandType.StoredProcedure);
             return jobList;
         }
         
+        public async Task<ReturnDto> SaveFPOAsync(List<FacProdOrderDto> facProdOrderDtos)
+        {
+            DataTable FPOHeader = new DataTable();
+            DataTable FPODetails = new DataTable();
 
+            DynamicParameters para = new DynamicParameters();
+
+            FPOHeader.Columns.Add("AutoId", typeof(long));
+            FPOHeader.Columns.Add("JobHeaderId", typeof(long));
+            FPOHeader.Columns.Add("FPONo", typeof(string));
+            FPOHeader.Columns.Add("StartDate", typeof(string));
+            FPOHeader.Columns.Add("EndDate", typeof(string));
+            // FPOHeader.Columns.Add("StatusId", typeof(byte));
+            FPOHeader.Columns.Add("Remarks", typeof(string));
+            FPOHeader.Columns.Add("Qty", typeof(int));
+            FPOHeader.Columns.Add("UserId", typeof(int));
+
+            FPODetails.Columns.Add("SODelivDtId" , typeof(long));
+            FPODetails.Columns.Add("SOItemDtId" , typeof(long));
+            FPODetails.Columns.Add("Qty" , typeof(int));
+
+            foreach (var item in facProdOrderDtos)
+            {
+                if (item.FtyProductionOrderHd != null)
+                {
+                    FPOHeader.Rows.Add( item.FtyProductionOrderHd.AutoId
+                        , item.FtyProductionOrderHd.JobHeaderId
+                        , item.FtyProductionOrderHd.FPONo.Trim()
+                        , item.FtyProductionOrderHd.StartDate
+                        , item.FtyProductionOrderHd.EndDate
+                        // , item.FtyProductionOrderHd.StatusId
+                        , item.FtyProductionOrderHd.Remarks.Trim()
+                        , item.FtyProductionOrderHd.Qty
+                        , item.FtyProductionOrderHd.CreateUserId);
+                }
+                else 
+                {
+                    FPODetails.Rows.Add( item.SODelivDtId
+                        , item.SOItemDtId
+                        , item.Qty);
+                }
+            }           
+
+            para.Add("FPOHeaderDT", FPOHeader.AsTableValuedParameter("FPOHeaderType"));
+            para.Add("FPODetailDT", FPODetails.AsTableValuedParameter("FPODeailType"));
+
+            var result = await DbConnection.QueryFirstOrDefaultAsync<ReturnDto>("spTransFtyProdOrderSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return result;
+        }
+
+        public async Task<IEnumerable<ReturnFPODetailsDto>> GetFPODetailsAsync(string FPONo)
+        {
+            IEnumerable<ReturnFPODetailsDto> fPODetails;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("FPONo" , FPONo);  
+
+            fPODetails = await DbConnection.QueryAsync<ReturnFPODetailsDto>("spTransFtyProdOrderGetDetails" , para
+                    , commandType: CommandType.StoredProcedure);
+            return fPODetails;
+        }
+    
+        public async Task<int> DeleteFPOAsync(DeleteFPODto fPODto)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("UserId", fPODto.UserId);
+            para.Add("FPOId", fPODto.FPOId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spTransFtyProdOrderDelete", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
     }
 }

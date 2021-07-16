@@ -48,6 +48,7 @@ export class JobCreationComponent implements OnInit {
   showSize: boolean = true;
   selectedCusLoc: number;
   isFPOCreated: boolean = false;
+  delivLocation: number = 0;
 
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -169,20 +170,23 @@ export class JobCreationComponent implements OnInit {
   }
 
   //// LOADS CUSTOMER DELIVERY LOCATION
-  loadCustomerDt(customerId) {    
-    this.masterServices.getCustomerLocation(customerId).subscribe((customerDt) => {
-      this.customerDtList = customerDt;
-      //this.cmbcusDelLoc.open();
-    },(err) => console.error(err),
-    () => {
-      //this.cmbcusDelLoc.setSelectedItem(1,true);
-      console.log("observable complete");
-    });
+  loadCustomerDt(customerId) {
+    this.masterServices.getCustomerLocation(customerId).subscribe(
+      (customerDt) => {
+        this.customerDtList = customerDt;
+        //this.cmbcusDelLoc.open();
+      },
+      (err) => console.error(err),
+      () => {
+        //this.cmbcusDelLoc.setSelectedItem(1,true);
+        console.log('observable complete');
+      }
+    );
   }
 
   getJobRefNo() {
     this.jobHeaderForm.get('jobNo').setValue('');
-    this.salesOrderServices.getJobRefNumber().subscribe((res) => {
+    this.salesOrderServices.getRefNumber('JobNo').subscribe((res) => {
       //console.log(refNo);
       this.jobHeaderForm.get('jobNo').setValue(res.refNo.toString());
     });
@@ -193,8 +197,8 @@ export class JobCreationComponent implements OnInit {
   }
 
   getCostCombination(event) {
-    this.combinationList = [];  
-    this.pendOrderList = [];  
+    this.combinationList = [];
+    this.pendOrderList = [];
     this.jobHeaderForm.get('combinId').setValue('');
 
     for (const item of event.added) {
@@ -485,7 +489,7 @@ export class JobCreationComponent implements OnInit {
 
     allRows.forEach((element) => {
       this.totQty = this.totQty + element['jobQty'];
-      this.planQty = this.planQty + element['planQty'];      
+      this.planQty = this.planQty + element['planQty'];
     });
 
     this.jobHeaderForm.get('totQty').setValue(this.totQty);
@@ -596,11 +600,16 @@ export class JobCreationComponent implements OnInit {
   saveJobCard() {
     if (this.validateJobCard()) {
       var user: User = JSON.parse(localStorage.getItem('user'));
-      var jobCardList = [] , customerId = 0 , articleId = 0 , colorId = 0 , sizeId = 0 ,combinId = 0;
+      var jobCardList = [],
+        customerId = 0,
+        articleId = 0,
+        colorId = 0,
+        sizeId = 0,
+        combinId = 0;
 
       //console.log(this.jobHeaderForm.get('customerId').value);
       ////--------=========== JOB CARD HEADER =======================---------
-      if  (this.jobHeaderForm.get('headerId').value > 0) {
+      if (this.jobHeaderForm.get('headerId').value > 0) {
         ///// IF IT IS A EXISTING JOB CARD
         customerId = this.jobHeaderForm.get('customerId').value;
         articleId = this.jobHeaderForm.get('articleId').value;
@@ -630,7 +639,10 @@ export class JobCreationComponent implements OnInit {
         planQty: this.jobHeaderForm.get('planQty').value,
         locationId: user.locationId,
         createUserId: this.user.userId,
-        planDate: this.datePipe.transform(this.jobHeaderForm.get('planDate').value,'yyyy-MM-dd')
+        planDate: this.datePipe.transform(
+          this.jobHeaderForm.get('planDate').value,
+          'yyyy-MM-dd'
+        ),
       };
 
       var obj = {
@@ -675,10 +687,15 @@ export class JobCreationComponent implements OnInit {
 
   ///// VALIDATION BEFORE SAVE JOB CARD
   validateJobCard() {
-    if (this.JobGrid.dataLength > 0) {
-      return true;
+    if (this.isFPOCreated == false) {
+      if (this.JobGrid.dataLength > 0) {
+        return true;
+      } else {
+        this.toastr.info('Fill the Job Card !!!');
+        return false;
+      }
     } else {
-      this.toastr.info('Fill the Job Card !!!');
+      this.toastr.info('FPO already created !!!');
       return false;
     }
   }
@@ -688,90 +705,119 @@ export class JobCreationComponent implements OnInit {
   //   this.cmbcusDelLoc.setSelectedItem(this.selectedCusLoc,true);
   //   this.cmbcusDelLoc.triggerCheck();
   // }
- 
 
   loadJobCardDetails() {
-    this.refreshJobControls() ;
+    this.refreshJobControls();
     this.disableControls();
 
-    this.totQty = 0, this.planQty = 0;
+    (this.totQty = 0), (this.planQty = 0);
     var jobNo = this.jobHeaderForm.get('jobNo').value;
     var jobCardList = [];
 
-    this.salesOrderServices.getJobCardDetails(jobNo).subscribe((jobCardDT) => {
-      //console.log(jobCardDT);
-      if (jobCardDT.length > 0) {
-        ////========= SET JOB CARD HEDER ================
-        /// LOADS CUSTOMER LOCATION BASED ON CUSTOMER  
-        this.loadCustomerDt(jobCardDT[0]['customerId']);    
+    this.salesOrderServices.getJobCardDetails(jobNo).subscribe(
+      (jobCardDT) => {
+        //console.log(jobCardDT);
+        if (jobCardDT.length > 0) {
+          ////========= SET JOB CARD HEDER ================
+          /// LOADS CUSTOMER LOCATION BASED ON CUSTOMER
+          this.loadCustomerDt(jobCardDT[0]['customerId']);
 
-        var jobDate: Date = new Date(
-          this.datePipe.transform(jobCardDT[0]['jobDate'], 'yyyy-MM-dd')
-        );
+          var jobDate: Date = new Date(
+            this.datePipe.transform(jobCardDT[0]['jobDate'], 'yyyy-MM-dd')
+          );
 
-        var planDate: Date = new Date(
-          this.datePipe.transform(jobCardDT[0]['planDate'], 'yyyy-MM-dd')
-        );
+          var planDate: Date = new Date(
+            this.datePipe.transform(jobCardDT[0]['planDate'], 'yyyy-MM-dd')
+          );
 
-        this.jobHeaderForm.get('jobDate').setValue(jobDate);
-        this.jobHeaderForm.get('planDate').setValue(planDate);
+          this.jobHeaderForm.get('jobDate').setValue(jobDate);
+          this.jobHeaderForm.get('planDate').setValue(planDate);
 
-        this.jobHeaderForm.get('customer').setValue(jobCardDT[0]['customer']);
-        this.jobHeaderForm.get('article').setValue(jobCardDT[0]['articleName']);
-        this.jobHeaderForm.get('color').setValue(jobCardDT[0]['color']);
-        this.jobHeaderForm.get('size').setValue(jobCardDT[0]['size']);
-        this.jobHeaderForm.get('description').setValue(jobCardDT[0]['description1']);
-        this.jobHeaderForm.get('customerLoc').setValue(jobCardDT[0]['customerLoc']);
-        this.jobHeaderForm.get('combination').setValue(jobCardDT[0]['combination']);
-        //this.selectedCusLoc = [jobCardDT[index]['delivLocationId']];
+          this.jobHeaderForm.get('customer').setValue(jobCardDT[0]['customer']);
+          this.jobHeaderForm
+            .get('article')
+            .setValue(jobCardDT[0]['articleName']);
+          this.jobHeaderForm.get('color').setValue(jobCardDT[0]['color']);
+          this.jobHeaderForm.get('size').setValue(jobCardDT[0]['size']);
+          this.jobHeaderForm
+            .get('description')
+            .setValue(jobCardDT[0]['description1']);
+          this.jobHeaderForm
+            .get('customerLoc')
+            .setValue(jobCardDT[0]['customerLoc']);
+          this.jobHeaderForm
+            .get('combination')
+            .setValue(jobCardDT[0]['combination']);
+          //this.selectedCusLoc = [jobCardDT[index]['delivLocationId']];
 
-        this.jobHeaderForm
-          .get('customerId')
-          .setValue(jobCardDT[0]['customerId']);
-        this.jobHeaderForm.get('articleId').setValue(jobCardDT[0]['articleId']);
-        this.jobHeaderForm.get('colorId').setValue(jobCardDT[0]['colorId']);
-        this.jobHeaderForm.get('sizeId').setValue(jobCardDT[0]['sizeId']);
-        this.jobHeaderForm.get('combinId').setValue(jobCardDT[0]['combinId']);
+          this.jobHeaderForm
+            .get('customerId')
+            .setValue(jobCardDT[0]['customerId']);
+          this.jobHeaderForm
+            .get('articleId')
+            .setValue(jobCardDT[0]['articleId']);
+          this.jobHeaderForm.get('colorId').setValue(jobCardDT[0]['colorId']);
+          this.jobHeaderForm.get('sizeId').setValue(jobCardDT[0]['sizeId']);
+          this.jobHeaderForm.get('combinId').setValue(jobCardDT[0]['combinId']);
 
-        //// SET CUSTOMER LOACTION
-        this.cmbcusDelLoc.setSelectedItem(jobCardDT[0]['delivLocationId'],true);
-        // // this.cmbcusDelLoc.close();
-        //this.selectedCusLoc = jobCardDT[0]['delivLocationId'];        
+          //// SET CUSTOMER LOACTION
+          this.delivLocation = jobCardDT[0]['delivLocationId'];
+          this.cmbcusDelLoc.setSelectedItem(
+            jobCardDT[0]['delivLocationId'],
+            true
+          );
 
-        this.jobHeaderForm.get('headerId').setValue(jobCardDT[0]['jobHeaderId']);
+          this.jobHeaderForm
+            .get('headerId')
+            .setValue(jobCardDT[0]['jobHeaderId']);
 
-        /// LOADS PENDING DELIVERY ITEMS
-        this.loadPendDelivOrders();
+          /// LOADS PENDING DELIVERY ITEMS
+          this.loadPendDelivOrders();
 
-        /// LOADS JOB CARD GRID
-        for (let index = 0; index < jobCardDT.length; index++) {
-          var balQty =
-            jobCardDT[index]['orderQty'] - jobCardDT[index]['jobQty'];
+          /// LOADS JOB CARD GRID
+          for (let index = 0; index < jobCardDT.length; index++) {
+            var balQty =
+              jobCardDT[index]['orderQty'] - jobCardDT[index]['jobQty'];
 
-          var obj = {
-            customerRef: jobCardDT[index]['customerRef'],
-            deliveryDate: jobCardDT[index]['deliveryDate'],
-            deliveryRef: jobCardDT[index]['deliveryRef'],
-            pjobQty: jobCardDT[index]['oldJobQty'],
-            orderQty: jobCardDT[index]['orderQty'],
-            planQty: jobCardDT[index]['planQty'],
-            balQty: balQty,
-            jobQty: jobCardDT[index]['jobQty'],
-            orderRef: jobCardDT[index]['orderRef'],
-            soDelivDtId: jobCardDT[index]['soDelivDtId'],
-            soItemDtId: jobCardDT[index]['soItemDtId'],
-          };
+            var obj = {
+              customerRef: jobCardDT[index]['customerRef'],
+              deliveryDate: jobCardDT[index]['deliveryDate'],
+              deliveryRef: jobCardDT[index]['deliveryRef'],
+              pjobQty: jobCardDT[index]['oldJobQty'],
+              orderQty: jobCardDT[index]['orderQty'],
+              planQty: jobCardDT[index]['planQty'],
+              balQty: balQty,
+              jobQty: jobCardDT[index]['jobQty'],
+              orderRef: jobCardDT[index]['orderRef'],
+              soDelivDtId: jobCardDT[index]['soDelivDtId'],
+              soItemDtId: jobCardDT[index]['soItemDtId'],
+            };
 
-          this.totQty = this.totQty + jobCardDT[index]['jobQty'];
-          this.planQty = this.planQty + jobCardDT[index]['planQty'];  
-          jobCardList.push(obj);
+            this.totQty = this.totQty + jobCardDT[index]['jobQty'];
+            this.planQty = this.planQty + jobCardDT[index]['planQty'];
+
+            if (this.planQty > 0) this.isFPOCreated = true;
+
+            jobCardList.push(obj);
+          }
+
+          this.jobOrderList = jobCardList;
+          this.jobHeaderForm.get('totQty').setValue(this.totQty);
+          this.jobHeaderForm.get('planQty').setValue(this.planQty);
         }
-
-        this.jobOrderList = jobCardList;
-        this.jobHeaderForm.get('totQty').setValue(this.totQty);
-        this.jobHeaderForm.get('planQty').setValue(this.planQty);
+      },
+      (err) => console.error(err),
+      () => {
+        this.setComboValues();
       }
-    });
+    );
+  }
+
+  setComboValues() {
+    setTimeout(() => {
+      //console.log("pending");
+      this.cmbcusDelLoc.setSelectedItem(this.delivLocation, true);
+    }, 1000);
   }
 
   refreshJobControls() {
@@ -785,7 +831,7 @@ export class JobCreationComponent implements OnInit {
 
     var date: Date = new Date(Date.now());
     this.jobHeaderForm.get('headerId').setValue(0);
-    this.jobHeaderForm.get('jobDate').setValue(date);    
+    this.jobHeaderForm.get('jobDate').setValue(date);
     this.jobHeaderForm.get('userId').setValue(this.user.userId);
     this.jobHeaderForm.get('customerId').setValue(0);
     this.jobHeaderForm.get('articleId').setValue('');
@@ -801,21 +847,22 @@ export class JobCreationComponent implements OnInit {
     this.jobHeaderForm.get('color').setValue('');
     this.jobHeaderForm.get('size').setValue('');
     this.jobHeaderForm.get('customerLoc').setValue('');
-    this.jobHeaderForm.get('combination').setValue('');   
+    this.jobHeaderForm.get('combination').setValue('');
     this.jobHeaderForm.get('totQty').setValue(0);
     this.jobHeaderForm.get('planQty').setValue(0);
+    this.isFPOCreated = false;
   }
 
   clearJobCardControls() {
     // this.jobHeaderForm.reset();
-    this.refreshJobControls(); 
+    this.refreshJobControls();
     this.clearJobEditControls();
     this.getJobRefNo();
     //this.loadCustomer();
-    this.enableControls();  
-  } 
+    this.enableControls();
+  }
 
-  clearJobEditControls(){
+  clearJobEditControls() {
     this.jobCardForm.reset();
     this.jobCardForm.get('pjobQty').setValue(0);
     this.jobCardForm.get('orderQty').setValue(0);
@@ -823,7 +870,7 @@ export class JobCreationComponent implements OnInit {
     this.jobCardForm.get('balQty').setValue(0);
   }
 
-  enableControls(){
+  enableControls() {
     this.showArticle = true;
     this.showColor = true;
     this.showCombin = true;
@@ -831,7 +878,7 @@ export class JobCreationComponent implements OnInit {
     this.showSize = true;
   }
 
-  disableControls(){
+  disableControls() {
     this.showArticle = false;
     this.showColor = false;
     this.showCombin = false;
@@ -840,10 +887,13 @@ export class JobCreationComponent implements OnInit {
     this.showSize = false;
   }
 
-   //// JOB NO KEY UP EVENT
-   onKey(event: any) {
-    this.refreshJobControls();
-    this.enableControls();
+  //// JOB NO KEY UP EVENT
+  onKey(event: any) {
+    if (event.keyCode != 13) {
+      this.refreshJobControls();
+      this.enableControls();
+    } else {
+      this.loadJobCardDetails();
+    }
   }
- 
 }

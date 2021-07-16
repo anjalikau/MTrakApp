@@ -161,7 +161,7 @@ namespace API.Repository
             para.Add("UserLocId", userLoc.AutoId);
             para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
 
-            var result = await DbConnection.ExecuteAsync("spUserLocSetDefault", para
+            var result = await DbConnection.ExecuteAsync("spMstrUserLocSetDefault", para
                 , commandType: CommandType.StoredProcedure);            
 
             return para.Get<int>("Result");

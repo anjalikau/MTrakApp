@@ -7,18 +7,25 @@
         <!-- FPO HEADER -->
         <form [formGroup]="fpoHeaderForm" (ngSubmit)="fpoHeaderForm.valid" autocomplete="off">
             <div class="row">
-                <div class="col-md-11">
+                <div class="col-md-8">
                     <h6 class="bg-secondary">
                         <!-- <i class="fas fa-file-alt"></i>  -->
-                        Factory Production Order
-                    </h6>
+                        Factory Production Order Header
+                    </h6>                    
+                </div>
+                <div class="col-md-2">
+                    <h6 class="bg-danger text-white"> {{ fpoStatus }} </h6>
                 </div>
                 <div class="col-md-1">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-success mr-3" [disabled]="!fpoHeaderForm.valid" (click)="saveFPO()">
+                        <button type="button" class="btn btn-success mr-1" [disabled]="!fpoHeaderForm.valid"
+                            (click)="saveFPO()">
                             <i class="fas fa-save"></i>
                         </button>
-                        <button type="button" class="btn btn-default" (click)="clearFPOControls()">
+                        <button type="button" class="btn btn-danger mr-1" (click)="openConfirmDialog($event)">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <button type="button" class="btn btn-default" (click)="refreshControls()">
                             <i class="fas fa-redo"></i>
                         </button>
                     </div>
@@ -27,28 +34,36 @@
             </div>
             <div class="row">
                 <div class="col-md-2">
-                    <div class="form-group">
-                        <label>FPO No </label>
-                        <igx-input-group type="search">
-                            <input #input1 igxInput placeholder="FPO No" formControlName="fPONo" (keyup)="onKey($event)" />
-                            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''">
-                                <igx-icon>clear</igx-icon>
-                            </igx-suffix>
-                            <igx-prefix>
-                                <igx-icon>search</igx-icon>
-                            </igx-prefix>
+                    <div class="form-group" *ngIf="!isDisplayMode">
+                        <label>Job No </label>
+                        <igx-combo #jobNo id="jobHeaderId" class="combo" displayKey="jobNo" valueKey="autoId"
+                            [itemsMaxHeight]="250" [data]="pendJobList" placeholder="Job No"
+                            (onSelectionChange)="onJobNoSelect($event)" (onSelectionChange)="singleSelection($event)"
+                            formControlName="jobHeaderId" searchPlaceholder="Search...">
+                        </igx-combo>
+                    </div>
+
+                    <div class="form-group" *ngIf="isDisplayMode">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="jobHeaderId" />
+                            <label igxLabel for="jobHeaderId"> Job No </label>
                         </igx-input-group>
                     </div>
                 </div>
 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label>Job No </label>
-                        <igx-combo #jobNo id="jobHeaderId" class="combo" displayKey="jobNo" valueKey="autoId"
-                            [itemsMaxHeight]="250" [data]="pendJobList" placeholder="Job No" (onSelectionChange)="onJobNoSelect($event)"
-                            (onSelectionChange)="singleSelection($event)" formControlName="jobHeaderId"
-                            searchPlaceholder="Search...">
-                        </igx-combo>
+                        <label>FPO No </label>
+                        <igx-input-group type="search">
+                            <input #input1 igxInput placeholder="FPO No" formControlName="fPONo"
+                                (keyup)="onKey($event)" />
+                            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''">
+                                <igx-icon>clear</igx-icon>
+                            </igx-suffix>
+                            <igx-prefix (click)="loadFPODetails()">
+                                <igx-icon>search</igx-icon>
+                            </igx-prefix>
+                        </igx-input-group>
                     </div>
                 </div>
 
@@ -85,18 +100,19 @@
                         </igx-input-group>
                     </div>
                 </div>
-            </div>            
+            </div>
         </form>
 
         <!-- PENDING JOB DETAILS -->
         <div class="grid__wrapper">
             <div class="sample__header">
-                <h6 class="bg-secondary">Pending Job Details</h6>
+                <h6 class="bg-secondary">Pending Job Details</h6>                
             </div>
             <div class="row">
-                <igx-grid #pendJobDtGrid [data]="jobDetails" [autoGenerate]="false" [paging]="true" [primaryKey]="'soDelivDtId'" 
-                    cellSelection="none" [rowEditable]="false" (onColumnResized)="onResize($event)" [perPage]="10" height="300px" 
-                    displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
+                <igx-grid #pendJobDtGrid [data]="jobDtList" [autoGenerate]="false" [paging]="true"
+                    [primaryKey]="'soDelivDtId'" cellSelection="none" [rowEditable]="false"
+                    (onColumnResized)="onResize($event)" [perPage]="10" height="300px" displayDensity="compact"
+                    [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
                     [rowSelection]="'Single'">
 
                     <igx-column [width]="'50px'" [field]="'status'" [header]="' '" [selectable]="false"
@@ -118,104 +134,205 @@
                         </ng-template>
                     </igx-column>
                     <igx-column [field]="'deliveryRef'" [header]="'DeliveryRef'" [width]="'150px'" [resizable]="true"
-                        [dataType]="'string'" [sortable]="true" >
+                        [dataType]="'string'" [sortable]="true">
                     </igx-column>
                     <igx-column [field]="'customer'" [header]="'Customer'" [width]="'130px'" [resizable]="true"
-                        [dataType]="'string'" [sortable]="true" >
+                        [dataType]="'string'" [sortable]="true">
                     </igx-column>
                     <igx-column [field]="'articleName'" [header]="'Article'" [width]="'150px'" [resizable]="true"
-                        [dataType]="'string'" [sortable]="true" >
+                        [dataType]="'string'" [sortable]="true">
                     </igx-column>
                     <igx-column field="color" [width]="'110px'" header="Color" [sortable]="true" [resizable]="true"
-                        [dataType]="'string'" resizable="true" >
+                        [dataType]="'string'" resizable="true">
                     </igx-column>
                     <igx-column [field]="'size'" [header]="'Size'" [width]="'110px'" [resizable]="true"
-                        [dataType]="'string'" [sortable]="true" >
+                        [dataType]="'string'" [sortable]="true">
                     </igx-column>
                     <igx-column [field]="'combination'" [header]="'Combination'" [width]="'150px'" [resizable]="true"
-                        [dataType]="'string'" [sortable]="true" >
+                        [dataType]="'string'" [sortable]="true">
                     </igx-column>
                     <igx-column [field]="'jobQty'" [header]="'Job Qty'" [width]="'100px'" [resizable]="true"
-                        [dataType]="'number'" [sortable]="true" >
+                        [dataType]="'number'" [sortable]="true">
                     </igx-column>
                     <igx-column [field]="'fpoQty'" [header]="'FPO Qty'" [width]="'100px'" [resizable]="true"
-                        [dataType]="'number'" [sortable]="true" >
+                        [dataType]="'number'" [sortable]="true">
                     </igx-column>
                     <igx-column [field]="'balQty'" [header]="'Bal Qty'" [width]="'100px'" [resizable]="true"
-                        [dataType]="'number'" [sortable]="true" >
+                        [dataType]="'number'" [sortable]="true">
                     </igx-column>
                 </igx-grid>
             </div>
         </div>
 
-         <!-- FPO ORDER -->
-         <div class="grid__wrapper">
+        <form [formGroup]="fpoDetailForm" (ngSubmit)="fpoDetailForm.valid" autocomplete="off">
+            <div class="row">
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="deliveryRef" />
+                            <label igxLabel for="deliveryRef"> Delivery Ref </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="customer" />
+                            <label igxLabel for="customer"> Customer </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="articleName" />
+                            <label igxLabel for="articleName"> Article </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="color" />
+                            <label igxLabel for="color"> Color </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="size" />
+                            <label igxLabel for="size"> Size </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="combination" />
+                            <label igxLabel for="combination"> Combination </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="jobQty" />
+                            <label igxLabel for="jobQty"> JobQty </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="prevfpoQty" />
+                            <label igxLabel for="prevfpoQty"> PrevFPO Qty </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="fpoQty" />
+                            <label igxLabel for="fpoQty"> FPO Qty </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="balQty" />
+                            <label igxLabel for="balQty"> BalQty </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-sm-1">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success mr-3" [disabled]="!fpoDetailForm.valid"
+                            (click)="updateFPORow()">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button type="button" class="btn btn-default" (click)="clearFPODetailControls()">
+                            <i class="fas fa-broom"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+        </form>
+
+        <!-- FPO ORDER -->
+        <div class="grid__wrapper" >
             <div class="sample__header">
                 <h6 class="bg-secondary">Factory Production Order</h6>
             </div>
             <div class="row">
-                <igx-grid #fpoGrid [data]="jobDetails" [autoGenerate]="false" [paging]="true" [primaryKey]="'soDelivDtId'" 
-                    cellSelection="none" [rowEditable]="false" (onColumnResized)="onResize($event)" [perPage]="10" height="300px" 
-                    displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
-                    [rowSelection]="'Single'">
+                <igx-grid #fpoGrid [data]="fpoList" [autoGenerate]="false" [paging]="true" [primaryKey]="'soDelivDtId'"
+                    cellSelection="none" [rowEditable]="false" (onColumnResized)="onResize($event)" [perPage]="10"
+                    height="300px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
+                    [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
 
-                    <igx-column [width]="'50px'" [field]="'status'" [header]="' '" [selectable]="false"
-                        [sortable]="false" [resizable]="false">
+                    <igx-column [width]="'80px'" [selectable]="false" [sortable]="false" [resizable]="false">
                         <ng-template igxCell let-cell="cell">
-                            <div *ngIf="!cell.value; then completeBlock else elseBlock"></div>
-                            <ng-template #completeBlock>
-                                <button igxButton="icon" class="fab-compact"
-                                    (click)="onPendingOrderDown($event,cell.cellID)">
-                                    <igx-icon fontSet="material" style="color:green">arrow_drop_down_circle</igx-icon>
-                                </button>
-                            </ng-template>
-                            <ng-template #elseBlock>
-                                <button igxButton="icon" class="fab-compact" [disabled]="'true'">
-                                    <igx-icon fontSet="material" style="color:mediumvioletred">arrow_drop_down_circle
-                                    </igx-icon>
-                                </button>
-                            </ng-template>
+                            <button igxButton="icon" class="fab-compact" [disabled]="isGridDisabled"
+                                (click)="openConfirmDialogLine($event,cell.cellID)">
+                                <igx-icon family="material">delete</igx-icon>
+                            </button>
+                            <button igxButton="icon" class="fab-compact" (click)="onFPOEdit($event,cell.cellID)" [disabled]="isGridDisabled">
+                                <igx-icon family="material">edit</igx-icon>
+                            </button>
                         </ng-template>
                     </igx-column>
                     <igx-column [field]="'deliveryRef'" [header]="'DeliveryRef'" [width]="'150px'" [resizable]="true"
-                        [dataType]="'string'" [sortable]="true" >
+                        [dataType]="'string'" [sortable]="true">
                     </igx-column>
                     <igx-column [field]="'customer'" [header]="'Customer'" [width]="'130px'" [resizable]="true"
-                        [dataType]="'string'" [sortable]="true" >
+                        [dataType]="'string'" [sortable]="true">
                     </igx-column>
                     <igx-column [field]="'articleName'" [header]="'Article'" [width]="'150px'" [resizable]="true"
-                        [dataType]="'string'" [sortable]="true" >
+                        [dataType]="'string'" [sortable]="true">
                     </igx-column>
                     <igx-column field="color" [width]="'110px'" header="Color" [sortable]="true" [resizable]="true"
-                        [dataType]="'string'" resizable="true" >
+                        [dataType]="'string'" resizable="true">
                     </igx-column>
                     <igx-column [field]="'size'" [header]="'Size'" [width]="'110px'" [resizable]="true"
-                        [dataType]="'string'" [sortable]="true" >
+                        [dataType]="'string'" [sortable]="true">
                     </igx-column>
                     <igx-column [field]="'combination'" [header]="'Combination'" [width]="'150px'" [resizable]="true"
-                        [dataType]="'string'" [sortable]="true" >
+                        [dataType]="'string'" [sortable]="true">
                     </igx-column>
                     <igx-column [field]="'jobQty'" [header]="'Job Qty'" [width]="'100px'" [resizable]="true"
-                        [dataType]="'number'" [sortable]="true" >
+                        [dataType]="'number'" [sortable]="true">
+                    </igx-column>
+                    <igx-column [field]="'prevfpoQty'" [header]="'Prev FPOQty'" [width]="'130px'" [resizable]="true"
+                        [dataType]="'number'" [sortable]="true">
                     </igx-column>
                     <igx-column [field]="'fpoQty'" [header]="'FPO Qty'" [width]="'100px'" [resizable]="true"
-                        [dataType]="'number'" [sortable]="true" >
+                        [dataType]="'number'" [sortable]="true">
                     </igx-column>
                     <igx-column [field]="'balQty'" [header]="'Bal Qty'" [width]="'100px'" [resizable]="true"
-                        [dataType]="'number'" [sortable]="true" >
+                        [dataType]="'number'" [sortable]="true">
                     </igx-column>
                 </igx-grid>
             </div>
         </div>
+
     </div>
 </div>
 
-<!-- <igx-dialog #dialog title="Confirmation" leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()"
+<igx-dialog #dialog title="Confirmation" leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()"
     rightButtonLabel="OK" (onRightButtonSelect)="onDialogOKSelected($event)"
     message="Are you sure you want to delete the record ?">
-</igx-dialog> -->
+</igx-dialog>
+
 
 <!-- <p> Form Value : {{jobCardForm.value | json }} </p>
 <p> Form Status : {{jobCardForm.status | json }} </p> -->
-
-

@@ -44,8 +44,8 @@ export class SalesorderService {
     return this.http.post<any>(this.baseUrl + 'SalesOrder/JobPedOrders' , model , httpOptions);
   }
 
-  getJobRefNumber() {
-    return this.http.get<any>(this.baseUrl + 'SalesOrder/JobNo' , httpOptions);
+  getRefNumber(transType: string) {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/RefNum/' + transType , httpOptions);
   }
 
   getCostComination(model: any) {
@@ -66,6 +66,18 @@ export class SalesorderService {
 
   getFPOPendingJobDt(jobId: number) {
     return this.http.get<any[]>(this.baseUrl + 'SalesOrder/FPO/JobList/' + jobId , httpOptions);
+  }
+
+  saveFPO(fpoList: any[]) {
+    return this.http.post(this.baseUrl + 'SalesOrder/SaveFPO' , fpoList , httpOptions);
+  }
+
+  getFPODetails(fpoNo: string) {
+    return this.http.get<any[]>(this.baseUrl + 'SalesOrder/FPODetails/' + fpoNo , httpOptions);
+  }
+
+  deleteFPO(fpodt: any) {
+    return this.http.post(this.baseUrl + 'SalesOrder/DeleteFPO' , fpodt , httpOptions);
   }
 
 }

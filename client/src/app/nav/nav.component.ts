@@ -18,13 +18,19 @@ export class NavComponent implements OnInit {
   user: User;
   public selectedNoValueKey: number[]; 
 
-  @ViewChild('navMenu') navMenu: ElementRef<HTMLElement>;
+  @ViewChild('navMenu' , { static: false }) navMenu: ElementRef<HTMLElement>;
+  // @ViewChild('message', { static: false }) messageElement: ElementRef;
 
   constructor(private accountServices: AccountService , private registerServices: RegisterService
       ,private router: Router) { }
 
   ngOnInit(): void {    
-    this.loadUserLocation();    
+    this.loadUserLocation();
+    //this.navMenu.nativeElement.click();    
+  }
+
+  ngAfterViewInit() {    
+    this.navMenu.nativeElement.click(); 
   }
 
   // login() {

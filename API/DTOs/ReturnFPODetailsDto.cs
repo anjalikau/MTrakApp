@@ -2,12 +2,23 @@ using System;
 
 namespace API.DTOs
 {
-    public class PendJobDetailsDto
-    {          
+    public class ReturnFPODetailsDto
+    {
+        public long AutoId {get;set;}
+        public long JobHeaderId {get;set;}
+        public string FPONo {get;set;}
+        public DateTime StartDate {get;set;}
+        public DateTime EndDate {get;set;}
+        public string Status {get;set;}
+        public string StatusId {get;set;}
+        public string JobNo {get; set;}        
+        public string Remarks {get;set;} 
+        public int TotFPOQty { get; set; }       
         public string DeliveryRef { get; set; }
         public int SOItemDtId { get; set; }
         public int SODelivDtId { get; set; }
         public int FPOQty { get; set; }
+        public int PrvFPOQty { get; set; }
         public int JobQty { get; set; }
         public int BalQty { get; set; }
         public int CustomerId { get; set; }
@@ -20,6 +31,5 @@ namespace API.DTOs
         public string Size { get; set; }
         public int CombinId { get; set; }     
         public string Combination { get; set; }        
-
     }
 }

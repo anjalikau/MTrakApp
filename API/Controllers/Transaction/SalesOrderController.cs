@@ -22,7 +22,7 @@ namespace API.Controllers.Transaction
         {
             _salesRepository = salesRepository;
             _context = context;
-        }
+        }        
 
         [HttpGet("SORefNo")]
         public async Task<IActionResult> GetSalesOrderRef()
@@ -59,11 +59,11 @@ namespace API.Controllers.Transaction
             return Ok(pendOrders);
         }
 
-        [HttpGet("JobNo")]
-        public async Task<IActionResult> GetJobRefNumber()
+        [HttpGet("RefNum/{TransType}")]
+        public async Task<IActionResult> GetRefNumber(string TransType)
         {
-           var jobNo = await _salesRepository.GetJobRefNumberAsync();
-           return Ok(jobNo);
+           var refNum = await _salesRepository.GetRefNumberAsync(TransType);
+           return Ok(refNum);
         }
 
         [HttpPost("CostComb")]
@@ -109,6 +109,27 @@ namespace API.Controllers.Transaction
         {
             var jobList = await _salesRepository.GetFPOPendingJobDtAsync(id);
             return Ok(jobList);
+        }
+
+        [HttpPost("SaveFPO")]
+        public async Task<IActionResult> SaveFPO(List<FacProdOrderDto> facProdOrderDto)
+        {
+            var result = await _salesRepository.SaveFPOAsync(facProdOrderDto);
+            return Ok(result);
+        }
+
+        [HttpGet("FPODetails/{FPONo}")]
+        public async Task<IActionResult> GetFPODetails(string FPONo)
+        {
+            var FPODetails = await _salesRepository.GetFPODetailsAsync(FPONo);
+            return Ok(FPODetails);
+        }
+
+        [HttpPost("DeleteFPO")]
+        public async Task<IActionResult> DeleteFPO(DeleteFPODto fpoDto)
+        {
+            var result = await _salesRepository.DeleteFPOAsync(fpoDto);
+            return Ok(result);
         }
 
     }

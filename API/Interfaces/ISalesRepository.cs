@@ -12,10 +12,13 @@ namespace API.Interfaces
          Task<IEnumerable<SalesOrderRetDto>> GetSalesOrderAsync(string SORefNo);
          Task<IEnumerable<PendingOrderItemsDto>> GetPendOrderItemsAsync(int custometId);
          Task<IEnumerable<PendingDelivOrderDto>> GetPendDelivOrderAsync(PendingOrderItemsDto items);
-         Task<RefNumDto> GetJobRefNumberAsync();
+         Task<RefNumDto> GetRefNumberAsync(string TransType);
          Task<ReturnDto> SaveJobCardAsync(List<TransJobDetail> trnsJob);
          Task<IEnumerable<ReturnJobCardDto>> GetJobCardDetailsAsync(string jobNo);
          Task<IEnumerable<TransJobHeader>> GetFPOPendingJobsAsync();
          Task<IEnumerable<PendJobDetailsDto>> GetFPOPendingJobDtAsync(int JobId);
+         Task<ReturnDto> SaveFPOAsync(List<FacProdOrderDto> facProdOrderDtos);
+         Task<IEnumerable<ReturnFPODetailsDto>> GetFPODetailsAsync(string FPONo);
+         Task<int> DeleteFPOAsync(DeleteFPODto fPODto);
     }
 }
