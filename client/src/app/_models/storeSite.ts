@@ -1,6 +1,6 @@
 export interface StoreSite {
     autoId:number;
-    SiteName:string;
-    SiteCode:string;
+    siteName:string;
+    siteCode:string;
     createUserId: number;
 }

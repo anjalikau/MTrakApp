@@ -49,6 +49,12 @@ import { CustomerCurrencyComponent } from './master/customer/customer-currency/c
 import { CustomerDefaultComponent } from './master/customer/customer-default/customer-default.component';
 import { CustomerLocationsComponent } from './master/customer/customer-locations/customer-locations.component';
 import { FacProdOrderComponent } from './transaction/fac-prod-order/fac-prod-order.component';
+import { MasterProdDefinitionComponent } from './master/master-prod-definition/master-prod-definition.component';
+import { MasterCostingGroupComponent } from './master/master-costing-group/master-costing-group.component';
+import { MasterProdTypeComponent } from './master/master-prod-type/master-prod-type.component';
+import { MasterProdGroupComponent } from './master/master-prod-group/master-prod-group.component';
+import { MasterProdSubCategoryComponent } from './master/master-prod-sub-category/master-prod-sub-category.component';
+import { MasterSerialnoDetailsComponent } from './master/master-serialno-details/master-serialno-details.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +95,13 @@ import { FacProdOrderComponent } from './transaction/fac-prod-order/fac-prod-ord
     CustomerCurrencyComponent,
     CustomerDefaultComponent,
     CustomerLocationsComponent,
-    FacProdOrderComponent
+    FacProdOrderComponent,
+    MasterProdDefinitionComponent,
+    MasterCostingGroupComponent,
+    MasterProdTypeComponent,
+    MasterProdGroupComponent,
+    MasterProdSubCategoryComponent,
+    MasterSerialnoDetailsComponent
   ],
   imports: [
     BrowserModule,

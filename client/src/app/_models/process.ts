@@ -1,7 +1,9 @@
 export interface Process {
     autoId:number;
-    Process:string;
-    LocationId:number;
+    process:string;
+    locationId:number;
     createUserId: number;
-    Location:any;
 }
+
+
+

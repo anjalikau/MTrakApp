@@ -1,0 +1,93 @@
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">Serial Number</h3>
+    </div>
+
+    <form [formGroup]="serialNoForm" (ngSubmit)="serialNoForm.valid" autocomplete="off">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="name" />
+                            <label igxLabel for="name">  Name </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="prefix" />
+                            <label igxLabel for="prefix"> Prefix </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="noOfDigits" />
+                            <label igxLabel for="noOfDigits"> Number Of Digits</label>
+                        </igx-input-group>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="counter" />
+                            <label igxLabel for="counter"> Counter</label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1 offset-md-2">
+                    <div class="form-group">
+                        <div class="btn-group">
+                            <button type="button" [disabled]="!serialNoForm.valid" (click)="saveSerialNo()"
+                                class="btn btn-success mr-3"> <i class="fas fa-save"></i> </button>
+                       
+                            <button type="button" class="btn btn-default" (click)="clearControls()"> 
+                                <i class="fas fa-broom"></i> </button>
+                        </div>
+                    </div>                   
+                </div>        
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <igx-grid #SerialNoGrid [data]="serialNoList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+                        [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
+                        height="400px" displayDensity="compact" [allowFiltering]="true"
+                        [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
+
+                        <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                            <ng-template igxCell let-cell="cell">
+                                <button igxButton="icon" class="fab-compact" (click)="onEdit($event,cell.cellID)">
+                                    <igx-icon family="material">edit</igx-icon>
+                                </button>
+                            </ng-template>
+                        </igx-column>
+                        <igx-column [field]="'name'" [header]="'Name'" [resizable]="true" [dataType]="'string'"
+                            [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'moduleId'" [header]="'ModuleId'" [resizable]="true" [dataType]="'string'"
+                            [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'prefix'" [header]="'Prefix'" [resizable]="true" [dataType]="'string'"
+                            [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'noOfDigits'" [header]="'NoOfDigits'" [resizable]="true" [dataType]="'string'"
+                            [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'counter'" [header]="'Counter'" [resizable]="true" [dataType]="'string'"
+                            [sortable]="true">
+                        </igx-column>                       
+                       
+                    </igx-grid>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+

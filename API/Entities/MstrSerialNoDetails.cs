@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace API.Entities
 {
     [Table("Master.SerialNoDetails")]
-    public class MstrSerialNoD
+    public class MstrSerialNoDetails
     {
         [Key]
         public int AutoId { get; set; }

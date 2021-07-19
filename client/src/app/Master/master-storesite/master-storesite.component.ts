@@ -42,11 +42,11 @@ export class MasterStoresiteComponent implements OnInit {
 
   SaveStoreSite() {     
     var obj = {
-      "createUserId": this.user.userId,     
-      "SiteCode" : this.mstrStoresite.get('SiteCode').value.trim(),
-      "SiteName" : this.mstrStoresite.get('SiteName').value.trim(),
-      "autoId" : this.mstrStoresite.get('AutoId').value
-    }
+      createUserId: this.user.userId,
+      siteCode: this.mstrStoresite.get('SiteCode').value.trim(),
+      siteName: this.mstrStoresite.get('SiteName').value.trim(),
+      autoId: this.mstrStoresite.get('AutoId').value,
+    };
 
     this.saveobj = Object.assign({}, obj);
     //console.log(this.saveobj);

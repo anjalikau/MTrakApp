@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
-using API.Entities.Admin;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -691,26 +690,170 @@ namespace API.Controllers.Master
 
         #endregion "SalesAgent"
 
-        // private async Task<bool> ColorExists(MstrColor color)
+
+        #region "ProductionDefinition"
+
+        [HttpGet("ProdDefinition")]
+        public async Task<ActionResult> GetProdDefinition()
+        {
+            var ProdDefList = await _masterRepository.GetProdDefinitionAsync();
+            return Ok(ProdDefList);
+        }
+
+        [HttpPost("SaveProdDef")]
+        public async Task<ActionResult> SaveProdDefinition(ProdDefinitionDto prodDefinitionDt)
+        {
+            var result = await _masterRepository.SaveProdDefinitionAsync(prodDefinitionDt);
+            return Ok(result);
+        }
+
+        #endregion "ProductionDefinition"
+
+
+        #region "Product Type"        
+
+        // [HttpGet("ProdType/{catId}")]
+        // public async Task<ActionResult> ProductTypeGetDt(int catId)
         // {
-        //     return await _context.MstrColor
-        //         .AnyAsync(x => x.Name.ToLower() == color.Name.ToLower() && x.Code.ToLower() == color.Code.ToLower());
+        //     var ProdTypeList = await _masterRepository.ProductTypeGetAsync();
+        //     return Ok(ProdTypeList);
         // }
 
-        // private async Task<bool> SizeExists(MstrSize size)
+        [HttpGet("ProdType/{catId}")]
+        public async Task<IActionResult> GetProcuctType(int catId)
+        {
+            var result = await _context.MstrProductType
+                .Where(x => x.CategoryId == catId)
+                .Join(_context.MstrCategory , p => p.CategoryId , c => c.AutoId ,
+                    (p,c) => 
+                    new {
+                        autoId = p.AutoId,
+                        bAutoArticle = p.bAutoArticle,
+                        categoryId = p.CategoryId,
+                        prodTypeCode = p.ProdTypeCode,
+                        prodTypeName = p.ProdTypeName,
+                        isActive = p.IsActive,
+                        categoryName = c.Name
+                    })
+                .ToListAsync();
+            return Ok(result);
+        }
+
+        [HttpPost("SaveProdType")]
+        public async Task<ActionResult> SaveProductType(MstrProductType MstrProductType)
+        {
+            var result = await _masterRepository.SaveProductTypeAsync(MstrProductType);
+            return Ok(result);
+        }
+
+        [HttpPost("Deactive/ProdType")]
+        public async Task<ActionResult> DeactProductType(MstrProductType MstrProductType)
+        {
+            var result = await _masterRepository.DeactProductTypeAsync(MstrProductType);
+            return Ok(result);
+        }
+
+        #endregion "Product Type"
+
+
+        #region "Product Group"
+
+        [HttpGet("ProdGroup")]
+        public async Task<ActionResult> GetProductGroup()
+        {
+            var ProdGroupList = await _masterRepository.ProductGroupGetAsync();
+            return Ok(ProdGroupList);
+        }
+
+        // [HttpGet("ProdGroup")]
+        // public async Task<IActionResult> GetProcuctGroup()
         // {
-        //     return await _context.MstrSize
-        //         .AnyAsync(x => x.Name.ToLower() == size.Name.ToLower() && x.Code.ToLower() == size.Code.ToLower());
+        //     var result = await _context.MstrProductGroup.ToListAsync();
+        //     return Ok(result);
         // }
 
-        // private async Task<bool> SizeCardExists(string sizeCard)
+        [HttpPost("SaveProdGroup")]
+        public async Task<ActionResult> SaveProductGroup(MstrProductGroup MstrProductGroup)
+        {
+            var result = await _masterRepository.SaveProductGroupAsync(MstrProductGroup);
+            return Ok(result);
+        }     
+
+        #endregion "Product Group"
+
+
+        #region "Product Sub Category"
+
+        [HttpGet("ProdSubCat")]
+        public async Task<ActionResult> GetProdSubCategory()
+        {
+            var ProdSubCatList = await _masterRepository.GetProductSubCatAsync();
+            return Ok(ProdSubCatList);
+        }    
+
+        // [HttpGet("ProdSubCat")]
+        // public async Task<IActionResult> GetProductSubCat()
         // {
-        //     return await _context.MstrSizeCard.AnyAsync(x => x.Name.ToLower() == sizeCard.ToLower());
+        //     var result = await _context.MstrProductSubCat.ToListAsync();
+        //     return Ok(result);
         // }
-        // private async Task<bool> ColorCardExists(string colorCard)
-        // {
-        //     return await _context.MstrColorCard.AnyAsync(x => x.Name.ToLower() == colorCard.ToLower());
-        // }
+
+        [HttpPost("SaveProdSubCat")]
+        public async Task<ActionResult> SaveProductSubCat(MstrProductSubCat MstrProductSubCat)
+        {
+            var result = await _masterRepository.SaveProductSubCatAsync(MstrProductSubCat);
+            return Ok(result);
+        }
+
+        #endregion "Product Sub Category"    
+
+
+        #region "Costing Group"
+
+        [HttpPost("SaveCostGroup")]
+        public async Task<ActionResult> SaveCostingGroup(MstrCostingGroup MstrCostingGroup)
+        {
+            var result = await _masterRepository.SaveCostGroupAsync(MstrCostingGroup);
+            return Ok(result);
+        }
+
+        [HttpGet("CostingGroup/{locId}")]
+        public async Task<IActionResult> GetCostingGroup(int locId)
+        {
+            var result = await _context.MstrCostingGroup
+                .Where(x => x.LocationId == locId).ToListAsync();
+            return Ok(result);
+        }       
+       
+        #endregion "Costing Group"       
+
+
+        #region "Serial No Details"
+
+        [HttpGet("SerialNoDt/{locId}")]
+        public async Task<IActionResult> GetSerialNoDetails(int locId)
+        {
+            var result = await _context.MstrSerialNoDetails
+                .Where(x => x.LocationId == locId).ToListAsync();
+            return Ok(result);
+        }
         
+        [HttpPost("SaveSerialNo")]
+        public async Task<ActionResult> SaveSerialNoDetails(MstrSerialNoDetails MstrSerialNoD)
+        {
+            var result = await _masterRepository.SaveSerialNoDtAsync(MstrSerialNoD);
+            return Ok(result);
+        }
+
+        #endregion "Serial No Details"
+       
+         // [HttpGet("ProductionDefinition")]
+        // public async Task<IActionResult> getProductionDefinition()
+        // {
+        //     var result = await _context.MstrProductionDefinition.ToListAsync();
+        //     return Ok(result);
+
+        // }  
+       
     }
 }

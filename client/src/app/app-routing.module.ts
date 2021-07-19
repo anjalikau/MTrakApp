@@ -13,8 +13,12 @@ import { MasterBrandComponent } from './master/master-brand/master-brand.compone
 import { MasterBrandcodeComponent } from './master/master-brandcode/master-brandcode.component';
 import { MasterCategoryComponent } from './master/master-category/master-category.component';
 import { MasterColorComponent } from './master/master-color/master-color.component';
+import { MasterCostingGroupComponent } from './master/master-costing-group/master-costing-group.component';
 import { MasterMaterialtypeComponent } from './master/master-materialtype/master-materialtype.component';
 import { MasterProcessComponent } from './master/master-process/master-process.component';
+import { MasterProdDefinitionComponent } from './master/master-prod-definition/master-prod-definition.component';
+import { MasterProdTypeComponent } from './master/master-prod-type/master-prod-type.component';
+import { MasterSerialnoDetailsComponent } from './master/master-serialno-details/master-serialno-details.component';
 import { MasterSizeComponent } from './master/master-size/master-size.component';
 import { MasterStoresiteComponent } from './master/master-storesite/master-storesite.component';
 import { MasterUnitsComponent } from './master/master-units/master-units.component';
@@ -48,6 +52,10 @@ const routes: Routes = [
       {path:'MasterMaterialtype', component: MasterMaterialtypeComponent},
       {path:'MasterCategory', component: MasterCategoryComponent},
       {path:'MasterCustomer', component: CustomerTabComponent},
+      {path:'ProdDefinition', component: MasterProdDefinitionComponent},
+      {path:'CostingGroup', component: MasterCostingGroupComponent},
+      {path:'SerialNoDetails', component: MasterSerialnoDetailsComponent},
+      {path:'ProductMenu', component: MasterProdTypeComponent},
       {path:'SalesOrder', component: SalesOrderComponent},
       {path:'Job', component: JobCreationComponent},
       {path:'FPO', component: FacProdOrderComponent}

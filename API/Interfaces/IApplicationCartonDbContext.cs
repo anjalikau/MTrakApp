@@ -48,7 +48,8 @@ namespace API.Interfaces
         DbSet<MstrProductType> MstrProductType { get;  set ; }
         DbSet<MstrProductGroup> MstrProductGroup { get;  set ; }
         DbSet<MstrProductSubCat> MstrProductSubCat { get;  set ; }
-        DbSet<MstrProductionDefinition> MstrProdDefinition { get;  set ; }
+        DbSet<MstrProductionDefinitionDt> MstrProdDefinitionDt { get;  set ; }
+        DbSet<MstrProductionDefinitionHd> MstrProdDefinitionHd { get;  set ; }
         DbSet<MstrSalesAgent> MstrSalesAgent { get;  set ; }
         DbSet<MstrCustomerDivision> MstrCustomerDivision { get;  set ; }
         DbSet<MstrCustomerBrand> MstrCustomerBrand { get;  set ; }
@@ -59,6 +60,8 @@ namespace API.Interfaces
         DbSet<TransFtyProductionOrderDt> TransFtyProductionOrderDt { get;  set ; }
         DbSet<TransFtyProductionProcessOrder> TransFtyProdProcessOrder { get;  set ; }        
         DbSet<TransFtyProductionProcessOrderDt> TransFtyProdProcessOrderDt { get;  set ; }
+        DbSet<MstrCostingGroup> MstrCostingGroup { get;  set ; }
+        DbSet<MstrSerialNoDetails> MstrSerialNoDetails { get;  set ; }
 
     }
 }

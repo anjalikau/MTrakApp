@@ -48,7 +48,8 @@ namespace API.Data
         public DbSet<MstrProductType> MstrProductType { get;  set ; }
         public DbSet<MstrProductGroup> MstrProductGroup { get;  set ; }
         public DbSet<MstrProductSubCat> MstrProductSubCat { get;  set ; }
-        public DbSet<MstrProductionDefinition> MstrProdDefinition { get;  set ; }
+        public DbSet<MstrProductionDefinitionDt> MstrProdDefinitionDt { get;  set ; }
+        public DbSet<MstrProductionDefinitionHd> MstrProdDefinitionHd { get;  set ; }
         public DbSet<MstrSalesAgent> MstrSalesAgent { get;  set ; }
         public DbSet<MstrCustomerDivision> MstrCustomerDivision { get;  set ; }
         public DbSet<MstrCustomerBrand> MstrCustomerBrand { get;  set ; }
@@ -59,6 +60,8 @@ namespace API.Data
         public DbSet<TransFtyProductionOrderDt> TransFtyProductionOrderDt { get;  set ; }
         public DbSet<TransFtyProductionProcessOrder> TransFtyProdProcessOrder { get;  set ; }        
         public DbSet<TransFtyProductionProcessOrderDt> TransFtyProdProcessOrderDt { get;  set ; }
+        public DbSet<MstrCostingGroup> MstrCostingGroup { get;  set ; }
+        public DbSet<MstrSerialNoDetails> MstrSerialNoDetails { get;  set ; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
