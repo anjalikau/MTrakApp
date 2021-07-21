@@ -46,15 +46,18 @@ namespace API.Interfaces
         Task<IEnumerable<ReturnCustomerAddDto>> GetCustomerAddressAsync(int customerId);
         Task<int> SaveCustomerDivisionAsync(MstrCustomerDivision cusDivision);
         // Task<int> DeactiveCusLocAsync(MstrCustomerLocation mstrCustomerDetails);
-        Task<int> SaveProdDefinitionAsync(ProdDefinitionDto prodDefinitionDto);
-        Task<IEnumerable<ProdDefinitionDto>> GetProdDefinitionAsync();
+        Task<ReturnDto> SaveProdDefinitionAsync(ProdDefinitionDto prodDefinitionDto);
+        Task<int> DeleteProdDefinitionAsync(ProdDefinitionDto prodDefDto);
+        Task<IEnumerable<ProdDefinitionDto>> GetProdDefinitionAsync(byte ProdHeaderId);
         Task<int> SaveProductGroupAsync(MstrProductGroup MstrProductGroup);
-        Task<IEnumerable<ProdGroupDto>> ProductGroupGetAsync();
+        Task<IEnumerable<ProdGroupDto>> ProductGroupGetAsync(int ProdTypeId);
+        Task<int> DeactiveProdGroupAsync(MstrProductGroup MstrProductGroup);
         Task<int> SaveProductTypeAsync(MstrProductType MstrProductType);
         Task<IEnumerable<ProductTypeDto>> ProductTypeGetAsync();
         Task<int> DeactProductTypeAsync(MstrProductType MstrProductType);
         Task<int> SaveProductSubCatAsync(MstrProductSubCat MstrProductSubCat);
-        Task<IEnumerable<ProductSubCatDto>> GetProductSubCatAsync();        
+        Task<IEnumerable<ProductSubCatDto>> GetProductSubCatAsync(int ProdGroupId); 
+        Task<int> DeactiveProdSubCatAsync(MstrProductSubCat MstrProductSubCat);       
         Task<int> SaveCostGroupAsync(MstrCostingGroup MstrCostingGroup);        
         Task<int> SaveSerialNoDtAsync(MstrSerialNoDetails MstrSerialNoD);       
 

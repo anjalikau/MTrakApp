@@ -8,7 +8,7 @@ namespace API.Entities
     public class MstrProductionDefinitionHd
     {
         [Key]
-        public int AutoId { get; set; }        
+        public byte AutoId { get; set; }        
         public string PDName { get; set; }  
         public int ? CreateUserId { get; set; }
         public DateTime ? CreateDateTime { get; set; }

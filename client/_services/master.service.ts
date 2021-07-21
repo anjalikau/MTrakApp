@@ -18,13 +18,15 @@ import { BrandCode } from 'src/app/_models/brandCode';
 import { CustomerCurrency } from 'src/app/_models/customerCurrency';
 import { CustomerBrand } from 'src/app/_models/CustomerBrand';
 import { CustomerUser } from 'src/app/_models/customerUser';
-import { AddressType } from 'src/app/_models/AddressType';
+import { AddressType } from 'src/app/_models/addressType';
 import { CustomerAddressList } from 'src/app/_models/customerAddressList';
 import { CustomerDivision } from 'src/app/_models/customerDivision';
 import { ProdDefinition } from 'src/app/_models/prodDefinition';
 import { CostingGroup } from 'src/app/_models/costingGroup';
 import { SerialNo } from 'src/app/_models/serialNo';
 import { ProductType } from 'src/app/_models/productType';
+import { ProductGroup } from 'src/app/_models/productGroup';
+import { ProdSubCategory } from 'src/app/_models/ProdSubCategory';
 
 var usertoken: any;
 if (localStorage.length > 0) {
@@ -204,9 +206,9 @@ export class MasterService {
 
   //#region "Process"
 
-  getProcess() {
+  getProcess(locId: number) {
     return this.http.get<Process[]>(
-      this.baseUrl + 'Master/Process',
+      this.baseUrl + 'Master/Process/' + locId , 
       httpOptions
     );
   }
@@ -523,15 +525,18 @@ export class MasterService {
 
   //#endregion "Currency"
 
-  //#region "Product Type"
-
-  //#endregion "Product Type"
-
   //#region "Product Definition"
 
-  getProductDefinition() {
+  getProductDefinitionDt(prodHeaderId: number) {
+    return this.http.get<ProdDefinition[]>(
+      this.baseUrl + 'Master/ProdDefDt/' + prodHeaderId,
+      httpOptions
+    );
+  }
+
+  getProductDefinitionList() {
     return this.http.get<any>(
-      this.baseUrl + 'Master/ProdDefinition',
+      this.baseUrl + 'Master/ProdDefList',
       httpOptions
     );
   }
@@ -539,6 +544,13 @@ export class MasterService {
   saveProductDefinition(prodDefinition: ProdDefinition) {
     return this.http.post(
       this.baseUrl + 'Master/SaveProdDef', prodDefinition ,
+      httpOptions
+    );
+  }
+
+  deleteProductDefinition(prodDefinition: any) {
+    return this.http.post(
+      this.baseUrl + 'Master/DeleteProdDef', prodDefinition ,
       httpOptions
     );
   }
@@ -555,7 +567,7 @@ export class MasterService {
   }
 
   getCostingGroup(locId: number) {
-    return this.http.get<any>(
+    return this.http.get<CostingGroup[]>(
       this.baseUrl + 'Master/CostingGroup/' + locId,
       httpOptions
     );
@@ -573,7 +585,7 @@ export class MasterService {
   }
 
   getSerialNoDetails(locId: number) {
-    return this.http.get<any>(
+    return this.http.get<SerialNo[]>(
       this.baseUrl + 'Master/SerialNoDt/' + locId,
       httpOptions
     );
@@ -591,10 +603,15 @@ export class MasterService {
   }
 
   getProductTypeDetils(catId: number) {
-    return this.http.get<any>(
+    return this.http.get<ProductType[]>(
       this.baseUrl + 'Master/ProdType/' + catId,
       httpOptions
     );
+  }
+
+  getProductTypeAll() {
+    return this.http.get<ProductType[]>(
+      this.baseUrl + 'Master/ProdType', httpOptions);
   }
 
   deactiveProductType(prodType: any) {
@@ -605,6 +622,42 @@ export class MasterService {
   }
 
   //#endregion "Product Type"
+
+  //#region "Product Group"
+
+  saveProductGroup(prodGroup: ProductGroup) {
+    return this.http.post(this.baseUrl + 'Master/SaveProdGroup', prodGroup , httpOptions);
+  }
+
+  getProductGroupDt(prodTypeId: number) {
+    return this.http.get<any>(this.baseUrl + 'Master/PGroup/' + prodTypeId , httpOptions);
+  }
+
+  getProductGroupAll() {
+    return this.http.get<any>(this.baseUrl + 'Master/ProdGroup' , httpOptions);
+  }
+
+  deactiveProductGroup(prodGroup: ProductGroup) {
+    return this.http.post(this.baseUrl + 'Master/Deactive/ProdGroup', prodGroup , httpOptions);
+  }
+
+  //#endregion "Product Group"
+
+  //#region "Product Sub Category"
+
+  saveProductSubCat(subCat: ProdSubCategory) {
+    return this.http.post(this.baseUrl + 'Master/SaveProdSubCat', subCat , httpOptions);
+  }
+
+  getProductSubCatDt(groupId: number) {
+    return this.http.get<any>(this.baseUrl + 'Master/PSubCat/' + groupId , httpOptions);   
+  }
+
+  deactiveProductSubCat(subCat: ProdSubCategory) {
+    return this.http.post(this.baseUrl + 'Master/Deactive/PSubCat', subCat , httpOptions);
+  }
+
+  //#endregion "Product Sub Category"
 
   // getCustomerDt(customerId: number) {
   //   return this.http.get<CustomerDt[]>(this.baseUrl + 'Master/CustomerDt/' + customerId , httpOptions);

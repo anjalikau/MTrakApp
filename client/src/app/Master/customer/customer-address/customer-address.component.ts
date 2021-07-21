@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxComboComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
-import { AddressType } from 'src/app/_models/AddressType';
+import { AddressType } from 'src/app/_models/addressType';
 import { CustomerHd } from 'src/app/_models/customerHd';
 import { CustomerLoc } from 'src/app/_models/customerLoc';
 import { User } from 'src/app/_models/user';

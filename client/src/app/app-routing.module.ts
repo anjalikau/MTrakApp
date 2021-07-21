@@ -18,6 +18,7 @@ import { MasterMaterialtypeComponent } from './master/master-materialtype/master
 import { MasterProcessComponent } from './master/master-process/master-process.component';
 import { MasterProdDefinitionComponent } from './master/master-prod-definition/master-prod-definition.component';
 import { MasterProdTypeComponent } from './master/master-prod-type/master-prod-type.component';
+import { MasterProductTabComponent } from './master/master-product-tab/master-product-tab.component';
 import { MasterSerialnoDetailsComponent } from './master/master-serialno-details/master-serialno-details.component';
 import { MasterSizeComponent } from './master/master-size/master-size.component';
 import { MasterStoresiteComponent } from './master/master-storesite/master-storesite.component';
@@ -55,7 +56,7 @@ const routes: Routes = [
       {path:'ProdDefinition', component: MasterProdDefinitionComponent},
       {path:'CostingGroup', component: MasterCostingGroupComponent},
       {path:'SerialNoDetails', component: MasterSerialnoDetailsComponent},
-      {path:'ProductMenu', component: MasterProdTypeComponent},
+      {path:'ProductMenu', component: MasterProductTabComponent},
       {path:'SalesOrder', component: SalesOrderComponent},
       {path:'Job', component: JobCreationComponent},
       {path:'FPO', component: FacProdOrderComponent}

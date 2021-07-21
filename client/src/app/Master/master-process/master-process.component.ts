@@ -29,11 +29,13 @@ export class MasterProcessComponent implements OnInit {
 
   ngOnInit(): void {
     this.initilizeForm();  
-    this.LoadUnits();  
+    this.loadProcess();  
   }
 
-  LoadUnits(){
-    this.masterService.getProcess().subscribe(cardList => {
+  loadProcess(){
+    var user: User = JSON.parse(localStorage.getItem('user'));
+
+    this.masterService.getProcess(user.locationId).subscribe(cardList => {
       this.sizeProcessList = cardList;
     })
     //console.log("sss",this.sizeProcessList);
@@ -52,11 +54,11 @@ export class MasterProcessComponent implements OnInit {
     this.masterService.saveProcess(obj).subscribe((result) => {    
       if (result == 1) {
         this.toastr.success("Process save Successfully !!!");
-        this.LoadUnits();
+        this.loadProcess();
         this.clearControls();
       } else if (result == 2) {
         this.toastr.success("Process update Successfully !!!");
-       this.LoadUnits();
+       this.loadProcess();
         this.clearControls();
       } else if (result == -1) {
         this.toastr.warning("Process already exists !!!");

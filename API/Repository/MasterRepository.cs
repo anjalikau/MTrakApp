@@ -650,27 +650,46 @@ namespace API.Repository
             return para.Get<int>("Result");
         }
 
-        public async Task<int> SaveProdDefinitionAsync(ProdDefinitionDto prodDefinitionDto)
+        public async Task<ReturnDto> SaveProdDefinitionAsync(ProdDefinitionDto prodDefinitionDto)
         {
             DynamicParameters para = new DynamicParameters();
 
-            para.Add("AutoId" , prodDefinitionDto.AutoId);
+            para.Add("PdHeaderId" , prodDefinitionDto.PDHeaderId);
             para.Add("ProcessId", prodDefinitionDto.ProcessId);
-            para.Add("Name", prodDefinitionDto.PDName.Trim());
+            para.Add("Name", prodDefinitionDto.PDName.Trim().ToUpper());
             para.Add("ReceiveSiteId", prodDefinitionDto.ReceiveSiteId);
             para.Add("DispatchSiteId", prodDefinitionDto.DispatchSiteId);
             para.Add("UserId", prodDefinitionDto.CreateUserId);
+            //para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.QueryFirstOrDefaultAsync<ReturnDto>("spMstrProductDefinitionSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return result;
+        }
+
+        public async Task<int> DeleteProdDefinitionAsync(ProdDefinitionDto prodDefDto)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("PdDetailId" , prodDefDto.AutoId);
+            para.Add("PdHeaderId" , prodDefDto.PDHeaderId);
+            para.Add("UserId", prodDefDto.CreateUserId);
             para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
 
-            var result = await DbConnection.ExecuteAsync("spMstrProductionDefinitionSave", para
+            var result = await DbConnection.ExecuteAsync("spMstrProductDefinitionDelete", para
                 , commandType: CommandType.StoredProcedure);            
 
             return para.Get<int>("Result");
         }
-        public async Task<IEnumerable<ProdDefinitionDto>> GetProdDefinitionAsync()
+
+        public async Task<IEnumerable<ProdDefinitionDto>> GetProdDefinitionAsync(byte ProdHeaderId)
         {
             IEnumerable<ProdDefinitionDto> podDefiList;
-            podDefiList = await DbConnection.QueryAsync<ProdDefinitionDto>("spMstrProductDefinationGet" , null
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("ProdHeaderId" , ProdHeaderId);
+            podDefiList = await DbConnection.QueryAsync<ProdDefinitionDto>("spMstrProductDefinationGet" , para
                     , commandType: CommandType.StoredProcedure);
             
             return podDefiList;
@@ -684,7 +703,7 @@ namespace API.Repository
             para.Add("ProdTypeId", MstrProductGroup.ProdTypeId);
             para.Add("ProdGroupName", MstrProductGroup.ProdGroupName.Trim());
             para.Add("ProdGroupCode", MstrProductGroup.ProdGroupCode.Trim().ToUpper());
-            para.Add("SerialNo", MstrProductGroup.SerialNo);
+            //para.Add("SerialNo", MstrProductGroup.SerialNo);
             para.Add("UserId", MstrProductGroup.CreateUserId);
             para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
 
@@ -693,10 +712,30 @@ namespace API.Repository
 
             return para.Get<int>("Result");
         }
-        public async Task<IEnumerable<ProdGroupDto>> ProductGroupGetAsync()
+
+        public async Task<int> DeactiveProdGroupAsync(MstrProductGroup MstrProductGroup)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , MstrProductGroup.AutoId);  
+            para.Add("IsActive" , MstrProductGroup.IsActive);         
+            para.Add("UserId", MstrProductGroup.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrProductGroupDeactive", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<IEnumerable<ProdGroupDto>> ProductGroupGetAsync(int ProdTypeId)
         {
             IEnumerable<ProdGroupDto> prodGroupList;
-            prodGroupList = await DbConnection.QueryAsync<ProdGroupDto>("spMstrProductGroupGetDt" , null
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("ProdTypeId" , ProdTypeId);
+            
+            prodGroupList = await DbConnection.QueryAsync<ProdGroupDto>("spMstrProductGroupGetDt" , para
                     , commandType: CommandType.StoredProcedure);
             
             return prodGroupList;
@@ -738,7 +777,7 @@ namespace API.Repository
             para.Add("UserId", MstrProductType.CreateUserId);
             para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
 
-            var result = await DbConnection.ExecuteAsync("spMstrProductTypeActive", para
+            var result = await DbConnection.ExecuteAsync("spMstrProductTypeDeactive", para
                 , commandType: CommandType.StoredProcedure);            
 
             return para.Get<int>("Result");
@@ -780,10 +819,30 @@ namespace API.Repository
             return para.Get<int>("Result");
         }
 
-        public async Task<IEnumerable<ProductSubCatDto>> GetProductSubCatAsync()
+        public async Task<int> DeactiveProdSubCatAsync(MstrProductSubCat MstrProductSubCat)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , MstrProductSubCat.AutoId);
+            para.Add("IsActive" , MstrProductSubCat.IsActive);
+            para.Add("UserId", MstrProductSubCat.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrProductSubCatDeactive", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+
+        public async Task<IEnumerable<ProductSubCatDto>> GetProductSubCatAsync(int ProdGroupId)
         {
             IEnumerable<ProductSubCatDto> prodSubCatList;
-            prodSubCatList = await DbConnection.QueryAsync<ProductSubCatDto>("spMstrProductSubCategoryGetDt" , null
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("ProdGroupId" , ProdGroupId);
+
+            prodSubCatList = await DbConnection.QueryAsync<ProductSubCatDto>("spMstrProductSubCategoryGetDt" , para
                     , commandType: CommandType.StoredProcedure);
             
             return prodSubCatList;

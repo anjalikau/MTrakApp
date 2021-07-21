@@ -496,10 +496,13 @@ namespace API.Controllers.Master
             return Ok(result);
         }
 
-        [HttpGet("Process")]
-        public async Task<IActionResult> GetProcess()
+        [HttpGet("Process/{id}")]
+        public async Task<IActionResult> GetProcess(int id)
         {
-            var result = await _context.MstrProcess.ToListAsync();
+            var result = await _context.MstrProcess
+                .Select(x => new {x.AutoId , x.Process , x.LocationId})
+                .Where(x => x.LocationId == id)
+                .ToListAsync();
             return Ok(result);            
         }
 
@@ -693,10 +696,18 @@ namespace API.Controllers.Master
 
         #region "ProductionDefinition"
 
-        [HttpGet("ProdDefinition")]
-        public async Task<ActionResult> GetProdDefinition()
+        [HttpGet("ProdDefDt/{id}")]
+        public async Task<ActionResult> GetProdDefinition(byte id)
         {
-            var ProdDefList = await _masterRepository.GetProdDefinitionAsync();
+            var ProdDefList = await _masterRepository.GetProdDefinitionAsync(id);
+            return Ok(ProdDefList);
+        }
+
+        [HttpGet("ProdDefList")]
+        public async Task<ActionResult> GetProdDefinitionList()
+        {
+            var ProdDefList = await _context.MstrProdDefinitionHd
+                .Select(x => new {x.AutoId , x.PDName}).ToListAsync();
             return Ok(ProdDefList);
         }
 
@@ -707,22 +718,37 @@ namespace API.Controllers.Master
             return Ok(result);
         }
 
+        [HttpPost("DeleteProdDef")]
+        public async Task<ActionResult> DeleteProdDefinition(ProdDefinitionDto prodDefinitionDt)
+        {
+            var result = await _masterRepository.DeleteProdDefinitionAsync(prodDefinitionDt);
+            return Ok(result);
+        }
+
         #endregion "ProductionDefinition"
 
 
         #region "Product Type"        
 
-        // [HttpGet("ProdType/{catId}")]
-        // public async Task<ActionResult> ProductTypeGetDt(int catId)
-        // {
-        //     var ProdTypeList = await _masterRepository.ProductTypeGetAsync();
-        //     return Ok(ProdTypeList);
-        // }
+        [HttpGet("ProdType")]
+        public async Task<ActionResult> GetProductTypeAll()
+        {
+            var ProdTypeList = await _context.MstrProductType
+                .Where(x => x.IsActive == true)
+                .Join(_context.MstrCategory , p => p.CategoryId , c => c.AutoId ,
+                    (p,c) => 
+                    new {
+                        autoId = p.AutoId,
+                        prodTypeName = c.Name + " - " +  p.ProdTypeName
+                    })
+                .ToListAsync();
+            return Ok(ProdTypeList);
+        }
 
         [HttpGet("ProdType/{catId}")]
         public async Task<IActionResult> GetProcuctType(int catId)
         {
-            var result = await _context.MstrProductType
+            var prodTypeList = await _context.MstrProductType
                 .Where(x => x.CategoryId == catId)
                 .Join(_context.MstrCategory , p => p.CategoryId , c => c.AutoId ,
                     (p,c) => 
@@ -736,7 +762,7 @@ namespace API.Controllers.Master
                         categoryName = c.Name
                     })
                 .ToListAsync();
-            return Ok(result);
+            return Ok(prodTypeList);
         }
 
         [HttpPost("SaveProdType")]
@@ -758,36 +784,53 @@ namespace API.Controllers.Master
 
         #region "Product Group"
 
-        [HttpGet("ProdGroup")]
-        public async Task<ActionResult> GetProductGroup()
+        [HttpGet("PGroup/{id}")]
+        public async Task<ActionResult> GetProductGroup(int id)
         {
-            var ProdGroupList = await _masterRepository.ProductGroupGetAsync();
+            var ProdGroupList = await _masterRepository.ProductGroupGetAsync(id);
             return Ok(ProdGroupList);
         }
 
-        // [HttpGet("ProdGroup")]
-        // public async Task<IActionResult> GetProcuctGroup()
-        // {
-        //     var result = await _context.MstrProductGroup.ToListAsync();
-        //     return Ok(result);
-        // }
+        [HttpGet("ProdGroup")]
+        public async Task<IActionResult> GetProcuctGroupAll()
+        {
+            var result = await _context.MstrProductGroup
+                .Where(x => x.IsActive == true)
+                .Join(_context.MstrProductType , p => p.ProdTypeId , c => c.AutoId ,
+                    (p,c) => new {p,c})
+                .Join(_context.MstrCategory , pp => pp.c.CategoryId , t => t.AutoId, 
+                    (pp, t) =>
+                    new {
+                        autoId = pp.p.AutoId,
+                        ProdGroupName = t.Name + "-"+ pp.c.ProdTypeName + "-" + pp.p.ProdGroupName
+                    })
+                .ToListAsync();
+            return Ok(result);
+        }
 
         [HttpPost("SaveProdGroup")]
         public async Task<ActionResult> SaveProductGroup(MstrProductGroup MstrProductGroup)
         {
             var result = await _masterRepository.SaveProductGroupAsync(MstrProductGroup);
             return Ok(result);
-        }     
+        }  
+
+        [HttpPost("Deactive/ProdGroup")]
+        public async Task<ActionResult> DeactiveProdGroup(MstrProductGroup MstrProductGroup)
+        {
+            var result = await _masterRepository.DeactiveProdGroupAsync(MstrProductGroup);
+            return Ok(result);
+        }   
 
         #endregion "Product Group"
 
 
         #region "Product Sub Category"
 
-        [HttpGet("ProdSubCat")]
-        public async Task<ActionResult> GetProdSubCategory()
+        [HttpGet("PSubCat/{id}")]
+        public async Task<ActionResult> GetProdSubCategory(int id)
         {
-            var ProdSubCatList = await _masterRepository.GetProductSubCatAsync();
+            var ProdSubCatList = await _masterRepository.GetProductSubCatAsync(id);            
             return Ok(ProdSubCatList);
         }    
 
@@ -802,6 +845,13 @@ namespace API.Controllers.Master
         public async Task<ActionResult> SaveProductSubCat(MstrProductSubCat MstrProductSubCat)
         {
             var result = await _masterRepository.SaveProductSubCatAsync(MstrProductSubCat);
+            return Ok(result);
+        }
+
+        [HttpPost("Deactive/PSubCat")]
+        public async Task<ActionResult> DeactiveProdSubCat(MstrProductSubCat MstrProductSubCat)
+        {
+            var result = await _masterRepository.DeactiveProdSubCatAsync(MstrProductSubCat);
             return Ok(result);
         }
 

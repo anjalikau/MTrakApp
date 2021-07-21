@@ -55,6 +55,7 @@ import { MasterProdTypeComponent } from './master/master-prod-type/master-prod-t
 import { MasterProdGroupComponent } from './master/master-prod-group/master-prod-group.component';
 import { MasterProdSubCategoryComponent } from './master/master-prod-sub-category/master-prod-sub-category.component';
 import { MasterSerialnoDetailsComponent } from './master/master-serialno-details/master-serialno-details.component';
+import { MasterProductTabComponent } from './master/master-product-tab/master-product-tab.component';
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { MasterSerialnoDetailsComponent } from './master/master-serialno-details
     MasterProdTypeComponent,
     MasterProdGroupComponent,
     MasterProdSubCategoryComponent,
-    MasterSerialnoDetailsComponent
+    MasterSerialnoDetailsComponent,
+    MasterProductTabComponent
   ],
   imports: [
     BrowserModule,

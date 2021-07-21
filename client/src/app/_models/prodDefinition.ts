@@ -1,9 +1,15 @@
 export interface ProdDefinition {
-    autoId:number;
-    name:string;
-    processId:number;
-    recSiteId: number;
-    dispSiteId: number;
-    createUserId: number;
+    autoId: number;
+    pDName: string;
+    pDHeaderId: number;
+    processId: number;
+    receiveSiteId: number;
+    dispatchSiteId: number;
+    receiveSite?: string;
+    dispatchSite?: string;
+    process?: string;
+    createUserId ?: number;
 }
+
+
 
