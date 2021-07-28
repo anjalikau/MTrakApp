@@ -56,6 +56,9 @@ import { MasterProdGroupComponent } from './master/master-prod-group/master-prod
 import { MasterProdSubCategoryComponent } from './master/master-prod-sub-category/master-prod-sub-category.component';
 import { MasterSerialnoDetailsComponent } from './master/master-serialno-details/master-serialno-details.component';
 import { MasterProductTabComponent } from './master/master-product-tab/master-product-tab.component';
+import { FlexFieldDetailsComponent } from './master/article/flex-field-details/flex-field-details.component';
+import { FlexFieldValueListComponent } from './master/article/flex-field-value-list/flex-field-value-list.component';
+import { FlexFieldTabComponent } from './master/article/flex-field-tab/flex-field-tab.component';
 
 @NgModule({
   declarations: [
@@ -103,7 +106,10 @@ import { MasterProductTabComponent } from './master/master-product-tab/master-pr
     MasterProdGroupComponent,
     MasterProdSubCategoryComponent,
     MasterSerialnoDetailsComponent,
-    MasterProductTabComponent
+    MasterProductTabComponent,
+    FlexFieldDetailsComponent,
+    FlexFieldValueListComponent,
+    FlexFieldTabComponent
   ],
   imports: [
     BrowserModule,

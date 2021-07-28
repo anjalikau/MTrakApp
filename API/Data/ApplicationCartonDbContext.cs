@@ -62,6 +62,8 @@ namespace API.Data
         public DbSet<TransFtyProductionProcessOrderDt> TransFtyProdProcessOrderDt { get;  set ; }
         public DbSet<MstrCostingGroup> MstrCostingGroup { get;  set ; }
         public DbSet<MstrSerialNoDetails> MstrSerialNoDetails { get;  set ; }
+        public DbSet<MstrFlexFieldDetails> MstrFlexFieldDetails { get;  set ; }
+        public DbSet<MstrFlexFieldValueList> MstrFlexFieldValueList { get;  set ; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

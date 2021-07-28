@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Controllers.Master
+namespace API.Controllers.CCSystem.Master
 {
     [Authorize]
     public class MasterController : BaseApiController
@@ -23,6 +23,8 @@ namespace API.Controllers.Master
             _context = context;
             _masterRepository = masterRepository;
         }
+
+        
 
         #region "MenuList"
         // [HttpPost("AuthMenus")]
@@ -904,6 +906,74 @@ namespace API.Controllers.Master
         //     return Ok(result);
 
         // }  
+
+        #region Flex Field Details
+
+        [HttpPost("SaveFlexFDt")]
+        public async Task<IActionResult> SaveFlexFieldDetails(MstrFlexFieldDetails flexFieldDt)
+        {
+            var result = await _masterRepository.SaveFlexFieldDetailsAsync(flexFieldDt);
+            return Ok(result);
+        }
+
+        [HttpGet("FlexFieldDt/{id}")]
+        public async Task<IActionResult> GetFlexFieldDetails(int id)
+        {
+            var flexFieldDt = await _masterRepository.GetFlexFieldDtAsync(id);
+            return Ok(flexFieldDt);
+        }
+
+        //// GET ONLY VALUE LISTED FLEX FIELD LIST
+        [HttpGet("FlexFldDt/Val")]
+        public async Task<IActionResult> GetFlexFieldList()
+        {
+            var flexFieldDt = await _context.MstrFlexFieldDetails
+                .Select(x => new { x.AutoId , x.FlexFieldCode , x.FlexFieldName , x.ValueList})
+                .Where(x => x.ValueList == true).ToListAsync();
+            return Ok(flexFieldDt);
+        }
+
+        [HttpPost("Deactive/FlexFldDt")]
+        public async Task<IActionResult> DeactiveFlexFieldDt(MstrFlexFieldDetails flexFieldDt)
+        {
+            var result = await _masterRepository.DeactiveFlexFieldDtAsync(flexFieldDt);
+            return Ok(result);
+        }
+            
+        #endregion
+
+        #region Flex Field ValueList
+
+        [HttpGet("FFValList/{id}")]
+        public async Task<IActionResult> GetFlexFieldValueList(int id)
+        {
+            var result = await _context.MstrFlexFieldValueList
+                .Where(x => x.FlexFieldId == id)
+                .Join(_context.MstrFlexFieldDetails , v => v.FlexFieldId , d => d.AutoId ,
+                   (v , d) => new 
+                   {
+                       autoId = v.AutoId,
+                       flexFieldId = v.FlexFieldId,
+                       flexFeildVlaue = v.FlexFeildVlaue
+                   }).ToListAsync();                
+            return Ok(result);
+        }
+
+        [HttpPost("SaveFFValList")]
+        public async Task<IActionResult> SaveFlexFieldValueList(MstrFlexFieldValueList flexFieldval)
+        {
+            var result = await _masterRepository.SaveFlexFieldValListAsync(flexFieldval);
+            return Ok(result);
+        }
+
+        [HttpPost("DeleteFFValList")]
+        public async Task<IActionResult> DeleteFlexFieldValList(MstrFlexFieldValueList flexFieldval)
+        {
+            var result = await _masterRepository.DeleteFlexFieldValListAsync(flexFieldval);
+            return Ok(result);
+        }
+            
+        #endregion
        
     }
 }

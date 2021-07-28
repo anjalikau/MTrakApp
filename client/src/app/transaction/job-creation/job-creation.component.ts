@@ -65,8 +65,10 @@ export class JobCreationComponent implements OnInit {
   public pendOrderGrid: IgxGridComponent;
   @ViewChild('JobGrid', { read: IgxGridComponent, static: true })
   public JobGrid: IgxGridComponent;
+  
   @ViewChild('dialog', { read: IgxDialogComponent })
   public dialog: IgxDialogComponent;
+
   @ViewChild('cmbarticle', { read: IgxComboComponent })
   public cmbarticle: IgxComboComponent;
   @ViewChild('cmbcolor', { read: IgxComboComponent })

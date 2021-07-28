@@ -834,7 +834,6 @@ namespace API.Repository
             return para.Get<int>("Result");
         }
 
-
         public async Task<IEnumerable<ProductSubCatDto>> GetProductSubCatAsync(int ProdGroupId)
         {
             IEnumerable<ProductSubCatDto> prodSubCatList;
@@ -865,7 +864,94 @@ namespace API.Repository
             return para.Get<int>("Result");
         }
 
-              
+        #region Flex Field Details
+            
+        public async Task<int> SaveFlexFieldDetailsAsync(MstrFlexFieldDetails flexDetails)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , flexDetails.AutoId);
+            para.Add("FieldCode", flexDetails.FlexFieldCode.ToUpper().Trim());
+            para.Add("FieldName", flexDetails.FlexFieldName.Trim());
+            para.Add("CategoryId", flexDetails.CategoryId);
+            para.Add("ProdTypeId", flexDetails.ProdTypeId);
+            para.Add("ModuleId", flexDetails.ModuleId);
+            para.Add("DataType", flexDetails.DataType);
+            para.Add("ValueList", flexDetails.ValueList);
+            para.Add("Mandatory", flexDetails.Mandatory);
+            para.Add("UserId", flexDetails.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrFlexFeildDetailsSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<IEnumerable<FlexFieldReturnDto>> GetFlexFieldDtAsync(int CategoryId)
+        {
+            IEnumerable<FlexFieldReturnDto> flexFieldList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("CategoryId" , CategoryId);
+
+            flexFieldList = await DbConnection.QueryAsync<FlexFieldReturnDto>("spMstrFlexFeildDetailsGet" , para
+                    , commandType: CommandType.StoredProcedure);
+            
+            return flexFieldList;
+        }
+
+        public async Task<int> DeactiveFlexFieldDtAsync(MstrFlexFieldDetails flexFieldDt)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , flexFieldDt.AutoId);
+            para.Add("IsActive" , flexFieldDt.isActive);
+            para.Add("UserId", flexFieldDt.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrFlexFeildDetailsDeactive", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        #endregion Flex Field Details
+
+    
+        #region Flex Field ValueList
+
+        public async Task<int> SaveFlexFieldValListAsync(MstrFlexFieldValueList flexDetailsVal)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , flexDetailsVal.AutoId);
+            para.Add("FlexFieldDtId", flexDetailsVal.FlexFieldId);
+            para.Add("FlexFieldValue", flexDetailsVal.FlexFeildVlaue.Trim());           
+            para.Add("UserId", flexDetailsVal.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrFlexFieldValueListSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<int> DeleteFlexFieldValListAsync(MstrFlexFieldValueList flexDetailsVal)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , flexDetailsVal.AutoId);          
+            para.Add("UserId", flexDetailsVal.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrFlexFieldValueListDelete", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+            
+        #endregion Flex Field ValueList      
       
     }
 }

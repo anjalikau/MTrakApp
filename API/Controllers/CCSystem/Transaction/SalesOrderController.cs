@@ -1,5 +1,3 @@
-
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 
-namespace API.Controllers.Transaction
+namespace API.Controllers.CCSystem.Transaction
 {
     [Authorize]
     public class SalesOrderController : BaseApiController

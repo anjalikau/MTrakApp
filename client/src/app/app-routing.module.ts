@@ -7,6 +7,8 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
+import { FlexFieldDetailsComponent } from './master/article/flex-field-details/flex-field-details.component';
+import { FlexFieldTabComponent } from './master/article/flex-field-tab/flex-field-tab.component';
 import { CustomerHeaderComponent } from './master/customer/customer-header/customer-header.component';
 import { CustomerTabComponent } from './master/customer/customer-tab/customer-tab.component';
 import { MasterBrandComponent } from './master/master-brand/master-brand.component';
@@ -59,7 +61,8 @@ const routes: Routes = [
       {path:'ProductMenu', component: MasterProductTabComponent},
       {path:'SalesOrder', component: SalesOrderComponent},
       {path:'Job', component: JobCreationComponent},
-      {path:'FPO', component: FacProdOrderComponent}
+      {path:'FPO', component: FacProdOrderComponent},
+      {path:'FlexField', component: FlexFieldTabComponent},
     ]
   },  
   {path:'not-found', component: NotFoundComponent},

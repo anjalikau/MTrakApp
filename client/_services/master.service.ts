@@ -27,6 +27,8 @@ import { SerialNo } from 'src/app/_models/serialNo';
 import { ProductType } from 'src/app/_models/productType';
 import { ProductGroup } from 'src/app/_models/productGroup';
 import { ProdSubCategory } from 'src/app/_models/ProdSubCategory';
+import { FlexFieldDetails } from 'src/app/_models/flexFieldDetails';
+import { FlexFieldValueList } from 'src/app/_models/flexFieldValueList';
 
 var usertoken: any;
 if (localStorage.length > 0) {
@@ -659,6 +661,44 @@ export class MasterService {
 
   //#endregion "Product Sub Category"
 
+ 
+  //#region "Flex Field Details"
+
+  saveFlexFieldDetails(flexFieldDt: FlexFieldDetails) {
+    return this.http.post(this.baseUrl + 'Master/SaveFlexFDt' , flexFieldDt , httpOptions);
+  }
+
+  getFlexFieldDetails(catId: number) {
+    return this.http.get<any[]>(this.baseUrl + 'Master/FlexFieldDt/' + catId  , httpOptions);
+  }
+
+  deactiveFlexFieldDt(flexFieldDt: FlexFieldDetails) {
+    return this.http.post(this.baseUrl + 'Master/Deactive/FlexFldDt' , flexFieldDt  , httpOptions);
+  }
+
+  //// GET FLEX FIELD ONLY VALUED 
+  getFlexFieldDtList() {
+    return this.http.get<any[]>(this.baseUrl + 'Master/FlexFldDt/Val'  , httpOptions);
+  }
+
+  //#endregion "Flex Field Details"
+
+  //#region "Flex Field ValueList"
+
+  saveFlexFieldValList(flexFldValList: FlexFieldValueList) {
+    return this.http.post(this.baseUrl + 'Master/SaveFFValList' , flexFldValList , httpOptions);
+  }
+
+  getFlexFieldValList(flexFldId: number) {
+    return this.http.get<any[]>(this.baseUrl + 'Master/FFValList/' + flexFldId  , httpOptions);
+  }
+
+  deleteFlexFieldValList(flexFldValList: any) {
+    return this.http.post(this.baseUrl + 'Master/DeleteFFValList' , flexFldValList , httpOptions);
+  }
+
+  //#endregion "Flex Field ValueList"
+  
   // getCustomerDt(customerId: number) {
   //   return this.http.get<CustomerDt[]>(this.baseUrl + 'Master/CustomerDt/' + customerId , httpOptions);
   // }

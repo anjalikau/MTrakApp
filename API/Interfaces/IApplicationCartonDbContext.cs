@@ -62,6 +62,8 @@ namespace API.Interfaces
         DbSet<TransFtyProductionProcessOrderDt> TransFtyProdProcessOrderDt { get;  set ; }
         DbSet<MstrCostingGroup> MstrCostingGroup { get;  set ; }
         DbSet<MstrSerialNoDetails> MstrSerialNoDetails { get;  set ; }
+        DbSet<MstrFlexFieldDetails> MstrFlexFieldDetails { get;  set ; }
+        DbSet<MstrFlexFieldValueList> MstrFlexFieldValueList { get;  set ; }
 
     }
 }

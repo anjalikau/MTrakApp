@@ -59,8 +59,12 @@ namespace API.Interfaces
         Task<IEnumerable<ProductSubCatDto>> GetProductSubCatAsync(int ProdGroupId); 
         Task<int> DeactiveProdSubCatAsync(MstrProductSubCat MstrProductSubCat);       
         Task<int> SaveCostGroupAsync(MstrCostingGroup MstrCostingGroup);        
-        Task<int> SaveSerialNoDtAsync(MstrSerialNoDetails MstrSerialNoD);       
-
+        Task<int> SaveSerialNoDtAsync(MstrSerialNoDetails MstrSerialNoD);
+        Task<int> SaveFlexFieldDetailsAsync(MstrFlexFieldDetails flexDetails); 
+        Task<IEnumerable<FlexFieldReturnDto>> GetFlexFieldDtAsync(int CategoryId);
+        Task<int> DeactiveFlexFieldDtAsync(MstrFlexFieldDetails flexFieldDt);
+        Task<int> SaveFlexFieldValListAsync(MstrFlexFieldValueList flexDetailsVal);
+        Task<int> DeleteFlexFieldValListAsync(MstrFlexFieldValueList flexDetailsVal);
 
     }
 }

@@ -8,7 +8,7 @@ using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers.Master
+namespace API.Controllers.CCSystem.Master
 {
     [Authorize]
     public class MenuController : BaseApiController
