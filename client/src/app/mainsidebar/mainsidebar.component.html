@@ -274,7 +274,25 @@
                 <p>Flex Field</p>
               </a>
             </li>
-          </ul>      
+          </ul>  
+          
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/Article" routerLinkActive="active" (click)="menuClose()">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Article</p>
+              </a>
+            </li>
+          </ul>  
+
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/App" routerLinkActive="active" (click)="menuClose()">
+                <i class="far fa-circle nav-icon"></i>
+                <p>App</p>
+              </a>
+            </li>
+          </ul>  
 
         </li>
         <li class="nav-item" *ngIf="salesGroup">

@@ -16,7 +16,7 @@ import { MasterService } from '_services/master.service';
 export class MasterProdGroupComponent implements OnInit {
   prodGroupForm: FormGroup;
   prodGroupList: any[];
-  prodTypeList: ProductType[];
+  // prodTypeList: ProductType[];
   user: User;
   validationErrors: string[] = [];
   public col: IgxColumnComponent;
@@ -31,7 +31,8 @@ export class MasterProdGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.initilizeForm();
-    this.loadProductTypeAll();
+    this.loadProductGroup();
+    // this.loadProductTypeAll();
   }
 
   initilizeForm() {
@@ -45,7 +46,7 @@ export class MasterProdGroupComponent implements OnInit {
       prodGroupName: ['', [Validators.required , Validators.maxLength(50)]],
       prodGroupCode: ['', [Validators.required , Validators.maxLength(10)]],
       //serialNo: ['', [Validators.required ]],
-      prodTypeId: ['', [Validators.required ]]
+      // prodTypeId: ['', [Validators.required ]]
     })
   } 
 
@@ -55,12 +56,12 @@ export class MasterProdGroupComponent implements OnInit {
     }
   }
 
-  loadProductTypeAll(){
-    this.masterService.getProductTypeAll().subscribe(typeList => {
-      this.prodTypeList = typeList;
-      //console.log(this.prodTypeList);
-    });    
-  }
+  // loadProductTypeAll(){
+  //   this.masterService.getProductTypeAll().subscribe(typeList => {
+  //     this.prodTypeList = typeList;
+  //     //console.log(this.prodTypeList);
+  //   });    
+  // }
 
   public onResize(event) {
     this.col = event.column;
@@ -68,15 +69,15 @@ export class MasterProdGroupComponent implements OnInit {
     this.nWidth = event.newWidth;
   }
 
-  onSelectChange(event) {
-    this.prodGroupList = [];
-    for (const item of event.added) {
-      this.loadProductGroup(item);
-    }
-  }
+  // onSelectChange(event) {
+  //   this.prodGroupList = [];
+  //   for (const item of event.added) {
+  //     this.loadProductGroup(item);
+  //   }
+  // }
 
-  loadProductGroup(prodTypeId){
-    this.masterService.getProductGroupDt(prodTypeId).subscribe(groupList => {
+  loadProductGroup(){
+    this.masterService.getProductGroupAll().subscribe(groupList => {
       //console.log(groupList);
       this.prodGroupList = groupList;
     })
@@ -84,7 +85,7 @@ export class MasterProdGroupComponent implements OnInit {
 
 
   saveProductGroup() { 
-    var prodTypeId = this.prodGroupForm.get('prodTypeId').value[0];
+    // var prodTypeId = this.prodGroupForm.get('prodTypeId').value[0];
     var user: User = JSON.parse(localStorage.getItem('user'));
 
     var obj = {
@@ -92,18 +93,18 @@ export class MasterProdGroupComponent implements OnInit {
       prodGroupName: this.prodGroupForm.get('prodGroupName').value.trim(),
       prodGroupCode: this.prodGroupForm.get('prodGroupCode').value.trim(),
       autoId: this.prodGroupForm.get('autoId').value,
-      prodTypeId: this.prodGroupForm.get('prodTypeId').value[0],
+      // prodTypeId: this.prodGroupForm.get('prodTypeId').value[0],
       locationId: user.locationId
     };
 
     this.masterService.saveProductGroup(obj).subscribe((result) => {    
       if (result == 1) {
         this.toastr.success("Product Group save Successfully !!!");
-        this.loadProductGroup(prodTypeId);
+        this.loadProductGroup();
         this.clearControls();
       } else if (result == 2) {
         this.toastr.success("Product Group update Successfully !!!");
-        this.loadProductGroup(prodTypeId);
+        this.loadProductGroup();
         this.clearControls();
       } else if (result == -1) {
         this.toastr.warning("Product Group already exists !!!");
@@ -124,7 +125,7 @@ export class MasterProdGroupComponent implements OnInit {
 
     this.prodGroupForm.get('prodGroupName').enable();
     this.prodGroupForm.get('prodGroupCode').enable();
-    this.prodGroupForm.get('prodTypeId').enable();
+    // this.prodGroupForm.get('prodTypeId').enable();
   }
 
   deactive(cellValue, cellId) {
@@ -152,16 +153,16 @@ export class MasterProdGroupComponent implements OnInit {
 
   deactiveProdGroup(obj, status) {
     // console.log(obj);
-    var prodTypeId = this.prodGroupForm.get('prodTypeId').value[0];
+    // var prodTypeId = this.prodGroupForm.get('prodTypeId').value[0];
 
     this.masterService.deactiveProductGroup(obj).subscribe(
       (result) => {
         if (result == 1) {
           this.toastr.success('Product Group ' + status + ' Successfully !!!');
-          this.loadProductGroup(prodTypeId);
+          this.loadProductGroup();
         } else if (result == 2) {
           this.toastr.success('Product Group ' + status + ' Successfully !!!');
-          this.loadProductGroup(prodTypeId);
+          this.loadProductGroup();
         } else if (result == -1) {
           this.toastr.warning('Deactive failed, already allocated !!!');
         } else {

@@ -1,6 +1,6 @@
 export interface ProductType {
     autoId: number;
-    categoryId: number;
+    // categoryId: number;
     prodTypeName: string;
     prodTypeCode: string;
     bAutoArticle:boolean;

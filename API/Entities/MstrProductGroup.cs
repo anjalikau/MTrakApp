@@ -12,13 +12,13 @@ namespace API.Entities
         public string ProdGroupName { get; set; }
         public string ProdGroupCode { get; set; }
         public int SerialNo { get; set; }
-        public int ProdTypeId { get; set; }
+        // public int ProdTypeId { get; set; }
         public bool ? IsActive { get; set; }        
         public int ? CreateUserId { get; set; }
         public DateTime ? CreateDateTime { get; set; } = DateTime.Now;
         public int ? UpdateUserId { get; set; }
         public DateTime ? UpdateDateTime { get; set; }        
-        public virtual MstrProductType ProductType {get; set;}
+        // public virtual MstrProductType ProductType {get; set;}
     }
 
 }

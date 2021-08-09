@@ -7,9 +7,9 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
-import { FlexFieldDetailsComponent } from './master/article/flex-field-details/flex-field-details.component';
+import { AppComponentComponent } from './master/article/app-component/app-component.component';
 import { FlexFieldTabComponent } from './master/article/flex-field-tab/flex-field-tab.component';
-import { CustomerHeaderComponent } from './master/customer/customer-header/customer-header.component';
+import { MasterArticleComponent } from './master/article/master-article/master-article.component';
 import { CustomerTabComponent } from './master/customer/customer-tab/customer-tab.component';
 import { MasterBrandComponent } from './master/master-brand/master-brand.component';
 import { MasterBrandcodeComponent } from './master/master-brandcode/master-brandcode.component';
@@ -19,8 +19,7 @@ import { MasterCostingGroupComponent } from './master/master-costing-group/maste
 import { MasterMaterialtypeComponent } from './master/master-materialtype/master-materialtype.component';
 import { MasterProcessComponent } from './master/master-process/master-process.component';
 import { MasterProdDefinitionComponent } from './master/master-prod-definition/master-prod-definition.component';
-import { MasterProdTypeComponent } from './master/master-prod-type/master-prod-type.component';
-import { MasterProductTabComponent } from './master/master-product-tab/master-product-tab.component';
+import { MasterProductTabComponent } from './master/product/master-product-tab/master-product-tab.component';
 import { MasterSerialnoDetailsComponent } from './master/master-serialno-details/master-serialno-details.component';
 import { MasterSizeComponent } from './master/master-size/master-size.component';
 import { MasterStoresiteComponent } from './master/master-storesite/master-storesite.component';
@@ -63,6 +62,8 @@ const routes: Routes = [
       {path:'Job', component: JobCreationComponent},
       {path:'FPO', component: FacProdOrderComponent},
       {path:'FlexField', component: FlexFieldTabComponent},
+      {path:'Article', component: MasterArticleComponent},
+      {path:'App', component: AppComponentComponent},
     ]
   },  
   {path:'not-found', component: NotFoundComponent},

@@ -13,8 +13,12 @@
                                 role="tab" aria-controls="product-group-tab" aria-selected="false">Group</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="custom-tabs-subcat-tab" data-toggle="pill" href="#product-subcat-tab"
-                                role="tab" aria-controls="product-subcat-tab" aria-selected="false">Sub Category</a>
+                            <a class="nav-link" id="custom-tabs-assignpt-tab" data-toggle="pill" href="#product-assignpt-tab"
+                                role="tab" aria-controls="product-assignpt-tab" aria-selected="false">Assign Product Type</a>
+                        </li>  
+                        <li class="nav-item">
+                            <a class="nav-link" id="custom-tabs-assignpg-tab" data-toggle="pill" href="#product-assignpg-tab"
+                                role="tab" aria-controls="product-assignpg-tab" aria-selected="false">Assign Product Group</a>
                         </li>                        
                     </ul>
                 </div>
@@ -27,11 +31,14 @@
                         aria-labelledby="custom-tabs-group-tab">
                         <app-master-prod-group></app-master-prod-group>
                     </div>
-                    <div class="tab-pane fade" id="product-subcat-tab" role="tabpanel"
-                        aria-labelledby="custom-tabs-subcat-tab">
-                        <app-master-prod-sub-category></app-master-prod-sub-category>
+                    <div class="tab-pane fade" id="product-assignpt-tab" role="tabpanel"
+                        aria-labelledby="custom-tabs-assignpt-tab">
+                        <app-assign-prodtype-cat></app-assign-prodtype-cat>
                     </div>
-                    
+                    <div class="tab-pane fade" id="product-assignpg-tab" role="tabpanel"
+                        aria-labelledby="custom-tabs-assignpg-tab">
+                        <app-assign-prodgroup-type></app-assign-prodgroup-type>
+                    </div>
                     <!-- /.modal -->
                 </div>
 

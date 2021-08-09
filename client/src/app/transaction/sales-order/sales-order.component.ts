@@ -340,7 +340,7 @@ export class SalesOrderComponent implements OnInit {
 
   loadArticle() {
     if (this.soHeaderForm.get('headerId').value == 0) {
-      this.masterServices.getArticles().subscribe(
+      this.masterServices.getArticlesAll().subscribe(
         (art) => {
           // console.log(art);
           this.articleList = art;

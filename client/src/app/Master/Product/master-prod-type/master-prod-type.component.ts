@@ -18,7 +18,7 @@ export class MasterProdTypeComponent implements OnInit {
   ProdTypList: ProductType[];
   user: User;
   validationErrors: string[] = [];
-  CategoryList: Category[];
+  // CategoryList: Category[];
 
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -39,7 +39,8 @@ export class MasterProdTypeComponent implements OnInit {
 
   ngOnInit(): void {
     this.initilizeForm();
-    this.loadCategory();
+    this.loadProductTypes();
+    // this.loadCategory();
   }
 
   initilizeForm() {
@@ -50,7 +51,7 @@ export class MasterProdTypeComponent implements OnInit {
     this.prodTypeForm = this.fb.group({
       autoId: [0],
       createUserId: this.user.userId,
-      categoryId: ['', Validators.required],
+      // categoryId: ['', Validators.required],
       prodTypeName: ['', [Validators.required, Validators.maxLength(50)]],
       prodTypeCode: ['', [Validators.required, Validators.maxLength(10)]],
       bAutoArticle: [false],
@@ -63,11 +64,11 @@ export class MasterProdTypeComponent implements OnInit {
     }
   }
 
-  loadCategory() {
-    this.masterService.getCategory().subscribe((cardList) => {
-      this.CategoryList = cardList;
-    });
-  }
+  // loadCategory() {
+  //   this.masterService.getCategory().subscribe((cardList) => {
+  //     this.CategoryList = cardList;
+  //   });
+  // }
 
   public onResize(event) {
     this.col = event.column;
@@ -75,14 +76,14 @@ export class MasterProdTypeComponent implements OnInit {
     this.nWidth = event.newWidth;
   }
 
-  onSelectCategory(event) {
-    for (const item of event.added) {
-      this.loadProductTypes(item);
-    }
-  }
+  // onSelectCategory(event) {
+  //   for (const item of event.added) {
+  //     this.loadProductTypes(item);
+  //   }
+  // }
 
-  loadProductTypes(catId) {
-      this.masterService.getProductTypeDetils(catId).subscribe((cardList) => {
+  loadProductTypes() {
+      this.masterService.getProductTypeAll().subscribe((cardList) => {
         this.ProdTypList = cardList;
       })
   }
@@ -111,16 +112,16 @@ export class MasterProdTypeComponent implements OnInit {
   }
 
   deactiveProdType(obj, status) {
-    var categoryId = this.prodTypeForm.get('categoryId').value[0];
+    // var categoryId = this.prodTypeForm.get('categoryId').value[0];
 
     this.masterService.deactiveProductType(obj).subscribe(
       (result) => {
         if (result == 1) {
           this.toastr.success('Product Type ' + status + ' Successfully !!!');
-          this.loadProductTypes(categoryId);
+          this.loadProductTypes();
         } else if (result == 2) {
           this.toastr.success('Product Type ' + status + ' Successfully !!!');
-          this.loadProductTypes(categoryId);
+          this.loadProductTypes();
         } else if (result == -1) {
           this.toastr.warning('Deactive failed, already allocated !!!');
         } else {
@@ -134,14 +135,13 @@ export class MasterProdTypeComponent implements OnInit {
   }
 
   saveProductType() {
-    var categoryId = this.prodTypeForm.get('categoryId').value[0];
-
+    // var categoryId = this.prodTypeForm.get('categoryId').value[0];
     var obj = {
       createUserId: this.user.userId,
       prodTypeName: this.prodTypeForm.get('prodTypeName').value.trim(),
       prodTypeCode: this.prodTypeForm.get('prodTypeCode').value.trim(),
       autoId: this.prodTypeForm.get('autoId').value,
-      categoryId: categoryId,
+      // categoryId: categoryId,
       bAutoArticle: this.chkAutoArticle.checked,
     };
 
@@ -150,11 +150,11 @@ export class MasterProdTypeComponent implements OnInit {
       (result) => {
         if (result == 1) {
           this.toastr.success('Product Type save Successfully !!!');
-          this.loadProductTypes(categoryId);
+          this.loadProductTypes();
           this.clearControls();
         } else if (result == 2) {
           this.toastr.success('Product Type update Successfully !!!');
-          this.loadProductTypes(categoryId);
+          this.loadProductTypes();
           this.clearControls();
         } else if (result == -1) {
           this.toastr.warning('Product Type already exists !!!');
@@ -177,7 +177,7 @@ export class MasterProdTypeComponent implements OnInit {
 
     this.prodTypeForm.get('prodTypeName').enable();
     this.prodTypeForm.get('prodTypeCode').enable();
-    this.prodTypeForm.get('categoryId').enable();
+    // this.prodTypeForm.get('categoryId').enable();
   }
 
   //// EDIT ROW LOADS DETAILS TO CONTROL
@@ -195,7 +195,7 @@ export class MasterProdTypeComponent implements OnInit {
     this.prodTypeForm.get('bAutoArticle')
       .setValue(selectedRowData[0]['bAutoArticle']);
 
-    this.prodTypeForm.get('categoryId').disable();
+    // this.prodTypeForm.get('categoryId').disable();
     this.prodTypeForm.get('prodTypeName').disable();
     this.prodTypeForm.get('prodTypeCode').disable();
   }

@@ -1,6 +1,6 @@
 export interface ProductGroup {
     autoId: number;
-    prodTypeId: number;
+    // prodTypeId: number;
     prodGroupName: string;
     prodGroupCode: string;
     serialNo?: number;

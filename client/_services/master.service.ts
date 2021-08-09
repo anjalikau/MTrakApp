@@ -29,6 +29,8 @@ import { ProductGroup } from 'src/app/_models/productGroup';
 import { ProdSubCategory } from 'src/app/_models/ProdSubCategory';
 import { FlexFieldDetails } from 'src/app/_models/flexFieldDetails';
 import { FlexFieldValueList } from 'src/app/_models/flexFieldValueList';
+import { CatProdType } from 'src/app/_models/CatProdType';
+import { ProdTypeGroup } from 'src/app/_models/ProdTypeGroup';
 
 var usertoken: any;
 if (localStorage.length > 0) {
@@ -154,14 +156,30 @@ export class MasterService {
 
   //#region "Article"
 
-  getArticles() {
+  getArticlesAll() {
     return this.http.get<Article[]>(
       this.baseUrl + 'Master/Articles',
       httpOptions
     );
   }
 
+  saveArticle(article: Article) {
+    return this.http.post(this.baseUrl + 'Master/SaveArticle' , article , httpOptions)
+  }
+
+  getArticleDetails(article: any) {
+    return this.http.post<any>(this.baseUrl + 'Master/ArtProdWise' , article , httpOptions)
+  }
+
   //#endregion "Article"
+
+  //#region "Code Settings"
+
+  getCodeSettings() {
+    return this.http.get<any[]>(this.baseUrl + 'Master/CodeSett' , httpOptions);
+  }
+
+  //#endregion "Code Settings"
 
   //#region "Units"
 
@@ -623,6 +641,18 @@ export class MasterService {
     );
   }
 
+  assignCatProdType(prodType: any[]) {
+    return this.http.post(this.baseUrl + 'Master/AssignCatPT' , prodType , httpOptions);
+  }
+
+  deleteCatProdType(prodType: any[]) {
+    return this.http.post(this.baseUrl + 'Master/DeleteCatPT' , prodType , httpOptions);
+  }
+
+  getCatProdTypeDetails(catId: number) {
+    return this.http.get<CatProdType[]>(this.baseUrl + 'Master/CatProdT/' + catId , httpOptions);
+  }
+
   //#endregion "Product Type"
 
   //#region "Product Group"
@@ -637,10 +667,22 @@ export class MasterService {
 
   getProductGroupAll() {
     return this.http.get<any>(this.baseUrl + 'Master/ProdGroup' , httpOptions);
-  }
+  }  
 
   deactiveProductGroup(prodGroup: ProductGroup) {
     return this.http.post(this.baseUrl + 'Master/Deactive/ProdGroup', prodGroup , httpOptions);
+  }
+
+  getProdTypeGroup(prodTypeId: number) {
+    return this.http.get<any[]>(this.baseUrl + 'Master/PTGroup/' + prodTypeId ,httpOptions);
+  }
+
+  assignProdTypeGroup(prodType: any[]) {
+    return this.http.post(this.baseUrl + 'Master/AssignPGroup/' , prodType ,httpOptions);
+  }
+
+  deleteProdTypeGroup(prodType: any[]) {
+    return this.http.post(this.baseUrl + 'Master/DeletePGroup/' , prodType ,httpOptions);
   }
 
   //#endregion "Product Group"
@@ -661,8 +703,7 @@ export class MasterService {
 
   //#endregion "Product Sub Category"
 
- 
-  //#region "Flex Field Details"
+   //#region "Flex Field Details"
 
   saveFlexFieldDetails(flexFieldDt: FlexFieldDetails) {
     return this.http.post(this.baseUrl + 'Master/SaveFlexFDt' , flexFieldDt , httpOptions);
@@ -679,6 +720,11 @@ export class MasterService {
   //// GET FLEX FIELD ONLY VALUED 
   getFlexFieldDtList() {
     return this.http.get<any[]>(this.baseUrl + 'Master/FlexFldDt/Val'  , httpOptions);
+  }
+
+  /// GET FLEX FIELD LIST RELATED TO CATEGORY AND PROD TYPE
+  getFlexFieldCatPTWise(flexFieldDt: any) {
+    return this.http.post<any[]>(this.baseUrl + 'Master/FFListCatPT' , flexFieldDt , httpOptions);
   }
 
   //#endregion "Flex Field Details"

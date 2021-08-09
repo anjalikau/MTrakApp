@@ -50,10 +50,10 @@ namespace API.Interfaces
         Task<int> DeleteProdDefinitionAsync(ProdDefinitionDto prodDefDto);
         Task<IEnumerable<ProdDefinitionDto>> GetProdDefinitionAsync(byte ProdHeaderId);
         Task<int> SaveProductGroupAsync(MstrProductGroup MstrProductGroup);
-        Task<IEnumerable<ProdGroupDto>> ProductGroupGetAsync(int ProdTypeId);
+        Task<IEnumerable<ProdGroupDto>> GetProductGroupAsync(int ProdTypeId);
         Task<int> DeactiveProdGroupAsync(MstrProductGroup MstrProductGroup);
         Task<int> SaveProductTypeAsync(MstrProductType MstrProductType);
-        Task<IEnumerable<ProductTypeDto>> ProductTypeGetAsync();
+        // Task<IEnumerable<ProductTypeDto>> ProductTypeGetAsync();
         Task<int> DeactProductTypeAsync(MstrProductType MstrProductType);
         Task<int> SaveProductSubCatAsync(MstrProductSubCat MstrProductSubCat);
         Task<IEnumerable<ProductSubCatDto>> GetProductSubCatAsync(int ProdGroupId); 
@@ -65,6 +65,14 @@ namespace API.Interfaces
         Task<int> DeactiveFlexFieldDtAsync(MstrFlexFieldDetails flexFieldDt);
         Task<int> SaveFlexFieldValListAsync(MstrFlexFieldValueList flexDetailsVal);
         Task<int> DeleteFlexFieldValListAsync(MstrFlexFieldValueList flexDetailsVal);
+        Task<ArticleReturnDto> SaveArticleAsync(MstrArticle article);
+        Task<IEnumerable<ArticleDetailDto>> GetArtileDetailsAsync(ArticleSerchDto article);
+        Task<IEnumerable<CatProdTypeDto>> GetCatProductTypeDtAsync(int catId);
+        Task<int> AssignCatProdTypeAsync(List<MstrCatProductType> prod);
+        Task<int> DeleteCatProdTypeAsync(List<MstrCatProductType> prod);
+        Task<IEnumerable<ProdTypeGroupDto>> GetProdTypeGroupAsync(int prodTypeId);
+        Task<int> AssignProdTypeGroupAsync(List<MstrProdTypeGroup> prod);
+        Task<int> DeleteProdTypeGroupAsync(List<MstrProdTypeGroup> prod);
 
     }
 }

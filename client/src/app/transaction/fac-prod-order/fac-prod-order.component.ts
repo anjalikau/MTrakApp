@@ -222,6 +222,7 @@ export class FacProdOrderComponent implements OnInit {
 
   //// DELETE FPO ITEM LINE
   public onDialogOKSelected(event) {
+    this.clearFPODetailControls();
     event.dialog.close();
     if (this.clickFPODelete == true) {
       this.deleteFPO();
@@ -399,6 +400,7 @@ export class FacProdOrderComponent implements OnInit {
   refreshControls() {
     this.clearFPOControls();
     this.getFPORefNo();
+    this.loadPendingJobList();
   }
 
   //// CLEAR ALL THE FPO DETAILS AND RESET FORMS
@@ -416,6 +418,7 @@ export class FacProdOrderComponent implements OnInit {
     this.fpoHeaderForm.get('endDate').reset();
     this.fpoHeaderForm.get('remarks').reset();
     this.fpoHeaderForm.get('qty').reset();
+    this.fpoHeaderForm.get('qty').disable();
 
     this.clearFPODetailControls();
   }

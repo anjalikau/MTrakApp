@@ -173,37 +173,44 @@ namespace API.Controllers.CCSystem.Master
             var articleList = await _context.MstrArticle
                 .Join(_context.MstrCategory, a => a.CategoryId , c => c.AutoId
                     , (a, c) => new { a , c })
-                .Join(_context.MstrMaterialType , am => am.a.MaterialId , m => m.AutoId
-                    ,(am , m) => new {am , m })
-                .Join (_context.MstrUnits , au => au.am.a.UnitId , u => u.AutoId ,
+                // .Join(_context.MstrMaterialType , am => am.a.MaterialId , m => m.AutoId
+                //     ,(am , m) => new {am , m })
+                .Join (_context.MstrUnits , au => au.a.UnitId , u => u.AutoId ,
                     (au , u) => new { au , u })
-                .Join(_context.MstrProductType , ap => ap.au.am.a.ProTypeId , p => p.AutoId,
+                .Join(_context.MstrProductType , ap => ap.au.a.ProTypeId , p => p.AutoId,
                     (ap , p) => new { ap , p})
-                .Join(_context.MstrProductSubCat, aps => aps.ap.au.am.a.SubCatId , s => s.AutoId , 
+                .Join(_context.MstrProductGroup, aps => aps.ap.au.a.ProGroupId , s => s.AutoId , 
                     ( aps , s) => 
                     new 
                     {
-                        autoId = aps.ap.au.am.a.AutoId,
+                        autoId = aps.ap.au.a.AutoId,
                         unitCode = aps.ap.u.Code,
-                        materialCode = aps.ap.au.m.Code,
-                        catCode = aps.ap.au.am.c.Code,
+                        // materialCode = aps.ap.au.Code,
+                        catCode = aps.ap.au.c.Code,
                         prodTypeCode = aps.p.ProdTypeCode,
-                        subCatCode = s.ProdSubCatCode,
-                        unitId = aps.ap.au.am.a.UnitId,
-                        materialId = aps.ap.au.am.a.MaterialId,
-                        categoryId = aps.ap.au.am.a.CategoryId,
-                        proTypeId = aps.ap.au.am.a.ProTypeId,
-                        subCatId = aps.ap.au.am.a.SubCatId,
-                        articleName = aps.ap.au.am.a.ArticleName,
-                        stockCode = aps.ap.au.am.a.StockCode,
-                        height = aps.ap.au.am.a.Height,
-                        width = aps.ap.au.am.a.Width,
-                        length = aps.ap.au.am.a.Length,
-                        description1 = aps.ap.au.am.a.Description1,
-                        description2 = aps.ap.au.am.a.Description2
+                        ProdGroupCode = s.ProdGroupCode,
+                        unitId = aps.ap.au.a.UnitId,
+                        // materialId = aps.ap.au.a.MaterialId,
+                        categoryId = aps.ap.au.a.CategoryId,
+                        proTypeId = aps.ap.au.a.ProTypeId,
+                        ProGroupId = aps.ap.au.a.ProGroupId,
+                        articleName = aps.ap.au.a.ArticleName,
+                        stockCode = aps.ap.au.a.StockCode,
+                        // height = aps.ap.au.a.Height,
+                        // width = aps.ap.au.a.Width,
+                        // length = aps.ap.au.a.Length,
+                        description1 = aps.ap.au.a.Description1,
+                        description2 = aps.ap.au.a.Description2
                     })
                 .ToListAsync();
                 
+            return Ok(articleList);
+        }
+
+        [HttpPost("ArtProdWise")]
+        public async Task<IActionResult> GetArticleDetails(ArticleSerchDto article)
+        {
+            var articleList = await _masterRepository.GetArtileDetailsAsync(article);
             return Ok(articleList);
         }
 
@@ -221,9 +228,29 @@ namespace API.Controllers.CCSystem.Master
             return Ok(sizeList);
         }
 
+        [HttpPost("SaveArticle")]
+        public async Task<IActionResult> SaveArticle(MstrArticle article)
+        {
+            var result = await _masterRepository.SaveArticleAsync(article);
+            return Ok(result);
+        }
+
         #endregion "Article"
 
+        #region "CodeSettings"
 
+        [HttpGet("CodeSett")]
+        public async Task<IActionResult> GetCodeSettingDetails() 
+        {
+            var result = await _context.MstrCodeSetting
+                .Select(x => new {x.ProdGroupId , x.ProdTypeId , x.isLength , x.isWidth , x.isHeight})
+                .ToListAsync();
+            return Ok(result);
+        }
+
+        #endregion "CodeSettings"
+
+   
         #region "CustomerHeader"
 
         [HttpGet("Customer/{locId}")]
@@ -444,6 +471,7 @@ namespace API.Controllers.CCSystem.Master
 
         #endregion "CustomerAddressList"
 
+
         #region "AddressType"
 
         [HttpGet("AddressType")]
@@ -456,6 +484,7 @@ namespace API.Controllers.CCSystem.Master
         }
 
         #endregion "AddressType"
+
 
         #region "Unit"
 
@@ -489,6 +518,7 @@ namespace API.Controllers.CCSystem.Master
 
         #endregion "Unit"
 
+
         #region "Process"
 
         [HttpPost("SaveProcess")]
@@ -509,6 +539,7 @@ namespace API.Controllers.CCSystem.Master
         }
 
         #endregion "Process"
+
 
         #region "StoreSite"
 
@@ -737,12 +768,7 @@ namespace API.Controllers.CCSystem.Master
         {
             var ProdTypeList = await _context.MstrProductType
                 .Where(x => x.IsActive == true)
-                .Join(_context.MstrCategory , p => p.CategoryId , c => c.AutoId ,
-                    (p,c) => 
-                    new {
-                        autoId = p.AutoId,
-                        prodTypeName = c.Name + " - " +  p.ProdTypeName
-                    })
+                .Select(x => new { x.AutoId , x.ProdTypeCode , x.ProdTypeName , x.IsActive , x.bAutoArticle})
                 .ToListAsync();
             return Ok(ProdTypeList);
         }
@@ -750,18 +776,19 @@ namespace API.Controllers.CCSystem.Master
         [HttpGet("ProdType/{catId}")]
         public async Task<IActionResult> GetProcuctType(int catId)
         {
-            var prodTypeList = await _context.MstrProductType
+            var prodTypeList = await _context.MstrCatProductType
                 .Where(x => x.CategoryId == catId)
-                .Join(_context.MstrCategory , p => p.CategoryId , c => c.AutoId ,
-                    (p,c) => 
-                    new {
-                        autoId = p.AutoId,
-                        bAutoArticle = p.bAutoArticle,
-                        categoryId = p.CategoryId,
-                        prodTypeCode = p.ProdTypeCode,
-                        prodTypeName = p.ProdTypeName,
-                        isActive = p.IsActive,
-                        categoryName = c.Name
+                .Join(_context.MstrProductType , c => c.ProdTypeId , p => p.AutoId ,
+                    (c , p) => new {c , p})
+                .Join(_context.MstrCategory , y => y.c.CategoryId , l => l.AutoId 
+                    , (y, l) => new {
+                        autoId = y.p.AutoId,
+                        bAutoArticle = y.p.bAutoArticle,
+                        categoryId = y.c.CategoryId,
+                        prodTypeCode = y.p.ProdTypeCode,
+                        prodTypeName = y.p.ProdTypeName,
+                        isActive = y.p.IsActive,
+                        categoryName = l.Name
                     })
                 .ToListAsync();
             return Ok(prodTypeList);
@@ -781,6 +808,27 @@ namespace API.Controllers.CCSystem.Master
             return Ok(result);
         }
 
+        [HttpGet("CatProdT/{catId}")]
+        public async Task<ActionResult> GetCatProdTypeDetails(int catId)
+        {
+            var result = await _masterRepository.GetCatProductTypeDtAsync(catId);
+            return Ok(result);
+        }
+
+        [HttpPost("DeleteCatPT")]
+        public async Task<ActionResult> DeleteCatProdType(List<MstrCatProductType> prod)
+        {
+            var result = await _masterRepository.DeleteCatProdTypeAsync(prod);
+            return Ok(result);
+        }
+        
+        [HttpPost("AssignCatPT")]
+        public async Task<ActionResult> AssignCatProdType(List<MstrCatProductType> prod) 
+        {
+            var result = await _masterRepository.AssignCatProdTypeAsync(prod);
+            return Ok(result);
+        }
+
         #endregion "Product Type"
 
 
@@ -789,23 +837,38 @@ namespace API.Controllers.CCSystem.Master
         [HttpGet("PGroup/{id}")]
         public async Task<ActionResult> GetProductGroup(int id)
         {
-            var ProdGroupList = await _masterRepository.ProductGroupGetAsync(id);
+            var ProdGroupList = await _masterRepository.GetProductGroupAsync(id);
             return Ok(ProdGroupList);
         }
+
+        [HttpGet("PTGroup/{id}")]
+        public async Task<ActionResult> GetProdTypeGroup(int id)
+        {
+            var ProdGroupList = await _masterRepository.GetProdTypeGroupAsync(id);
+            return Ok(ProdGroupList);
+        }
+
+        [HttpPost("AssignPGroup")]
+        public async Task<IActionResult> AssignProdTypeGroup(List<MstrProdTypeGroup> prod) 
+        {
+            var result = await _masterRepository.AssignProdTypeGroupAsync(prod);
+            return Ok(result);
+        }
+
+        [HttpPost("DeletePGroup")]
+        public async Task<IActionResult> DeleteProdTypeGroup(List<MstrProdTypeGroup> prod) 
+        {
+            var result = await _masterRepository.DeleteProdTypeGroupAsync(prod);
+            return Ok(result);
+        }
+
 
         [HttpGet("ProdGroup")]
         public async Task<IActionResult> GetProcuctGroupAll()
         {
             var result = await _context.MstrProductGroup
-                .Where(x => x.IsActive == true)
-                .Join(_context.MstrProductType , p => p.ProdTypeId , c => c.AutoId ,
-                    (p,c) => new {p,c})
-                .Join(_context.MstrCategory , pp => pp.c.CategoryId , t => t.AutoId, 
-                    (pp, t) =>
-                    new {
-                        autoId = pp.p.AutoId,
-                        ProdGroupName = t.Name + "-"+ pp.c.ProdTypeName + "-" + pp.p.ProdGroupName
-                    })
+                // .Where(x => x.IsActive == true)
+                .Select(x => new {x.AutoId , x.ProdGroupName , x.ProdGroupCode , x.IsActive , x.SerialNo})
                 .ToListAsync();
             return Ok(result);
         }
@@ -923,6 +986,22 @@ namespace API.Controllers.CCSystem.Master
             return Ok(flexFieldDt);
         }
 
+        /// GET FLEX FIELD LIST RELATED TO CATEGORY AND PROD TYPE
+        [HttpPost("FFListCatPT")]
+        public async Task<IActionResult> GetFlexFieldCatTypeWise(MstrFlexFieldDetails ffDetails)
+        {
+            var result = await _context.MstrFlexFieldDetails            
+                .Where(x => x.CategoryId == ffDetails.CategoryId && x.ProdTypeId == ffDetails.ProdTypeId && x.isActive == true)
+                .Select(x => new {
+                    x.AutoId , x.FlexFieldCode , x.FlexFieldName , x.Mandatory 
+                    , x.ModuleId , x.ValueList , x.DataType 
+                    , fieldName = "flexField" + x.AutoId }
+                    )
+                .ToListAsync();
+
+            return Ok(result);
+        }
+
         //// GET ONLY VALUE LISTED FLEX FIELD LIST
         [HttpGet("FlexFldDt/Val")]
         public async Task<IActionResult> GetFlexFieldList()
@@ -941,6 +1020,7 @@ namespace API.Controllers.CCSystem.Master
         }
             
         #endregion
+
 
         #region Flex Field ValueList
 

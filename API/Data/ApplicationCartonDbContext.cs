@@ -64,6 +64,9 @@ namespace API.Data
         public DbSet<MstrSerialNoDetails> MstrSerialNoDetails { get;  set ; }
         public DbSet<MstrFlexFieldDetails> MstrFlexFieldDetails { get;  set ; }
         public DbSet<MstrFlexFieldValueList> MstrFlexFieldValueList { get;  set ; }
+        public DbSet<MstrCatProductType> MstrCatProductType { get;  set ; }
+        public DbSet<MstrProdTypeGroup> MstrProdTypeGroup { get;  set ; }
+        public DbSet<MstrCodeSetting> MstrCodeSetting {get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

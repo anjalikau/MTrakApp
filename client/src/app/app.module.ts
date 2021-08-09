@@ -51,14 +51,18 @@ import { CustomerLocationsComponent } from './master/customer/customer-locations
 import { FacProdOrderComponent } from './transaction/fac-prod-order/fac-prod-order.component';
 import { MasterProdDefinitionComponent } from './master/master-prod-definition/master-prod-definition.component';
 import { MasterCostingGroupComponent } from './master/master-costing-group/master-costing-group.component';
-import { MasterProdTypeComponent } from './master/master-prod-type/master-prod-type.component';
-import { MasterProdGroupComponent } from './master/master-prod-group/master-prod-group.component';
-import { MasterProdSubCategoryComponent } from './master/master-prod-sub-category/master-prod-sub-category.component';
+import { MasterProdTypeComponent } from './master/product/master-prod-type/master-prod-type.component';
+import { MasterProdGroupComponent } from './master/product/master-prod-group/master-prod-group.component';
+import { MasterProdSubCategoryComponent } from './master/product/master-prod-sub-category/master-prod-sub-category.component';
 import { MasterSerialnoDetailsComponent } from './master/master-serialno-details/master-serialno-details.component';
-import { MasterProductTabComponent } from './master/master-product-tab/master-product-tab.component';
+import { MasterProductTabComponent } from './master/product/master-product-tab/master-product-tab.component';
 import { FlexFieldDetailsComponent } from './master/article/flex-field-details/flex-field-details.component';
 import { FlexFieldValueListComponent } from './master/article/flex-field-value-list/flex-field-value-list.component';
 import { FlexFieldTabComponent } from './master/article/flex-field-tab/flex-field-tab.component';
+import { MasterArticleComponent } from './master/article/master-article/master-article.component';
+import { AppComponentComponent } from './master/article/app-component/app-component.component';
+import { AssignProdtypeCatComponent } from './master/product/assign-prodtype-cat/assign-prodtype-cat.component';
+import { AssignProdgroupTypeComponent } from './master/product/assign-prodgroup-type/assign-prodgroup-type.component';
 
 @NgModule({
   declarations: [
@@ -109,7 +113,11 @@ import { FlexFieldTabComponent } from './master/article/flex-field-tab/flex-fiel
     MasterProductTabComponent,
     FlexFieldDetailsComponent,
     FlexFieldValueListComponent,
-    FlexFieldTabComponent
+    FlexFieldTabComponent,
+    MasterArticleComponent,
+    AppComponentComponent,
+    AssignProdtypeCatComponent,
+    AssignProdgroupTypeComponent
   ],
   imports: [
     BrowserModule,

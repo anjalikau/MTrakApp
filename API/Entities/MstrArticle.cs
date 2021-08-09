@@ -8,27 +8,40 @@ namespace API.Entities
     public class MstrArticle
     {
         [Key]
-        public long AutoId { get; set; }
-        public string ArticleName { get; set; }
-        public string StockCode { get; set; }
-        public string Description1 { get; set; }
-        public string Description2 { get; set; }
+        public long AutoId {get;set;}
+        public string StockCode {get;set;}
+        public string ArticleName {get;set;}
+        public string Description1 {get;set;}
+        public string Description2 {get;set;}
+        public int CategoryId {get;set;}
         public int ProTypeId {get;set;}
-        public int SubCatId {get;set;}
+        public int ProGroupId {get;set;}
         public int ItemType {get;set;}
+        public int UnitId {get;set;}
+        public int MeasurementId {get;set;}
         public double BoardLength {get;set;}
         public double BoardWidth {get;set;}
-        public int QtyInStock {get;set;}
-        public DateTime PODate {get;set;}  
-        public int MaterialId { get; set; }
-        public int CategoryId { get; set; }
-        public int UnitId { get; set; }
-        public int Length { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public double RollWidth {get;set;}
+        public int ColorCardId {get;set;}
+        public int SizeCardId {get;set;}
+        public decimal SalesPrice {get;set;}
+	    public int QtyInStock {get;set;}
+	    public decimal AvgCostPrice {get;set;}
+	    public decimal LastCostPrice {get;set;}
+	    public decimal MaxCostPrice {get;set;}
+        public float Length {get;set;}
+	    public float Width {get;set;}
+	    public float Height {get;set;}
+        public DateTime PODate {get;set;}
         public int ? CreateUserId { get; set; }
         public DateTime ? CreateDateTime { get; set; }
         public int ? UpdateUserId { get; set; }
         public DateTime ? UpdateDateTime { get; set; }
+        public virtual MstrCategory MstrCategory { get; set; }
+        public virtual MstrProductType MstrProductType { get; set; }
+        public virtual MstrProductGroup MstrProductGroup { get; set; }
+        public virtual MstrUnits MstrUnits { get; set; }
+        public virtual MstrColorCard MstrColorCard { get; set; }
+        public virtual MstrSizeCard MstrSizeCard { get; set; }
     }
 }
