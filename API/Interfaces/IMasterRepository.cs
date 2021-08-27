@@ -72,7 +72,8 @@ namespace API.Interfaces
         Task<int> DeleteCatProdTypeAsync(List<MstrCatProductType> prod);
         Task<IEnumerable<ProdTypeGroupDto>> GetProdTypeGroupAsync(int prodTypeId);
         Task<int> AssignProdTypeGroupAsync(List<MstrProdTypeGroup> prod);
-        Task<int> DeleteProdTypeGroupAsync(List<MstrProdTypeGroup> prod);
+        Task<int> DeleteProdTypeGroupAsync(List<MstrProdTypeGroup> prod);   
+             
 
     }
 }

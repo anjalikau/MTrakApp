@@ -29,7 +29,7 @@ import { ProductGroup } from 'src/app/_models/productGroup';
 import { ProdSubCategory } from 'src/app/_models/ProdSubCategory';
 import { FlexFieldDetails } from 'src/app/_models/flexFieldDetails';
 import { FlexFieldValueList } from 'src/app/_models/flexFieldValueList';
-import { CatProdType } from 'src/app/_models/CatProdType';
+import { CatProdType } from 'src/app/_models/catProdType';
 import { ProdTypeGroup } from 'src/app/_models/ProdTypeGroup';
 
 var usertoken: any;
@@ -744,6 +744,14 @@ export class MasterService {
   }
 
   //#endregion "Flex Field ValueList"
+  
+  //#region "Reject Reason"
+
+  getRejectReason() {
+    return this.http.get<any>(this.baseUrl + 'Master/RejetReason' ,httpOptions);
+  }
+
+  //#endregion
   
   // getCustomerDt(customerId: number) {
   //   return this.http.get<CustomerDt[]>(this.baseUrl + 'Master/CustomerDt/' + customerId , httpOptions);

@@ -54,8 +54,7 @@ export class FacProdOrderComponent implements OnInit {
     private fb: FormBuilder,
     private datePipe: DatePipe,
     private toastr: ToastrService,
-    private salesOrderServices: SalesorderService,
-    private masterServices: MasterService
+    private salesOrderServices: SalesorderService
   ) {}
 
   ngOnInit(): void {
@@ -75,12 +74,12 @@ export class FacProdOrderComponent implements OnInit {
       userId: this.user.userId,
       jobHeaderId: ['', [Validators.required, Validators.maxLength(30)]],
       fPONo: ['', Validators.required],
-      startDate: ['', Validators.required],
+      startDate: ['', [Validators.required]],
       endDate: ['', Validators.required],
       statusId: [0],      
       remarks: [''],
       qty: [{ value: 0, disabled: true }],
-    });
+    }, {validators: this.dateLessThan('startDate', 'endDate')});
 
     this.fpoDetailForm = this.fb.group({
       soDelivDtId: [0],
@@ -102,6 +101,25 @@ export class FacProdOrderComponent implements OnInit {
       balQty: [{ value: 0, disabled: true }],
     });
   }
+
+  /// VALIDATE START DATE AND END DATE 
+  dateLessThan(from: string, to: string) {
+    return (group: FormGroup): {[key: string]: any} => {
+      let f = group.controls[from];
+      let t = group.controls[to];
+      // console.log(f.value);
+      // console.log(t.value);
+
+      if(f.value != "" && t.value != "") {
+        if (f.value > t.value) {
+          return {
+            dates: 'Date Start should be less than Date End'
+          };
+        }
+      }      
+      return {};
+    }
+}
 
   singleSelection(event: IComboSelectionChangeEventArgs) {
     if (event.added.length) {

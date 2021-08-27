@@ -1055,5 +1055,20 @@ namespace API.Controllers.CCSystem.Master
             
         #endregion
        
+
+        #region  Reject Reason
+
+        [HttpGet("RejetReason")]
+        public async Task<IActionResult> GetRejectReason()
+        {
+            var rejReasonList = await _context.MstrRejeReasons
+                .Select(x => new { x.AutoId , x.Details , x.IsActive})
+                .Where(x => x.IsActive == true).ToListAsync();
+
+            return Ok(rejReasonList);
+        }
+
+        #endregion Reject Reason
+
     }
 }

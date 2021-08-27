@@ -7,7 +7,6 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
-import { AppComponentComponent } from './master/article/app-component/app-component.component';
 import { FlexFieldTabComponent } from './master/article/flex-field-tab/flex-field-tab.component';
 import { MasterArticleComponent } from './master/article/master-article/master-article.component';
 import { CustomerTabComponent } from './master/customer/customer-tab/customer-tab.component';
@@ -31,6 +30,11 @@ import { MenuListComponent } from './users/menu-list/menu-list.component';
 import { UserPermissionComponent } from './users/user-permission/user-permission.component';
 import { UserRegisterComponent } from './users/user-register/user-register.component';
 import { AuthGuard } from './_guards/auth.guard';
+import { ProductionInComponent } from './transaction/production/production-in/production-in.component';
+import { ProductionOutComponent } from './transaction/production/production-out/production-out.component';
+import { QualityControlComponent } from './transaction/production/quality-control/quality-control.component';
+import { ProdDispatchComponent } from './transaction/prod-dispatch/prod-dispatch.component';
+import { ReportViewerComponent } from './report/report-viewer/report-viewer.component';
 
 const routes: Routes = [
   {path:'', component: LoginComponent},
@@ -63,7 +67,12 @@ const routes: Routes = [
       {path:'FPO', component: FacProdOrderComponent},
       {path:'FlexField', component: FlexFieldTabComponent},
       {path:'Article', component: MasterArticleComponent},
-      {path:'App', component: AppComponentComponent},
+      // {path:'App', component: AppComponentComponent},
+      {path:'FPPOIn', component: ProductionInComponent},
+      {path:'FPPOOut', component: ProductionOutComponent},
+      {path:'QualityC', component: QualityControlComponent},
+      {path:'Dispatch', component: ProdDispatchComponent},
+      {path:'Report', component: ReportViewerComponent},
     ]
   },  
   {path:'not-found', component: NotFoundComponent},

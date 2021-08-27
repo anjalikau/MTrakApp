@@ -1,0 +1,201 @@
+<div class="card card-default">
+    <!-- <div class="card-header">
+        <h3 class="card-title">Sales Order</h3>       
+    </div> -->
+
+    <div class="card-body">
+        <!-- FPO HEADER -->
+        <form [formGroup]="fppoOutForm" (ngSubmit)="fppoOutForm.valid" autocomplete="off">
+            <div class="row">
+                <div class="col-md-11">
+                    <h5 class="bg-teal">
+                        <!-- <i class="fas fa-file-alt"></i>  -->
+                        Factory Production Out
+                    </h5>
+                </div>
+                <!-- <div class="col-md-2">
+                    <h6 class="bg-danger text-white"> {{ fpoStatus }} </h6>
+                </div> -->
+                <div class="col-md-1">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success mr-1" [disabled]="!fppoOutForm.valid"
+                            (click)="saveFPPOOutDetails()">
+                            <i class="fas fa-save"></i>
+                        </button>
+                        <button type="button" class="btn btn-default" (click)="refreshControls()">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="text-lg">FPPO No </label>
+                        <div class="input-group input-group-lg">
+                            <input type="number" class="form-control" placeholder="FPPO No" formControlName="fPPODId"
+                                aria-label="Large" aria-describedby="inputGroup-sizing-lg" (keyup)="onKey($event)"
+                                (input)="onSearchChange($event.target.value)">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="text-lg">In Qty </label>
+                        <div class="input-group input-group-lg">
+                            <input type="number" class="form-control" placeholder="In Qty" formControlName="inQty"
+                                aria-label="Large" aria-describedby="inputGroup-sizing-lg">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="text-lg">Bal to Out Qty </label>
+                        <div class="input-group input-group-lg">
+                            <input type="number" class="form-control" placeholder="Bal Qty" formControlName="balQty"
+                                aria-label="Large" aria-describedby="inputGroup-sizing-lg">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="text-lg">Out Qty </label>
+                        <div class="input-group input-group-lg">
+                            <input type="number" class="form-control" placeholder="Out Qty" formControlName="outQty"
+                                aria-label="Large" aria-describedby="inputGroup-sizing-lg">
+                        </div>
+                        
+                        <label class="text-danger" *ngIf="fppoOutForm.errors && fppoOutForm.get('outQty').touched">
+                            {{ fppoOutForm.errors?.quantity | json }}</label>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <!-- small box -->
+                    <div class="small-box bg-teal">
+                        <div class="inner">
+                            <h3>{{todayTotQty}}</h3>
+                            <p>Today Total</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <!-- small box -->
+                    <div class="small-box bg-teal">
+                        <div class="inner">
+                            <h3>{{transDate | date: 'yyyy-MM-dd'}}</h3>
+                            <p>Trans Date</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card card-warning">
+    <div class="card-header bg-teal">
+        <h3 class="card-title">Production Details </h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div class="form-group row">
+            <strong class="col-md-2 text-md"><i class="fas fa-file-alt mr-1"></i> FPO No</strong>
+            <p class="col-md-4 h5">
+                {{fPONo}}
+            </p>
+
+            <strong class="col-md-2 text-md"><i class="fas fa-file-alt mr-1"></i> Job No</strong>
+            <p class="col-md-4 h5">
+                {{jobNo}}
+            </p>
+        </div>
+
+        <div class="form-group row">
+            <strong class="col-md-2 text-md"><i class="fas fa-file-alt mr-1"></i> Sales Order</strong>
+            <p class="col-md-4 h5">
+                {{orderRef}}
+            </p>
+
+            <strong class="col-md-2 text-md"><i class="fas fa-file-alt mr-1"></i> Customer Ref </strong>
+            <p class="col-md-4 h5">
+                {{customerRef}}
+            </p>
+        </div>
+
+        <div class="form-group row">
+            <strong class="col-md-2 text-md"><i class="fas fa-file-alt mr-1"></i> Delivery Ref</strong>
+            <p class="col-md-4 h5">
+                {{deliveryRef}}
+            </p>
+
+            <strong class="col-md-2 text-md"><i class="fas fa-file-alt mr-1"></i> Delivery Date</strong>
+            <p class="col-md-4 h5">
+                {{deliveryDate | date:'yyyy-MM-dd'}}
+            </p>
+        </div>
+
+        <div class="form-group row">
+            <strong class="col-md-2 text-md"><i class="fas fa-file-alt mr-1"></i> ArticleName </strong>
+            <p class="col-md-4 h5">
+                {{articleName}}
+            </p>
+
+            <strong class="col-md-2 text-md"><i class="fas fa-file-alt mr-1"></i> Color</strong>
+            <p class="col-md-4 h5">
+                {{color}}
+            </p>
+        </div>
+
+        <div class="form-group row">
+            <strong class="col-md-2 text-md"><i class="fas fa-file-alt mr-1"></i> Size</strong>
+            <p class="col-md-4 h5">
+                {{size}}
+            </p>
+
+            <strong class="col-md-2 text-md"><i class="fas fa-file-alt mr-1"></i> Process </strong>
+            <p class="col-md-4 h5">
+                {{process}}
+            </p>
+        </div>
+
+        <div class="form-group row">
+            <strong class="col-md-2 text-md"><i class="fas fa-file-alt mr-1"></i> Receive Site</strong>
+            <p class="col-md-4 h5">
+                {{receiveSite}}
+            </p>
+
+            <strong class="col-md-2 text-md"><i class="fas fa-file-alt mr-1"></i> Dispatch Site</strong>
+            <p class="col-md-4 h5">
+                {{dispatchName}}
+            </p>
+        </div>
+
+        <div class="form-group row">
+            <strong class="col-md-2 text-md"><i class="fas fa-file-alt mr-1"></i> Last Process</strong>
+            <p class="col-md-4 h5">
+                {{lastProcess}}
+            </p>
+
+            <strong class="col-md-2 text-md"><i class="fas fa-file-alt mr-1"></i> Damage Qty</strong>
+            <p class="col-md-4 h5">
+                {{damageQty}}
+            </p>
+        </div>
+
+        <div class="form-group row">
+            <strong class="col-md-2 text-md"><i class="fas fa-file-alt mr-1"></i>Total Out Qty </strong>
+            <p class="col-md-4 h5">
+                {{lastOutQty}}
+            </p>
+            
+        </div>
+
+    </div>
+</div>
+

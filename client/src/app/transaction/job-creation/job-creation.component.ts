@@ -663,7 +663,7 @@ export class JobCreationComponent implements OnInit {
         jobCardList.push(itemdata);
       });
 
-      console.log(jobCardList);
+      // console.log(jobCardList);
       // // //console.log(JSON.stringify(menuList));
 
       this.salesOrderServices.saveJobCard(jobCardList).subscribe((result) => {

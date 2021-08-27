@@ -67,6 +67,10 @@ namespace API.Interfaces
         DbSet<MstrCatProductType> MstrCatProductType { get;  set ; }
         DbSet<MstrProdTypeGroup> MstrProdTypeGroup { get;  set ; }
         DbSet<MstrCodeSetting> MstrCodeSetting {get; set;}
+        DbSet<MstrRejectionReasons> MstrRejeReasons {get; set;}
+        DbSet<TransDispatchHeader> TransDispatchHeader {get; set;}
+        DbSet<TransDispatchDetails> TransDispatchDetails {get; set;}
+        DbSet<MstrDispatchSite> MstrDispatchSite {get; set;}
 
     }
 }

@@ -30,6 +30,7 @@
     "igniteui-dockmanager": "^1.5.0",
     "ngx-bootstrap": "^6.2.0",
     "ngx-select-dropdown": "^2.1.0",
+    "ngx-ssrs-reportviewer": "^3.1.1",
     "ngx-toastr": "^13.2.1",
     "react-number-format": "^4.6.3",
     "rxjs": "~6.6.0",

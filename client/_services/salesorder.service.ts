@@ -1,6 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { DispatchNoteDt } from 'src/app/_models/DispatchNoteDt';
+import { DispatchProdDt } from 'src/app/_models/dispatchProdDt';
+import { FPPOProdDetails } from 'src/app/_models/FPPOProdDetails';
 import { SalesOrder } from 'src/app/_models/salesOrder';
+import { TransProdDetails } from 'src/app/_models/transProdDetails';
 import { environment } from 'src/environments/environment';
 
 var usertoken: any;
@@ -78,6 +82,50 @@ export class SalesorderService {
 
   deleteFPO(fpodt: any) {
     return this.http.post(this.baseUrl + 'SalesOrder/DeleteFPO' , fpodt , httpOptions);
+  }
+
+  getFPPOInDetails(fPPODId: number) {
+    return this.http.get<FPPOProdDetails>(this.baseUrl + 'SalesOrder/FPPOIn/' + fPPODId ,httpOptions );
+  }
+
+  saveFPPOInDetails(fppoIn: TransProdDetails) {
+    return this.http.post(this.baseUrl + 'SalesOrder/SaveFPPOIn' , fppoIn , httpOptions);
+  }
+
+  getTransProductionTot() {
+    return this.http.get<any[]>(this.baseUrl + 'SalesOrder/FPPOTot/' ,httpOptions );
+  }
+
+  getFPPOOutDetails(fPPODId: number) {
+    return this.http.get<FPPOProdDetails>(this.baseUrl + 'SalesOrder/FPPOOut/' + fPPODId ,httpOptions );
+  }
+
+  saveFPPOOutDetails(fppoOut: TransProdDetails){
+    return this.http.post(this.baseUrl + 'SalesOrder/SaveFPPOOut' , fppoOut , httpOptions);
+  }
+
+  saveFPPORejectDetails(transDamg: any[]){
+    return this.http.post(this.baseUrl + 'SalesOrder/SaveFPPORej' , transDamg , httpOptions);
+  }
+
+  getDispatchSite() {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/DispatchSite' , httpOptions );
+  }
+
+  getPendDispatchDetails(prod: any){
+    return this.http.post<DispatchProdDt[]>(this.baseUrl + 'SalesOrder/PendDispatch' , prod , httpOptions);
+  }
+
+  saveDispatchDetails(diaptch: any[]){
+    return this.http.post(this.baseUrl + 'SalesOrder/SaveDispatch' , diaptch , httpOptions);
+  }
+
+  getDispatchDetails(dispatchNo: number){
+    return this.http.get<DispatchNoteDt[]>(this.baseUrl + 'SalesOrder/DD/' + dispatchNo , httpOptions);   
+  }
+
+  cancelDispatchDetails(diaptch: any){
+    return this.http.post(this.baseUrl + 'SalesOrder/CancelDD' , diaptch , httpOptions);
   }
 
 }

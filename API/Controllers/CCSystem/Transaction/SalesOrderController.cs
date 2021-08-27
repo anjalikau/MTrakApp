@@ -130,5 +130,90 @@ namespace API.Controllers.CCSystem.Transaction
             return Ok(result);
         }
 
+        [HttpGet("FPPOIn/{FPPODId}")]
+        public async Task<IActionResult> GetFPPOInDetails(int FPPODId)
+        {
+            var result = await _salesRepository.GetFPPOInDetailsAsync(FPPODId);
+            return Ok(result);
+        }
+
+        [HttpPost("SaveFPPOIn")]
+        public async Task<IActionResult> SaveFPPOInDeails(TransProductionDetails prod)
+        {
+            var result = await _salesRepository.SaveFPPOInAsync(prod);
+            return Ok(result);
+        }
+
+        [HttpGet("FPPOTot")]
+        public async Task<IActionResult> GetTransProductionTot()
+        {
+            var result = await _salesRepository.GetTransProductionTotAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("FPPOOut/{FPPODId}")]
+        public async Task<IActionResult> GetFPPOOutDetails(int FPPODId)
+        {
+            var result = await _salesRepository.GetFPPOOutDetailsAsync(FPPODId);
+            return Ok(result);
+        }
+
+        [HttpPost("SaveFPPOOut")]
+        public async Task<IActionResult> SaveFPPOOutDetails(TransProductionDetails prod)
+        {
+            var result = await _salesRepository.SaveFPPOOutAsync(prod);
+            return Ok(result);
+        }
+
+        [HttpPost("SaveFPPORej")]
+        public async Task<IActionResult> SaveFPPORejectDetails(List<TransProdDetailsDto> prodDetails)
+        {
+            var result = await _salesRepository.SaveFPPORejectAsync(prodDetails);
+            return Ok(result);
+        }
+
+        [HttpGet("DispatchSite")]
+        public async Task<IActionResult> GetDispatchSite()
+        {
+            var result = await _context.MstrDispatchSite
+                .Join(_context.MstrStoreSite , d => d.DispatchId , s => s.AutoId ,
+                 (d , s)  =>
+                 new {
+                     autoId = s.AutoId,
+                     siteName = s.SiteName,
+                     siteCode = s.SiteCode
+                 }).ToListAsync();
+
+            return Ok(result);
+        }
+
+        [HttpPost("PendDispatch")]
+        public async Task<IActionResult> GetPendDispatchDetails(PendDispatchDto prod)
+        {
+            var result = await _salesRepository.GetPendDispatchDtAsync(prod);
+            return Ok(result);
+        }
+
+        [HttpPost("SaveDispatch")]
+        public async Task<IActionResult> SaveDispatchDetails(List<TransDispatchDetails> dispatch)
+        {
+            var result = await _salesRepository.SaveDispatchedDtAsync(dispatch);
+            return Ok(result);
+        }
+
+        [HttpGet("DD/{dispatchNo}")]
+        public async Task<IActionResult> GetDispatchDetails(string dispatchNo)
+        {
+            var result = await _salesRepository.GetDispatchDetails(dispatchNo);
+            return Ok(result);
+        }
+
+        [HttpPost("CancelDD")]
+        public async Task<IActionResult> CancelDispatchNote(TransDispatchHeader dispHd)
+        {
+            var result = await _salesRepository.CancelDispatchDtAsync(dispHd);
+            return Ok(result);
+        }
+
     }
 }

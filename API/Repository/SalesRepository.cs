@@ -176,7 +176,7 @@ namespace API.Repository
 
             para.Add("TransType" , TransType); 
 
-            refNum = await DbConnection.QuerySingleAsync<RefNumDto>("spTransGetRefNumber" , para
+            refNum = await DbConnection.QuerySingleAsync<RefNumDto>("spTransRefNumberGet" , para
                     , commandType: CommandType.StoredProcedure);
             return refNum;
         }
@@ -255,6 +255,7 @@ namespace API.Repository
 
             return result;
         }
+
         public async Task<IEnumerable<TransJobHeader>> GetFPOPendingJobsAsync()
         {
             IEnumerable<TransJobHeader> jobList;
@@ -264,6 +265,7 @@ namespace API.Repository
                     , commandType: CommandType.StoredProcedure);
             return jobList;
         }
+
         public async Task<IEnumerable<PendJobDetailsDto>> GetFPOPendingJobDtAsync(int JobId)
         {
             IEnumerable<PendJobDetailsDto> jobList;
@@ -353,5 +355,181 @@ namespace API.Repository
 
             return para.Get<int>("Result");
         }
+    
+        public async Task<FPPOProductionDto> GetFPPOInDetailsAsync(int FPPODId)
+        {
+            FPPOProductionDto fPPODetails;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("FPPODId" , FPPODId);  
+
+            fPPODetails = await DbConnection.QueryFirstOrDefaultAsync<FPPOProductionDto>("spTransProductionInGetDetails" , para
+                    , commandType: CommandType.StoredProcedure);
+            return fPPODetails;
+        }
+
+        public async Task<int> SaveFPPOInAsync(TransProductionDetails prodDetails)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("FPPODId" , prodDetails.FPPODId);
+            para.Add("BalQty", prodDetails.ValidationQty);
+            para.Add("InQty", prodDetails.Qty);
+            para.Add("ReceiveSiteId", prodDetails.ReceiveSiteId);
+            para.Add("DispatchId", prodDetails.DispatchId);            
+            para.Add("UserId", prodDetails.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spTransProductionInSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<IEnumerable<TransProductionTotalDto>> GetTransProductionTotAsync()
+        {
+            IEnumerable<TransProductionTotalDto> totProd;
+            totProd = await DbConnection.QueryAsync<TransProductionTotalDto>("spTransProductionGetTotal", null
+                , commandType: CommandType.StoredProcedure);            
+
+            return totProd;
+        }
+
+        public async Task<FPPOProductionDto> GetFPPOOutDetailsAsync(int FPPODId)
+        {
+            FPPOProductionDto fPPODetails;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("FPPODId" , FPPODId);  
+
+            fPPODetails = await DbConnection.QueryFirstOrDefaultAsync<FPPOProductionDto>("spTransProductionOutGetDetails" , para
+                    , commandType: CommandType.StoredProcedure);
+            return fPPODetails;
+        }
+
+        public async Task<int> SaveFPPOOutAsync(TransProductionDetails prodDetails)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("FPPODId" , prodDetails.FPPODId);
+            para.Add("BalQty", prodDetails.ValidationQty);
+            para.Add("OutQty", prodDetails.Qty);
+            para.Add("ReceiveSiteId", prodDetails.ReceiveSiteId);
+            para.Add("DispatchId", prodDetails.DispatchId);            
+            para.Add("UserId", prodDetails.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spTransProductionOutSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<int> SaveFPPORejectAsync(List<TransProdDetailsDto> prodDetails)
+        {
+            DataTable DamageDT = new DataTable();
+            DynamicParameters para = new DynamicParameters();
+            
+            DamageDT.Columns.Add("RejReasonId" , typeof(int));
+
+            foreach (var item in prodDetails)
+            {                
+                DamageDT.Rows.Add(item.RejReasonId);
+            }
+
+            para.Add("FPPODId", prodDetails[0].FPPODId);
+            para.Add("BalQty", prodDetails[0].ValidationQty);
+            para.Add("RejectQty", prodDetails[0].Qty);
+            para.Add("ReceiveSiteId", prodDetails[0].ReceiveSiteId);
+            para.Add("DispatchId", prodDetails[0].DispatchId);
+            para.Add("UserId", prodDetails[0].CreateUserId);
+
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+            para.Add("DamageDT", DamageDT.AsTableValuedParameter("DamageType"));
+
+            var result = await DbConnection.ExecuteAsync("spTransProductionRejectSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<IEnumerable<PendDispatchDto>> GetPendDispatchDtAsync(PendDispatchDto prod)
+        {
+            IEnumerable<PendDispatchDto> prodDetails;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("DispatchSiteId" , prod.DispatchSiteId); 
+            para.Add("CustomerId", prod.CustomerId);
+
+            prodDetails = await DbConnection.QueryAsync<PendDispatchDto>("spTransDispatchGetPendDetails" , para
+                    , commandType: CommandType.StoredProcedure);
+            return prodDetails;
+        }
+
+        public async Task<ReturnDto> SaveDispatchedDtAsync(List<TransDispatchDetails> dispatch)
+        {
+            DataTable DispatchDT = new DataTable();
+            DynamicParameters para = new DynamicParameters();
+            
+            DispatchDT.Columns.Add("SOItemId" , typeof(long));
+            DispatchDT.Columns.Add("SODelivDtId" , typeof(long));
+            DispatchDT.Columns.Add("ProducedQty" , typeof(int));
+            DispatchDT.Columns.Add("DispatchedQty" , typeof(int));
+            DispatchDT.Columns.Add("BalDispatchQty" , typeof(int));
+
+            foreach (var item in dispatch)
+            {  
+                if(item.DispatchHeader != null) {              
+                    para.Add("DispatchNo", item.DispatchHeader.DispatchNo);
+                    para.Add("CustomerId", item.DispatchHeader.CustomerId);
+                    para.Add("CusLocationId", item.DispatchHeader.CusLocationId);
+                    para.Add("DispatchSiteId", item.DispatchHeader.DispatchSiteId);
+                    para.Add("Reason", item.DispatchHeader.Reason);
+                    para.Add("LoactionId", item.DispatchHeader.LocationId);
+                    para.Add("UserId", item.DispatchHeader.CreateUserId);
+                } else {
+                    DispatchDT.Rows.Add(item.SOItemId,
+                        item.SODelivDtId,
+                        item.ProducedQty,
+                        item.DispatchedQty,
+                        item.BalDispatchQty);
+                }
+            }           
+
+            // para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+            para.Add("DispatchDT", DispatchDT.AsTableValuedParameter("DispatchDetType"));
+
+            var result = await DbConnection.QueryFirstOrDefaultAsync<ReturnDto>("spTransDispatchSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return result;
+        }
+
+        public async Task<IEnumerable<DispatchedDetDto>> GetDispatchDetails(string dispatchNo)
+        {
+            IEnumerable<DispatchedDetDto> dispDetails;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("DispatchNo" , dispatchNo);  
+
+            dispDetails = await DbConnection.QueryAsync<DispatchedDetDto>("spTransDispatchGetDetails" , para
+                    , commandType: CommandType.StoredProcedure);
+            return dispDetails;
+        }
+
+        public async Task<int> CancelDispatchDtAsync(TransDispatchHeader dispHd)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("DispatchHdId" , dispHd.AutoId);  
+            para.Add("UserId" , dispHd.CancelUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+            var result = await DbConnection.ExecuteAsync("spTransDispatchCancel" , para
+                    , commandType: CommandType.StoredProcedure);
+                    
+            return para.Get<int>("Result");
+        }
+    
     }
 }

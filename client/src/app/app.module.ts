@@ -63,6 +63,12 @@ import { MasterArticleComponent } from './master/article/master-article/master-a
 import { AppComponentComponent } from './master/article/app-component/app-component.component';
 import { AssignProdtypeCatComponent } from './master/product/assign-prodtype-cat/assign-prodtype-cat.component';
 import { AssignProdgroupTypeComponent } from './master/product/assign-prodgroup-type/assign-prodgroup-type.component';
+import { ProductionInComponent } from './transaction/production/production-in/production-in.component';
+import { ProductionOutComponent } from './transaction/production/production-out/production-out.component';
+import { QualityControlComponent } from './transaction/production/quality-control/quality-control.component';
+import { ProdDispatchComponent } from './transaction/prod-dispatch/prod-dispatch.component';
+import { ReportViewerComponent } from './report/report-viewer/report-viewer.component';
+import { ReportViewerModule } from 'ngx-ssrs-reportviewer';
 
 @NgModule({
   declarations: [
@@ -117,7 +123,12 @@ import { AssignProdgroupTypeComponent } from './master/product/assign-prodgroup-
     MasterArticleComponent,
     AppComponentComponent,
     AssignProdtypeCatComponent,
-    AssignProdgroupTypeComponent
+    AssignProdgroupTypeComponent,
+    ProductionInComponent,
+    ProductionOutComponent,
+    QualityControlComponent,
+    ProdDispatchComponent,
+    ReportViewerComponent
   ],
   imports: [
     BrowserModule,
@@ -141,7 +152,8 @@ import { AssignProdgroupTypeComponent } from './master/product/assign-prodgroup-
     IgxTooltipModule,
     IgxDialogModule,
     IgxCardModule,
-	  IgxDividerModule   
+	  IgxDividerModule,
+    ReportViewerModule   
   ],
   providers: [
     DatePipe,

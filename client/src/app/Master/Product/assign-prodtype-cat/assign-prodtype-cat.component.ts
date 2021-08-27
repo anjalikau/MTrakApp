@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
 import { Category } from 'src/app/_models/category';
-import { CatProdType } from 'src/app/_models/CatProdType';
+import { CatProdType } from 'src/app/_models/catProdType';
 import { User } from 'src/app/_models/user';
 import { AccountService } from '_services/account.service';
 import { MasterService } from '_services/master.service';

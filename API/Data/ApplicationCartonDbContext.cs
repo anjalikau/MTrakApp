@@ -67,6 +67,10 @@ namespace API.Data
         public DbSet<MstrCatProductType> MstrCatProductType { get;  set ; }
         public DbSet<MstrProdTypeGroup> MstrProdTypeGroup { get;  set ; }
         public DbSet<MstrCodeSetting> MstrCodeSetting {get; set;}
+        public DbSet<MstrRejectionReasons> MstrRejeReasons {get; set;}
+        public DbSet<TransDispatchHeader> TransDispatchHeader {get; set;}
+        public DbSet<TransDispatchDetails> TransDispatchDetails {get; set;}
+        public DbSet<MstrDispatchSite> MstrDispatchSite {get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

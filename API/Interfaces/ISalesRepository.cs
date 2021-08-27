@@ -20,5 +20,15 @@ namespace API.Interfaces
          Task<ReturnDto> SaveFPOAsync(List<FacProdOrderDto> facProdOrderDtos);
          Task<IEnumerable<ReturnFPODetailsDto>> GetFPODetailsAsync(string FPONo);
          Task<int> DeleteFPOAsync(DeleteFPODto fPODto);
+         Task<FPPOProductionDto> GetFPPOInDetailsAsync(int FPPODId);
+         Task<int> SaveFPPOInAsync(TransProductionDetails prodDetails);
+         Task<IEnumerable<TransProductionTotalDto>> GetTransProductionTotAsync();
+         Task<FPPOProductionDto> GetFPPOOutDetailsAsync(int FPPODId);
+         Task<int> SaveFPPOOutAsync(TransProductionDetails prodDetails);
+         Task<int> SaveFPPORejectAsync(List<TransProdDetailsDto> prodDetails);
+         Task<IEnumerable<PendDispatchDto>> GetPendDispatchDtAsync(PendDispatchDto prod);
+         Task<ReturnDto> SaveDispatchedDtAsync(List<TransDispatchDetails> dispatch);
+         Task<IEnumerable<DispatchedDetDto>> GetDispatchDetails(string dispatchNo);
+         Task<int> CancelDispatchDtAsync(TransDispatchHeader dispHd);
     }
 }
