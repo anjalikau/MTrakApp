@@ -22,6 +22,7 @@ export class MasterColorCardComponent implements OnInit {
   public col: IgxColumnComponent;
   public pWidth: string;
   public nWidth: string;
+  
   @ViewChild("MstrCCgrid", { static: true }) 
   public MstrCCgrid: IgxGridComponent;
   

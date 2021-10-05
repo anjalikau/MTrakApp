@@ -15,7 +15,8 @@ import { AdminService } from '_services/admin.service';
 })
 export class UserPermissionComponent implements OnInit {
   user: User;
-  authMenus: MenuList[];
+  userObj: User;
+  authMenus: any[];
   permitUsers: PermitUser[];
   permitMenus: MenuList[];
   nPermitMenus: MenuList[];
@@ -76,17 +77,20 @@ export class UserPermissionComponent implements OnInit {
   }
 
   GetButtonPermission() {    
-    this.authMenus = JSON.parse(localStorage.getItem('menus'));    
-    //console.log(this.authMenus); 
+    this.userObj = JSON.parse(localStorage.getItem('user'));  
+    this.authMenus = this.userObj.permitMenus;  
+    
     if(this.authMenus != null) {
-    if(this.authMenus.filter(x => x.menuName == 'Save Menu Permission' && x.mType == 'B').length > 0) {
+    if(this.authMenus.filter(x => x.menuName == 'SaveMenuPermission' && x.mType == 'B').length > 0) {
       this.saveButton = true;
     }
-    if(this.authMenus.filter(x => x.menuName == 'Delete Menu Permission' && x.mType == 'B').length > 0) {
+    if(this.authMenus.filter(x => x.menuName == 'DeleteMenuPermission' && x.mType == 'B').length > 0) {
       this.removeButton = true;
     }
   }
-    //console.log(this.saveButton);
+    // console.log(this.authMenus);
+    // console.log(this.saveButton);
+    // console.log(this.removeButton);
   }
 
   public onResize(event) {
@@ -105,14 +109,14 @@ export class UserPermissionComponent implements OnInit {
   SaveUserMenuList() {
     var selectedRows = this.Menugrid.selectedRows;
     //console.log(this.userPermitForm.get("Agent").value[0]);
-    var SelUserId = this.userPermitForm.get("Agent").value[0];
+    var selUserId = this.userPermitForm.get("Agent").value[0];
     var menuList =[];
 
     selectedRows.forEach(menuId => {      
       var data = {
-        AgentId: SelUserId,
-        MenuId: menuId,
-        CreUserID: this.user.userId,
+        agentId: selUserId,
+        menuId: menuId,
+        creUserID: this.user.userId,
       };
 
       menuList.push(data);
@@ -123,11 +127,11 @@ export class UserPermissionComponent implements OnInit {
       if(result == 1) {
         this.toastr.success("User Menu save Successfully !!!");
         this.ClearGridRows();
-        this.LoadUserMenuList(SelUserId);
+        this.LoadUserMenuList(selUserId);
       } else if (result == -1) {
         this.toastr.warning("User Menu save failed !!!");
         this.ClearGridRows();
-        this.LoadUserMenuList(SelUserId);
+        this.LoadUserMenuList(selUserId);
       } else {
         this.toastr.warning("Contact Admin. Error No:- " + result.toString());
       }
@@ -138,13 +142,15 @@ export class UserPermissionComponent implements OnInit {
   DeleteUserMenuList() {
     //console.log(this.PermitMgrid.selectedRows);
     var selectedRows = this.PermitMgrid.selectedRows;
-    var SelUserId = this.userPermitForm.get("Agent").value[0];
+    var selUserId = this.userPermitForm.get("Agent").value[0];
     var menuList =[];
 
-    selectedRows.forEach(menuId => {      
-      var data = {"AgentId" : SelUserId,
-            "MenuId" : menuId,
-            "CreUserID" : this.user.userId};
+    selectedRows.forEach((menuId) => {
+      var data = {
+        agentId: selUserId,
+        menuId: menuId,
+        creUserID: this.user.userId,
+      };
 
       menuList.push(data);
     });
@@ -153,10 +159,10 @@ export class UserPermissionComponent implements OnInit {
     this.adminServices.deleteUserMenuList(menuList).subscribe((result) =>{
       if(result == 1) {
         this.toastr.success("User Menu delete Successfully !!!");
-        this.LoadUserMenuList(SelUserId);
+        this.LoadUserMenuList(selUserId);
       } else if (result == -1) {
         this.toastr.warning("User Menu delete failed !!!");
-        this.LoadUserMenuList(SelUserId);
+        this.LoadUserMenuList(selUserId);
       } else {
         this.toastr.warning("Contact Admin. Error No:- " + result.toString());
       }

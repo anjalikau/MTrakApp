@@ -31,7 +31,7 @@
                         <label>Job No </label>
                         <igx-input-group type="search">
                             <input #input1 igxInput placeholder="Job No" formControlName="jobNo" (keyup)="onKey($event)" />
-                            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''">
+                            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''" (click)="clearJobCardControls()">
                                 <igx-icon>clear</igx-icon>
                             </igx-suffix>
                             <igx-prefix (click)="loadJobCardDetails()">

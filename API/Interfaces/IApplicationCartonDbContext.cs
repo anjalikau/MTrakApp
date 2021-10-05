@@ -37,7 +37,7 @@ namespace API.Interfaces
         DbSet<MstrBrandCode> MstrBrandCode { get;  set ; }
         DbSet<MstrMaterialType> MstrMaterialType { get;  set ; }
         DbSet<MstrCategory> MstrCategory { get;  set ; }
-        DbSet<TransCostHeader> TransCostHeader { get;  set ; }
+        DbSet<TransCostingHeader> TransCostingHeader { get;  set ; }
         DbSet<MstrCombination> MstrCombination { get;  set ; }
         DbSet<MstrCustomerUsers> MstrCustomerUsers { get;  set ; }
         DbSet<MstrSalesCategory> MstrSalesCategory { get;  set ; }
@@ -71,6 +71,10 @@ namespace API.Interfaces
         DbSet<TransDispatchHeader> TransDispatchHeader {get; set;}
         DbSet<TransDispatchDetails> TransDispatchDetails {get; set;}
         DbSet<MstrDispatchSite> MstrDispatchSite {get; set;}
+        DbSet<MstrUnitConversion> UnitConversion {get; set;}
+        DbSet<MstrFluteTypes> MstrFluteTypes {get; set;}        
+        DbSet<MstrSpecialInstruction> MstrSpecialInstruction {get; set;}
+        DbSet<MstrArticleUOMConversion> MstrArticleUOMConversion {get; set;}
 
     }
 }

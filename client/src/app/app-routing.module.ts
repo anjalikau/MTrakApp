@@ -13,14 +13,12 @@ import { CustomerTabComponent } from './master/customer/customer-tab/customer-ta
 import { MasterBrandComponent } from './master/master-brand/master-brand.component';
 import { MasterBrandcodeComponent } from './master/master-brandcode/master-brandcode.component';
 import { MasterCategoryComponent } from './master/master-category/master-category.component';
-import { MasterColorComponent } from './master/master-color/master-color.component';
 import { MasterCostingGroupComponent } from './master/master-costing-group/master-costing-group.component';
 import { MasterMaterialtypeComponent } from './master/master-materialtype/master-materialtype.component';
 import { MasterProcessComponent } from './master/master-process/master-process.component';
 import { MasterProdDefinitionComponent } from './master/master-prod-definition/master-prod-definition.component';
 import { MasterProductTabComponent } from './master/product/master-product-tab/master-product-tab.component';
 import { MasterSerialnoDetailsComponent } from './master/master-serialno-details/master-serialno-details.component';
-import { MasterSizeComponent } from './master/master-size/master-size.component';
 import { MasterStoresiteComponent } from './master/master-storesite/master-storesite.component';
 import { MasterUnitsComponent } from './master/master-units/master-units.component';
 import { FacProdOrderComponent } from './transaction/fac-prod-order/fac-prod-order.component';
@@ -35,6 +33,11 @@ import { ProductionOutComponent } from './transaction/production/production-out/
 import { QualityControlComponent } from './transaction/production/quality-control/quality-control.component';
 import { ProdDispatchComponent } from './transaction/prod-dispatch/prod-dispatch.component';
 import { ReportViewerComponent } from './report/report-viewer/report-viewer.component';
+import { BoldreportViewerComponent } from './report/boldreport-viewer/boldreport-viewer.component';
+import { ColorTabComponent } from './master/color/color-tab/color-tab.component';
+import { SizeTabComponent } from './master/size/size-tab/size-tab.component';
+import { CostingComponent } from './transaction/costing/costing.component';
+import { CostListComponent } from './transaction/cost-list/cost-list.component';
 
 const routes: Routes = [
   {path:'', component: LoginComponent},
@@ -48,8 +51,8 @@ const routes: Routes = [
       {path:'UserRegister', component: UserRegisterComponent },
       {path:'MenuList', component: MenuListComponent},
       {path:'UserPermission', component: UserPermissionComponent},
-      {path:'MasterColor', component: MasterColorComponent},
-      {path:'MasterSize', component: MasterSizeComponent},      
+      {path:'ColorTab', component: ColorTabComponent},
+      {path:'SizeTab', component: SizeTabComponent},      
       {path:'MasterUnits', component: MasterUnitsComponent},
       {path:'MasterStoresite', component: MasterStoresiteComponent},
       {path:'MasterProess', component: MasterProcessComponent},
@@ -73,11 +76,14 @@ const routes: Routes = [
       {path:'QualityC', component: QualityControlComponent},
       {path:'Dispatch', component: ProdDispatchComponent},
       {path:'Report', component: ReportViewerComponent},
+      {path:'boldreport', component: BoldreportViewerComponent },
+      {path:'Costing', component: CostingComponent}
+      // {path:'CostingList', component: CostListComponent}
     ]
   },  
   {path:'not-found', component: NotFoundComponent},
   {path:'server-error', component: ServerErrorComponent},
-  {path:'errors', component: TestErrorsComponent},
+  {path:'errors', component: TestErrorsComponent},  
   {path:'**', component: NotFoundComponent , pathMatch:'full'}
 ];
 

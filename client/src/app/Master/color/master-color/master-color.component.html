@@ -1,6 +1,6 @@
 <div class="card card-default">
     <div class="card-header">
-        <h3 class="card-title">Master Size</h3>
+        <h3 class="card-title">Master Color</h3>
         <!-- <div class="card-tools">
           <button type="button" class="btn btn-tool" data-card-widget="collapse">
             <i class="fas fa-minus"></i>
@@ -11,16 +11,16 @@
         </div> -->
     </div>
 
-    <form [formGroup]="mstrSize" (ngSubmit)="mstrSize.valid" autocomplete="off">
+    <form [formGroup]="masterColor" (ngSubmit)="masterColor.valid" autocomplete="off">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-3">
+                <!-- <div class="col-md-3">
                     <div class="form-group">
-                        <label>Size Card </label>
+                        <label>Color Card </label>
                         <igx-combo id="colorCard" class="combo" displayKey="name" valueKey="autoId"
-                            [itemsMaxHeight]="250" [data]="sizeCardList" placeholder="Size Card"
+                            [itemsMaxHeight]="250" [data]="ColorCardList" placeholder="Color Card"
                             (onSelectionChange)="singleSelection($event)" (onSelectionChange)='loadGridDetails($event)'
-                            formControlName="LinkSizeCard" searchPlaceholder="Search...">
+                            formControlName="LinkColorCard" searchPlaceholder="Search...">
                         </igx-combo>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                             <igx-icon>loop</igx-icon>
                         </button>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="col-md-2">
                     <div class="form-group">
@@ -51,30 +51,19 @@
                     </div>
                 </div>
 
-
                 <div class="col-md-1">
-                    <div class="form-group">
-                        <button type="button" [disabled]="!mstrSize.valid" (click)="saveSize()"
-                            class="btn btn-block btn-success">Save</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default mr-3" (click)="resetControls()">
+                            <i class="fas fa-broom"></i> </button>
+                        <button type="button" class="btn btn-success" [disabled]="!masterColor.valid" (click)="saveColor()">
+                            <i class="fas fa-save"></i> </button>
                     </div>
-                </div>
-
-                <div class="col-md-1">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-block btn-default" (click)="resetControls()">New</button>
-                    </div>
-                </div>
-
-                <div class="col-md-1">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#modalSCard">Size Card</button>
-                    </div>
-                </div>
+                </div>               
             </div>
 
             <div class="row">
                 <div class="col-md-6">
-                    <igx-grid #sizeGrid [data]="sizeList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+                    <igx-grid #Colorgrid [data]="ColorList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
                         [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
                         height="500px" displayDensity="compact" [allowFiltering]="true"
                         [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
@@ -92,7 +81,7 @@
                         <igx-column [field]="'name'" [header]="'Name'" [resizable]="true" [dataType]="'string'"
                             [sortable]="true">
                         </igx-column>
-                        <!-- <igx-column [field]="'LinkSizeCard'" [header]="'Size Card'" [resizable]="true"
+                        <!-- <igx-column [field]="'linkColorCard'" [header]="'Color Card'" [resizable]="true"
                         [dataType]="'string'" [sortable]="true">
                     </igx-column> -->
                     </igx-grid>
@@ -102,7 +91,7 @@
     </form>
 </div>
 
-<div class="modal fade" id="modalSCard">
-    <app-master-size-card></app-master-size-card>
-</div>
+<!-- <div class="modal fade" id="modalCCard">
+    <app-master-color-card></app-master-color-card>
+</div> -->
 <!-- /.modal -->

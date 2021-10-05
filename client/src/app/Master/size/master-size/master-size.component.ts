@@ -15,7 +15,7 @@ import { MasterService } from '_services/master.service';
 })
 export class MasterSizeComponent implements OnInit {
   mstrSize: FormGroup;
-  sizeCardList: Card[];
+  // sizeCardList: Card[];
   sizeList: Size[];
   user: User;
   saveobj: Size;
@@ -24,6 +24,7 @@ export class MasterSizeComponent implements OnInit {
   public col: IgxColumnComponent;
   public pWidth: string;
   public nWidth: string;
+
   @ViewChild("sizeGrid", { static: true }) 
   public sizeGrid: IgxGridComponent;
   
@@ -32,7 +33,8 @@ export class MasterSizeComponent implements OnInit {
 
   ngOnInit(): void {
     this.initilizeForm();
-    this.LoadSizeCard();
+    // this.LoadSizeCard();
+    this.LoadSizeList();
   }
 
   initilizeForm() {
@@ -45,7 +47,7 @@ export class MasterSizeComponent implements OnInit {
       CreateUserId : this.user.userId,
       Code: ['', [Validators.required , Validators.maxLength(10)]],
       Name: ['', [Validators.required , Validators.maxLength(50)]],
-      LinkSizeCard: ['',Validators.required]
+      // LinkSizeCard: ['',Validators.required]
     })
   } 
 
@@ -61,43 +63,43 @@ export class MasterSizeComponent implements OnInit {
     this.nWidth = event.newWidth;
   }
 
-  LoadSizeCard(){
-    this.masterService.getSizeCard().subscribe(cardList => {
-      this.sizeCardList = cardList;
-    })
-  }
+  // LoadSizeCard(){
+  //   this.masterService.getSizeCard().subscribe(cardList => {
+  //     this.sizeCardList = cardList;
+  //   })
+  // }
 
-  LoadSizeList(sizeCard) {    
-      this.masterService.getSize(sizeCard).subscribe(sizes => {
+  LoadSizeList() {    
+      this.masterService.getSize().subscribe(sizes => {
         this.sizeList = sizes;
       })
   } 
   
-  loadGridDetails(event){
-    this.clearGridRows();
-    for(const item of event.added) {
-      //console.log(item);
-      this.LoadSizeList(item);
-    }    
-  }
+  // loadGridDetails(event){
+  //   this.clearGridRows();
+  //   for(const item of event.added) {
+  //     //console.log(item);
+  //     this.LoadSizeList(item);
+  //   }    
+  // }
 
   clearGridRows() {
     this.sizeGrid.deselectAllRows();
     this.sizeList = [];
   }
 
-  refreshPage() {
-    this.LoadSizeCard();
-  }
+  // refreshPage() {
+  //   this.LoadSizeCard();
+  // }
 
   saveSize() { 
-    var sizeCard = this.mstrSize.get('LinkSizeCard').value[0];
+    // var sizeCard = this.mstrSize.get('LinkSizeCard').value[0];
     // var code = this.mstrSize.get('Code').value;
     // var name = this.mstrSize.get('Name').value;
 
     var obj = {
       "createUserId": this.user.userId,
-      "linkSizeCard" : sizeCard,
+      // "linkSizeCard" : sizeCard,
       "code" : this.mstrSize.get('Code').value.trim() ,
       "name" : this.mstrSize.get('Name').value.trim(),
       "autoId" : this.mstrSize.get('AutoId').value
@@ -108,11 +110,11 @@ export class MasterSizeComponent implements OnInit {
     this.masterService.saveSize(this.saveobj).subscribe((result) => {    
       if (result == 1) {
         this.toastr.success("Size save Successfully !!!");
-        this.LoadSizeList(sizeCard);
+        this.LoadSizeList();
         this.clearControls();
       } else if (result == 2) {
         this.toastr.success("Size update Successfully !!!");
-        this.LoadSizeList(sizeCard);
+        this.LoadSizeList();
         this.clearControls();
       } else if (result == -1) {
         this.toastr.warning("Size already exists !!!");
@@ -134,9 +136,9 @@ export class MasterSizeComponent implements OnInit {
   }
 
   resetControls(){
-    this.mstrSize.reset();
+    // this.mstrSize.reset();
     this.clearControls();
-    this.clearGridRows();
+    // this.clearGridRows();
   }
 
    //// EDIT ROW LOADS DETAILS TO CONTROL 

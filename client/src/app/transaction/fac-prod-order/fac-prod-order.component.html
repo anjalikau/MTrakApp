@@ -57,7 +57,7 @@
                         <igx-input-group type="search">
                             <input #input1 igxInput placeholder="FPO No" formControlName="fPONo"
                                 (keyup)="onKey($event)" />
-                            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''">
+                            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''" (click)="refreshControls()">
                                 <igx-icon>clear</igx-icon>
                             </igx-suffix>
                             <igx-prefix (click)="loadFPODetails()">

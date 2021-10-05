@@ -30,5 +30,9 @@ namespace API.Interfaces
          Task<ReturnDto> SaveDispatchedDtAsync(List<TransDispatchDetails> dispatch);
          Task<IEnumerable<DispatchedDetDto>> GetDispatchDetails(string dispatchNo);
          Task<int> CancelDispatchDtAsync(TransDispatchHeader dispHd);
+         Task<ReturnDto> SaveCostingAsync(List<SavedCostingDto> costDt);
+         Task<CostingSheetDto> GetCostingDetailsAsync(long costHearderId);
+
+        //  Task<IEnumerable<MenuJoinList>> GetMenuListAsync();
     }
 }

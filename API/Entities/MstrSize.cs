@@ -9,26 +9,22 @@ namespace API.Entities
     {
         [Key]
         public int AutoId { get; set; }
-
-        [Required]
+        // [Required]
         public string Code { get; set; }
 
-        [Required]
+        // [Required]
         public string Name { get; set; }
 
-        [Required]
-        [ForeignKey("SizeCard")] 
-        public int LinkSizeCard { get; set; }
+        // [Required]
+        // [ForeignKey("SizeCard")] 
+        // public int LinkSizeCard { get; set; }
 
-        [ForeignKey("LinkSizeCard")] 
-        public virtual MstrSizeCard SizeCard {get; set;}
+        // [ForeignKey("LinkSizeCard")] 
+        // public virtual MstrSizeCard SizeCard {get; set;}
 
         public int ? CreateUserId { get; set; }
-
         public DateTime ? CreateDateTime { get; set; } = DateTime.Now;
-
         public int ? UpdateUserId { get; set; }
-
         public DateTime ? UpdateDateTime { get; set; } 
     }
 }

@@ -128,4 +128,16 @@ export class SalesorderService {
     return this.http.post(this.baseUrl + 'SalesOrder/CancelDD' , diaptch , httpOptions);
   }
 
+  saveCosting(costDt: any) {
+    return this.http.post(this.baseUrl + 'SalesOrder/SaveCost' , costDt , httpOptions );
+  }
+
+  getCostHeaderList(custId: number) {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/CostList/' + custId , httpOptions);  
+  }
+
+  getCostSheetDetails(costHeaderId: any) {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/CostDt/' + costHeaderId , httpOptions );
+  }
+
 }

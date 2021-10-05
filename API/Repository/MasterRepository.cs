@@ -206,7 +206,7 @@ namespace API.Repository
             para.Add("AutoId" , mstrColor.AutoId);
             para.Add("Code", mstrColor.Code.ToUpper().Trim());
             para.Add("Name", mstrColor.Name.ToUpper().Trim());
-            para.Add("LinkColor", mstrColor.LinkColorCard);
+            // para.Add("LinkColor", mstrColor.LinkColorCard);
             para.Add("UserId", mstrColor.CreateUserId);
             para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
 
@@ -234,6 +234,159 @@ namespace API.Repository
         #endregion
 
 
+        #region Color Allocation
+
+        public async Task<IEnumerable<ColorAllocationDto>> GetColorAllocDetailsAsync(int ColorCardId)
+        {
+            IEnumerable<ColorAllocationDto> colorList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("ColorCardId" , ColorCardId);
+           
+            return colorList = await DbConnection.QueryAsync<ColorAllocationDto>("spMstrColorGetAllocDetails" , para
+                    , commandType: CommandType.StoredProcedure);            
+        }
+
+        [System.Obsolete]
+        public async Task<int> SaveColorAllocationAsync(List<MstrColorAllocCard> colorAlloc)
+        {
+            DataTable ColorAllocDT = new DataTable();
+
+            ColorAllocDT.Columns.Add("ColorCardId",typeof(byte));
+            ColorAllocDT.Columns.Add("ColorId",typeof(int));
+            ColorAllocDT.Columns.Add("UserID",typeof(int));
+
+            foreach (var item in colorAlloc)
+            {
+                ColorAllocDT.Rows.Add( item.ColorCardId
+                        , item.ColorId
+                        , item.CreateUserId);
+            }         
+
+            var ColorAllocDetails = new SqlParameter("@ColorAllocDT", SqlDbType.Structured); 
+            ColorAllocDetails.Value = ColorAllocDT;
+            ColorAllocDetails.TypeName = "[dbo].[ColorAllocType]";
+
+            var Result = new SqlParameter("@Result", SqlDbType.Int);
+            Result.Direction = ParameterDirection.Output;            
+
+             await _context.Database
+            .ExecuteSqlCommandAsync(@"exec spMstrColorAllocationSave @ColorAllocDT,@Result out" 
+                ,ColorAllocDetails,Result );
+
+            return int.Parse(Result.Value.ToString());  
+        }
+
+        [System.Obsolete]
+        public async Task<int> DeleteColorAllocationAsync(List<MstrColorAllocCard> colorAlloc)
+        {
+            DataTable ColorAllocDT = new DataTable();
+
+            ColorAllocDT.Columns.Add("ColorCardId",typeof(byte));
+            ColorAllocDT.Columns.Add("ColorId",typeof(int));
+            ColorAllocDT.Columns.Add("UserID",typeof(int));
+
+            foreach (var item in colorAlloc)
+            {
+                ColorAllocDT.Rows.Add( item.ColorCardId
+                        , item.ColorId
+                        , item.CreateUserId);
+            }         
+
+            var ColorAllocDetails = new SqlParameter("@ColorAllocDT", SqlDbType.Structured); 
+            ColorAllocDetails.Value = ColorAllocDT;
+            ColorAllocDetails.TypeName = "[dbo].[ColorAllocType]";
+
+            var Result = new SqlParameter("@Result", SqlDbType.Int);
+            Result.Direction = ParameterDirection.Output;            
+
+             await _context.Database
+            .ExecuteSqlCommandAsync(@"exec spMstrColorAllocationDelete @ColorAllocDT,@Result out" 
+                ,ColorAllocDetails,Result );
+
+            return int.Parse(Result.Value.ToString());  
+           
+        }
+
+        #endregion Color Allocation
+
+        #region Size Allocation
+
+        public async Task<IEnumerable<SizeAllocationDto>> GetSizeAllocDetailsAsync(int SizeCardId)
+        {
+            IEnumerable<SizeAllocationDto> sizeList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("SizeCardId" , SizeCardId);
+           
+            return sizeList = await DbConnection.QueryAsync<SizeAllocationDto>("spMstrSizeGetAllocDetails" , para
+                    , commandType: CommandType.StoredProcedure);            
+        }
+
+        [System.Obsolete]
+        public async Task<int> SaveSizeAllocationAsync(List<MstrSizeAllocCard> sizeAlloc)
+        {
+            DataTable SizeAllocDT = new DataTable();
+
+            SizeAllocDT.Columns.Add("SizeCardId",typeof(byte));
+            SizeAllocDT.Columns.Add("SizeId",typeof(int));
+            SizeAllocDT.Columns.Add("UserID",typeof(int));
+
+            foreach (var item in sizeAlloc)
+            {
+                SizeAllocDT.Rows.Add( item.SizeCardId
+                        , item.SizeId
+                        , item.CreateUserId);
+            }         
+
+            var sizeAllocDetails = new SqlParameter("@SizeAllocDT", SqlDbType.Structured); 
+            sizeAllocDetails.Value = SizeAllocDT;
+            sizeAllocDetails.TypeName = "[dbo].[SizeAllocType]";
+
+            var Result = new SqlParameter("@Result", SqlDbType.Int);
+            Result.Direction = ParameterDirection.Output;            
+
+             await _context.Database
+            .ExecuteSqlCommandAsync(@"exec spMstrSizeAllocationSave @SizeAllocDT,@Result out" 
+                ,sizeAllocDetails,Result );
+
+            return int.Parse(Result.Value.ToString());  
+        }
+
+        [System.Obsolete]
+        public async Task<int> DeleteSizeAllocationAsync(List<MstrSizeAllocCard> sizeAlloc)
+        {
+            DataTable SizeAllocDT = new DataTable();
+
+            SizeAllocDT.Columns.Add("SizeCardId",typeof(byte));
+            SizeAllocDT.Columns.Add("SizeId",typeof(int));
+            SizeAllocDT.Columns.Add("UserID",typeof(int));
+
+            foreach (var item in sizeAlloc)
+            {
+                SizeAllocDT.Rows.Add( item.SizeCardId
+                        , item.SizeId
+                        , item.CreateUserId);
+            }         
+
+            var sizeAllocDetails = new SqlParameter("@SizeAllocDT", SqlDbType.Structured); 
+            sizeAllocDetails.Value = SizeAllocDT;
+            sizeAllocDetails.TypeName = "[dbo].[SizeAllocType]";
+
+            var Result = new SqlParameter("@Result", SqlDbType.Int);
+            Result.Direction = ParameterDirection.Output;            
+
+             await _context.Database
+            .ExecuteSqlCommandAsync(@"exec spMstrSizeAllocationDelete @SizeAllocDT,@Result out" 
+                ,sizeAllocDetails,Result );
+
+            return int.Parse(Result.Value.ToString());   
+           
+        }
+
+        #endregion Size Allocation
+
+
         #region Size
                     
         public async Task<int> SaveSizeCardAsync(MstrSizeCard mstrscard)
@@ -258,7 +411,7 @@ namespace API.Repository
             para.Add("AutoId" , mstrSize.AutoId);
             para.Add("Code", mstrSize.Code.ToUpper().Trim());
             para.Add("Name", mstrSize.Name.ToUpper().Trim());
-            para.Add("LinkSize", mstrSize.LinkSizeCard);
+            // para.Add("LinkSize", mstrSize.LinkSizeCard);
             para.Add("UserId", mstrSize.CreateUserId);
             para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
 
@@ -329,10 +482,10 @@ namespace API.Repository
             para.Add("ProTypeId", article.ProTypeId);
             para.Add("ProGroupId", article.ProGroupId);
             para.Add("ItemType", article.ItemType);
-            para.Add("UnitId", article.UnitId);
+            para.Add("UnitId", article.StorageUnitId);
             para.Add("MeasurementId", article.MeasurementId);
-            para.Add("BoardLength", article.BoardLength);
-            para.Add("BoardWidth", article.BoardWidth);
+            para.Add("GSM", article.GSM);
+            // para.Add("BoardWidth", article.BoardWidth);
             para.Add("RollWidth", article.RollWidth);
             para.Add("ColorCardId", article.ColorCardId);
             para.Add("SizeCardId", article.SizeCardId);
@@ -374,7 +527,7 @@ namespace API.Repository
 
         #endregion Article
 
-
+       
         #region Unit 
                     
         public async Task<int> SaveUnitAsync(MstrUnits mstrUnits)

@@ -17,11 +17,11 @@ namespace API.Entities
         public int ProTypeId {get;set;}
         public int ProGroupId {get;set;}
         public int ItemType {get;set;}
-        public int UnitId {get;set;}
+        public int StorageUnitId {get;set;}
         public int MeasurementId {get;set;}
-        public double BoardLength {get;set;}
-        public double BoardWidth {get;set;}
-        public double RollWidth {get;set;}
+        public int GSM {get;set;}
+        // public double ? BoardWidth {get;set;}
+        public double ? RollWidth {get;set;}
         public int ColorCardId {get;set;}
         public int SizeCardId {get;set;}
         public decimal SalesPrice {get;set;}
@@ -29,9 +29,9 @@ namespace API.Entities
 	    public decimal AvgCostPrice {get;set;}
 	    public decimal LastCostPrice {get;set;}
 	    public decimal MaxCostPrice {get;set;}
-        public float Length {get;set;}
-	    public float Width {get;set;}
-	    public float Height {get;set;}
+        public double Length {get;set;}
+	    public double Width {get;set;}
+	    public double Height {get;set;}
         public DateTime PODate {get;set;}
         public int ? CreateUserId { get; set; }
         public DateTime ? CreateDateTime { get; set; }

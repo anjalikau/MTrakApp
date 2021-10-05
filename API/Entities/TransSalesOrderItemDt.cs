@@ -24,7 +24,7 @@ namespace API.Entities
         public DateTime ? CreateDateTime { get; set; } = DateTime.Now;
         public int ? UpdateUserId { get; set; }
         public DateTime ? UpdateDateTime { get; set; } 
-        public virtual TransCostHeader CostHeader {get; set;}
+        public virtual TransCostingHeader CostHeader {get; set;}
         public virtual MstrArticle MstrArticle {get; set;}
         public virtual MstrColor MstrColor {get; set;}
         public virtual MstrSize MstrSize {get; set;}

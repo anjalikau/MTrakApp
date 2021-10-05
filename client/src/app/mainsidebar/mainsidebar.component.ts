@@ -101,7 +101,7 @@ export class MainsidebarComponent implements OnInit {
       if (formMenus.filter((x) => x.groupName == 'Admin' && x.menuName == 'UserPermission').length > 0)
         this.userPermit = true;
       if (formMenus.filter((x) => x.groupName == 'Admin' && x.menuName == 'UserRegister').length > 0)
-        this.userReg = false;
+        this.userReg = true;
       if (formMenus.filter((x) => x.groupName == 'Admin' && x.menuName == 'MenuList').length > 0)
         this.menuList = true;
     }

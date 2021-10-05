@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, TRANSLATIONS, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxComboComponent, IgxDialogComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerHd } from 'src/app/_models/customerHd';
@@ -60,7 +61,8 @@ export class ProdDispatchComponent implements OnInit {
     private fb: FormBuilder,
     private datePipe: DatePipe,
     private toastr: ToastrService,
-    private salesOrderServices: SalesorderService
+    private salesOrderServices: SalesorderService,
+    private router: Router 
   ) {}
 
   ngOnInit(): void {
@@ -327,7 +329,7 @@ export class ProdDispatchComponent implements OnInit {
           dispatchNo: this.dispatchForm.get('dispatchNo').value.trim(),
           customerId: this.dispatchForm.get('customer').value[0],
           cusLocationId: this.dispatchForm.get('cusLocation').value[0],
-          dispathSiteId: this.dispatchForm.get('fromSite').value[0],
+          dispatchSiteId: this.dispatchForm.get('fromSite').value[0],
           reason:
             this.dispatchForm.get('reason').value == undefined
               ? ''
@@ -528,5 +530,18 @@ export class ProdDispatchComponent implements OnInit {
       //// DELETE DISPATCH ITEM
       this.dispatchGrid.deleteRow(this.rowId);
     }
+  }
+
+  printDispatchNote() {
+    // this.router.navigate(['/boldreport']);
+    var obj = {
+      dispatchNo: this.dispatchForm.get('dispatchNo').value.trim(),
+      reportName: "DispatchNoteFormat"
+    }
+    /// STORE OBJECT IN LOCAL STORAGE
+    localStorage.setItem('params', JSON.stringify(obj));
+    window.open('/boldreport', '_blank');
+
+    // this.router.navigateByUrl('/boldreport', { state: obj });
   }
 }

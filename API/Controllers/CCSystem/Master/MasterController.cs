@@ -75,10 +75,11 @@ namespace API.Controllers.CCSystem.Master
 
         #region "Color"
 
-        [HttpGet("Color/{id}")]
-        public async Task<IActionResult> GetColor(int id)
+        [HttpGet("Color")]
+        public async Task<IActionResult> GetColor()
         { 
-            var result = await _context.MstrColor.Where(e => e.LinkColorCard == id).ToListAsync();        
+            var result = await _context.MstrColor
+                .Select(x => new {x.AutoId , x.Code , x.Name }).ToListAsync();        
             return Ok(result);
         }
 
@@ -112,6 +113,57 @@ namespace API.Controllers.CCSystem.Master
 
         #endregion "Color"
 
+        #region Color Allocation
+
+        [HttpGet("ColorAlloc/{id}")]
+        public async Task<IActionResult> GetColorAllocationDetails(int id)
+        {
+            var result = await _masterRepository.GetColorAllocDetailsAsync(id);
+            return Ok(result);
+        }
+
+        [HttpPost("SaveColorAll")]
+        public async Task<IActionResult> SaveColorAllocation(List<MstrColorAllocCard> colorAlloc)
+        {
+            var result = await _masterRepository.SaveColorAllocationAsync(colorAlloc);
+            return Ok(result);
+        }
+
+        [HttpPost("DelColorAll")]
+        public async Task<IActionResult> DeleteColorAllocation(List<MstrColorAllocCard> colorAlloc)
+        {
+            var result = await _masterRepository.DeleteColorAllocationAsync(colorAlloc);
+            return Ok(result);
+        }
+
+        #endregion Color Allocation
+
+
+        #region Size Allocation
+
+        [HttpGet("SizeAlloc/{id}")]
+        public async Task<IActionResult> GetSizeAllocDetails(int id)
+        {
+            var result = await _masterRepository.GetSizeAllocDetailsAsync(id);
+            return Ok(result);
+        }
+
+        [HttpPost("SaveSizeAll")]
+        public async Task<IActionResult> SaveSizeAllocation(List<MstrSizeAllocCard> sizeAlloc)
+        {
+            var result = await _masterRepository.SaveSizeAllocationAsync(sizeAlloc);
+            return Ok(result);
+        }
+
+        [HttpPost("DelSizeAll")]
+        public async Task<IActionResult> DeleteSizeAllocation(List<MstrSizeAllocCard> sizeAlloc)
+        {
+            var result = await _masterRepository.DeleteSizeAllocationAsync(sizeAlloc);
+            return Ok(result);
+        }
+
+        #endregion Size Allocation
+
 
         #region "Size"
 
@@ -122,10 +174,10 @@ namespace API.Controllers.CCSystem.Master
             return Ok(result);
         }
 
-        [HttpGet("Size/{id}")]
-        public async Task<IActionResult> GetSize(int id)
+        [HttpGet("Size")]
+        public async Task<IActionResult> GetSize()
         {
-            var result = await _context.MstrSize.Where(e => e.LinkSizeCard == id).ToListAsync();
+            var result = await _context.MstrSize.ToListAsync();
             return Ok(result);
         }
 
@@ -173,34 +225,39 @@ namespace API.Controllers.CCSystem.Master
             var articleList = await _context.MstrArticle
                 .Join(_context.MstrCategory, a => a.CategoryId , c => c.AutoId
                     , (a, c) => new { a , c })
-                // .Join(_context.MstrMaterialType , am => am.a.MaterialId , m => m.AutoId
-                //     ,(am , m) => new {am , m })
-                .Join (_context.MstrUnits , au => au.a.UnitId , u => u.AutoId ,
+                .Join (_context.MstrUnits , au => au.a.StorageUnitId , u => u.AutoId ,
                     (au , u) => new { au , u })
                 .Join(_context.MstrProductType , ap => ap.au.a.ProTypeId , p => p.AutoId,
                     (ap , p) => new { ap , p})
                 .Join(_context.MstrProductGroup, aps => aps.ap.au.a.ProGroupId , s => s.AutoId , 
-                    ( aps , s) => 
+                    ( aps , s) => new { aps, s})                
+                .Join(_context.MstrUnits , am => am.aps.ap.au.a.MeasurementId , m => m.AutoId
+                    ,(am , m) =>
                     new 
                     {
-                        autoId = aps.ap.au.a.AutoId,
-                        unitCode = aps.ap.u.Code,
-                        // materialCode = aps.ap.au.Code,
-                        catCode = aps.ap.au.c.Code,
-                        prodTypeCode = aps.p.ProdTypeCode,
-                        ProdGroupCode = s.ProdGroupCode,
-                        unitId = aps.ap.au.a.UnitId,
-                        // materialId = aps.ap.au.a.MaterialId,
-                        categoryId = aps.ap.au.a.CategoryId,
-                        proTypeId = aps.ap.au.a.ProTypeId,
-                        ProGroupId = aps.ap.au.a.ProGroupId,
-                        articleName = aps.ap.au.a.ArticleName,
-                        stockCode = aps.ap.au.a.StockCode,
-                        // height = aps.ap.au.a.Height,
-                        // width = aps.ap.au.a.Width,
-                        // length = aps.ap.au.a.Length,
-                        description1 = aps.ap.au.a.Description1,
-                        description2 = aps.ap.au.a.Description2
+                        autoId = am.aps.ap.au.a.AutoId,
+                        unitCode = am.aps.ap.u.Code,
+                        catCode = am.aps.ap.au.c.Code,
+                        prodTypeCode = am.aps.p.ProdTypeCode,
+                        prodGroupCode = am.s.ProdGroupCode,
+                        unitId = am.aps.ap.au.a.StorageUnitId,
+                        measurementId = am.aps.ap.au.a.MeasurementId,
+                        measurement = m.Code,
+                        categoryId = am.aps.ap.au.a.CategoryId,
+                        proTypeId = am.aps.ap.au.a.ProTypeId,
+                        proGroupId = am.aps.ap.au.a.ProGroupId,
+                        articleName = am.aps.ap.au.a.ArticleName,
+                        stockCode = am.aps.ap.au.a.StockCode,
+                        height = am.aps.ap.au.a.Height,
+                        width = am.aps.ap.au.a.Width,
+                        length = am.aps.ap.au.a.Length,
+                        GSM = am.aps.ap.au.a.GSM,                        
+                        rollWidth = am.aps.ap.au.a.RollWidth,
+                        description1 = am.aps.ap.au.a.Description1,
+                        description2 = am.aps.ap.au.a.Description2,
+                        avgCostPrice = am.aps.ap.au.a.AvgCostPrice,
+                        maxCostPrice = am.aps.ap.au.a.MaxCostPrice,
+                        lastCostPrice = am.aps.ap.au.a.LastCostPrice,
                     })
                 .ToListAsync();
                 
@@ -235,7 +292,47 @@ namespace API.Controllers.CCSystem.Master
             return Ok(result);
         }
 
+        [HttpGet("ArtPrice/{id}")]
+        public async Task<IActionResult> GetArticlePriceList(int id) 
+        {
+            var result = await _context.MstrArticle
+                .Where(x => x.AutoId == id)
+                .Select(x => new {x.AvgCostPrice , x.LastCostPrice , x.MaxCostPrice , x.SalesPrice})
+                .SingleOrDefaultAsync();
+
+            return Ok(result);
+        }
+
         #endregion "Article"
+
+        #region "Article UOM Conversion"
+
+        [HttpGet("ArtBase/{id}")]
+        public async Task<IActionResult> GetArticleUOMConversion(int id) 
+        {
+            var result = await _context.MstrArticleUOMConversion
+                .Where(x => x.ArticleId == id && x.IsActive == true)
+                .Select(x => new { x.AutoId , x.ArticleId , x.UnitId , x.Value , x.Version})
+                .ToListAsync();
+
+            return Ok(result);
+        }
+
+        #endregion "Article UOM Conversion"
+
+        #region "Special Instruction"
+
+        [HttpGet("SpeInst")]
+        public async Task<IActionResult> GetSpecialInstruction() 
+        {
+            var result = await _context.MstrSpecialInstruction
+                    .Select(x => new { x.AutoId , x.Description })
+                    .ToListAsync();
+            return Ok(result);
+        }
+
+        #endregion "Special Instruction"
+
 
         #region "CodeSettings"
 
@@ -518,6 +615,28 @@ namespace API.Controllers.CCSystem.Master
 
         #endregion "Unit"
 
+        #region "Unit Conversion"
+
+        [HttpGet("UnitConv")]
+        public async Task<ActionResult> GetUnitConversionDt()
+        {
+            var result = await _context.UnitConversion
+                .Join(_context.MstrUnits , c => c.FromUnitId , f => f.AutoId ,
+                    (c , f) => new {c,f})
+                .Join(_context.MstrUnits , tc => tc.c.ToUnitId ,  t => t.AutoId ,
+                    ( tc , t) => new 
+                    {
+                        toUnit = t.Code,
+                        fromUnitId = tc.c.FromUnitId,
+                        toUnitId = tc.c.ToUnitId,
+                        fromUnit = tc.f.Code,
+                        value = tc.c.Value
+                    }).ToListAsync();
+
+            return Ok(result);
+        }
+
+        #endregion "Unit Conversion"
 
         #region "Process"
 
@@ -632,14 +751,17 @@ namespace API.Controllers.CCSystem.Master
         [HttpGet("BrandCode")]
         public async Task<IActionResult> GetBrandCode()
         {
-            var result = await _context.MstrBrandCode.ToListAsync();
+            var result = await _context.MstrBrandCode
+            .Select(x => new { x.AutoId , x.BrandId , x.Name}).ToListAsync();
             return Ok(result);            
         }
 
         [HttpGet("BrandCode/{id}")]
         public async Task<IActionResult> GetBrandCode(int id)
         { 
-            var result = await _context.MstrBrandCode.Where(e => e.BrandId == id).ToListAsync();        
+            var result = await _context.MstrBrandCode
+                .Select(x => new { x.AutoId , x.BrandId , x.Name})
+                .Where(e => e.BrandId == id).ToListAsync();        
             return Ok(result);
         }
 
@@ -726,7 +848,7 @@ namespace API.Controllers.CCSystem.Master
 
         #endregion "SalesAgent"
 
-
+        
         #region "ProductionDefinition"
 
         [HttpGet("ProdDefDt/{id}")]
@@ -936,11 +1058,28 @@ namespace API.Controllers.CCSystem.Master
         public async Task<IActionResult> GetCostingGroup(int locId)
         {
             var result = await _context.MstrCostingGroup
-                .Where(x => x.LocationId == locId).ToListAsync();
+                .Where(x => x.LocationId == locId)
+                .Select(x => new { x.AutoId , x.IsMaterialAllocated , x.Name }).ToListAsync();
             return Ok(result);
         }       
        
-        #endregion "Costing Group"       
+        #endregion "Costing Group"    
+
+
+        #region "Flute Type"
+
+        [HttpGet("FluteType/{id}")]
+        public async Task<IActionResult> GetFluteTypeDt(int id)
+        {
+            var result = await _context.MstrFluteTypes
+                .Where(x => x.LocationId == id && x.IsActive == true)
+                .Select(x => new {x.AutoId ,x.Code , x.Factor})
+                .ToListAsync();
+
+            return Ok(result);            
+        }
+
+        #endregion "Flute Type"   
 
 
         #region "Serial No Details"

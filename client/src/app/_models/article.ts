@@ -2,8 +2,9 @@ export interface Article {
     autoId: number; 
     // materialId?: number;
     categoryId?: number;
-    unitId?: number;
+    storageUnitId?: number;
     measurementId?: number;
+    measurement?: string;
     length?: number;
     width?: number;
     height?: number;     
@@ -14,13 +15,13 @@ export interface Article {
     proTypeId: number;
     proGroupId: number;
     catCode?: string;
-    // materialCode: string;
+    prodGroupCode?: string;
     prodTypeCode?: string;
     subCatCode?: string;
     unitCode?: string;    
     itemType: number;    
-    boardLength: number;
-    boardWidth: number;
+    gsm: number;
+    // boardWidth: number;
     rollWidth: number;
     colorCardId: number;
     sizeCardId: number;

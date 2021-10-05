@@ -67,7 +67,7 @@ namespace API.Controllers.CCSystem.Transaction
         [HttpPost("CostComb")]
         public async Task<IActionResult> GetCostComination(PendingOrderItemsDto items)
         {
-            var combin = await _context.TransCostHeader
+            var combin = await _context.TransCostingHeader
                 .Where(x => x.CustomerId == items.CustomerId && x.ArticleId == items.ArticleId 
                     && x.ColorId == items.ColorId && x.SizeId == items.SizeId)
                 .Join(_context.MstrCombination, h => h.CombinId, c => c.AutoId
@@ -214,6 +214,39 @@ namespace API.Controllers.CCSystem.Transaction
             var result = await _salesRepository.CancelDispatchDtAsync(dispHd);
             return Ok(result);
         }
+
+        [HttpPost("SaveCost")]
+        public async Task<IActionResult> SaveCosting(List<SavedCostingDto> costDetails)
+        {
+            var result = await _salesRepository.SaveCostingAsync(costDetails);
+            return Ok(result);
+        }
+
+        [HttpGet("CostList/{id}")]
+        public async Task<IActionResult> GetCostHeaderList(int id) 
+        {
+            var result = await _context.TransCostingHeader
+                .Where(x => x.CustomerId == id)
+                .Select( x => new
+                    {
+                        autoId = x.AutoId,
+                        isActive = x.IsActive,
+                        transDate = x.TransDate,
+                        refNo = x.RefNo , 
+                        versionControl = x.VersionControl
+                    }).ToListAsync();
+
+            return Ok(result);
+        }
+
+        [HttpGet("CostDt/{id}")]
+        public async Task<IActionResult> GetCostingDetails(int id)
+        {
+            var result = await _salesRepository.GetCostingDetailsAsync(id);
+            return Ok(result);
+        }
+
+       
 
     }
 }

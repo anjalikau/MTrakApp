@@ -2,6 +2,6 @@ export interface Size {
     autoId:number;
     name:string;
     code:string;
-    linkSizeCard:number;
+    // linkSizeCard:number;
     createUserId:number;   
 }

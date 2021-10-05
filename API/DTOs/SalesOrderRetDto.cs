@@ -35,9 +35,9 @@ namespace API.DTOs
         public int SODelId { get; set; }
         public int DeliCustLocId { get; set; }
         public string DeliveryRef { get; set; }
-        public string SubCatCode { get; set; }
+        public string Category { get; set; }
         public string UnitCode { get; set; }
-        public string MaterialCode { get; set; }        
+        public string ProdGroupName { get; set; }        
         public string ProdTypeCode { get; set; }
         public string StockCode { get; set; }
         public string Description1 { get; set; }

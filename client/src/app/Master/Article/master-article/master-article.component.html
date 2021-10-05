@@ -96,7 +96,7 @@
                 </igx-column>
                 <igx-column [field]="'itemType'" [header]="'ItemType'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                 </igx-column>
-                <igx-column [field]="'measurementCode'" [header]="'Measurement'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                <igx-column [field]="'measurement'" [header]="'Measurement'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                 </igx-column>
                 <igx-column [field]="'poDate'" [header]="'PO Date'" [resizable]="true" [dataType]="'date'" [pipeArgs]="formatDateOptions" [sortable]="true">
                 </igx-column>
@@ -108,11 +108,13 @@
                 </igx-column>
                 <igx-column [field]="'qtyInStock'" [header]="'QtyInStock'" [resizable]="true" [dataType]="'number'" [sortable]="true">
                 </igx-column>
-                <igx-column [field]="'boardLength'" [header]="'Board Length'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                <igx-column [field]="'gsm'" [header]="'GSM'" [resizable]="true" [dataType]="'number'" [sortable]="true">
                 </igx-column>
-                <igx-column [field]="'boardWidth'" [header]="'Board Width'" [resizable]="true" [dataType]="'number'" [sortable]="true">
-                </igx-column>
+                <!-- <igx-column [field]="'boardWidth'" [header]="'Board Width'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                </igx-column> -->
                 <igx-column [field]="'rollWidth'" [header]="'Roll Width'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                </igx-column>
+                <igx-column [field]="'salesPrice'" [header]="'SalesPrice'" [resizable]="true" [dataType]="'number'" [sortable]="true">
                 </igx-column>
                 <igx-column [field]="'lastCostPrice'" [header]="'LastCostPrice'" [resizable]="true" [dataType]="'number'" [sortable]="true">
                 </igx-column>
@@ -233,7 +235,7 @@
                     
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label> Unit </label>
+                                <label> Storage Unit </label>
                                 <igx-combo #unit id="unitId" class="combo" displayKey="code" valueKey="autoId" [itemsMaxHeight]="250"
                                     [data]="unitList" placeholder="Unit" (onSelectionChange)="singleSelection($event)"
                                     formControlName="unitId" searchPlaceholder="Search...">
@@ -253,13 +255,13 @@
                         <div class="col-sm-1">
                             <div class="form-group">
                                 <igx-input-group>
-                                    <input igxInput type="number" formControlName="boardLength" />
-                                    <label igxLabel for="boardLength"> Board Length</label>
+                                    <input igxInput type="number" formControlName="gsm" />
+                                    <label igxLabel for="gsm"> GSM </label>
                                 </igx-input-group>
                             </div>
                         </div>
         
-                        <div class="col-sm-1">
+                        <!-- <div class="col-sm-1">
                             <div class="form-group">
                                 <igx-input-group>
                                     <input igxInput type="number" formControlName="boardWidth" />
@@ -267,7 +269,7 @@
                                 </igx-input-group>
                             </div>
                         </div>
-        
+         -->
                         <div class="col-sm-1">
                             <div class="form-group">
                                 <igx-input-group>

@@ -40,7 +40,7 @@
                         <label> Sales Order Ref </label>
                         <igx-input-group type="search">
                             <input #input1 igxInput placeholder="Sales Order Ref" formControlName="orderRef" (keyup)="onKey($event)" />
-                            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''">
+                            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''" (click)="refreshSalesOrder()">
                                 <igx-icon>clear</igx-icon>
                             </igx-suffix>
                             <igx-prefix (click)="loadSalesOrderDt()" >
@@ -59,7 +59,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label>Customer </label>
                         <igx-combo #customer id="customer" class="combo" displayKey="name" valueKey="autoId"
@@ -71,7 +71,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label>Location </label>
                         <igx-combo #location id="location" class="combo" displayKey="shortCode" valueKey="autoId"
@@ -88,35 +88,17 @@
                             <label igxLabel>Del. Date</label>
                         </igx-date-picker>
                     </div>
-                </div>
-
-                <div class="col-md-2">
-                    <div class="group">
-                        <igx-date-picker id="trnsDate" formControlName="trnsDate">
-                            <label igxLabel>Trns. Date</label>
-                        </igx-date-picker>
-                    </div>
-                </div>
+                </div>                
             </div>
 
-            <div class="row">
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label>Users </label>
-                        <igx-combo #users id="users" class="combo" displayKey="name" valueKey="autoId"
-                            [itemsMaxHeight]="250" [data]="customerUserList" placeholder="Users"
-                            (onSelectionChange)="singleSelection($event)" formControlName="customerUserId"
-                            searchPlaceholder="Search...">
-                        </igx-combo>
-                    </div>
-                </div>
+            <div class="row">               
 
                 <div class="col-md-2">
                     <div class="form-group">
                         <label>Currency </label>
-                        <igx-combo #currency id="currency" class="combo" displayKey="code" valueKey="cusCurrencyId"
+                        <igx-combo #currency id="cusCurrencyId" class="combo" displayKey="code" valueKey="currencyId"
                             [itemsMaxHeight]="250" [data]="customerCurrList" placeholder="Currency"
-                            (onSelectionChange)="singleSelection($event)" formControlName="cusCurrencyId"
+                             formControlName="cusCurrencyId" (onSelectionChange)="singleSelection($event)"
                             searchPlaceholder="Search...">
                         </igx-combo>
                     </div>
@@ -133,6 +115,28 @@
                     </div>
                 </div>
 
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Users </label>
+                        <igx-combo #users id="users" class="combo" displayKey="name" valueKey="autoId"
+                            [itemsMaxHeight]="250" [data]="customerUserList" placeholder="Users"
+                            (onSelectionChange)="singleSelection($event)" formControlName="customerUserId"
+                            searchPlaceholder="Search...">
+                        </igx-combo>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Sales Agent </label>
+                        <igx-combo #salesAgents id="salesAgents" class="combo" displayKey="name" valueKey="autoId"
+                            [itemsMaxHeight]="250" [data]="salesAgentList" placeholder="Sales Agent"
+                            (onSelectionChange)="singleSelection($event)" formControlName="salesAgentId"
+                            searchPlaceholder="Search...">
+                        </igx-combo>
+                    </div>
+                </div>  
+
                 <div class="col-md-2">
                     <div class="form-group">
                         <label>Country of Origins </label>
@@ -142,26 +146,7 @@
                             searchPlaceholder="Search...">
                         </igx-combo>
                     </div>
-                </div>
-
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label>Payment Terms </label>
-                        <igx-combo #payTerms id="payTerms" class="combo" displayKey="code" valueKey="autoId"
-                            [itemsMaxHeight]="250" [data]="payTermsList" placeholder="Payment Terms"
-                            (onSelectionChange)="singleSelection($event)" formControlName="paymentTermId"
-                            searchPlaceholder="Search...">
-                        </igx-combo>
-                    </div>
-                </div>
-
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <igx-checkbox #chkIsCharge checked="false" formControlName="isChargeable">
-                            IsChargeable
-                        </igx-checkbox>
-                    </div>
-                </div>
+                </div>              
 
             </div>
 
@@ -179,14 +164,31 @@
 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label>Sales Agent </label>
-                        <igx-combo #salesAgents id="salesAgents" class="combo" displayKey="name" valueKey="autoId"
-                            [itemsMaxHeight]="250" [data]="salesAgentList" placeholder="Sales Agent"
-                            (onSelectionChange)="singleSelection($event)" formControlName="salesAgentId"
+                        <label>Payment Terms </label>
+                        <igx-combo #payTerms id="payTerms" class="combo" displayKey="code" valueKey="autoId"
+                            [itemsMaxHeight]="250" [data]="payTermsList" placeholder="Payment Terms"
+                            (onSelectionChange)="singleSelection($event)" formControlName="paymentTermId"
                             searchPlaceholder="Search...">
                         </igx-combo>
                     </div>
-                </div>              
+                </div>             
+               
+                
+                <div class="col-md-2">
+                    <div class="group">
+                        <igx-date-picker id="trnsDate" formControlName="trnsDate">
+                            <label igxLabel>Trns. Date</label>
+                        </igx-date-picker>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <igx-checkbox #chkIsCharge checked="false" formControlName="isChargeable">
+                            IsChargeable
+                        </igx-checkbox>
+                    </div>
+                </div>
             </div>
 
         </form>
@@ -249,8 +251,8 @@
                 <div class="col-md-1">
                     <div class="form-group">
                         <igx-input-group>
-                            <input igxInput type="text" formControlName="subCategory" />
-                            <label igxLabel for="subCategory"> Sub Category </label>
+                            <input igxInput type="text" formControlName="category" />
+                            <label igxLabel for="category"> Category </label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -267,8 +269,8 @@
                 <div class="col-md-1">
                     <div class="form-group">
                         <igx-input-group>
-                            <input igxInput type="text" formControlName="material" />
-                            <label igxLabel for="material"> Material </label>
+                            <input igxInput type="text" formControlName="prodGroup" />
+                            <label igxLabel for="prodGroup"> Product Group </label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -606,19 +608,28 @@
         <igx-column [field]="'length'" [width]="'100px'" [header]="'Length'" [resizable]="true" [dataType]="'string'"
             [sortable]="true">
         </igx-column>
+        <igx-column [field]="'boardLength'" [width]="'100px'" [header]="'Board Length'" [resizable]="true" [dataType]="'string'"
+            [sortable]="true">
+        </igx-column>
+        <igx-column [field]="'boardWidth'" [width]="'100px'" [header]="'Board Width'" [resizable]="true" [dataType]="'string'"
+            [sortable]="true">
+        </igx-column>
+        <igx-column [field]="'rollWidth'" [width]="'100px'" [header]="'Roll Width'" [resizable]="true" [dataType]="'string'"
+            [sortable]="true">
+        </igx-column>
         <igx-column [field]="'unitCode'" [width]="'100px'" [header]="'Unit'" [resizable]="true" [dataType]="'string'"
             [sortable]="true">
         </igx-column>
-        <igx-column [field]="'materialCode'" [width]="'100px'" [header]="'Material'" [resizable]="true"
+        <!-- <igx-column [field]="'materialCode'" [width]="'100px'" [header]="'Material'" [resizable]="true"
             [dataType]="'string'" [sortable]="true">
-        </igx-column>
+        </igx-column> -->
         <igx-column [field]="'catCode'" [width]="'100px'" [header]="'Category'" [resizable]="true" [dataType]="'string'"
             [sortable]="true">
         </igx-column>
-        <igx-column [field]="'prodTypeCode'" [header]="'ProdType Code'" [resizable]="true" [dataType]="'string'"
+        <igx-column [field]="'prodTypeCode'" [header]="'Prod.Type'" [resizable]="true" [dataType]="'string'"
             [sortable]="true">
         </igx-column>
-        <igx-column [field]="'subCatCode'" [header]="'SubCat Code'" [resizable]="true" [dataType]="'string'"
+        <igx-column [field]="'prodGroupCode'" [header]="'Prod.Group'" [resizable]="true" [dataType]="'string'"
             [sortable]="true">
         </igx-column>
     </igx-grid>

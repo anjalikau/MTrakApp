@@ -16,7 +16,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath":  "dist/client", //"../API/wwwroot",
+            "outputPath":  "dist/client", //"../API/wwwroot", 
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -26,7 +26,10 @@
               "src/favicon.ico",
               "src/assets"
             ],
-            "allowedCommonJsDependencies": ["lodash"],
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min"
+            ],
             "styles": [
               //"node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/admin-lte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css",
@@ -37,7 +40,8 @@
               "node_modules/admin-lte/dist/css/adminlte.min.css",
               "node_modules/admin-lte/plugins/icheck-bootstrap",
               "node_modules/igniteui-angular/styles/igniteui-angular.css",
-              "src/styles.css"              
+              "src/styles.css",
+              "./node_modules/@boldreports/javascript-reporting-controls/Content/material/bold.reports.all.min.css"              
             ],
             "scripts": [
               "node_modules/admin-lte/plugins/jquery/jquery.min.js",
@@ -65,8 +69,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "4mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "7mb",
+                  "maximumError": "7mb"
                 },
                 {
                   "type": "anyComponentStyle",

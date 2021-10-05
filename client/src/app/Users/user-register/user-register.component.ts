@@ -101,5 +101,7 @@ export class UserRegisterComponent implements OnInit {
     this.registerForm.reset();
   }
 
+  //// LOADS PERMITED USER LIST 
+
   
 }

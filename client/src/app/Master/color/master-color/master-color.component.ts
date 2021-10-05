@@ -16,7 +16,7 @@ import { MasterService } from '_services/master.service';
 })
 export class MasterColorComponent implements OnInit {
   masterColor: FormGroup;
-  ColorCardList: Card[];
+  // ColorCardList: Card[];
   ColorList: Color[];
   user: User;
   saveobj: Color;
@@ -33,7 +33,8 @@ export class MasterColorComponent implements OnInit {
 
   ngOnInit(): void {
     this.initilizeForm();
-    this.LoadColorCard();
+    this.LoadColorList();
+    // this.LoadColorCard();
   }
 
   initilizeForm() {
@@ -46,7 +47,7 @@ export class MasterColorComponent implements OnInit {
       CreateUserId : this.user.userId,
       Code: ['', [Validators.required , Validators.maxLength(10)]],
       Name: ['', [Validators.required , Validators.maxLength(50)]],
-      LinkColorCard: ['',Validators.required]
+      // LinkColorCard: ['',Validators.required]
     })
   } 
 
@@ -62,40 +63,40 @@ export class MasterColorComponent implements OnInit {
     this.nWidth = event.newWidth;
   }
 
-  LoadColorCard(){
-    this.masterService.getColorCard().subscribe(cardList => {
-      this.ColorCardList = cardList;
-    })
-  }
+  // LoadColorCard(){
+  //   this.masterService.getColorCard().subscribe(cardList => {
+  //     this.ColorCardList = cardList;
+  //   })
+  // }
 
-  LoadColorList(colorCard) {    
-      this.masterService.getColor(colorCard).subscribe(colors => {
+  LoadColorList() {    
+      this.masterService.getColor().subscribe(colors => {
         this.ColorList = colors;
       })
   }    
 
-  loadGridDetails(event){
-    this.clearGridRows();
-    for(const item of event.added) {
-      //console.log(item);
-      this.LoadColorList(item);
-    }    
-  }
+  // loadGridDetails(event){
+  //   this.clearGridRows();
+  //   for(const item of event.added) {
+  //     //console.log(item);
+  //     this.LoadColorList(item);
+  //   }    
+  // }
 
   clearGridRows() {
     this.Colorgrid.deselectAllRows();
     this.ColorList = [];
   }
 
-  refreshPage() {
-    this.LoadColorCard();
-  }
+  // refreshPage() {
+  //   this.LoadColorCard();
+  // }
 
   saveColor() { 
-    var colorCard = this.masterColor.get('LinkColorCard').value[0];
+    // var colorCard = this.masterColor.get('LinkColorCard').value[0];
     var obj = {
       "createUserId": this.user.userId,
-      "linkColorCard" : this.masterColor.get('LinkColorCard').value[0],
+      // "linkColorCard" : this.masterColor.get('LinkColorCard').value[0],
       "code" : this.masterColor.get('Code').value.trim(),
       "name" : this.masterColor.get('Name').value.trim(),
       "autoId" : this.masterColor.get('AutoId').value
@@ -106,11 +107,11 @@ export class MasterColorComponent implements OnInit {
     this.masterService.saveColor(this.saveobj).subscribe((result) => {    
       if (result == 1) {
         this.toastr.success("Color save Successfully !!!");
-        this.LoadColorList(colorCard);
+        this.LoadColorList();
         this.clearControls();
       } else if (result == 2) {
         this.toastr.success("Color update Successfully !!!");
-        this.LoadColorList(colorCard);
+        this.LoadColorList();
         this.clearControls();
       } else if (result == -1) {
         this.toastr.warning("Color already exists !!!");
@@ -132,9 +133,9 @@ export class MasterColorComponent implements OnInit {
   }
 
   resetControls(){
-    this.masterColor.reset();
+    // this.masterColor.reset();
     this.clearControls();
-    this.clearGridRows();
+    // this.clearGridRows();
   }
 
    //// EDIT ROW LOADS DETAILS TO CONTROL 

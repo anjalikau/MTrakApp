@@ -18,16 +18,16 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { MainsidebarComponent } from './mainsidebar/mainsidebar.component';
 import { FooterComponent } from './footer/footer.component';
 import { UserRegisterComponent } from './users/user-register/user-register.component';
-import { IgxActionStripModule, IgxAvatarModule, IgxCardModule, IgxCheckboxModule, IgxComboModule, IgxDatePickerModule, IgxDialogModule, IgxDividerModule, IgxGridModule, IgxIconModule, IgxInputGroupModule, IgxMaskModule, IgxTabsModule, IgxTooltipModule } 
+import { IgxActionStripModule, IgxAvatarModule, IgxCardModule, IgxCheckboxModule, IgxComboModule, IgxDatePickerModule, IgxDialogModule, IgxDividerModule, IgxGridModule, IgxHierarchicalGridModule, IgxIconModule, IgxInputGroupModule, IgxMaskModule, IgxTabsModule, IgxTooltipModule } 
 from 'igniteui-angular';
 import { UserPwchangeComponent } from './users/user-pwchange/user-pwchange.component';
 import { MenuListComponent } from './users/menu-list/menu-list.component';
 import { UserPermissionComponent } from './users/user-permission/user-permission.component';
 import { ModuleRegisterComponent } from './users/module-register/module-register.component';
-import { MasterSizeComponent } from './master/master-size/master-size.component';
-import { MasterColorComponent } from './master/master-color/master-color.component';
-import { MasterColorCardComponent } from './master/master-color-card/master-color-card.component';
-import { MasterSizeCardComponent } from './master/master-size-card/master-size-card.component';
+import { MasterSizeComponent } from './master/size/master-size/master-size.component';
+import { MasterColorComponent } from './master/color/master-color/master-color.component';
+import { MasterColorCardComponent } from './master/color/master-color-card/master-color-card.component';
+import { MasterSizeCardComponent } from './master/size/master-size-card/master-size-card.component';
 import { DatePipe } from '@angular/common';
 import { SalesOrderComponent } from './transaction/sales-order/sales-order.component';
 import { MasterStoresiteComponent } from './master/master-storesite/master-storesite.component';
@@ -69,6 +69,21 @@ import { QualityControlComponent } from './transaction/production/quality-contro
 import { ProdDispatchComponent } from './transaction/prod-dispatch/prod-dispatch.component';
 import { ReportViewerComponent } from './report/report-viewer/report-viewer.component';
 import { ReportViewerModule } from 'ngx-ssrs-reportviewer';
+import { BoldReportViewerModule } from '@boldreports/angular-reporting-components';
+
+// Report viewer
+// import '@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min';
+
+// data-visualization
+// import '@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.bulletgraph.min';
+// import '@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.chart.min';
+import { BoldreportViewerComponent } from './report/boldreport-viewer/boldreport-viewer.component';
+import { ColorTabComponent } from './master/color/color-tab/color-tab.component';
+import { ColorAllocCardComponent } from './master/color/color-alloc-card/color-alloc-card.component';
+import { SizeTabComponent } from './master/size/size-tab/size-tab.component';
+import { SizeAllocCardComponent } from './master/size/size-alloc-card/size-alloc-card.component';
+import { CostingComponent } from './transaction/costing/costing.component';
+import { CostListComponent } from './transaction/cost-list/cost-list.component';
 
 @NgModule({
   declarations: [
@@ -128,7 +143,14 @@ import { ReportViewerModule } from 'ngx-ssrs-reportviewer';
     ProductionOutComponent,
     QualityControlComponent,
     ProdDispatchComponent,
-    ReportViewerComponent
+    ReportViewerComponent,
+    BoldreportViewerComponent,
+    ColorTabComponent,
+    ColorAllocCardComponent,
+    SizeTabComponent,
+    SizeAllocCardComponent,
+    CostingComponent,
+    CostListComponent
   ],
   imports: [
     BrowserModule,
@@ -153,7 +175,9 @@ import { ReportViewerModule } from 'ngx-ssrs-reportviewer';
     IgxDialogModule,
     IgxCardModule,
 	  IgxDividerModule,
-    ReportViewerModule   
+    ReportViewerModule,
+    BoldReportViewerModule,
+    IgxHierarchicalGridModule
   ],
   providers: [
     DatePipe,

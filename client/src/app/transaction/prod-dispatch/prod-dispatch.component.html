@@ -26,6 +26,9 @@
                         <button type="button" class="btn btn-danger mr-1" [disabled]="!isActive" (click)="cancelDispatchNote()">
                             <i class="fas fa-trash-alt"></i>
                         </button>
+                        <button type="button" class="btn btn-primary mr-1" [disabled]="!isDisplayMode" target="_blank" (click)="printDispatchNote()">
+                            <i class="fas fa-print"></i>
+                        </button>
                         <button type="button" class="btn btn-default" (click)="refreshControls()">
                             <i class="fas fa-redo"></i>
                         </button>
@@ -39,7 +42,7 @@
                         <label> Dispatch No </label>
                         <igx-input-group type="search">
                             <input #input1 igxInput placeholder="Dispatch No" formControlName="dispatchNo" (keyup)="onKey($event)" />
-                            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''">
+                            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''" (click)="refreshControls()">
                                 <igx-icon>clear</igx-icon>
                             </igx-suffix>
                             <igx-prefix (click)="loadDipatchDetails()">

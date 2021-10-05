@@ -229,7 +229,7 @@ export class CustomerHeaderComponent implements OnInit {
           this.toastr.success('Customer ' + status + ' Successfully !!!');
           this.loadCustomerheader();
         } else if (result == -1) {
-          this.toastr.warning("Can't Deactive! Customer Have Datails !");
+          this.toastr.warning("Can't Deactive, Customer details exists !!!");
         } else {
           this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
         }

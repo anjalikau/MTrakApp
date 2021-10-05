@@ -175,9 +175,9 @@ export class SalesOrderComponent implements OnInit {
       articleDes1: [{ value: '', disabled: true }],
       articleDes2: [{ value: '', disabled: true }],
       articleCode: [{ value: '', disabled: true }],
-      subCategory: [{ value: '', disabled: true }],
+      category: [{ value: '', disabled: true }],
       unit: [{ value: '', disabled: true }],
-      material: [{ value: '', disabled: true }],
+      prodGroup: [{ value: '', disabled: true }],
       prodType: [{ value: '', disabled: true }],
     });
 
@@ -198,7 +198,7 @@ export class SalesOrderComponent implements OnInit {
       size: [{ value: '', disabled: true }, Validators.required],
       qty: [{ value: 0, disabled: true }, Validators.required],
       // price: [{ value: 0, disabled: true }, Validators.required],
-      deliCustLocId: [''],
+      deliCustLocId: [{ value: '', disabled: true }],
       deliveryRef: [{ value: '', disabled: true }, Validators.required],
       deliveryDate: [{ value: '', disabled: true }, Validators.required],
     });
@@ -217,12 +217,26 @@ export class SalesOrderComponent implements OnInit {
     this.nWidth = event.newWidth;
   }
 
+  deliveryFormEnable() {
+    this.soDeliveyForm.get("deliCustLocId").enable();
+    this.soDeliveyForm.get("qty").enable();
+    this.soDeliveyForm.get("deliveryRef").enable();
+    this.soDeliveyForm.get("deliveryDate").enable();
+  }
+
+  deliveryFormDisable() {
+    this.soDeliveyForm.get("deliCustLocId").disable();
+    this.soDeliveyForm.get("qty").disable();
+    this.soDeliveyForm.get("deliveryRef").disable();
+    this.soDeliveyForm.get("deliveryDate").disable();
+  }
+
   //// ORDER REFERANCE NO KEY UP EVENT
   onKey(event: any) {
     //this.soDeliveyForm.disable();
     //console.log(event.keyCode);
     if (event.keyCode != 13) {
-      this.soDeliveyForm.disable();
+      this.deliveryFormDisable();
       this.customer.disabled = false;
       this.soHeaderForm.get('customerRef').enable();
       this.articleForm.reset();
@@ -327,8 +341,9 @@ export class SalesOrderComponent implements OnInit {
       //// LOADS CUSTOMER CURRENCY
       this.masterServices.getCustomCurrency(item).subscribe((customerCurr) => {
         this.customerCurrList = customerCurr;
+        // console.log(this.customerCurrList);
       });
-      //console.log(this.customerCurrList);
+      
 
       //// LOADS CUSTOMER DIVISION
       this.masterServices.getCustomerDivision(item).subscribe((customerDivi) => {
@@ -385,12 +400,12 @@ export class SalesOrderComponent implements OnInit {
       .get('articleCode')
       .setValue(selectedRowData[0]['stockCode']);
     this.articleForm
-      .get('subCategory')
-      .setValue(selectedRowData[0]['subCatCode']);
+      .get('category')
+      .setValue(selectedRowData[0]['category']);
     this.articleForm.get('unit').setValue(selectedRowData[0]['unitCode']);
     this.articleForm
-      .get('material')
-      .setValue(selectedRowData[0]['materialCode']);
+      .get('prodGroup')
+      .setValue(selectedRowData[0]['prodGroupName']);
     this.articleForm
       .get('prodType')
       .setValue(selectedRowData[0]['prodTypeCode']);
@@ -643,6 +658,7 @@ export class SalesOrderComponent implements OnInit {
   onDeliveryEdit(event, cellId) {
     if (this.checkIsEditable()) {
       this.clearDeliveryControls();
+      this.deliveryFormEnable();
       const ids = cellId.rowID;
 
       const selectedRowData = this.deliveryGrid.data.filter((record) => {
@@ -980,7 +996,7 @@ export class SalesOrderComponent implements OnInit {
 
     //// validate sales order number is exists
     if (this.soHeaderForm.get('orderRef').value != '') {
-      this.soDeliveyForm.enable();
+      this.deliveryFormDisable();
       var salesOrderRef = this.soHeaderForm.get('orderRef').value;
 
       this.salesOrderServices.getSalesOrderDT(salesOrderRef).subscribe(
@@ -1081,14 +1097,14 @@ export class SalesOrderComponent implements OnInit {
                   .get('articleCode')
                   .setValue(orderDt[index]['stockCode']);
                 this.articleForm
-                  .get('subCategory')
-                  .setValue(orderDt[index]['subCatCode']);
+                  .get('category')
+                  .setValue(orderDt[index]['category']);
                 this.articleForm
                   .get('unit')
                   .setValue(orderDt[index]['unitCode']);
                 this.articleForm
-                  .get('material')
-                  .setValue(orderDt[index]['materialCode']);
+                  .get('prodGroup')
+                  .setValue(orderDt[index]['prodGroupName']);
                 this.articleForm
                   .get('prodType')
                   .setValue(orderDt[index]['prodTypeCode']);
@@ -1221,8 +1237,9 @@ export class SalesOrderComponent implements OnInit {
   }
 
   refreshSalesOrder() {
+    // console.log('here');
     //this.isNewSO = true;
-    this.soDeliveyForm.disable();
+    this.deliveryFormDisable();
     this.customer.disabled = false;
     this.soHeaderForm.get('customerRef').enable();
     this.articleForm.reset();

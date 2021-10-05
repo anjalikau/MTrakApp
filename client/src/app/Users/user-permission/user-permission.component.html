@@ -22,26 +22,26 @@
                         formControlName="Agent" searchPlaceholder="Search...">
                     </igx-combo>
                 </div>
-                <div class="col-sm-2">
+                <!-- <div class="col-sm-2">
                     <button igxButton="outlined" (click)="ClearControls()">New</button>
-                </div>
+                </div> -->
             </div>
             <div class="form-group row">
                 <div class="col-sm-5">
                     <h4>Permitted Menu</h4>
-                </div>
+                </div>                
                 <div class="col-sm-1">
-                    <button type="button" igxButton="raised" (click)="DeleteUserMenuList()"
-                        igxButtonBackground="#e14166"
-                        [disabled]="(this.PermitMgrid.selectedRows.length==0 || !removeButton)"
-                        igxRipple>Remove</button>
+                    <button type="button" class="btn btn-danger" (click)="DeleteUserMenuList()" 
+                    [disabled]="!(this.PermitMgrid.selectedRows.length>0 && removeButton)" igxRipple>
+                        <i class="fas fa-trash-alt"></i> </button>                    
                 </div>
                 <div class="col-sm-5">
                     <h4>Not-Permitted Menu</h4>
                 </div>
                 <div class="col-sm-1">
-                    <button type="button" igxButton="raised" (click)="SaveUserMenuList()" igxButtonBackground="#72da66"
-                        igxRipple [disabled]="this.Menugrid.selectedRows.length==0 || !saveButton">Add</button>
+                    <button type="button" class="btn btn-success" (click)="SaveUserMenuList()" 
+                    [disabled]="!(this.Menugrid.selectedRows.length>0 && saveButton)">
+                        <i class="fas fa-plus-square"></i> </button>
                 </div>
             </div>
 

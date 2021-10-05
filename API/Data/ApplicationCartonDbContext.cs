@@ -37,7 +37,7 @@ namespace API.Data
         public DbSet<MstrBrandCode> MstrBrandCode { get;  set ; }
         public DbSet<MstrMaterialType> MstrMaterialType { get;  set ; }
         public DbSet<MstrCategory> MstrCategory { get;  set ; }
-        public DbSet<TransCostHeader> TransCostHeader { get;  set ; }
+        public DbSet<TransCostingHeader> TransCostingHeader { get;  set ; }
         public DbSet<MstrCombination> MstrCombination { get;  set ; }
         public DbSet<MstrCustomerUsers> MstrCustomerUsers { get;  set ; }
         public DbSet<MstrSalesCategory> MstrSalesCategory { get;  set ; }
@@ -71,6 +71,10 @@ namespace API.Data
         public DbSet<TransDispatchHeader> TransDispatchHeader {get; set;}
         public DbSet<TransDispatchDetails> TransDispatchDetails {get; set;}
         public DbSet<MstrDispatchSite> MstrDispatchSite {get; set;}
+        public DbSet<MstrUnitConversion> UnitConversion {get; set;}
+        public DbSet<MstrFluteTypes> MstrFluteTypes {get; set;}
+        public DbSet<MstrSpecialInstruction> MstrSpecialInstruction {get; set;}
+        public DbSet<MstrArticleUOMConversion> MstrArticleUOMConversion {get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

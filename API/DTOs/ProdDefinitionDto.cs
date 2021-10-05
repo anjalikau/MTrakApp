@@ -3,6 +3,7 @@ namespace API.DTOs
     public class ProdDefinitionDto
     {
         public int AutoId { get; set; } 
+        public int SeqNo { get; set; }
         public string PDName { get; set; } 
         public byte PDHeaderId { get; set; }           
         public int ProcessId { get; set; }  

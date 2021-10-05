@@ -41,7 +41,14 @@ namespace API
             services.AddApplicationServices(_config);
             services.AddControllers();
             services.AddCors();
-            services.AddIdentityServices(_config);
+            services.AddIdentityServices(_config);            
+            // services.AddCors(o => o.AddPolicy("AllowAllOrigins", builder =>
+            // {
+            //     builder.AllowAnyOrigin()
+            //             .AllowAnyMethod()
+            //             .AllowAnyHeader();
+            // }));
+            services.AddMvc(m => m.EnableEndpointRouting = false);
             // configure basic authentication 
             // services.AddAuthentication("BasicAuthentication")
             //     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
@@ -50,6 +57,7 @@ namespace API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Bold.Licensing.BoldLicenseProvider.RegisterLicense("mqoPef4RAkY+sg/AM8zscoLDRPDLWCOn63kyeXsuWXM=");
             // if (env.IsDevelopment())
             // {
             //     app.UseDeveloperExceptionPage();
@@ -63,6 +71,7 @@ namespace API
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
             // app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://10.0.2.5:8080/ReportServer"));
             //app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            // app.UseMvc();
 
             app.UseAuthentication();
 

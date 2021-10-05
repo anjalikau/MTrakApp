@@ -73,7 +73,12 @@ namespace API.Interfaces
         Task<IEnumerable<ProdTypeGroupDto>> GetProdTypeGroupAsync(int prodTypeId);
         Task<int> AssignProdTypeGroupAsync(List<MstrProdTypeGroup> prod);
         Task<int> DeleteProdTypeGroupAsync(List<MstrProdTypeGroup> prod);   
-             
+        Task<IEnumerable<ColorAllocationDto>> GetColorAllocDetailsAsync(int ColorCardId);
+        Task<int> SaveColorAllocationAsync(List<MstrColorAllocCard> colorAlloc);
+        Task<int> DeleteColorAllocationAsync(List<MstrColorAllocCard> colorAlloc);  
+        Task<IEnumerable<SizeAllocationDto>> GetSizeAllocDetailsAsync(int SizeCardId);
+        Task<int> SaveSizeAllocationAsync(List<MstrSizeAllocCard> sizeAlloc); 
+        Task<int> DeleteSizeAllocationAsync(List<MstrSizeAllocCard> sizeAlloc);       
 
     }
 }

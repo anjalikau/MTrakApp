@@ -4,10 +4,12 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build && gzipper compress ./dist ./gzipped",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "gzipper": "gzipper",
+    "compress": "gzipper compress ./dist"
   },
   "private": true,
   "dependencies": {
@@ -41,6 +43,8 @@
     "@angular-devkit/build-angular": "~0.1102.2",
     "@angular/cli": "^11.2.3",
     "@angular/compiler-cli": "~11.2.3",
+    "@boldreports/angular-reporting-components": "^3.1.45",
+    "@boldreports/types": "^3.1.45",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",

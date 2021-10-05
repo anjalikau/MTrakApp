@@ -1,25 +1,8 @@
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <div class="container-fluid">
-        <!-- <div class="row">
-            <div class="col-sm-6">
-                <h4>User Register</h4>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active">User Register</li> 
-                </ol>
-            </div>
-        </div> -->
-    </div>
-</section>
-
 <!-- Main content -->
 <section class="content">
-    <div class="container-fluid">
-        <div class="col-12">
-            <div class="card card-primary card-outline card-tabs">
+    <!-- <div class="container-fluid"> -->
+        <!-- <div class="col-12"> -->
+            <div class="card card-default card-outline card-tabs">
                 <div class="card-header p-0 pt-1 border-bottom-0">
                     <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
                         <li class="nav-item">
@@ -97,18 +80,18 @@
                                         </igx-input-group>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-1 offset-md-10">
-                                    <div class="button-sample">
-                                        <button type="submit" [disabled]="!registerForm.valid" igxButton="raised"
-                                            igxButtonBackground="#72da66" igxRipple>Register</button>
-                                    </div>
-                                </div>
-                                <div class="col-sm-1">
-                                    <div class="button-sample">
-                                        <button type="button" (click)="cancelRegister()"
-                                            igxButton="flat">New</button>
+                                <div class="col-1">
+                                    <div class="btn-group">
+                                        <div class="button-sample">
+                                            <button type="submit" class="btn btn-success mr-3" [disabled]="!registerForm.valid">
+                                                <i class="fas fa-user-plus"></i> </button>
+                                            <!-- <button type="submit" [disabled]="!registerForm.valid" igxButton="raised"
+                                                igxButtonBackground="#72da66" igxRipple>Register</button> -->
+                                        </div>
+                                        <div class="button-sample">                                        
+                                            <button type="button" (click)="cancelRegister()" class="btn btn-default">
+                                                <i class="fas fa-sync-alt"></i></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -127,8 +110,8 @@
                 </div>
                 <!-- /.card -->
             </div>
-        </div>
-    </div><!-- /.container-fluid -->
+        <!-- </div>
+    </div>/.container-fluid -->
 </section>
 
 <!-- <p> Form Value: {{registerForm.value | json}} </p>

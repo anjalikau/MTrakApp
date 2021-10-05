@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
@@ -530,6 +531,166 @@ namespace API.Repository
                     
             return para.Get<int>("Result");
         }
-    
+
+        public async Task<ReturnDto> SaveCostingAsync(List<SavedCostingDto> costDt)
+        {
+            DataTable CostHeaderDT = new DataTable();
+            DataTable CostDetailDT = new DataTable();
+            DataTable CostSpeInsDT = new DataTable();
+
+            DynamicParameters para = new DynamicParameters();
+
+            CostHeaderDT.Columns.Add("CostHeaderId", typeof(long));
+            CostHeaderDT.Columns.Add("UserId", typeof(int));
+            CostHeaderDT.Columns.Add("RefNo", typeof(string));
+            CostHeaderDT.Columns.Add("VersionControl", typeof(int));
+            CostHeaderDT.Columns.Add("CustomerId", typeof(int));
+            CostHeaderDT.Columns.Add("ArticleId", typeof(long));
+            CostHeaderDT.Columns.Add("ColorId", typeof(int));
+            CostHeaderDT.Columns.Add("SizeId", typeof(int));
+            CostHeaderDT.Columns.Add("Combination", typeof(string));
+            CostHeaderDT.Columns.Add("NoOfUps", typeof(int));
+            CostHeaderDT.Columns.Add("BrandCodeId", typeof(int));
+            CostHeaderDT.Columns.Add("PDHeaderId", typeof(int));
+            CostHeaderDT.Columns.Add("BoardLength", typeof(decimal));
+            CostHeaderDT.Columns.Add("BoardWidth", typeof(decimal));
+            CostHeaderDT.Columns.Add("SQM", typeof(decimal));
+            CostHeaderDT.Columns.Add("ReelSize", typeof(int));
+            CostHeaderDT.Columns.Add("ActualReal", typeof(int));
+            CostHeaderDT.Columns.Add("TrimWaste", typeof(decimal));
+            CostHeaderDT.Columns.Add("TotNetWeight", typeof(decimal));
+            CostHeaderDT.Columns.Add("TotGrossWeight", typeof(decimal));
+            CostHeaderDT.Columns.Add("Tollerence", typeof(int));            
+            CostHeaderDT.Columns.Add("TotalBoxCost", typeof(decimal));
+            CostHeaderDT.Columns.Add("Markup", typeof(decimal));
+            CostHeaderDT.Columns.Add("Commission", typeof(decimal));
+            CostHeaderDT.Columns.Add("MOQCost", typeof(decimal));
+            CostHeaderDT.Columns.Add("SellingPrice", typeof(decimal));
+            CostHeaderDT.Columns.Add("TotMOQCost", typeof(decimal));
+            CostHeaderDT.Columns.Add("ProfitMarkup", typeof(decimal));
+            CostHeaderDT.Columns.Add("CommSelPrice", typeof(decimal));
+
+            CostDetailDT.Columns.Add("CostGroupId", typeof(byte));
+            CostDetailDT.Columns.Add("GroupOrder", typeof(int));
+            CostDetailDT.Columns.Add("ArticleId", typeof(long));
+            CostDetailDT.Columns.Add("ColorId", typeof(int));
+            CostDetailDT.Columns.Add("SizeId", typeof(int));
+            CostDetailDT.Columns.Add("UnitId", typeof(int));
+            CostDetailDT.Columns.Add("GSM", typeof(int));
+            CostDetailDT.Columns.Add("FluteId", typeof(int));
+            CostDetailDT.Columns.Add("Cost", typeof(decimal));
+            CostDetailDT.Columns.Add("Base", typeof(string));
+            CostDetailDT.Columns.Add("BaseValue", typeof(decimal));
+            CostDetailDT.Columns.Add("Westage", typeof(decimal));
+            CostDetailDT.Columns.Add("ArtiUOMConvId", typeof(int));
+            CostDetailDT.Columns.Add("NetCons", typeof(decimal));
+            CostDetailDT.Columns.Add("GrossCons", typeof(decimal));
+            CostDetailDT.Columns.Add("CostPcs", typeof(decimal));
+
+            CostSpeInsDT.Columns.Add("SpeInsId", typeof(int));
+            CostSpeInsDT.Columns.Add("Value", typeof(string));
+
+            foreach (var item in costDt)
+            {
+                if (item.CostingHeader != null)
+                {
+                    CostHeaderDT.Rows.Add(
+                        item.CostingHeader.AutoId,
+                        item.CostingHeader.CreateUserId,
+                        item.CostingHeader.RefNo,
+                        item.CostingHeader.VersionControl,
+                        item.CostingHeader.CustomerId,
+                        item.CostingHeader.ArticleId,
+                        item.CostingHeader.ColorId,
+                        item.CostingHeader.SizeId,
+                        item.CostingHeader.Combination,
+                        item.CostingHeader.NoOfUps,
+                        item.CostingHeader.BrandCodeId,
+                        item.CostingHeader.PDHeaderId,
+                        item.CostingHeader.BoardLength,
+                        item.CostingHeader.BoardWidth,
+                        item.CostingHeader.SQM,
+                        item.CostingHeader.ReelSize,
+                        item.CostingHeader.ActualReal,
+                        item.CostingHeader.TrimWaste,
+                        item.CostingHeader.TotNetWeight,
+                        item.CostingHeader.TotGrossWeight,
+                        item.CostingHeader.Tollerence,
+                        item.CostingHeader.TotalBoxCost,
+                        item.CostingHeader.Markup,
+                        item.CostingHeader.Commission,
+                        item.CostingHeader.MOQCost,
+                        item.CostingHeader.SellingPrice,
+                         item.CostingHeader.TotMOQCost,
+                        item.CostingHeader.ProfitMarkup,
+                        item.CostingHeader.CommSelPrice
+                    );
+                }
+                else if (item.CostingDetails != null)
+                {
+                    foreach (var det in item.CostingDetails)
+                    {
+                        CostDetailDT.Rows.Add(det.CostGroupId,
+                            det.GroupOrder,
+                            det.ArticleId,
+                            det.ColorId,
+                            det.SizeId,
+                            det.UnitId,
+                            det.GSM,
+                            det.FluteId,
+                            det.Cost,
+                            det.Base,
+                            det.BaseValue,
+                            det.Wastage,
+                            det.ArtiUOMConvId,
+                            det.NetCon,
+                            det.GrossCon,
+                            det.CostPcs);
+                    }
+                }
+                else if (item.CostingSpecial != null)
+                {
+                    foreach (var spe in item.CostingSpecial)
+                    {
+                        CostSpeInsDT.Rows.Add(
+                            spe.SpeInstId,
+                            spe.Value
+                        );
+                    }
+                }
+            }
+           
+            para.Add("CostHeaderDT", CostHeaderDT.AsTableValuedParameter("CostHeaderType"));
+            para.Add("CostDetailDT", CostDetailDT.AsTableValuedParameter("CostDetailsType"));
+            para.Add("CostSpecialInsDT", CostSpeInsDT.AsTableValuedParameter("CostSpecialInsType"));
+
+            var result = await DbConnection.QueryFirstOrDefaultAsync<ReturnDto>("spTransCostingSave", para
+                , commandType: CommandType.StoredProcedure);
+
+            return result;
+        }
+
+        public async Task<CostingSheetDto> GetCostingDetailsAsync(long costHearderId)
+        {
+            // IEnumerable<CostingDetailsDto> costDetails;
+            // IEnumerable<CostingSpecialDto> costingSpecials;
+            CostingSheetDto costSheet = new CostingSheetDto();
+
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("CostHeaderId", costHearderId);
+
+            // using (var multi = DbConnection.QueryMultiple(sql, new {InvoiceID = 1}))
+            using (var multi = await DbConnection.QueryMultipleAsync("spTransCostingGetDetails", para, commandType: CommandType.StoredProcedure))
+            {
+                costSheet.costHeader = multi.Read<CostingHeaderDto>();
+                costSheet.costDetails = multi.Read<CostingDetailsDto>();
+                costSheet.costSpecials = multi.Read<CostingSpecialDto>();
+            }
+            return costSheet;
+        }
+
+
+
     }
 }

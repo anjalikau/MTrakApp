@@ -8,29 +8,20 @@ namespace API.Entities
     public class MstrColor
     {
         [Key]
-        public int AutoId { get; set; }
-        
-        [Required]
+        public int AutoId { get; set; }  
         public string Code { get; set; }
-
-        [Required]
         public string Name { get; set; }
 
-        [Required]
-        [ForeignKey("ColorCard")] 
-        public int LinkColorCard { get; set; }
+        // [Required]
+        // [ForeignKey("ColorCard")] 
+        // public int LinkColorCard { get; set; }
 
-        [ForeignKey("LinkColorCard")] 
-        public virtual MstrColorCard ColorCard {get; set;}
+        // [ForeignKey("LinkColorCard")] 
+        // public virtual MstrColorCard ColorCard {get; set;}
 
         public int ? CreateUserId { get; set; }
-
         public DateTime ? CreateDateTime { get; set; } = DateTime.Now;
-
         public int ? UpdateUserId { get; set; }
-
-        public DateTime ? UpdateDateTime { get; set; } 
-
-        
+        public DateTime ? UpdateDateTime { get; set; }         
     }
 }

@@ -381,7 +381,7 @@ export class JobCreationComponent implements OnInit {
 
   /// MOVE DELIVERY ORDER TO JOB FORM
   onAddJobOrderItem(selectedRowData) {
-    console.log(selectedRowData);
+    // console.log(selectedRowData);
     var orderQty = selectedRowData[0]['orderQty'];
     var delDate: Date = new Date(selectedRowData[0]['deliveryDate']);
     var prvJobQty = 0,

@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter, map, mergeMap } from 'rxjs/operators';
 import { AccountService } from '_services/account.service';
 import { User } from './_models/user';
 
@@ -11,6 +13,7 @@ import { User } from './_models/user';
 export class AppComponent implements OnInit { 
   title = 'MTrack';
   users: any;
+  visible:boolean=false;
 
   constructor(private http: HttpClient, public accountServices: AccountService) {}
 
@@ -25,6 +28,10 @@ export class AppComponent implements OnInit {
     // const menu: any = JSON.parse(localStorage.getItem('menus'));
     // console.log(menu);
   }
+
+
+    
+  
 
   // getUsers() {
   //   this.http.get('https://localhost:5001/api/Agents').subscribe(response => {

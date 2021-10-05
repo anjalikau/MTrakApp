@@ -31,6 +31,13 @@ import { FlexFieldDetails } from 'src/app/_models/flexFieldDetails';
 import { FlexFieldValueList } from 'src/app/_models/flexFieldValueList';
 import { CatProdType } from 'src/app/_models/catProdType';
 import { ProdTypeGroup } from 'src/app/_models/ProdTypeGroup';
+import { ColorAllocation } from 'src/app/_models/colorAllocation';
+import { ColorAllocCard } from 'src/app/_models/colorAllocCard';
+import { SizeAllocation } from 'src/app/_models/SizeAllocation';
+import { SizeAllocCard } from 'src/app/_models/sizeAllocCard';
+import { UnitConversion } from 'src/app/_models/unitConversion';
+import { FluteType } from 'src/app/_models/fluteType';
+import { SpecialInstruction } from 'src/app/_models/specialInstruction';
 
 var usertoken: any;
 if (localStorage.length > 0) {
@@ -65,11 +72,12 @@ export class MasterService {
     return this.http.get<Card[]>(this.baseUrl + 'Master/SizeCard', httpOptions);
   }
 
-  getSize(sizeCardId: number) {
-    return this.http.get<Size[]>(
-      this.baseUrl + 'Master/Size/' + sizeCardId,
-      httpOptions
-    );
+  getSize() {
+    return this.http.get<Size[]>( this.baseUrl + 'Master/Size', httpOptions);
+  }
+
+  saveSize(size: Size) {
+    return this.http.post(this.baseUrl + 'Master/Size', size, httpOptions);
   }
 
   saveSizeCard(sizeCard: Card) {
@@ -78,10 +86,6 @@ export class MasterService {
       sizeCard,
       httpOptions
     );
-  }
-
-  saveColor(color: Color) {
-    return this.http.post(this.baseUrl + 'Master/Color', color, httpOptions);
   }
 
   deactiveSizeCard(model: any) {
@@ -103,11 +107,8 @@ export class MasterService {
     );
   }
 
-  getColor(colorCardId: number) {
-    return this.http.get<Color[]>(
-      this.baseUrl + 'Master/Color/' + colorCardId,
-      httpOptions
-    );
+  getColor() {
+    return this.http.get<Color[]>( this.baseUrl + 'Master/Color', httpOptions);
   }
 
   saveColorCard(colorCard: Card) {
@@ -118,8 +119,8 @@ export class MasterService {
     );
   }
 
-  saveSize(size: Size) {
-    return this.http.post(this.baseUrl + 'Master/Size', size, httpOptions);
+  saveColor(color: Color) {
+    return this.http.post(this.baseUrl + 'Master/Color', color, httpOptions);
   }
 
   deactiveColorCard(model: any) {
@@ -129,6 +130,38 @@ export class MasterService {
       httpOptions
     );
   }
+
+  //#region "Color Allocation"
+
+  getColorAllocDetails(id: number) {
+    return this.http.get<ColorAllocation[]>(this.baseUrl + "Master/ColorAlloc/" + id , httpOptions);
+  }
+
+  saveColorAllocation(colorAlloc: ColorAllocCard[]) {
+    return this.http.post(this.baseUrl + "Master/SaveColorAll" , colorAlloc , httpOptions);
+  }
+
+  deleteColorAllocation(colorAlloc: ColorAllocCard[]) {
+    return this.http.post(this.baseUrl + "Master/DelColorAll" , colorAlloc , httpOptions);
+  }
+
+  //#endregion "Color Allocation"
+
+  //#region "Size Allocation"
+
+  getSizeAllocDetails(id: number) {
+    return this.http.get<SizeAllocation[]>(this.baseUrl + "Master/SizeAlloc/" + id , httpOptions);
+  }
+  
+  saveSizeAllocation(sizeAlloc: SizeAllocCard[]) {
+    return this.http.post(this.baseUrl + "Master/SaveSizeAll" , sizeAlloc , httpOptions);
+  }
+  
+  deleteSizeAllocation(sizeAlloc: SizeAllocCard[]) {
+    return this.http.post(this.baseUrl + "Master/DelSizeAll" , sizeAlloc , httpOptions);
+  }
+  
+    //#endregion "Color Allocation"DelSizeAll
 
   //#endregion "Color"
 
@@ -161,6 +194,10 @@ export class MasterService {
       this.baseUrl + 'Master/Articles',
       httpOptions
     );
+  }
+
+  getArticlePrices(articleId: number) {
+    return this.http.get<any>(this.baseUrl + 'Master/ArtPrice/' + articleId , httpOptions );
   }
 
   saveArticle(article: Article) {
@@ -204,6 +241,22 @@ export class MasterService {
   }
 
   //#endregion "Units"
+
+  //#region "Special Instruction"
+
+  getSpecialInstruction() {
+    return this.http.get<SpecialInstruction[]>(this.baseUrl + 'Master/SpeInst' , httpOptions);
+  }
+
+  //#endregion "Speacial Instruction"
+  
+  //#region "Unit Conversion"
+
+  getUnitConversion() {
+    return this.http.get<UnitConversion[]>(this.baseUrl + 'Master/UnitConv', httpOptions);
+  }
+
+  //#endregion "Unit Conversion"
 
   //#region  "StoreSite"
 
@@ -545,6 +598,14 @@ export class MasterService {
 
   //#endregion "Currency"
 
+  //#region "Article UOM Conversion"
+
+  getArticleUOMConversion(articleId: number) {
+    return this.http.get<any[]>( this.baseUrl + 'Master/ArtBase/' + articleId, httpOptions );
+  }
+
+  //#endregion "Article UOM Conversion"
+
   //#region "Product Definition"
 
   getProductDefinitionDt(prodHeaderId: number) {
@@ -594,6 +655,18 @@ export class MasterService {
   }
 
   //#endregion "Costing Group"
+
+  //#region "Flute Type"
+
+  getFluteType(locId: number) {
+    return this.http.get<FluteType[]>(
+      this.baseUrl + 'Master/FluteType/' + locId,
+      httpOptions
+    );
+  }
+
+  //#endregion "Flute Type" 
+
 
   //#region "Serial No"
 

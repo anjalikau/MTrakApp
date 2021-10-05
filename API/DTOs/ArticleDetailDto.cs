@@ -12,12 +12,12 @@ namespace API.DTOs
         public string SizeCardName {get;set;}
         public string ColorCardName {get;set;}
         public string UnitCode {get;set;}
-        public string MeasurementCode {get;set;}
+        public string Measurement {get;set;}
         public int ItemTypeId {get;set;}
         public int UnitId {get;set;}
         public int MeasurementId {get;set;}
-        public double BoardLength {get;set;}
-        public double BoardWidth {get;set;}
+        public int GSM {get;set;}
+        // public double BoardWidth {get;set;}
         public double RollWidth {get;set;}
         public int ColorCardId {get;set;}
         public int SizeCardId {get;set;}

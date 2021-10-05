@@ -1,0 +1,50 @@
+
+<div class="card card-default">
+    <!-- <div class="card-header">
+        <h3 class="card-title">Sales Order</h3>       
+    </div> -->
+
+    <div class="card-body">
+            <div class="row">
+                <div class="col-11">
+                    <h6 class="bg-secondary">
+                        <!-- <i class="fas fa-file-alt"></i>  -->
+                        Costing List
+                    </h6>
+                </div>
+            </div>            
+
+            <div class="row">
+                <igx-grid #costListGrid class="hierarchicalGrid" [data]="costNumberList" (columnResized)="onResize($event)"
+                    [autoGenerate]="false" [paging]="true" [rowEditable]="false" cellSelection="none" height="600px" displayDensity="compact"
+                     [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [primaryKey]="'autoId'" [allowAdvancedFiltering]="true"
+                     [rowSelection]="'Single'" [groupingExpressions]='expr' > 
+                    <igx-column [width]="'80px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                        <ng-template igxCell let-cell="cell">                            
+                            <button igxButton="icon" class="fab-compact" (click)="onViewCostingDetails($event,cell.cellID)">
+                                <igx-icon family="material">visibility</igx-icon>
+                            </button>
+                        </ng-template>
+                    </igx-column>                   
+                    <igx-column [field]="'refNo'" [header]="'Ref No'" [resizable]="true" [dataType]="'string'" [sortable]="true"
+                       [width]="'200px'" [editable]="false" [groupable]="true">
+                    </igx-column>                    
+                    <igx-column [field]="'versionControl'" [header]="'Version'" [resizable]="true" [dataType]="'number'" [sortable]="true"
+                        [width]="'100px'" [editable]="false">
+                     </igx-column>
+                    <igx-column [field]="'transDate'" [header]="'Trans Date'" [resizable]="true" [dataType]="'date'" [sortable]="true"
+                        [width]="'200px'" [editable]="false">
+                    </igx-column>
+                    <igx-column [field]="'customer'" [header]="'Customer'" [resizable]="true" [dataType]="'string'" [sortable]="true"
+                        [width]="'300px'" [editable]="false">
+                    </igx-column>                   
+                    
+                </igx-grid>
+            </div>
+                   
+    </div>
+</div>
+
+
+
+
