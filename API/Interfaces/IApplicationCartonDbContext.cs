@@ -66,7 +66,7 @@ namespace API.Interfaces
         DbSet<MstrFlexFieldValueList> MstrFlexFieldValueList { get;  set ; }
         DbSet<MstrCatProductType> MstrCatProductType { get;  set ; }
         DbSet<MstrProdTypeGroup> MstrProdTypeGroup { get;  set ; }
-        DbSet<MstrCodeSetting> MstrCodeSetting {get; set;}
+        DbSet<MstrCodeDefinition> MstrCodeDefinition {get; set;}
         DbSet<MstrRejectionReasons> MstrRejeReasons {get; set;}
         DbSet<TransDispatchHeader> TransDispatchHeader {get; set;}
         DbSet<TransDispatchDetails> TransDispatchDetails {get; set;}

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -469,46 +470,61 @@ namespace API.Repository
             return sizeList;
         } 
 
-        public async Task<ArticleReturnDto> SaveArticleAsync(MstrArticle article)
+        public async Task<ArticleReturnDto> SaveArticleAsync(SaveArticleDto article)
         {
+            DataTable flexField = new DataTable();
             DynamicParameters para = new DynamicParameters();
 
-            para.Add("AutoId" , article.AutoId);
-            para.Add("StockCode", article.StockCode.Trim());
-            para.Add("ArticleName", article.ArticleName.Trim());
-            para.Add("Description1", article.Description1.Trim());
-            para.Add("Description2", article.Description2.Trim());
-            para.Add("CategoryId", article.CategoryId);
-            para.Add("ProTypeId", article.ProTypeId);
-            para.Add("ProGroupId", article.ProGroupId);
-            para.Add("ItemType", article.ItemType);
-            para.Add("UnitId", article.StorageUnitId);
-            para.Add("MeasurementId", article.MeasurementId);
-            para.Add("GSM", article.GSM);
-            // para.Add("BoardWidth", article.BoardWidth);
-            para.Add("RollWidth", article.RollWidth);
-            para.Add("ColorCardId", article.ColorCardId);
-            para.Add("SizeCardId", article.SizeCardId);
-            para.Add("SalesPrice", article.SalesPrice);
-            para.Add("QtyInStock", article.QtyInStock);
-            para.Add("AvgCostPrice", article.AvgCostPrice);
-            para.Add("LastCostPrice", article.LastCostPrice);
-            para.Add("MaxCostPrice", article.MaxCostPrice);
-            para.Add("Width", article.Width);
-            para.Add("Height", article.Height);
-            para.Add("Length", article.Length);
-            para.Add("PODate", article.PODate);
-            para.Add("UserId", article.CreateUserId);
-            // para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+            flexField.Columns.Add("FieldId", typeof(int));
+            flexField.Columns.Add("FieldCode", typeof(string));
+            flexField.Columns.Add("FieldName", typeof(string));
+            flexField.Columns.Add("DataType", typeof(string));
+            flexField.Columns.Add("ValueList", typeof(bool));
+            flexField.Columns.Add("bFlexFieldValue", typeof(bool));
+            flexField.Columns.Add("dFlexFieldValue", typeof(DateTime));
+            flexField.Columns.Add("iFlexFeildValue", typeof(int));
+            flexField.Columns.Add("fFlexFeildValue", typeof(decimal));
+            flexField.Columns.Add("cFlexFeildValue", typeof(string));
+
+            para.Add("AutoId" , article.Article.AutoId);
+            para.Add("StockCode", article.Article.StockCode.Trim());
+            para.Add("ArticleName", article.Article.ArticleName.Trim());
+            para.Add("Description1", article.Article.Description1.Trim());
+            para.Add("Description2", article.Article.Description2.Trim());
+            para.Add("CategoryId", article.Article.CategoryId);
+            para.Add("ProTypeId", article.Article.ProTypeId);
+            para.Add("ProGroupId", article.Article.ProGroupId);
+            para.Add("ItemType", article.Article.ItemType);
+            para.Add("UnitId", article.Article.StorageUnitId);
+            para.Add("MeasurementId", article.Article.MeasurementId);
+            para.Add("ColorCardId", article.Article.ColorCardId);
+            para.Add("SizeCardId", article.Article.SizeCardId);
+            para.Add("SalesPrice", article.Article.SalesPrice);
+            para.Add("AvgCostPrice", article.Article.AvgCostPrice);
+            para.Add("LastCostPrice", article.Article.LastCostPrice);
+            para.Add("MaxCostPrice", article.Article.MaxCostPrice);
+            para.Add("UserId", article.Article.CreateUserId);
+
+            foreach (var item in article.FlexField)
+            {
+                flexField.Rows.Add(item.FlexFieldId,
+                                    item.FlexFieldCode ,
+                                    item.FlexFieldName ,
+                                    item.DataType ,
+                                    item.ValueList,
+                                    item.bFlexFieldValue,
+                                    item.dFlexFieldValue,
+                                    item.iFlexFeildValue,
+                                    item.fFlexFeildValue,
+                                    item.cFlexFeildValue);
+            } 
+
+            para.Add("FlexFieldDT", flexField.AsTableValuedParameter("FlexFieldType"));       
 
             var result = await DbConnection.QueryFirstOrDefaultAsync<ArticleReturnDto>("spMstrArticleSave", para
                 , commandType: CommandType.StoredProcedure);            
 
             return result;
-            // var result = await DbConnection.ExecuteAsync("spMstrArticleSave", para
-            //     , commandType: CommandType.StoredProcedure);            
-
-            // return para.Get<int>("Result");
         }
 
         public async Task<IEnumerable<ArticleDetailDto>> GetArtileDetailsAsync(ArticleSerchDto article) 

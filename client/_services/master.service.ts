@@ -200,7 +200,7 @@ export class MasterService {
     return this.http.get<any>(this.baseUrl + 'Master/ArtPrice/' + articleId , httpOptions );
   }
 
-  saveArticle(article: Article) {
+  saveArticle(article: any) {
     return this.http.post(this.baseUrl + 'Master/SaveArticle' , article , httpOptions)
   }
 
@@ -212,9 +212,9 @@ export class MasterService {
 
   //#region "Code Settings"
 
-  getCodeSettings() {
-    return this.http.get<any[]>(this.baseUrl + 'Master/CodeSett' , httpOptions);
-  }
+  // getCodeSettings() {
+  //   return this.http.get<any[]>(this.baseUrl + 'Master/CodeSett' , httpOptions);
+  // }
 
   //#endregion "Code Settings"
 

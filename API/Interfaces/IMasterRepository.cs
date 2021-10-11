@@ -65,7 +65,7 @@ namespace API.Interfaces
         Task<int> DeactiveFlexFieldDtAsync(MstrFlexFieldDetails flexFieldDt);
         Task<int> SaveFlexFieldValListAsync(MstrFlexFieldValueList flexDetailsVal);
         Task<int> DeleteFlexFieldValListAsync(MstrFlexFieldValueList flexDetailsVal);
-        Task<ArticleReturnDto> SaveArticleAsync(MstrArticle article);
+        Task<ArticleReturnDto> SaveArticleAsync(SaveArticleDto article);
         Task<IEnumerable<ArticleDetailDto>> GetArtileDetailsAsync(ArticleSerchDto article);
         Task<IEnumerable<CatProdTypeDto>> GetCatProductTypeDtAsync(int catId);
         Task<int> AssignCatProdTypeAsync(List<MstrCatProductType> prod);

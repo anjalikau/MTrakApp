@@ -18,7 +18,7 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { MainsidebarComponent } from './mainsidebar/mainsidebar.component';
 import { FooterComponent } from './footer/footer.component';
 import { UserRegisterComponent } from './users/user-register/user-register.component';
-import { IgxActionStripModule, IgxAvatarModule, IgxCardModule, IgxCheckboxModule, IgxComboModule, IgxDatePickerModule, IgxDialogModule, IgxDividerModule, IgxGridModule, IgxHierarchicalGridModule, IgxIconModule, IgxInputGroupModule, IgxMaskModule, IgxTabsModule, IgxTooltipModule } 
+import { IgxActionStripModule, IgxAvatarModule, IgxCardModule, IgxCheckboxModule, IgxComboModule, IgxDatePickerModule, IgxDialogModule, IgxDividerModule, IgxGridModule, IgxHierarchicalGridModule, IgxIconModule, IgxInputGroupModule, IgxMaskModule, IgxRadioModule, IgxTabsModule, IgxTooltipModule } 
 from 'igniteui-angular';
 import { UserPwchangeComponent } from './users/user-pwchange/user-pwchange.component';
 import { MenuListComponent } from './users/menu-list/menu-list.component';
@@ -166,6 +166,7 @@ import { CostListComponent } from './transaction/cost-list/cost-list.component';
     IgxComboModule,
     IgxInputGroupModule,
     IgxCheckboxModule,
+    IgxRadioModule,
     IgxGridModule,
     IgxTabsModule,
     IgxMaskModule,

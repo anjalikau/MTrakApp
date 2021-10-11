@@ -19,20 +19,20 @@ namespace API.Entities
         public int ItemType {get;set;}
         public int StorageUnitId {get;set;}
         public int MeasurementId {get;set;}
-        public int GSM {get;set;}
+        // public int GSM {get;set;}
         // public double ? BoardWidth {get;set;}
-        public double ? RollWidth {get;set;}
+        // public double ? RollWidth {get;set;}
         public int ColorCardId {get;set;}
         public int SizeCardId {get;set;}
         public decimal SalesPrice {get;set;}
-	    public int QtyInStock {get;set;}
+	    // public int QtyInStock {get;set;}
 	    public decimal AvgCostPrice {get;set;}
 	    public decimal LastCostPrice {get;set;}
 	    public decimal MaxCostPrice {get;set;}
-        public double Length {get;set;}
-	    public double Width {get;set;}
-	    public double Height {get;set;}
-        public DateTime PODate {get;set;}
+        // public double Length {get;set;}
+	    // public double Width {get;set;}
+	    // public double Height {get;set;}
+        // public DateTime PODate {get;set;}
         public int ? CreateUserId { get; set; }
         public DateTime ? CreateDateTime { get; set; }
         public int ? UpdateUserId { get; set; }

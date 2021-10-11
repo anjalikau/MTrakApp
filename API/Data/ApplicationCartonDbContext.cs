@@ -66,7 +66,7 @@ namespace API.Data
         public DbSet<MstrFlexFieldValueList> MstrFlexFieldValueList { get;  set ; }
         public DbSet<MstrCatProductType> MstrCatProductType { get;  set ; }
         public DbSet<MstrProdTypeGroup> MstrProdTypeGroup { get;  set ; }
-        public DbSet<MstrCodeSetting> MstrCodeSetting {get; set;}
+        public DbSet<MstrCodeDefinition> MstrCodeDefinition {get; set;}
         public DbSet<MstrRejectionReasons> MstrRejeReasons {get; set;}
         public DbSet<TransDispatchHeader> TransDispatchHeader {get; set;}
         public DbSet<TransDispatchDetails> TransDispatchDetails {get; set;}

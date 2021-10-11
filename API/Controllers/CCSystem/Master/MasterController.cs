@@ -248,11 +248,11 @@ namespace API.Controllers.CCSystem.Master
                         proGroupId = am.aps.ap.au.a.ProGroupId,
                         articleName = am.aps.ap.au.a.ArticleName,
                         stockCode = am.aps.ap.au.a.StockCode,
-                        height = am.aps.ap.au.a.Height,
-                        width = am.aps.ap.au.a.Width,
-                        length = am.aps.ap.au.a.Length,
-                        GSM = am.aps.ap.au.a.GSM,                        
-                        rollWidth = am.aps.ap.au.a.RollWidth,
+                        // height = am.aps.ap.au.a.Height,
+                        // width = am.aps.ap.au.a.Width,
+                        // length = am.aps.ap.au.a.Length,
+                        // GSM = am.aps.ap.au.a.GSM,                        
+                        // rollWidth = am.aps.ap.au.a.RollWidth,
                         description1 = am.aps.ap.au.a.Description1,
                         description2 = am.aps.ap.au.a.Description2,
                         avgCostPrice = am.aps.ap.au.a.AvgCostPrice,
@@ -286,7 +286,7 @@ namespace API.Controllers.CCSystem.Master
         }
 
         [HttpPost("SaveArticle")]
-        public async Task<IActionResult> SaveArticle(MstrArticle article)
+        public async Task<IActionResult> SaveArticle(SaveArticleDto article)
         {
             var result = await _masterRepository.SaveArticleAsync(article);
             return Ok(result);
@@ -336,14 +336,14 @@ namespace API.Controllers.CCSystem.Master
 
         #region "CodeSettings"
 
-        [HttpGet("CodeSett")]
-        public async Task<IActionResult> GetCodeSettingDetails() 
-        {
-            var result = await _context.MstrCodeSetting
-                .Select(x => new {x.ProdGroupId , x.ProdTypeId , x.isLength , x.isWidth , x.isHeight})
-                .ToListAsync();
-            return Ok(result);
-        }
+        // [HttpGet("CodeSett")]
+        // public async Task<IActionResult> GetCodeSettingDetails() 
+        // {
+        //     var result = await _context.MstrCodeDefinition
+        //         .Select(x => new {x.ProdGroupId , x.ProdTypeId , x.isLength , x.isWidth , x.isHeight})
+        //         .ToListAsync();
+        //     return Ok(result);
+        // }
 
         #endregion "CodeSettings"
 
@@ -1134,8 +1134,7 @@ namespace API.Controllers.CCSystem.Master
                 .Select(x => new {
                     x.AutoId , x.FlexFieldCode , x.FlexFieldName , x.Mandatory 
                     , x.ModuleId , x.ValueList , x.DataType 
-                    , fieldName = "flexField" + x.AutoId }
-                    )
+                    })
                 .ToListAsync();
 
             return Ok(result);

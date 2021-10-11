@@ -16,19 +16,30 @@ namespace API.DTOs
         public int ItemTypeId {get;set;}
         public int UnitId {get;set;}
         public int MeasurementId {get;set;}
-        public int GSM {get;set;}
-        // public double BoardWidth {get;set;}
-        public double RollWidth {get;set;}
+        // public int GSM {get;set;}
+        // // public double BoardWidth {get;set;}
+        // public double RollWidth {get;set;}
         public int ColorCardId {get;set;}
         public int SizeCardId {get;set;}
         public decimal SalesPrice {get;set;}
-	    public int QtyInStock {get;set;}
+	    // public int QtyInStock {get;set;}
 	    public decimal AvgCostPrice {get;set;}
 	    public decimal LastCostPrice {get;set;}
-	    public decimal MaxCostPrice {get;set;}
-        public float Length {get;set;}
-	    public float Width {get;set;}
-	    public float Height {get;set;}
-        public DateTime PODate {get;set;}
+	    public decimal MaxCostPrice {get;set;}       
+        public int FlexFieldId {get;set;}
+        public long ArticleId {get;set;}
+        public bool bFlexFieldValue {get;set;}
+        public DateTime dFlexFieldValue {get;set;}
+        public int iFlexFeildValue {get;set;}
+        public double fFlexFeildValue {get;set;}
+        public string cFlexFeildValue {get;set;}
+        public string FlexFieldCode {get;set;}
+        public string FlexFieldName {get;set;}
+        public char DataType {get;set;}
+        public bool ValueList {get;set;}
+        // public float Length {get;set;}
+	    // public float Width {get;set;}
+	    // public float Height {get;set;}
+        // public DateTime PODate {get;set;}
     }
 }

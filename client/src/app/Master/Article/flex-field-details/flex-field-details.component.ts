@@ -104,12 +104,11 @@ export class FlexFieldDetailsComponent implements OnInit {
 
   loadDataType() {
     this.dataTypeList = [
-      { type: 'Integer', typeId: 'I' },
+      { type: 'Number', typeId: 'N' },
       { type: 'Boolean', typeId: 'B' },
-      { type: 'Varchar', typeId: 'V' },
-      { type: 'Char', typeId: 'C' },
+      { type: 'Text', typeId: 'T' },      
       { type: 'Date', typeId: 'D' },
-      { type: 'Float', typeId: 'F' },
+      { type: 'Decimal', typeId: 'F' }
     ];
   }
 

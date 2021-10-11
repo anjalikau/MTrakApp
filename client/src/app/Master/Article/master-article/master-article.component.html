@@ -53,10 +53,20 @@
                 </div>              
             </div>         
         
-        </form> 
+        </form>
+<!--<div class="row">
+            <igx-hierarchical-grid #hierarchicalGrid [data]="articleList" [autoGenerate]="true">
+                <igx-row-island [key]="'Albums'" [autoGenerate]="true">
+                    <igx-row-island [key]="'Songs'" [autoGenerate]="true">
+                    </igx-row-island>
+                </igx-row-island>
+                <igx-row-island [key]="'FlexFields'" [autoGenerate]="true">
+                </igx-row-island>
+            </igx-hierarchical-grid>
+        </div> -->
 
         <div class="row">
-            <igx-grid #articleGrid [data]="articleList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+            <igx-hierarchical-grid #articleGrid [data]="articleList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
                 [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
                 height="500px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
                 [allowAdvancedFiltering]="true" [rowSelection]="'Single'"> 
@@ -67,17 +77,6 @@
                             data-target="#modalArticle">
                             <igx-icon family="material">edit</igx-icon>
                         </button>
-                        <!-- <div *ngIf="!cell.value; then thenBlock else elseBlock"></div>
-                        <ng-template #thenBlock>
-                            <button igxButton="icon" class="fab-compact" (click)="active($event ,cell.cellID)">
-                                <igx-icon class="icon-red" family="material">toggle_off</igx-icon>
-                            </button>
-                        </ng-template>
-                        <ng-template #elseBlock>
-                            <button igxButton="icon" class="fab-compact" (click)="deactive($event ,cell.cellID)">
-                                <igx-icon class="icon-green" family="material">toggle_on</igx-icon>
-                            </button>
-                        </ng-template> -->
                     </ng-template>
                 </igx-column>
                 <igx-column [field]="'stockCode'" [header]="'Stock Code'" [resizable]="true" [dataType]="'string'" [sortable]="true">
@@ -98,22 +97,6 @@
                 </igx-column>
                 <igx-column [field]="'measurement'" [header]="'Measurement'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                 </igx-column>
-                <igx-column [field]="'poDate'" [header]="'PO Date'" [resizable]="true" [dataType]="'date'" [pipeArgs]="formatDateOptions" [sortable]="true">
-                </igx-column>
-                <igx-column [field]="'length'" [header]="'Length'" [resizable]="true" [dataType]="'number'" [sortable]="true">
-                </igx-column>
-                <igx-column [field]="'width'" [header]="'Width'" [resizable]="true" [dataType]="'number'" [sortable]="true">
-                </igx-column>
-                <igx-column [field]="'height'" [header]="'Height'" [resizable]="true" [dataType]="'number'" [sortable]="true">
-                </igx-column>
-                <igx-column [field]="'qtyInStock'" [header]="'QtyInStock'" [resizable]="true" [dataType]="'number'" [sortable]="true">
-                </igx-column>
-                <igx-column [field]="'gsm'" [header]="'GSM'" [resizable]="true" [dataType]="'number'" [sortable]="true">
-                </igx-column>
-                <!-- <igx-column [field]="'boardWidth'" [header]="'Board Width'" [resizable]="true" [dataType]="'number'" [sortable]="true">
-                </igx-column> -->
-                <igx-column [field]="'rollWidth'" [header]="'Roll Width'" [resizable]="true" [dataType]="'number'" [sortable]="true">
-                </igx-column>
                 <igx-column [field]="'salesPrice'" [header]="'SalesPrice'" [resizable]="true" [dataType]="'number'" [sortable]="true">
                 </igx-column>
                 <igx-column [field]="'lastCostPrice'" [header]="'LastCostPrice'" [resizable]="true" [dataType]="'number'" [sortable]="true">
@@ -122,8 +105,15 @@
                 </igx-column>
                 <igx-column [field]="'maxCostPrice'" [header]="'MaxCostPrice'" [resizable]="true" [dataType]="'number'" [sortable]="true">
                 </igx-column>              
-    
-            </igx-grid>
+                <igx-row-island [key]="'FlexFields'">
+                    <igx-column [field]="'flexFieldName'" [header]="'FieldName'" [resizable]="true" [dataType]="'string'" 
+                            [sortable]="true" [width]="'200px'" >
+                    </igx-column>
+                    <igx-column [field]="'flexFieldValue'" [header]="'FieldValue'" [resizable]="true" [dataType]="'string'" 
+                            [sortable]="true" [width]="'120px'" >
+                    </igx-column>
+                </igx-row-island>
+            </igx-hierarchical-grid>
         </div>
        
     </div>
@@ -143,210 +133,246 @@
                 <form [formGroup]="articleForm" (ngSubmit)="articleForm.valid" autocomplete="off">
                     
                     <div class="row">
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <igx-input-group>
-                                    <input igxInput type="text" formControlName="stockCode" />
-                                    <label igxLabel for="stockCode"> Stock Code </label>
-                                </igx-input-group>
-                            </div>
-                        </div>
-            
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <igx-input-group>
-                                    <input igxInput type="text" formControlName="articleName" />
-                                    <label igxLabel for="articleName"> Article Name</label>
-                                </igx-input-group>
-                            </div>
-                        </div>
-        
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <igx-input-group>
-                                    <input igxInput type="text" formControlName="description1" />
-                                    <label igxLabel for="description1"> Descriprion 1</label>
-                                </igx-input-group>
+                        <div class="col-12 col-md-12 col-lg-6 order-2 order-md-1">                           
+                            <div class="row">
+                                <div class="col-12 col-md-5">
+                                    <div class="form-group">
+                                        <igx-input-group>
+                                            <input igxInput type="text" formControlName="stockCode" />
+                                            <label igxLabel for="stockCode"> Stock Code </label>
+                                        </igx-input-group>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-7">
+                                    <div class="form-group">
+                                        <igx-input-group>
+                                            <input igxInput type="text" formControlName="articleName" />
+                                            <label igxLabel for="articleName"> Article Name</label>
+                                        </igx-input-group>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-md-2">
-                            <div class="group">
-                                <igx-date-picker id="pODate" formControlName="pODate">
-                                    <label igxLabel>PO Date</label>
-                                </igx-date-picker>
+                        <div class="col-12 col-md-12 col-lg-6 order-2 order-md-1">                       
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <igx-input-group>
+                                            <input igxInput type="text" formControlName="description1" />
+                                            <label igxLabel for="description1"> Descriprion 1</label>
+                                        </igx-input-group>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <igx-input-group>
+                                            <input igxInput type="text" formControlName="description2" />
+                                            <label igxLabel for="description2"> Descriprion 2 </label>
+                                        </igx-input-group>
+                                    </div>
+                                </div>
+                               
                             </div>
-                        </div> 
-                        
+                        </div>                      
+                       
                     </div>
 
-                    <div class="row"> 
-                        
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <igx-input-group>
-                                    <input igxInput type="text" formControlName="description2" />
-                                    <label igxLabel for="description2"> Descriprion 2 </label>
-                                </igx-input-group>
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-lg-6 order-2 order-md-1">
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label> Measurement </label>
+                                        <igx-combo #measurement id="measurementId" class="combo" displayKey="code" valueKey="autoId"
+                                            [itemsMaxHeight]="250" [data]="measurList" placeholder="Measurement"
+                                            (onSelectionChange)="singleSelection($event)" formControlName="measurementId"
+                                            searchPlaceholder="Search...">
+                                        </igx-combo>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label> Item Type </label>
+                                        <igx-combo #itemType id="itemType" class="combo" displayKey="type" valueKey="typeId"
+                                            [itemsMaxHeight]="250" [data]="itemTypeList" placeholder="Item Type"
+                                            (onSelectionChange)="singleSelection($event)" formControlName="itemType"
+                                            searchPlaceholder="Search...">
+                                        </igx-combo>
+                                    </div>
+                                </div>
+                    
                             </div>
-                        </div> 
+                        </div>
+
+                        <div class="col-12 col-md-12 col-lg-6 order-2 order-md-1">
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label> Color Card </label>
+                                        <igx-combo #colorCard id="colorCardId" class="combo" displayKey="name" valueKey="autoId"
+                                            [itemsMaxHeight]="250" [data]="colorCardList" placeholder="Color Card"
+                                            (onSelectionChange)="singleSelection($event)" formControlName="colorCardId"
+                                            searchPlaceholder="Search...">
+                                        </igx-combo>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label> Size Card </label>
+                                        <igx-combo #sizeCard id="sizeCardId" class="combo" displayKey="name" valueKey="autoId"
+                                            [itemsMaxHeight]="250" [data]="sizeCardList" placeholder="Size Card"
+                                            (onSelectionChange)="singleSelection($event)" formControlName="sizeCardId"
+                                            searchPlaceholder="Search...">
+                                        </igx-combo>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                    
+                    </div>    
+               
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-lg-6 order-2 order-md-1">
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group">
+                                        <label> Storage Unit </label>
+                                        <igx-combo #unit id="unitId" class="combo" displayKey="code" valueKey="autoId" [itemsMaxHeight]="250"
+                                            [data]="unitList" placeholder="Unit" (onSelectionChange)="singleSelection($event)"
+                                            formControlName="unitId" searchPlaceholder="Search...">
+                                        </igx-combo>
+                                    </div>
+                                </div>       
+                            </div>                                                
+                        </div>
+
+                        <div class="col-12 col-md-12 col-lg-6 order-2 order-md-1">
+                            <div class="row">
+                                <div class="col-12 col-md-3">
+                                    <div class="form-group">
+                                        <igx-input-group>
+                                            <input igxInput type="number" formControlName="salesPrice" />
+                                            <label igxLabel for="salesPrice"> Sales Price</label>
+                                        </igx-input-group>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="form-group">
+                                        <igx-input-group>
+                                            <input igxInput type="number" formControlName="avgCostPrice" />
+                                            <label igxLabel for="avgCostPrice"> Avg CostPrice</label>
+                                        </igx-input-group>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="form-group">
+                                        <igx-input-group>
+                                            <input igxInput type="number" formControlName="lastCostPrice" />
+                                            <label igxLabel for="lastCostPrice"> Last CostPrice</label>
+                                        </igx-input-group>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="form-group">
+                                        <igx-input-group>
+                                            <input igxInput type="number" formControlName="maxCostPrice" />
+                                            <label igxLabel for="maxCostPrice"> Max CostPrice</label>
+                                        </igx-input-group>
+                                    </div>
+                                </div>
+                    
+                            </div>
+                        </div>
+                    </div>    
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <h6 class="bg-info">
+                                Field List
+                            </h6>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label> Field Name </label>  
+                                <igx-combo #cmbflexFeild class="combo" displayKey="flexFieldName" valueKey="autoId" [itemsMaxHeight]="250"
+                                            [data]="flexFieldList" placeholder="Field Name" (onSelectionChange)="singleSelection($event)"
+                                            formControlName="flexFieldName" searchPlaceholder="Search...">
+                                </igx-combo>
+                                <!-- (onSelectionChange)="onSelectFlexField($event)" -->
+                            </div>
+                        </div>
 
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label> Color Card </label>
-                                <igx-combo #colorCard id="colorCardId" class="combo" displayKey="name" valueKey="autoId" [itemsMaxHeight]="250"
-                                    [data]="colorCardList" placeholder="Color Card" (onSelectionChange)="singleSelection($event)"
-                                    formControlName="colorCardId" searchPlaceholder="Search...">
-                                </igx-combo>
+                                <div *ngIf="comboField">
+                                    <label> Value </label>
+                                    <igx-combo #flexFieldVal id="flexFieldVal" class="combo" displayKey="flexFieldName" valueKey="autoId"
+                                        [itemsMaxHeight]="250" [data]="flexValueList" placeholder="Flex Feilds"
+                                        (onSelectionChange)="singleSelection($event)" formControlName="flexFieldVal"
+                                        searchPlaceholder="Search...">
+                                    </igx-combo>
+                                </div>
+                        
+                                <div *ngIf="numberField">
+                                    <igx-input-group>
+                                        <input igxInput type="number" formControlName="FlexFieldVal" />
+                                        <label igxLabel for="flexFieldVal"> Value</label>
+                                    </igx-input-group>
+                                </div>
+                        
+                                <div *ngIf="textField">
+                                    <igx-input-group>
+                                        <input igxInput type="text" formControlName="flexFieldVal" />
+                                        <label igxLabel for="flexFieldVal"> Value</label>
+                                    </igx-input-group>
+                                </div>
+                        
+                                <div *ngIf="dateField">
+                                    <div class="group">
+                                        <igx-date-picker id="flexFieldVal" formControlName="flexFieldVal">
+                                            <label igxLabel>Value </label>
+                                        </igx-date-picker>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="radioField">                        
+                                    <igx-radio-group name="radioGroup" formControlName="flexFieldVal">
+                                        <igx-radio class="radio-sample" name="radio" value="Yes" labelPosition="before">Yes</igx-radio>
+                                        <igx-radio class="radio-sample" name="radio" value="No" labelPosition="before">No</igx-radio>                        
+                                    </igx-radio-group>                        
+                                </div>
                             </div>
                         </div>
-                    
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label> Size Card </label>
-                                <igx-combo #sizeCard id="sizeCardId" class="combo" displayKey="name" valueKey="autoId" [itemsMaxHeight]="250"
-                                    [data]="sizeCardList" placeholder="Size Card" (onSelectionChange)="singleSelection($event)"
-                                    formControlName="sizeCardId" searchPlaceholder="Search...">
-                                </igx-combo>
-                            </div>
-                        </div> 
-                        
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label> Measurement </label>
-                                <igx-combo #measurement id="measurementId" class="combo" displayKey="code" valueKey="autoId" [itemsMaxHeight]="250"
-                                    [data]="measurList" placeholder="Measurement" (onSelectionChange)="singleSelection($event)"
-                                    formControlName="measurementId" searchPlaceholder="Search...">
-                                </igx-combo>
+
+                        <div class="col-sm-1 offset-sm-1">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-success mr-3" (click)="addFlexField()">
+                                    <i class="fas fa-plus"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label> Item Type </label>
-                                <igx-combo #itemType id="itemType" class="combo" displayKey="type" valueKey="typeId" [itemsMaxHeight]="250"
-                                    [data]="itemTypeList" placeholder="Item Type" (onSelectionChange)="singleSelection($event)"
-                                    formControlName="itemType" searchPlaceholder="Search...">
-                                </igx-combo>
-                            </div>
-                        </div>
-                    
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label> Storage Unit </label>
-                                <igx-combo #unit id="unitId" class="combo" displayKey="code" valueKey="autoId" [itemsMaxHeight]="250"
-                                    [data]="unitList" placeholder="Unit" (onSelectionChange)="singleSelection($event)"
-                                    formControlName="unitId" searchPlaceholder="Search...">
-                                </igx-combo>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-1">
-                            <div class="form-group">
-                                <igx-input-group>
-                                    <input igxInput type="number" formControlName="qtyInStock" />
-                                    <label igxLabel for="qtyInStock"> Qty In Stock</label>
-                                </igx-input-group>
-                            </div>
-                        </div>
-        
-                        <div class="col-sm-1">
-                            <div class="form-group">
-                                <igx-input-group>
-                                    <input igxInput type="number" formControlName="gsm" />
-                                    <label igxLabel for="gsm"> GSM </label>
-                                </igx-input-group>
-                            </div>
-                        </div>
-        
-                        <!-- <div class="col-sm-1">
-                            <div class="form-group">
-                                <igx-input-group>
-                                    <input igxInput type="number" formControlName="boardWidth" />
-                                    <label igxLabel for="boardWidth"> Board Width </label>
-                                </igx-input-group>
-                            </div>
-                        </div>
-         -->
-                        <div class="col-sm-1">
-                            <div class="form-group">
-                                <igx-input-group>
-                                    <input igxInput type="number" formControlName="rollWidth" />
-                                    <label igxLabel for="rollWidth"> Roll Width</label>
-                                </igx-input-group>
-                            </div>
-                        </div>  
-                        
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <igx-input-group>
-                                    <input igxInput type="number" formControlName="length" />
-                                    <label igxLabel for="length"> Length</label>
-                                </igx-input-group>
-                            </div>
-                        </div>
-        
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <igx-input-group>
-                                    <input igxInput type="number" formControlName="width" />
-                                    <label igxLabel for="width"> Width </label>
-                                </igx-input-group>
-                            </div>
-                        </div>
-        
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <igx-input-group>
-                                    <input igxInput type="number" formControlName="height" />
-                                    <label igxLabel for="height"> Height </label>
-                                </igx-input-group>
-                            </div>
-                        </div>
-        
+                        <igx-grid #flexFieldGrid [data]="flexFieldDataList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+                            [primaryKey]="'flexFieldId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="300px"
+                            displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
+                            [allowAdvancedFiltering]="true" [rowSelection]="'Single'">                    
+                            <igx-column [width]="'50px'" [header]="' '" [selectable]="false" [sortable]="false" [resizable]="false">
+                                <ng-template igxCell let-cell="cell">
+                                    <button igxButton="icon" class="fab-compact" [disabled]="isEditMode" (click)="openConfirmDialog($event,cell.cellID)">
+                                        <igx-icon family="material">delete</igx-icon>
+                                    </button>                    
+                                </ng-template>
+                            </igx-column>
+                            <igx-column [field]="'flexFieldName'" [header]="'Field Name'" [resizable]="true" [dataType]="'string'"
+                                [sortable]="true">
+                            </igx-column>
+                            <igx-column [field]="'flexFieldValue'" [header]="'Value'" [resizable]="true" [dataType]="'string'"
+                                [sortable]="true">
+                            </igx-column>
+                        </igx-grid>
                     </div>
-            
-                    <div class="row">       
-                        
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <igx-input-group>
-                                    <input igxInput type="number" formControlName="salesPrice" />
-                                    <label igxLabel for="salesPrice"> Sales Price</label>
-                                </igx-input-group>
-                            </div>
-                        </div>
-            
-                        <div class="col-sm-1">
-                            <div class="form-group">
-                                <igx-input-group>
-                                    <input igxInput type="number" formControlName="avgCostPrice" />
-                                    <label igxLabel for="avgCostPrice"> Avg CostPrice</label>
-                                </igx-input-group>
-                            </div>
-                        </div>
-            
-                        <div class="col-sm-1">
-                            <div class="form-group">
-                                <igx-input-group>
-                                    <input igxInput type="number" formControlName="lastCostPrice" />
-                                    <label igxLabel for="lastCostPrice"> Last CostPrice</label>
-                                </igx-input-group>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-1">
-                            <div class="form-group">
-                                <igx-input-group>
-                                    <input igxInput type="number" formControlName="maxCostPrice" />
-                                    <label igxLabel for="maxCostPrice"> Max CostPrice</label>
-                                </igx-input-group>
-                            </div>
-                        </div>       
-                        
-                    </div>     
                 </form> 
             </div>
 
@@ -363,6 +389,11 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+
+<igx-dialog #dialog title="Confirmation" leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()"
+    rightButtonLabel="OK" (onRightButtonSelect)="onDialogOKSelected($event)"
+    message="Are you sure you want to delete the record ?">
+</igx-dialog>
 
 <!-- <div *ngFor="let fields of t.controls; let i = index" class="list-group list-group-flush">
             <div [formGroup]="fields" class="row">

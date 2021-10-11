@@ -1466,7 +1466,7 @@ export class CostingComponent implements OnInit {
     this.clearSubTotalControls();
 
     this.clearSpecInstruction();
-    this.baseMatForm.get('consBase').setValue(0);
+    // this.baseMatForm.get('consBase').setValue(0);
     this.prodDefiDetails = [];
     this.instructList = [];
     this.specInsForm.get('prodDefinition').reset();

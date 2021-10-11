@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxComboComponent, IgxGridComponent } from 'igniteui-angular';
+import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxComboComponent, IgxDialogComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
 import { resourceUsage } from 'node:process';
 import { Card } from 'src/app/_models/card';
@@ -34,11 +34,19 @@ export class MasterArticleComponent implements OnInit {
   articleList: any[];
   codeSettList: any[];
   flexValueList: FlexFieldValueList[];
+  flexFieldDataList: any;
   user: User;
   isEditMode: boolean = false;
   isProGroupSel: boolean = false;
   formTitle: string = 'New Article';
-
+  numberField: boolean = false;
+  textField: boolean = true;
+  comboField: boolean = false;
+  radioField: boolean = false;
+  dateField: boolean = false;
+  nameValuePairs: any[];
+  rowId: number = 0;
+  
   // Date options
   public dateOptions = {
     format: 'yyyy-MM-dd',
@@ -51,9 +59,12 @@ export class MasterArticleComponent implements OnInit {
   public col: IgxColumnComponent;
   public pWidth: string;
   public nWidth: string;
+  public selected: string;
 
   @ViewChild('articleGrid', { static: true })
   public articleGrid: IgxGridComponent;
+  @ViewChild('flexFieldGrid', { static: true })
+  public flexFieldGrid: IgxGridComponent;
 
   @ViewChild('category', { read: IgxComboComponent })
   public category: IgxComboComponent;
@@ -71,8 +82,15 @@ export class MasterArticleComponent implements OnInit {
   public sizeCard: IgxComboComponent;
   @ViewChild('itemType', { read: IgxComboComponent })
   public itemType: IgxComboComponent;
-
-  constructor(
+  @ViewChild('cmbflexFeild', { read: IgxComboComponent })
+  public cmbflexFeild: IgxComboComponent;
+  @ViewChild('flexFieldVal', { read: IgxComboComponent })
+  public flexFieldVal: IgxComboComponent;
+  
+  @ViewChild('dialog', { read: IgxDialogComponent })
+  public dialog: IgxDialogComponent;
+  
+ constructor(
     private fb: FormBuilder,
     private datePipe: DatePipe,
     private accountService: AccountService,
@@ -87,7 +105,7 @@ export class MasterArticleComponent implements OnInit {
     this.loadSizeCard();
     this.loadColorCard();
     this.loadItemType();
-    this.loadCodeSettings();
+    // this.loadCodeSettings();
   }
 
   initilizeForm() {
@@ -108,23 +126,22 @@ export class MasterArticleComponent implements OnInit {
       proGroupId: ['', Validators.required],
       itemType: [''],
       unitId: ['', Validators.required],
-      measurementId: [''],
+      measurementId: ['' , Validators.required],
       colorCardId: [''],
       sizeCardId: [''],
-      length: [''],
-      width: [''],
-      height: [''],
-      gsm: [''],
-      // boardWidth: [''],
-      rollWidth: [''],
-      salesPrice: [''],
-      qtyInStock: [''],
+      salesPrice: [''],    
       avgCostPrice: [''],
       lastCostPrice: [''],
       maxCostPrice: [''],
-      pODate: ['', Validators.required],
+      flexFieldName: [0],
+      flexFieldVal: [''],
     });
 
+    this.nameValuePairs = [
+      { name: 'Red Color', value: 'Red' },
+      { name: 'Green Color', value: 'Green' },
+      { name: 'Blue Color', value: 'Blue' },
+    ];
     // this.dynamicForm = this.fb.group({
     //   fields: new FormArray([])
     // });
@@ -134,38 +151,19 @@ export class MasterArticleComponent implements OnInit {
   // get f() { return this.dynamicForm.controls; }
   // get t() { return this.f.fields as FormArray; }
 
-  //   loadFlexFields(item) {
-  //     var obj = {
-  //       categoryId: this.articleForm.get('categoryId').value[0],
-  //       prodTypeId: item
-  //     };
+  ///// LOADS FLEX FIELD BASED ON CATEGORY AND PRODUCT TYPE
+  loadFlexFields(item) {
+    var obj = {
+      categoryId: this.articleForm.get('categoryId').value[0],
+      prodTypeId: item,
+    };
 
-  //     console.log(obj);
-  //     this.masterService.getFlexFieldCatPTWise(obj).subscribe((result) => {
-  //       this.flexFieldList = result
-  //       console.log(result);
-
-  //       const numberOfFields = result.length || 0;
-  //       if (this.t.length < numberOfFields) {
-  //         for (let i = this.t.length; i < numberOfFields; i++) {
-
-  //           var fieldName = result[i]["fieldName"];
-  //           console.log(result[i]["fieldName"]);
-  //           this.t.push(
-  //             this.fb.group({
-  //               [result[i]["fieldName"]]: ['', Validators.required]
-  //             })
-  //           );
-  //         }
-  //       } else {
-  //         for (let i = this.t.length; i >= numberOfFields; i--) {
-  //           this.t.removeAt(i);
-  //         }
-  //       }
-
-  //     });
-  //     console.log
-  // }
+    // console.log(obj);
+    this.masterService.getFlexFieldCatPTWise(obj).subscribe((result) => {
+      this.flexFieldList = result;
+      console.log(result);
+    });
+  }
 
   //// ALOW SINGLE SILECTION ONLY COMBO EVENT
   singleSelection(event: IComboSelectionChangeEventArgs) {
@@ -180,19 +178,50 @@ export class MasterArticleComponent implements OnInit {
     this.nWidth = event.newWidth;
   }
 
-  loadCodeSettings() {
-    this.masterService.getCodeSettings().subscribe((result) => {
-      this.codeSettList = result;
-      // console.log(this.codeSettList);
-    });
-  }
-
   onSelectProdGroup(event) {
     this.articleList = [];
     this.isProGroupSel = false;
     for (const item of event.added) {
       this.loadArticleDetails(item);
       this.isProGroupSel = true;
+    }
+  }
+
+  onSelectFlexField(event) {
+    for (const item of event.added) {
+      var selectField = this.flexFieldList.filter((x) => x.autoId == item);
+
+      if (selectField[0]['valueList'] == true) {
+        this.comboField = true;
+        this.textField = false;
+        this.numberField = false;
+        this.dateField = false;
+        this.radioField = false;
+      } else if (selectField[0]['dataType'] == 'T') {
+        this.comboField = false;
+        this.textField = true;
+        this.numberField = false;
+        this.dateField = false;
+        this.radioField = false;
+      } else if ( selectField[0]['dataType'] == 'N' || selectField[0]['dataType'] == 'F') {
+        this.textField = false;
+        this.numberField = true;
+        this.comboField = false;
+        this.dateField = false;
+        this.radioField = false;
+      } else if (selectField[0]['dataType'] == 'D') {
+        this.textField = false;
+        this.numberField = false;
+        this.comboField = false;
+        this.dateField = true;
+        this.radioField = false;
+      } else if (selectField[0]['dataType'] == 'B') {
+        this.textField = false;
+        this.numberField = false;
+        this.comboField = false;
+        this.dateField = false;
+        this.radioField = true;
+      }
     }
   }
 
@@ -214,19 +243,64 @@ export class MasterArticleComponent implements OnInit {
       },
       () => {
         if (articles.length > 0) {
-          for (let index = 0; index < articles.length; index++) {
-            var fieldLine: any = articles[index];
+          var autoId = 0,
+            flexLine = [];
+          // console.log(articles);
+
+          ///// Get Unique Article List
+          var uniqeArticle = articles.filter(
+            (arr, index, self) =>
+              index === self.findIndex((t) => t.autoId === arr.autoId)
+          );
+
+          ///// PUSH ITEM TYPE IN ARTICLE LIST
+          for (let b = 0; b < uniqeArticle.length; b++) {
+            autoId = uniqeArticle[b]['autoId'];
+            var fieldLine: any = uniqeArticle[b];
 
             ///// FILL ITEM TYPE
             var itemType = this.itemTypeList.filter(
-              (x) => x.typeId == articles[index]['itemTypeId']
+              (x) => x.typeId == uniqeArticle[b]['itemTypeId']
             );
-            // console.log(this.itemTypeList);
-            // console.log(articles[index]['itemTypeId']);
+
             if (itemType.length > 0) fieldLine.itemType = itemType[0]['type'];
             else fieldLine.itemType = '';
+
+            // console.log(uniqeArticle);
+            //// GET FLEX FIELD LIST FOR SAME ARTICLE
+            var flexFieldList = articles.filter((x) => x.autoId == autoId);
+            flexLine = [];
+
+            //// CREATE CHILD OBJECT AS FLEX FIELD
+            for (let a = 0; a < flexFieldList.length; a++) {
+              const element = flexFieldList[a];
+              var flexValue = 0;
+
+              if (element['dataType'] == 'F')
+                flexValue = element['fFlexFeildValue'];
+              else if (element['dataType'] == 'N')
+                flexValue = element['iFlexFeildValue'];
+              else if (element['dataType'] == 'T')
+                flexValue = element['cFlexFeildValue'];
+              else if (element['dataType'] == 'B')
+                flexValue = element['bFlexFeildValue'];
+              else if (element['dataType'] == 'D')
+                flexValue = element['dFlexFeildValue'];
+
+              var obj = {
+                dataType: element['dataType'],
+                flexFieldId: element['flexFieldId'],
+                flexFieldName: element['flexFieldName'],
+                flexFieldCode : element['flexFieldCode'],
+                flexFieldValue: flexValue,
+                valueList: element['valueList'],
+              };
+              flexLine.push(obj);
+            }
+
+            fieldLine.FlexFields = flexLine;
           }
-          this.articleList = articles;
+          this.articleList = uniqeArticle;
           // console.log(this.articleList);
         }
       }
@@ -237,6 +311,63 @@ export class MasterArticleComponent implements OnInit {
     this.masterService.getCategory().subscribe((result) => {
       this.categoryList = result;
     });
+  }
+
+  openConfirmDialog(event, cellId) {
+    this.rowId = cellId.rowID;  
+    this.dialog.open();
+  }
+
+  //// DELETE FLEX FIELD VALUE 
+  public onDialogOKSelected(event) {   
+    event.dialog.close();
+    //console.log(this.rowId);
+    if (this.rowId > 0) {
+      this.flexFieldGrid.deleteRow(this.rowId);
+    }
+  }
+
+  //// ADD NEW FLEX FIELD ITEM
+  addFlexField() {
+    var flexValue = 0, fieldCode = "";
+    var flexFieldId = this.articleForm.get('flexFieldName').value[0];
+
+    var selectedRowData = this.flexFieldGrid.data.filter((record) => {
+      return record.flexFieldId == flexFieldId;
+    })
+
+    if(selectedRowData.length > 0) {
+      this.toastr.warning("Field already added!!!");
+    } else {
+      var selectedRow = this.flexFieldList.filter(x => x.autoId == flexFieldId);
+
+      if (selectedRow[0]['valueList'] == true) 
+        flexValue = this.articleForm.get('flexFieldVal').value[0];
+      else
+        flexValue = this.articleForm.get('flexFieldVal').value; 
+        
+        var obj = {
+          dataType: selectedRow[0]['dataType'],
+          flexFieldId: flexFieldId,
+          flexFieldCode: selectedRow[0]['flexFieldCode'],
+          flexFieldName: this.cmbflexFeild.value,
+          flexFieldValue: flexValue,
+          valueList: selectedRow[0]['valueList'],
+        };
+      
+      this.flexFieldGrid.addRow(obj);
+    }   
+    this.clearFlexFields();
+  }
+
+  clearFlexFields() {
+    this.articleForm.get('flexFieldName').setValue("");
+    this.articleForm.get('flexFieldVal').setValue("");
+    this.textField = true;
+    this.numberField = false;
+    this.comboField = false;
+    this.dateField = false;
+    this.radioField = false;
   }
 
   onEditArticle(event, cellId) {
@@ -250,12 +381,9 @@ export class MasterArticleComponent implements OnInit {
     });
 
     this.formTitle = 'Update Article';
-    var poDate: Date = new Date(selectedRowData[0]['poDate']);
+    // var poDate: Date = new Date(selectedRowData[0]['poDate']);
 
-    //console.log(selectedRowData);
-    // console.log(selectedRowData[0]['poDate']);
-
-    this.articleForm.get('pODate').setValue(poDate);
+    // this.articleForm.get('pODate').setValue(poDate);
     this.articleForm.get('stockCode').setValue(selectedRowData[0]['stockCode']);
     this.articleForm.get('autoId').setValue(selectedRowData[0]['autoId']);
     this.articleForm
@@ -270,11 +398,6 @@ export class MasterArticleComponent implements OnInit {
     this.articleForm
       .get('avgCostPrice')
       .setValue(selectedRowData[0]['avgCostPrice']);
-    this.articleForm.get('gsm').setValue(selectedRowData[0]['gsm']);
-    // this.articleForm.get('boardWidth').setValue(selectedRowData[0]['boardWidth']);
-    this.articleForm.get('height').setValue(selectedRowData[0]['height']);
-    this.articleForm.get('length').setValue(selectedRowData[0]['length']);
-    this.articleForm.get('width').setValue(selectedRowData[0]['width']);
     this.articleForm
       .get('lastCostPrice')
       .setValue(selectedRowData[0]['lastCostPrice']);
@@ -282,13 +405,8 @@ export class MasterArticleComponent implements OnInit {
       .get('maxCostPrice')
       .setValue(selectedRowData[0]['maxCostPrice']);
     this.articleForm
-      .get('qtyInStock')
-      .setValue(selectedRowData[0]['qtyInStock']);
-    this.articleForm.get('rollWidth').setValue(selectedRowData[0]['rollWidth']);
-    this.articleForm
       .get('salesPrice')
       .setValue(selectedRowData[0]['salesPrice']);
-    // this.articleForm.get('itemType').setValue(selectedRowData[0]['itemTypeId']);
 
     this.itemType.setSelectedItem(selectedRowData[0]['itemTypeId'], true);
     this.unit.setSelectedItem(selectedRowData[0]['unitId'], true);
@@ -296,6 +414,8 @@ export class MasterArticleComponent implements OnInit {
     this.colorCard.setSelectedItem(selectedRowData[0]['colorCardId'], true);
     this.sizeCard.setSelectedItem(selectedRowData[0]['sizeCardId'], true);
 
+    ///// FILL FLEX FIELD GRID
+    this.flexFieldDataList = selectedRowData[0]['FlexFields'];
     /// disabled fileds
     this.disableArticleControls();
   }
@@ -324,7 +444,7 @@ export class MasterArticleComponent implements OnInit {
     this.articleList = [];
     for (const item of event.added) {
       this.loadProductGroup(item);
-      //this.loadFlexFields(item);
+      this.loadFlexFields(item);
     }
   }
 
@@ -369,50 +489,44 @@ export class MasterArticleComponent implements OnInit {
   validationControls() {
     var prodTypeId = this.articleForm.get('proTypeId').value;
     var prodGroupId = this.articleForm.get('proGroupId').value;
-    ///// check article code is automatic or not
+    ///// check article Name is automatic or not
     var selProdType = this.prodTypeList.filter(
       (x) => x.bAutoArticle == true && x.autoId == prodTypeId
     );
 
-    ///// IF PROD TYPE CODE IS ATOMATIC 
+    ///// IF PROD TYPE CODE IS ATOMATIC
     if (selProdType.length > 0) {
-      var codeSetLine = this.codeSettList.filter(
-        (x) => x.prodGroupId == prodGroupId && x.prodTypeId == prodTypeId
-      );
+      /// CHECK ALL MANDATORY FLEX FIELDS ARE ENTERED 
+      var flexFieldLine = this.flexFieldList.filter(x => x.mandatory == true );
 
-      if (codeSetLine.length > 0) {
-        if (
-          (this.articleForm.get('length').value == null ||
-            this.articleForm.get('length').value == 0) &&
-          codeSetLine[0]['isLength'] == true
-        ) {
-          this.toastr.warning('Length is required');
-          return false;
-        } else if (
-          (this.articleForm.get('width').value == null ||
-            this.articleForm.get('width').value == 0) &&
-          codeSetLine[0]['isWidth'] == true
-        ) {
-          this.toastr.warning('Width is required');
-          return false;
-        } else if (
-          (this.articleForm.get('height').value == null ||
-            this.articleForm.get('height').value == 0) &&
-          codeSetLine[0]['isHeight'] == true
-        ) {
-          this.toastr.warning('Height is required');
-          return false;
+      if (flexFieldLine.length > 0) {
+        for (let a = 0; a < flexFieldLine.length; a++) {
+          const element = flexFieldLine[a];
+
+          var selectedRow = this.flexFieldGrid.data.filter((record) => {
+            return record.flexFieldId == element["autoId"];
+          });
+          
+          ///// FLEX FIELD NOT IN THE LIST RETURN AN ERROR
+          if(selectedRow.length == 0) {
+            this.toastr.warning('Please enter mandatory fields !!!');
+            return false;
+          }            
         }
-      } else {
-        this.toastr.warning('Please enter code Settings !!!');
-        return false;
-      }
+      } 
+    }
+    else {
+      this.toastr.warning('Please enter Article Name !!!');
+      return false;
     }
     return true;
   }
 
   saveArticle() {
     if (this.validationControls()) {
+      var flexList = [] ;
+      var bFlexFieldValue = false, dFlexFieldValue = "1990-01-01", iFlexFeildValue = 0 , fFlexFeildValue= 0
+        , cFlexFeildValue = "";
       var user: User = JSON.parse(localStorage.getItem('user'));
       // console.log(this.articleForm.get('itemType').value);
 
@@ -459,30 +573,6 @@ export class MasterArticleComponent implements OnInit {
           this.articleForm.get('measurementId').value == null
             ? 0
             : this.articleForm.get('measurementId').value[0],
-        length:
-          this.articleForm.get('length').value == null
-            ? 0
-            : this.articleForm.get('length').value,
-        width:
-          this.articleForm.get('width').value == null
-            ? 0
-            : this.articleForm.get('width').value,
-        height:
-          this.articleForm.get('height').value == null
-            ? 0
-            : this.articleForm.get('height').value,
-        gsm:
-          this.articleForm.get('gsm').value == null
-            ? 0
-            : this.articleForm.get('gsm').value,
-        // boardWidth:
-        //   this.articleForm.get('boardWidth').value == null
-        //     ? 0
-        //     : this.articleForm.get('boardWidth').value,
-        rollWidth:
-          this.articleForm.get('rollWidth').value == null
-            ? 0
-            : this.articleForm.get('rollWidth').value,
         colorCardId:
           this.articleForm.get('colorCardId').value == null
             ? 0
@@ -494,11 +584,7 @@ export class MasterArticleComponent implements OnInit {
         salesPrice:
           this.articleForm.get('salesPrice').value == null
             ? 0
-            : this.articleForm.get('salesPrice').value,
-        qtyInStock:
-          this.articleForm.get('qtyInStock').value == null
-            ? 0
-            : this.articleForm.get('qtyInStock').value,
+            : this.articleForm.get('salesPrice').value,       
         avgCostPrice:
           this.articleForm.get('avgCostPrice').value == null
             ? 0
@@ -510,18 +596,48 @@ export class MasterArticleComponent implements OnInit {
         maxCostPrice:
           this.articleForm.get('maxCostPrice').value == null
             ? 0
-            : this.articleForm.get('maxCostPrice').value,
-        pODate: this.datePipe.transform(
-          this.articleForm.get('pODate').value,
-          'yyyy-MM-dd'
-        ),
+            : this.articleForm.get('maxCostPrice').value       
       };
 
-      // console.log(this.articleForm.get('pODate').value);
+      ////// ---------============= FLEX FIELD GRID DETAILS ==============------------------
+      var itemRows = this.flexFieldGrid.data;
 
+      itemRows.forEach((items) => {
+        if (items.dataType == "B")
+          bFlexFieldValue = items.flexFieldValue == "true" ? true : false;
+        else if (items.dataType == "D")
+          dFlexFieldValue = items.flexFieldValue;
+        else if (items.dataType == "N" || items.valueList == true)
+          iFlexFeildValue = parseInt(items.flexFieldValue);
+        else if (items.dataType == "F")
+          fFlexFeildValue = parseFloat(items.flexFieldValue);
+        else if (items.dataType == "S")
+          cFlexFeildValue = items.flexFieldValue;
+
+        var itemdata = {
+          flexFieldId: items.flexFieldId,
+          flexFieldName: items.flexFieldName,
+          flexFieldCode: items.flexFieldCode,
+          dataType: items.dataType,
+          valueList: items.valueList,
+          bFlexFieldValue: bFlexFieldValue == undefined ? 0 : bFlexFieldValue,
+          dFlexFieldValue: dFlexFieldValue,
+          iFlexFeildValue: iFlexFeildValue == undefined ? 0 : iFlexFeildValue,
+          fFlexFeildValue: fFlexFeildValue == undefined ? 0 : fFlexFeildValue,
+          cFlexFeildValue: cFlexFeildValue == undefined ? 0 : cFlexFeildValue
+        };
+        flexList.push(itemdata);
+      });
+
+      var artiObj = {
+        flexField : flexList,
+        article: obj
+      }
+
+      // console.log(this.articleForm.get('pODate').value);
       var prodGroupId = this.articleForm.get('proGroupId').value[0];
-      // console.log(obj);
-      this.masterService.saveArticle(obj).subscribe(
+      console.log(artiObj);
+      this.masterService.saveArticle(artiObj).subscribe(
         (result) => {
           //console.log(result);
           if (result['result'] == 1) {
@@ -553,22 +669,15 @@ export class MasterArticleComponent implements OnInit {
   }
 
   disableArticleControls() {
-    // this.articleForm.get('stockCode').disable();
+    this.articleForm.get('unitId').disable();
+    this.articleForm.get('measurementId').disable();
     this.articleForm.get('articleName').disable();
-    // this.articleForm.get('categoryId').disable();
-    // this.articleForm.get('proTypeId').disable();
-    // this.articleForm.get('proGroupId').disable();
-    this.articleForm.get('length').disable();
-    this.articleForm.get('width').disable();
-    this.articleForm.get('height').disable();
   }
 
   enableArticleControls() {
-    // this.articleForm.get('stockCode').enable();
+    this.articleForm.get('unitId').enable();
+    this.articleForm.get('measurementId').enable();
     this.articleForm.get('articleName').enable();
-    this.articleForm.get('length').enable();
-    this.articleForm.get('width').enable();
-    this.articleForm.get('height').enable();
   }
 
   clearArticleControls() {
@@ -576,21 +685,21 @@ export class MasterArticleComponent implements OnInit {
     this.formTitle = 'New Article';
 
     this.articleForm.get('autoId').setValue(0);
-    this.articleForm.get('pODate').reset();
+    // this.articleForm.get('pODate').reset();
     this.articleForm.get('stockCode').reset();
     this.articleForm.get('articleName').reset();
     this.articleForm.get('description1').reset();
     this.articleForm.get('description2').reset();
     this.articleForm.get('avgCostPrice').reset();
-    this.articleForm.get('gsm').reset();
+    // this.articleForm.get('gsm').reset();
     // this.articleForm.get('boardWidth').reset();
-    this.articleForm.get('height').reset();
-    this.articleForm.get('length').reset();
-    this.articleForm.get('width').reset();
+    // this.articleForm.get('height').reset();
+    // this.articleForm.get('length').reset();
+    // this.articleForm.get('width').reset();
     this.articleForm.get('lastCostPrice').reset();
     this.articleForm.get('maxCostPrice').reset();
-    this.articleForm.get('qtyInStock').reset();
-    this.articleForm.get('rollWidth').reset();
+    // this.articleForm.get('qtyInStock').reset();
+    // this.articleForm.get('rollWidth').reset();
     this.articleForm.get('salesPrice').reset();
     this.articleForm.get('itemType').reset();
 
