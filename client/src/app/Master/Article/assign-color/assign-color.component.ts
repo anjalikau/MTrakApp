@@ -34,7 +34,6 @@ export class AssignColorComponent implements OnInit {
   public nWidth: string;
   
   constructor(private fb: FormBuilder,
-    private datePipe: DatePipe,
     private accountService: AccountService,
     private masterService: MasterService,
     private toastr: ToastrService) { }
@@ -78,6 +77,7 @@ export class AssignColorComponent implements OnInit {
   }
 
   onSelectArticle(event) {
+    this.clearGridDetails();
     this.assignColorForm.get("colorCard").setValue("");
     for (const item of event.added) {
       var selectedRow = this.articleList.filter(x => x.autoId == item);
@@ -93,9 +93,9 @@ export class AssignColorComponent implements OnInit {
   //// loads both permited and not permited color list
   loadColorDetails(articleId) {
     this.masterService.getArtColorPermitDt(articleId).subscribe (result => {
-      console.log(result);
-      this.pColorList = result.filter(x => x.isPermit == 1); 
-      this.npColorList = result.filter(x => x.isPermit == 0);
+      // console.log(result);
+      this.pColorList = result.filter(x => x.isAsign == 1); 
+      this.npColorList = result.filter(x => x.isAsign == 0);
     })
   }
 
@@ -114,7 +114,7 @@ export class AssignColorComponent implements OnInit {
       colorList.push(data);
     });
 
-    console.log(colorList);
+    // console.log(colorList);
     this.masterService.saveArtColor(colorList).subscribe((result) =>{
       if(result == 1) {
         this.toastr.success("Color assigned Successfully !!!");
@@ -122,6 +122,37 @@ export class AssignColorComponent implements OnInit {
         this.loadColorDetails(articleId);
       } else if (result == -1) {
         this.toastr.warning("Color assigned failed !!!");
+        this.clearGridDetails();
+        this.loadColorDetails(articleId);
+      } else {
+        this.toastr.warning("Contact Admin. Error No:- " + result.toString());
+      }
+    })
+  }
+
+  deleteArticleColor() {
+    var selectedRows = this.pColorGrid.selectedRows;
+    var articleId = this.assignColorForm.get("article").value[0];
+    var colorList =[];
+
+    selectedRows.forEach(colorId => {      
+      var data = {
+        colorId: colorId,
+        articleId: articleId,
+        createUserId: this.user.userId,
+      };
+
+      colorList.push(data);
+    });
+
+    // console.log(colorList);
+    this.masterService.deleteArtColor(colorList).subscribe((result) =>{
+      if(result == 1) {
+        this.toastr.success("Color deleted Successfully !!!");
+        this.clearGridDetails();
+        this.loadColorDetails(articleId);
+      } else if (result == -1) {
+        this.toastr.warning("Color already used !!!");
         this.clearGridDetails();
         this.loadColorDetails(articleId);
       } else {

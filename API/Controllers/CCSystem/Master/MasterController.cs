@@ -280,6 +280,22 @@ namespace API.Controllers.CCSystem.Master
             return Ok(result);
         }
 
+        [HttpGet("SCArticle")]
+        public async Task<IActionResult> GetSCardArticle() 
+        {
+            var result = await _context.MstrArticle
+                .Where(x => x.SizeCardId > 0)
+                .Join( _context.MstrSizeCard , x => x.SizeCardId , s => s.AutoId 
+                , (x , s) => new {
+                    autoId = x.AutoId , 
+                    articleName = x.ArticleName , 
+                    stockCode = x.StockCode , 
+                    sizeCardId = x.SizeCardId,
+                    sizeCard = s.Name
+                }).ToListAsync();
+            return Ok(result);
+        }
+
 
         [HttpPost("ArtProdWise")]
         public async Task<IActionResult> GetArticleDetails(ArticleSerchDto article)
@@ -339,7 +355,39 @@ namespace API.Controllers.CCSystem.Master
             return Ok(result);
         }
 
+        [HttpPost("DelArtColor")]
+        public async Task<IActionResult> DeleteArticleColor(List<MstrArticleColor> colors) 
+        {
+            var result = await _masterRepository.DeleteArticleColorAsync(colors);
+            return Ok(result);
+        }
+
         #endregion Assign Article Color
+
+         #region Assign Article Size
+
+        [HttpGet("GetAtiSize/{id}")]
+        public async Task<IActionResult> getArtSizePermitDt(int id) 
+        {
+            var result = await _masterRepository.getArtSizePermitDtAsync(id);
+            return Ok(result);
+        }
+
+        [HttpPost("SaveArtSize")]
+        public async Task<IActionResult> SaveArticleSize(List<MstrArticleSize> size) 
+        {
+            var result = await _masterRepository.SaveArticleSizeAsync(size);
+            return Ok(result);
+        }
+
+        [HttpPost("DelArtSize")]
+        public async Task<IActionResult> DeleteArticleSize(List<MstrArticleSize> size) 
+        {
+            var result = await _masterRepository.DeleteArticleSizeAsync(size);
+            return Ok(result);
+        }
+
+        #endregion Assign Article Size
 
 
         #region "Article UOM Conversion"

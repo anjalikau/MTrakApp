@@ -147,7 +147,7 @@ namespace API.Repository
 
         }
 
-        #endregion
+        #endregion User Menu List
 
 
         #region Location            
@@ -172,18 +172,18 @@ namespace API.Repository
             return para.Get<int>("Result");
         }
 
-        #endregion
+        #endregion Location
 
-        #region Article Color
+        #region Article Color Allocation
 
-        public async Task<IEnumerable<ArticleColorAllocDto>> getArtColorPermitDtAsync(int ArticleId)
+        public async Task<IEnumerable<ColorAllocationDto>> getArtColorPermitDtAsync(int ArticleId)
         {
-            IEnumerable<ArticleColorAllocDto> colorList;
+            IEnumerable<ColorAllocationDto> colorList;
             DynamicParameters para = new DynamicParameters();
 
             para.Add("ArticleId" , ArticleId);
            
-            return colorList = await DbConnection.QueryAsync<ArticleColorAllocDto>("spMstrArticleColorGetPColor" , para
+            return colorList = await DbConnection.QueryAsync<ColorAllocationDto>("spMstrArticleColorGetPColor" , para
                     , commandType: CommandType.StoredProcedure);            
         }
 
@@ -212,9 +212,97 @@ namespace API.Repository
             return para.Get<int>("Result");
         }
 
+           public async Task<int> DeleteArticleColorAsync(List<MstrArticleColor> articleColor)
+        {
+            DataTable artColorDt = new DataTable();
+            DynamicParameters para = new DynamicParameters();
+
+            artColorDt.Columns.Add("ArticleId" , typeof(long));
+            artColorDt.Columns.Add("ColorId" , typeof(int));
+            artColorDt.Columns.Add("UserId" , typeof(int));
+
+            foreach (var item in articleColor)
+            {
+                artColorDt.Rows.Add( item.ArticleId
+                       , item.ColorId
+                       , item.CreateUserId);                
+            }   
+
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+            para.Add("ArtColorTypeDT", artColorDt.AsTableValuedParameter("ArtColorType"));
+
+            var result = await DbConnection.ExecuteAsync("spMstrArticleColorDelete", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
 
         #endregion Article Color
         
+        #region Article Size Allocation
+
+        public async Task<IEnumerable<SizeAllocationDto>> getArtSizePermitDtAsync(int ArticleId)
+        {
+            IEnumerable<SizeAllocationDto> sizeList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("ArticleId" , ArticleId);
+           
+            return sizeList = await DbConnection.QueryAsync<SizeAllocationDto>("spMstrArticleSizeGetPSize" , para
+                    , commandType: CommandType.StoredProcedure);            
+        }
+
+        public async Task<int> SaveArticleSizeAsync(List<MstrArticleSize> articleSize)
+        {
+            DataTable artColorDt = new DataTable();
+            DynamicParameters para = new DynamicParameters();
+
+            artColorDt.Columns.Add("ArticleId" , typeof(long));
+            artColorDt.Columns.Add("SizeId" , typeof(int));
+            artColorDt.Columns.Add("UserId" , typeof(int));
+
+            foreach (var item in articleSize)
+            {
+                artColorDt.Rows.Add( item.ArticleId
+                       , item.SizeId
+                       , item.CreateUserId);                
+            }   
+
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+            para.Add("ArtSizeTypeDT", artColorDt.AsTableValuedParameter("ArtSizeType"));
+
+            var result = await DbConnection.ExecuteAsync("spMstrArticleSizeSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<int> DeleteArticleSizeAsync(List<MstrArticleSize> articleSize)
+        {
+            DataTable artColorDt = new DataTable();
+            DynamicParameters para = new DynamicParameters();
+
+            artColorDt.Columns.Add("ArticleId" , typeof(long));
+            artColorDt.Columns.Add("SizeId" , typeof(int));
+            artColorDt.Columns.Add("UserId" , typeof(int));
+
+            foreach (var item in articleSize)
+            {
+                artColorDt.Rows.Add( item.ArticleId
+                       , item.SizeId
+                       , item.CreateUserId);                
+            }   
+
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+            para.Add("ArtSizeTypeDT", artColorDt.AsTableValuedParameter("ArtSizeType"));
+
+            var result = await DbConnection.ExecuteAsync("spMstrArticleSizeDelete", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        #endregion Article Size
 
         #region Color            
         
@@ -266,7 +354,6 @@ namespace API.Repository
         }
 
         #endregion
-
 
         #region Color Allocation
 
@@ -345,7 +432,7 @@ namespace API.Repository
         #endregion Color Allocation
 
 
-        #region Size Allocation
+        #region Size to Size Card Allocation
 
         public async Task<IEnumerable<SizeAllocationDto>> GetSizeAllocDetailsAsync(int SizeCardId)
         {
@@ -419,7 +506,7 @@ namespace API.Repository
            
         }
 
-        #endregion Size Allocation
+        #endregion Size to Size Card Allocation
 
 
         #region Size

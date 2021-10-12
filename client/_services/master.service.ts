@@ -193,6 +193,10 @@ export class MasterService {
       this.baseUrl + 'Master/SaveArtColor' , artColor, httpOptions );
   }
 
+  deleteArtColor(artColor: any[]) {
+    return this.http.post(
+      this.baseUrl + 'Master/DelArtColor' , artColor, httpOptions );
+  }
 
   //#endregion "ArticleColor"
 
@@ -203,6 +207,23 @@ export class MasterService {
       this.baseUrl + 'Master/ArtiSize/' + id,
       httpOptions
     );
+  }
+
+  getArtSizePermitDt(id: number) {
+    return this.http.get<any>(
+      this.baseUrl + 'Master/GetAtiSize/' + id,
+      httpOptions
+    );
+  }
+
+  saveArticleSize(artSize: any[]) {
+    return this.http.post(
+      this.baseUrl + 'Master/SaveArtSize' , artSize, httpOptions );
+  }
+
+  deleteArticleSize(artSize: any[]) {
+    return this.http.post(
+      this.baseUrl + 'Master/DelArtSize' , artSize, httpOptions );
   }
 
   //#endregion "ArticleSize"
@@ -230,6 +251,10 @@ export class MasterService {
 
   getCCardArticles() {
     return this.http.get<any>(this.baseUrl + 'Master/CCArticle' , httpOptions)
+  }
+
+  getSCardArticles() {
+    return this.http.get<any>(this.baseUrl + 'Master/SCArticle' , httpOptions)
   }
 
   //#endregion "Article"

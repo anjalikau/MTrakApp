@@ -25,15 +25,8 @@
                             <label igxLabel for="colorCard"> Color Card</label>
                         </igx-input-group>
                     </div>
-                </div>   
+                </div>                  
                 
-                <div class="col-md-1">
-                    <div class="btn-group">
-                        <button igxButton="icon" class="fab-compact" data-toggle="modal" data-target="#modalArticle">
-                            <igx-icon family="material">add_box</igx-icon>
-                        </button>
-                    </div>
-                </div>
             </div> 
 
             <div class="form-group row">
@@ -50,16 +43,16 @@
                     <h4>Permitted Color</h4>
                 </div>
                 <div class="col-sm-1">
-                    <!-- <button type="button" class="btn btn-danger" (click)="DeleteUserMenuList()" 
-                    [disabled]="!(this.PermitMgrid.selectedRows.length>0 && removeButton)" igxRipple>
-                        <i class="fas fa-trash-alt"></i> </button>                     -->
+                    <button type="button" class="btn btn-danger" (click)="deleteArticleColor()" 
+                    [disabled]="!(this.pColorGrid.selectedRows.length>0)" igxRipple>
+                        <i class="fas fa-trash-alt"></i> </button>                    
                 </div>
             </div>
             
             <div class="row">
                 <div class="col-md-6">
                     <igx-grid #npColorGrid [data]="npColorList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
-                        [primaryKey]="'colorId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="300px"
+                        [primaryKey]="'colorId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="500px"
                         displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
                         [allowAdvancedFiltering]="true" [rowSelection]="'multiple'">
                         <igx-column [field]="'code'" [header]="'Code'" [resizable]="true" [dataType]="'string'" [sortable]="true">
@@ -71,7 +64,7 @@
 
                 <div class="col-md-6">
                     <igx-grid #pColorGrid [data]="pColorList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
-                        [primaryKey]="'colorId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="300px"
+                        [primaryKey]="'colorId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="500px"
                         displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
                         [allowAdvancedFiltering]="true" [rowSelection]="'multiple'">
                         <igx-column [field]="'code'" [header]="'Code'" [resizable]="true" [dataType]="'string'" [sortable]="true">

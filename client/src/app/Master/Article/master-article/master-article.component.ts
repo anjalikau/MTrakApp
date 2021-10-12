@@ -92,7 +92,6 @@ export class MasterArticleComponent implements OnInit {
   
  constructor(
     private fb: FormBuilder,
-    private datePipe: DatePipe,
     private accountService: AccountService,
     private masterService: MasterService,
     private toastr: ToastrService
@@ -161,7 +160,7 @@ export class MasterArticleComponent implements OnInit {
     // console.log(obj);
     this.masterService.getFlexFieldCatPTWise(obj).subscribe((result) => {
       this.flexFieldList = result;
-      console.log(result);
+      // console.log(result);
     });
   }
 
@@ -636,7 +635,7 @@ export class MasterArticleComponent implements OnInit {
 
       // console.log(this.articleForm.get('pODate').value);
       var prodGroupId = this.articleForm.get('proGroupId').value[0];
-      console.log(artiObj);
+      // console.log(artiObj);
       this.masterService.saveArticle(artiObj).subscribe(
         (result) => {
           //console.log(result);
