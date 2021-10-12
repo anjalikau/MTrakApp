@@ -84,6 +84,9 @@ import { SizeTabComponent } from './master/size/size-tab/size-tab.component';
 import { SizeAllocCardComponent } from './master/size/size-alloc-card/size-alloc-card.component';
 import { CostingComponent } from './transaction/costing/costing.component';
 import { CostListComponent } from './transaction/cost-list/cost-list.component';
+import { ArticleTabComponent } from './master/article/article-tab/article-tab.component';
+import { AssignColorComponent } from './master/article/assign-color/assign-color.component';
+import { AssignSizeComponent } from './master/article/assign-size/assign-size.component';
 
 @NgModule({
   declarations: [
@@ -150,7 +153,10 @@ import { CostListComponent } from './transaction/cost-list/cost-list.component';
     SizeTabComponent,
     SizeAllocCardComponent,
     CostingComponent,
-    CostListComponent
+    CostListComponent,
+    ArticleTabComponent,
+    AssignColorComponent,
+    AssignSizeComponent
   ],
   imports: [
     BrowserModule,

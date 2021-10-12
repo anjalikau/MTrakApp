@@ -38,6 +38,7 @@ import { ColorTabComponent } from './master/color/color-tab/color-tab.component'
 import { SizeTabComponent } from './master/size/size-tab/size-tab.component';
 import { CostingComponent } from './transaction/costing/costing.component';
 import { CostListComponent } from './transaction/cost-list/cost-list.component';
+import { ArticleTabComponent } from './master/article/article-tab/article-tab.component';
 
 const routes: Routes = [
   {path:'', component: LoginComponent},
@@ -69,7 +70,7 @@ const routes: Routes = [
       {path:'Job', component: JobCreationComponent},
       {path:'FPO', component: FacProdOrderComponent},
       {path:'FlexField', component: FlexFieldTabComponent},
-      {path:'Article', component: MasterArticleComponent},
+      {path:'Article', component: ArticleTabComponent},
       // {path:'App', component: AppComponentComponent},
       {path:'FPPOIn', component: ProductionInComponent},
       {path:'FPPOOut', component: ProductionOutComponent},

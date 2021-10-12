@@ -264,6 +264,23 @@ namespace API.Controllers.CCSystem.Master
             return Ok(articleList);
         }
 
+        [HttpGet("CCArticle")]
+        public async Task<IActionResult> GetCCardArticle() 
+        {
+            var result = await _context.MstrArticle
+                .Where(x => x.ColorCardId > 0)
+                .Join( _context.MstrColorCard , x => x.ColorCardId , c => c.AutoId 
+                , (x , c) => new {
+                    autoId = x.AutoId , 
+                    articleName = x.ArticleName , 
+                    stockCode = x.StockCode , 
+                    colorCardId = x.ColorCardId,
+                    colorCard = c.Name
+                }).ToListAsync();
+            return Ok(result);
+        }
+
+
         [HttpPost("ArtProdWise")]
         public async Task<IActionResult> GetArticleDetails(ArticleSerchDto article)
         {
@@ -305,6 +322,26 @@ namespace API.Controllers.CCSystem.Master
 
         #endregion "Article"
 
+
+        #region Assign Article Color
+
+        [HttpGet("GetAtiClr/{id}")]
+        public async Task<IActionResult> getArtColorPermitDt(int id) 
+        {
+            var result = await _masterRepository.getArtColorPermitDtAsync(id);
+            return Ok(result);
+        }
+
+        [HttpPost("SaveArtColor")]
+        public async Task<IActionResult> SaveArticleColor(List<MstrArticleColor> colors) 
+        {
+            var result = await _masterRepository.SaveArticleColorAsync(colors);
+            return Ok(result);
+        }
+
+        #endregion Assign Article Color
+
+
         #region "Article UOM Conversion"
 
         [HttpGet("ArtBase/{id}")]
@@ -319,6 +356,7 @@ namespace API.Controllers.CCSystem.Master
         }
 
         #endregion "Article UOM Conversion"
+
 
         #region "Special Instruction"
 

@@ -174,6 +174,26 @@ export class MasterService {
     );
   }
 
+  getArticleColorAll(id: number) {
+    return this.http.get<any>(
+      this.baseUrl + 'Master/ArtiColor/' + id,
+      httpOptions
+    );
+  }
+
+  getArtColorPermitDt(id: number) {
+    return this.http.get<any>(
+      this.baseUrl + 'Master/GetAtiClr/' + id,
+      httpOptions
+    );
+  }
+
+  saveArtColor(artColor: any[]) {
+    return this.http.post(
+      this.baseUrl + 'Master/SaveArtColor' , artColor, httpOptions );
+  }
+
+
   //#endregion "ArticleColor"
 
   //#region "ArticleSize"
@@ -206,6 +226,10 @@ export class MasterService {
 
   getArticleDetails(article: any) {
     return this.http.post<any>(this.baseUrl + 'Master/ArtProdWise' , article , httpOptions)
+  }
+
+  getCCardArticles() {
+    return this.http.get<any>(this.baseUrl + 'Master/CCArticle' , httpOptions)
   }
 
   //#endregion "Article"

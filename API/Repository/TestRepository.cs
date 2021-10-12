@@ -22,7 +22,7 @@ namespace API.Repository
         {
             IEnumerable<MenuJoinList> menuList;
 
-            menuList = await DbConnection.QueryAsync<MenuJoinList>("spMenuListGet" , null
+            menuList = await DbConnection.QueryAsync<MenuJoinList>("spMenuListGetXML" , null
                     , commandType: CommandType.StoredProcedure);
             return menuList;
         }

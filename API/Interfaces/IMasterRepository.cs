@@ -78,7 +78,9 @@ namespace API.Interfaces
         Task<int> DeleteColorAllocationAsync(List<MstrColorAllocCard> colorAlloc);  
         Task<IEnumerable<SizeAllocationDto>> GetSizeAllocDetailsAsync(int SizeCardId);
         Task<int> SaveSizeAllocationAsync(List<MstrSizeAllocCard> sizeAlloc); 
-        Task<int> DeleteSizeAllocationAsync(List<MstrSizeAllocCard> sizeAlloc);       
+        Task<int> DeleteSizeAllocationAsync(List<MstrSizeAllocCard> sizeAlloc);
+        Task<IEnumerable<ArticleColorAllocDto>> getArtColorPermitDtAsync(int ArticleId);   
+        Task<int> SaveArticleColorAsync(List<MstrArticleColor> articleColor);    
 
     }
 }

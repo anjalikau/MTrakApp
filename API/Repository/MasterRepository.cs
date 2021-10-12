@@ -75,14 +75,6 @@ namespace API.Repository
             
             return menuList;
 
-            // IEnumerable<MenuListDto> menuList = Enumerable.Empty<MenuListDto>();
-            // var AgentId = new SqlParameter("AgentId", userDto.UserId);
-
-            // if (userDto.ModuleId == 1) {
-            //     string StoredProc = "exec spMenuListAuthorize @AgentId";
-            //     return await _context.Database.(StoredProc , AgentId).ToListAsync();
-            // }
-            // return menuList;
         }        
 
         public async Task<IEnumerable<UserMenuList>> GetUserMenuList(int userId)
@@ -181,6 +173,47 @@ namespace API.Repository
         }
 
         #endregion
+
+        #region Article Color
+
+        public async Task<IEnumerable<ArticleColorAllocDto>> getArtColorPermitDtAsync(int ArticleId)
+        {
+            IEnumerable<ArticleColorAllocDto> colorList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("ArticleId" , ArticleId);
+           
+            return colorList = await DbConnection.QueryAsync<ArticleColorAllocDto>("spMstrArticleColorGetPColor" , para
+                    , commandType: CommandType.StoredProcedure);            
+        }
+
+        public async Task<int> SaveArticleColorAsync(List<MstrArticleColor> articleColor)
+        {
+            DataTable artColorDt = new DataTable();
+            DynamicParameters para = new DynamicParameters();
+
+            artColorDt.Columns.Add("ArticleId" , typeof(long));
+            artColorDt.Columns.Add("ColorId" , typeof(int));
+            artColorDt.Columns.Add("UserId" , typeof(int));
+
+            foreach (var item in articleColor)
+            {
+                artColorDt.Rows.Add( item.ArticleId
+                       , item.ColorId
+                       , item.CreateUserId);                
+            }   
+
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+            para.Add("ArtColorTypeDT", artColorDt.AsTableValuedParameter("ArtColorType"));
+
+            var result = await DbConnection.ExecuteAsync("spMstrArticleColorSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+
+        #endregion Article Color
         
 
         #region Color            
@@ -310,6 +343,7 @@ namespace API.Repository
         }
 
         #endregion Color Allocation
+
 
         #region Size Allocation
 

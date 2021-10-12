@@ -11,7 +11,6 @@ namespace API.Entities
         public int AutoId { get; set; }        
         public long ArticleId { get; set; }
         public int ColorId { get; set; }
-        public int LocationId { get; set; }
         public int CreateUserId { get; set; }
         public DateTime CreateDateTime { get; set; }
         public int UpdateUserId { get; set; }

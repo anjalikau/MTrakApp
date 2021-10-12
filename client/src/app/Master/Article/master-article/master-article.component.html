@@ -1,19 +1,11 @@
 <div class="card card-default">
     <div class="card-header">
         <h3 class="card-title">Article</h3>
-        <div class="card-tools">
+        <!-- <div class="card-tools">
             <button igxButton="icon" class="fab-compact" data-toggle="modal" data-target="#modalArticle" [disabled]="!isProGroupSel" (click)="clearArticleControls()">
                 <igx-icon family="material">add_box</igx-icon>
-            </button>
-            <!-- <div class="btn-group">
-                <button type="button" class="btn btn-success mr-3" [disabled]="!articleForm.valid" (click)="saveArticle()">
-                    <i class="fas fa-save"></i>
-                </button>
-                <button type="button" class="btn btn-default">
-                    <i class="fas fa-redo"></i>
-                </button>
-            </div> -->
-        </div>
+            </button>           
+        </div> -->
     </div>
     
     <div class="card-body">
@@ -50,7 +42,15 @@
                             (onSelectionChange)="onSelectProdGroup($event)" searchPlaceholder="Search...">
                         </igx-combo>
                     </div>
-                </div>              
+                </div> 
+                
+                <div class="col-md-1">
+                    <div class="btn-group">
+                        <button igxButton="icon" class="fab-compact" data-toggle="modal" data-target="#modalArticle" [disabled]="!isProGroupSel" (click)="clearArticleControls()">
+                            <igx-icon family="material">add_box</igx-icon>
+                        </button>
+                    </div>
+                </div>
             </div>         
         
         </form>

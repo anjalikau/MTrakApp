@@ -40,6 +40,12 @@ namespace API
         {
             services.AddApplicationServices(_config);
             services.AddControllers();
+            // services.AddControllers
+            // (options =>
+            // {
+            //     options.RespectBrowserAcceptHeader = true; // false by default
+            // })
+            // .AddXmlSerializerFormatters();
             services.AddCors();
             services.AddIdentityServices(_config);            
             // services.AddCors(o => o.AddPolicy("AllowAllOrigins", builder =>
@@ -49,6 +55,7 @@ namespace API
             //             .AllowAnyHeader();
             // }));
             services.AddMvc(m => m.EnableEndpointRouting = false);
+           
             // configure basic authentication 
             // services.AddAuthentication("BasicAuthentication")
             //     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
