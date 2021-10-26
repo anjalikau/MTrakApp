@@ -9,8 +9,8 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <igx-input-group>
-                            <input igxInput type="text" formControlName="name" />
-                            <label igxLabel for="name">  Name </label>
+                            <input igxInput type="text" formControlName="transType" />
+                            <label igxLabel for="transType">  Trans. Type </label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -27,19 +27,27 @@
                 <div class="col-md-1">
                     <div class="form-group">
                         <igx-input-group>
-                            <input igxInput type="number" formControlName="noOfDigits" />
-                            <label igxLabel for="noOfDigits"> Number Of Digits</label>
+                            <input igxInput type="number" formControlName="seqLength" />
+                            <label igxLabel for="seqLength"> Seq Length</label>
                         </igx-input-group>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
                         <igx-input-group>
-                            <input igxInput type="number" formControlName="counter" />
-                            <label igxLabel for="counter"> Counter</label>
+                            <input igxInput type="number" formControlName="seqNo" />
+                            <label igxLabel for="seqNo"> Seq No</label>
                         </igx-input-group>
                     </div>
                 </div>
+
+                <!-- <div class="col-md-2">
+                    <div class="form-group">     
+                         <ngy-year-picker id="year-picker1" formControlName="currentYear"></ngy-year-picker>          
+                        <input igxInput type="number" formControlName="seqNo" />
+                        <label igxLabel for="seqNo"> Seq No</label>
+                    </div>
+                </div> -->
 
                 <div class="col-md-1 offset-md-2">
                     <div class="form-group">
@@ -55,9 +63,9 @@
             </div>
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-8">
                     <igx-grid #SerialNoGrid [data]="serialNoList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
-                        [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
+                        [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="25"
                         height="500px" displayDensity="compact" [allowFiltering]="true"
                         [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
 
@@ -68,19 +76,19 @@
                                 </button>
                             </ng-template>
                         </igx-column>
-                        <igx-column [field]="'name'" [header]="'Name'" [resizable]="true" [dataType]="'string'"
+                        <igx-column [field]="'transType'" [header]="'Trans Type'" [resizable]="true" [dataType]="'string'"
                             [sortable]="true">
-                        </igx-column>
-                        <igx-column [field]="'moduleId'" [header]="'ModuleId'" [resizable]="true" [dataType]="'string'"
-                            [sortable]="true">
-                        </igx-column>
+                        </igx-column>                       
                         <igx-column [field]="'prefix'" [header]="'Prefix'" [resizable]="true" [dataType]="'string'"
                             [sortable]="true">
                         </igx-column>
-                        <igx-column [field]="'noOfDigits'" [header]="'NoOfDigits'" [resizable]="true" [dataType]="'string'"
+                        <igx-column [field]="'seqLength'" [header]="'Seq Length'" [resizable]="true" [dataType]="'number'"
+                        [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'seqNo'" [header]="'SeqNo'" [resizable]="true" [dataType]="'number'"
                             [sortable]="true">
                         </igx-column>
-                        <igx-column [field]="'counter'" [header]="'Counter'" [resizable]="true" [dataType]="'string'"
+                        <igx-column [field]="'currentYear'" [header]="'Current Year'" [resizable]="true" [dataType]="'string'"
                             [sortable]="true">
                         </igx-column>                       
                        

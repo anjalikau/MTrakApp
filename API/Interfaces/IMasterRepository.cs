@@ -59,7 +59,7 @@ namespace API.Interfaces
         Task<IEnumerable<ProductSubCatDto>> GetProductSubCatAsync(int ProdGroupId); 
         Task<int> DeactiveProdSubCatAsync(MstrProductSubCat MstrProductSubCat);       
         Task<int> SaveCostGroupAsync(MstrCostingGroup MstrCostingGroup);        
-        Task<int> SaveSerialNoDtAsync(MstrSerialNoDetails MstrSerialNoD);
+        Task<int> SaveSequenceSetAsync(TransSequenceSettings seqSettings);
         Task<int> SaveFlexFieldDetailsAsync(MstrFlexFieldDetails flexDetails); 
         Task<IEnumerable<FlexFieldReturnDto>> GetFlexFieldDtAsync(int CategoryId);
         Task<int> DeactiveFlexFieldDtAsync(MstrFlexFieldDetails flexFieldDt);
@@ -85,6 +85,16 @@ namespace API.Interfaces
         Task<int> SaveArticleSizeAsync(List<MstrArticleSize> articleSize);
         Task<int> DeleteArticleSizeAsync(List<MstrArticleSize> articleSize);
         Task<int> DeleteArticleColorAsync(List<MstrArticleColor> articleColor);
+        Task<int> SaveUnitConversionAsync(MstrUnitConversion unitConv);
+        Task<int> SaveFluteTypeAsync(MstrFluteTypes fluteTypes);
+        Task<int> SaveSalesAgentAsync(MstrSalesAgent salesAgent);
+        Task<int> SaveCurrencyAsync(MstrCurrency currency);
+        Task<int> SaveCountriesAsync(MstrCountries countries);
+        Task<int> SavePaymentTermsAsync(MstrPaymentTerm paymentTerm);
+        Task<int> SaveRejectReasonAsync(MstrRejectionReasons rejReasons);
+        Task<int> SaveCodeDefinitionAsync(MstrCodeDefinition codeDefinition);
+        Task<int> DeleteCodeDefinitionAsync(MstrCodeDefinition codeDefinition);
+        Task<int> SaveAddressTypeAsync(MstrAddressType addressType);
 
     }
 }

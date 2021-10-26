@@ -42,9 +42,9 @@ export class AccountService {
   }
 
   logout() {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    //localStorage.removeItem('menus');
+    // localStorage.removeItem('user');
+    // localStorage.removeItem('token');
+    localStorage.clear();
     this.currentUserSource.next(null);
   }
 

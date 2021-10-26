@@ -8,7 +8,6 @@ import { TestErrorsComponent } from './errors/test-errors/test-errors.component'
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { FlexFieldTabComponent } from './master/article/flex-field-tab/flex-field-tab.component';
-import { MasterArticleComponent } from './master/article/master-article/master-article.component';
 import { CustomerTabComponent } from './master/customer/customer-tab/customer-tab.component';
 import { MasterBrandComponent } from './master/master-brand/master-brand.component';
 import { MasterBrandcodeComponent } from './master/master-brandcode/master-brandcode.component';
@@ -20,7 +19,6 @@ import { MasterProdDefinitionComponent } from './master/master-prod-definition/m
 import { MasterProductTabComponent } from './master/product/master-product-tab/master-product-tab.component';
 import { MasterSerialnoDetailsComponent } from './master/master-serialno-details/master-serialno-details.component';
 import { MasterStoresiteComponent } from './master/master-storesite/master-storesite.component';
-import { MasterUnitsComponent } from './master/master-units/master-units.component';
 import { FacProdOrderComponent } from './transaction/fac-prod-order/fac-prod-order.component';
 import { JobCreationComponent } from './transaction/job-creation/job-creation.component';
 import { SalesOrderComponent } from './transaction/sales-order/sales-order.component';
@@ -37,8 +35,16 @@ import { BoldreportViewerComponent } from './report/boldreport-viewer/boldreport
 import { ColorTabComponent } from './master/color/color-tab/color-tab.component';
 import { SizeTabComponent } from './master/size/size-tab/size-tab.component';
 import { CostingComponent } from './transaction/costing/costing.component';
-import { CostListComponent } from './transaction/cost-list/cost-list.component';
 import { ArticleTabComponent } from './master/article/article-tab/article-tab.component';
+import { UnitTabComponent } from './master/unit/unit-tab/unit-tab.component';
+import { FluteTypeComponent } from './master/flute-type/flute-type.component';
+import { SalesAgentComponent } from './master/sales-agent/sales-agent.component';
+import { CurrencyComponent } from './master/currency/currency.component';
+import { CountriesComponent } from './master/countries/countries.component';
+import { PaymentTermsComponent } from './master/payment-terms/payment-terms.component';
+import { RejectReasonComponent } from './master/reject-reason/reject-reason.component';
+import { CodeDefinitionComponent } from './users/code-definition/code-definition.component';
+import { AddressTypeComponent } from './master/address-type/address-type.component';
 
 const routes: Routes = [
   {path:'', component: LoginComponent},
@@ -53,8 +59,7 @@ const routes: Routes = [
       {path:'MenuList', component: MenuListComponent},
       {path:'UserPermission', component: UserPermissionComponent},
       {path:'ColorTab', component: ColorTabComponent},
-      {path:'SizeTab', component: SizeTabComponent},      
-      {path:'MasterUnits', component: MasterUnitsComponent},
+      {path:'SizeTab', component: SizeTabComponent},
       {path:'MasterStoresite', component: MasterStoresiteComponent},
       {path:'MasterProess', component: MasterProcessComponent},
       {path:'MasterBrand', component: MasterBrandComponent},
@@ -71,15 +76,22 @@ const routes: Routes = [
       {path:'FPO', component: FacProdOrderComponent},
       {path:'FlexField', component: FlexFieldTabComponent},
       {path:'Article', component: ArticleTabComponent},
-      // {path:'App', component: AppComponentComponent},
       {path:'FPPOIn', component: ProductionInComponent},
       {path:'FPPOOut', component: ProductionOutComponent},
       {path:'QualityC', component: QualityControlComponent},
       {path:'Dispatch', component: ProdDispatchComponent},
       {path:'Report', component: ReportViewerComponent},
       {path:'boldreport', component: BoldreportViewerComponent },
-      {path:'Costing', component: CostingComponent}
-      // {path:'CostingList', component: CostListComponent}
+      {path:'Costing', component: CostingComponent},
+      {path:'Unit', component: UnitTabComponent},
+      {path:'FluteType', component: FluteTypeComponent},
+      {path:'SalesAgent', component: SalesAgentComponent},
+      {path:'Currency', component: CurrencyComponent},
+      {path:'Countries', component: CountriesComponent},
+      {path:'PayTerms', component: PaymentTermsComponent},
+      {path:'RejReason', component: RejectReasonComponent},
+      {path:'CodeDefinition', component: CodeDefinitionComponent},
+      {path:'AddressType', component: AddressTypeComponent}
     ]
   },  
   {path:'not-found', component: NotFoundComponent},

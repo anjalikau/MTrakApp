@@ -741,7 +741,7 @@
             </div>              
         </div> 
         <div class="row">
-            <igx-grid #articleGrid [data]="articleList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+            <igx-hierarchical-grid #articleGrid [data]="articleList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
                 [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
                 height="500px" displayDensity="compact" width="1200px" [allowFiltering]="true"
                 [filterMode]="'excelStyleFilter'" [rowSelection]="'Single'">
@@ -752,52 +752,39 @@
                         </button>
                     </ng-template>
                 </igx-column>
-                <igx-column [field]="'articleName'" [header]="'Article Name'" [resizable]="true" [dataType]="'string'"
-                    [sortable]="true">
+                <igx-column [field]="'stockCode'" [header]="'Stock Code'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                 </igx-column>
-                <igx-column [field]="'stockCode'" [header]="'Stock Code'" [resizable]="true" [dataType]="'string'"
-                    [sortable]="true">
+                <igx-column [field]="'articleName'" [header]="'Article Name'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                 </igx-column>
-                <igx-column [field]="'description1'" [header]="'Description1'" [resizable]="true" [dataType]="'string'"
-                    [sortable]="true">
+                <igx-column [field]="'description1'" [header]="'Description1'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                 </igx-column>
-                <igx-column [field]="'description2'" [header]="'Description2'" [resizable]="true" [dataType]="'string'"
-                    [sortable]="true">
+                <igx-column [field]="'description2'" [header]="'Description2'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                 </igx-column>
-                <igx-column [field]="'height'" [width]="'100px'" [header]="'Height'" [resizable]="true"
-                    [dataType]="'number'" [sortable]="true">
+                <igx-column [field]="'colorCardName'" [header]="'Color Card'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                 </igx-column>
-                <igx-column [field]="'width'" [width]="'100px'" [header]="'Width'" [resizable]="true" [dataType]="'number'"
-                    [sortable]="true">
+                <igx-column [field]="'sizeCardName'" [header]="'Size Card'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                 </igx-column>
-                <igx-column [field]="'length'" [width]="'100px'" [header]="'Length'" [resizable]="true"
-                    [dataType]="'number'" [sortable]="true">
+                <igx-column [field]="'unitCode'" [header]="'Unit'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                </igx-column>               
+                <igx-column [field]="'measurement'" [header]="'Measurement'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                 </igx-column>
-                <igx-column [field]="'gsm'" [width]="'100px'" [header]="'GSM'" [resizable]="true" [dataType]="'string'"
-                    [sortable]="true">
+                <igx-column [field]="'salesPrice'" [header]="'SalesPrice'" [resizable]="true" [dataType]="'number'" [sortable]="true">
                 </igx-column>
-                <igx-column [field]="'rollWidth'" [width]="'100px'" [header]="'Roll Width'" [resizable]="true"
-                    [dataType]="'number'" [sortable]="true">
+                <igx-column [field]="'lastCostPrice'" [header]="'LastCostPrice'" [resizable]="true" [dataType]="'number'" [sortable]="true">
                 </igx-column>
-                <igx-column [field]="'qtyInStock'" [width]="'100px'" [header]="'QtyInStock'" [resizable]="true"
-                    [dataType]="'number'" [sortable]="true">
+                <igx-column [field]="'avgCostPrice'" [header]="'AvgCostPrice'" [resizable]="true" [dataType]="'number'" [sortable]="true">
                 </igx-column>
-                <igx-column [field]="'measurement'" [width]="'100px'" [header]="'Measurement'" [resizable]="true"
-                    [dataType]="'string'" [sortable]="true">
+                <igx-column [field]="'maxCostPrice'" [header]="'MaxCostPrice'" [resizable]="true" [dataType]="'number'" [sortable]="true">
                 </igx-column>
-                <igx-column [field]="'salesPrice'" [width]="'100px'" [header]="'SalesPrice'" [resizable]="true"
-                    [dataType]="'number'" [sortable]="true" [pipeArgs]="formatPrice">
-                </igx-column>
-                <igx-column [field]="'avgCostPrice'" [header]="'AvgCostPrice'" [resizable]="true" [dataType]="'number'"
-                    [sortable]="true" [pipeArgs]="formatPrice">
-                </igx-column>
-                <igx-column [field]="'lastCostPrice'" [header]="'LastCostPrice'" [resizable]="true" [dataType]="'number'"
-                    [sortable]="true" [pipeArgs]="formatPrice">
-                </igx-column>
-                <igx-column [field]="'maxCostPrice'" [header]="'MaxCostPrice'" [resizable]="true" [dataType]="'number'"
-                    [sortable]="true" [pipeArgs]="formatPrice">
-                </igx-column>
-            </igx-grid>
+                <igx-row-island [key]="'FlexFields'">
+                    <igx-column [field]="'flexFieldName'" [header]="'FieldName'" [resizable]="true" [dataType]="'string'" 
+                            [sortable]="true" [width]="'200px'" >
+                    </igx-column>
+                    <igx-column [field]="'flexFieldValue'" [header]="'FieldValue'" [resizable]="true" [dataType]="'string'" 
+                            [sortable]="true" [width]="'120px'" >
+                    </igx-column>
+                </igx-row-island>
+            </igx-hierarchical-grid>
         </div>
     </form>
 
@@ -847,11 +834,8 @@
                             [width]="'100px'" [editable]="false">
                          </igx-column>
                         <igx-column [field]="'transDate'" [header]="'Trans Date'" [resizable]="true" [dataType]="'date'" [sortable]="true"
-                            [width]="'200px'" [editable]="false">
-                        </igx-column>
-                        <igx-column [field]="'customer'" [header]="'Customer'" [resizable]="true" [dataType]="'string'" [sortable]="true"
-                            [width]="'300px'" [editable]="false">
-                        </igx-column>                   
+                            [pipeArgs]="formatDateOptions" [width]="'200px'" [editable]="false">
+                        </igx-column>                                      
                         
                     </igx-grid>
                     </div>

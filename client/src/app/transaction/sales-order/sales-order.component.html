@@ -194,11 +194,10 @@
         </form>
 
         <!--Article Items-->
-        <form [formGroup]="articleForm" autocomplete="off">
+        <!-- <form [formGroup]="articleForm" autocomplete="off">
             <div class="row">
                 <div class="col-md-11">
                     <h6 class="bg-secondary">
-                        <!-- <i class="fas fa-file-alt"></i>  -->
                         Article
                     </h6>
                 </div>
@@ -209,82 +208,8 @@
                         </button>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <igx-input-group>
-                            <input igxInput type="text" formControlName="articleName" />
-                            <label igxLabel for="articleName"> Name </label>
-                        </igx-input-group>
-                    </div>
-                </div>
-
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <igx-input-group>
-                            <input igxInput type="text" formControlName="articleCode" />
-                            <label igxLabel for="articleCode"> Code </label>
-                        </igx-input-group>
-                    </div>
-                </div>
-
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <igx-input-group>
-                            <input igxInput type="text" formControlName="articleDes1" />
-                            <label igxLabel for="articleDes1"> Description1 </label>
-                        </igx-input-group>
-                    </div>
-                </div>
-
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <igx-input-group>
-                            <input igxInput type="text" formControlName="articleDes2" />
-                            <label igxLabel for="articleDes2"> Description2 </label>
-                        </igx-input-group>
-                    </div>
-                </div>
-
-                <div class="col-md-1">
-                    <div class="form-group">
-                        <igx-input-group>
-                            <input igxInput type="text" formControlName="category" />
-                            <label igxLabel for="category"> Category </label>
-                        </igx-input-group>
-                    </div>
-                </div>
-
-                <div class="col-md-1">
-                    <div class="form-group">
-                        <igx-input-group>
-                            <input igxInput type="text" formControlName="unit" />
-                            <label igxLabel for="unit"> Unit </label>
-                        </igx-input-group>
-                    </div>
-                </div>
-
-                <div class="col-md-1">
-                    <div class="form-group">
-                        <igx-input-group>
-                            <input igxInput type="text" formControlName="prodGroup" />
-                            <label igxLabel for="prodGroup"> Product Group </label>
-                        </igx-input-group>
-                    </div>
-                </div>
-
-                <div class="col-md-1">
-                    <div class="form-group">
-                        <igx-input-group>
-                            <input igxInput type="text" formControlName="prodType" />
-                            <label igxLabel for="prodType"> Product Type </label>
-                        </igx-input-group>
-                    </div>
-                </div>
-            </div>
-        </form>
+            </div>           
+        </form> -->
 
         <!-- SALES ORDER ITEMS -->
         <form [formGroup]="soItemForm" autocomplete="off">
@@ -297,9 +222,32 @@
                 </div>
                 <!-- /.col -->
             </div>
-            <div class="row">              
 
+            <div class="row">              
                 <div class="col-md-3">
+                    <div class="form-group">
+                        <label> Article Name </label>
+                        <igx-input-group type="search">
+                            <input #txtArticle igxInput placeholder="Article Name" formControlName="articleName" />
+                            <igx-suffix *ngIf="txtArticle.value.length > 0" (click)="onClearArticle()">
+                                <igx-icon>clear</igx-icon>
+                            </igx-suffix>
+                            <igx-prefix (click)="articleDialog.open()" >
+                                <igx-icon>search</igx-icon>
+                            </igx-prefix>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="articleCode" />
+                            <label igxLabel for="articleCode"> Article Code</label>
+                        </igx-input-group>
+                    </div>
+                </div>
+                <div class="col-md-2">
                     <div class="form-group" *ngIf="showColor">
                         <label>Color </label>
                         <igx-combo #cmbcolor class="combo" displayKey="name" valueKey="autoId" [itemsMaxHeight]="250"
@@ -351,7 +299,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-1 offset-sm-4">
+                <div class="col-sm-1">
                     <div class="btn-group">
                         <button type="button" class="btn btn-success mr-3" [disabled]="!soItemForm.valid" (click)="addItemRow()">
                             <i class="fas fa-plus"></i>
@@ -368,8 +316,8 @@
                     [primaryKey]="'itemId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
                     height="300px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
                     [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
-                    <igx-column field="status" [width]="'120px'" [selectable]="false" [sortable]="false"
-                        [resizable]="false" [editable]="false">
+                    <igx-column field="status" [width]="'120px'" [selectable]="false" [sortable]="false" [resizable]="false" 
+                            [editable]="false" >
                         <ng-template igxCell let-cell="cell">
                             <div *ngIf="cell.value; then completeBlock else elseBlock"></div>
                             <ng-template #completeBlock>
@@ -378,8 +326,7 @@
                                 </button>
                             </ng-template>
                             <ng-template #elseBlock>
-                                <button igxButton="icon" class="fab-compact"
-                                    (click)="onAddItemToDelivery($event,cell.cellID)">
+                                <button igxButton="icon" class="fab-compact" (click)="onAddItemToDelivery($event,cell.cellID)">
                                     <igx-icon fontSet="material" style="color:mediumvioletred">arrow_drop_down_circle
                                     </igx-icon>
                                 </button>
@@ -395,7 +342,7 @@
                             </button>
                         </ng-template>
                     </igx-column>
-                    <igx-column [field]="'article'" [header]="'Article'" [resizable]="true" [dataType]="'string'"
+                    <igx-column [field]="'articleName'" [header]="'Article'" [resizable]="true" [dataType]="'string'"
                         [sortable]="true" [editable]="false">
                     </igx-column>
                     <igx-column [field]="'color'" [header]="'Color'" [resizable]="true" [dataType]="'string'"
@@ -458,11 +405,20 @@
                     </div>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <div class="group">
                         <igx-date-picker id="deliveryDate" formControlName="deliveryDate">
                             <label igxLabel>Del. Date</label>
                         </igx-date-picker>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="articleName" />
+                            <label igxLabel for="articleName"> Article </label>
+                        </igx-input-group>
                     </div>
                 </div>
 
@@ -502,7 +458,7 @@
                     </div>
                 </div> -->
 
-                <div class="col-sm-1 offset-sm-1">
+                <div class="col-sm-1">
                     <div class="btn-group">
                         <button type="button" class="btn btn-success mr-3" [disabled]="!soDeliveyForm.valid"
                             (click)="addDeliveryItemRow()">
@@ -531,7 +487,7 @@
                             </button>
                         </ng-template>
                     </igx-column>
-                    <igx-column [width]="'0px'" [field]="'deliCustLocId'" [header]="'ID'" [resizable]="false" [dataType]="'number'" [sortable]="false">
+                    <igx-column [field]="'deliCustLocId'" [header]="'ID'" [width]="'0px'" [resizable]="false" [dataType]="'number'" [sortable]="false">
                     </igx-column>
                     <igx-column [field]="'deliCustLoc'" [header]="'DelCustomer Loc'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                     </igx-column>
@@ -539,21 +495,17 @@
                     </igx-column>
                     <igx-column [field]="'deliveryDate'" [header]="'Delivery Date'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                     </igx-column>
-                    <!-- <igx-column [field]="'article'" [header]="'Article'" [resizable]="true" [dataType]="'string'" [sortable]="true">
-                    </igx-column> -->
+                    <igx-column [field]="'article'" [header]="'Article'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                    </igx-column>
                     <igx-column [field]="'color'" [header]="'Color'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                     </igx-column>
                     <igx-column [field]="'size'" [header]="'Size'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                     </igx-column>
                     <igx-column [field]="'qty'" [header]="'Qty'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                     </igx-column>
-                    <!-- <igx-column [field]="'price'" [header]="'Price'" [resizable]="true"  [pipeArgs]="formatPrice" [dataType]="'string'" 
-                            [sortable]="true">
-                    </igx-column> -->
                 </igx-grid>
             </div>
         </form>
-
     </div>
 </div>
 
@@ -562,7 +514,100 @@
     message="Are you sure you want to delete the record ?">
 </igx-dialog>
 
-<igx-dialog #form [closeOnOutsideSelect]="false">
+<igx-dialog #articleDialog [closeOnOutsideSelect]="false">
+    <igx-dialog-title>
+        <h5 class="col-md-11 bg-secondary">
+            Article
+        </h5>
+        <div igxButton class="col-md-1" (click)="articleDialog.close()">
+            <igx-icon>clear</igx-icon>
+        </div>
+    </igx-dialog-title>
+
+    <form [formGroup]="articleForm">
+        <div class="row">                
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Category </label>
+                    <igx-combo #category id="category" class="combo" displayKey="name" valueKey="autoId"
+                        [itemsMaxHeight]="250" [data]="categoryList" placeholder="Category"
+                        (onSelectionChange)="singleSelection($event)" (onSelectionChange)="onSelectCategory($event)"
+                        formControlName="category" searchPlaceholder="Search...">
+                    </igx-combo>
+                </div>
+            </div>
+        
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Product Type </label>
+                    <igx-combo #prodType id="prodType" class="combo" displayKey="prodTypeName" valueKey="autoId" [itemsMaxHeight]="250"
+                        [data]="prodTypeList" placeholder="Product Type" (onSelectionChange)="singleSelection($event)"
+                        (onSelectionChange)="onSelectProdType($event)" formControlName="prodType" searchPlaceholder="Search...">
+                    </igx-combo>
+                </div>
+            </div>
+        
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Product Group </label>
+                    <igx-combo #prodGroup id="prodGroup" class="combo" displayKey="prodGroupName" valueKey="autoId"
+                        [itemsMaxHeight]="250" [data]="prodGroupList" placeholder="Product Group"
+                        (onSelectionChange)="singleSelection($event)" formControlName="prodGroup"
+                        (onSelectionChange)="onSelectProdGroup($event)" searchPlaceholder="Search...">
+                    </igx-combo>
+                </div>
+            </div>              
+        </div> 
+        <div class="row">
+            <igx-hierarchical-grid #articleGrid [data]="articleList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+                [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
+                height="500px" displayDensity="compact" width="1200px" [allowFiltering]="true"
+                [filterMode]="'excelStyleFilter'" [rowSelection]="'Single'">
+                <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                    <ng-template igxCell let-cell="cell">
+                        <button igxButton="icon" class="fab-compact" (click)="selectArticle($event,cell.cellID)">
+                            <igx-icon family="material">check_circle</igx-icon>
+                        </button>
+                    </ng-template>
+                </igx-column>
+                <igx-column [field]="'stockCode'" [header]="'Stock Code'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                </igx-column>
+                <igx-column [field]="'articleName'" [header]="'Article Name'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                </igx-column>
+                <igx-column [field]="'description1'" [header]="'Description1'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                </igx-column>
+                <igx-column [field]="'description2'" [header]="'Description2'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                </igx-column>
+                <igx-column [field]="'colorCardName'" [header]="'Color Card'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                </igx-column>
+                <igx-column [field]="'sizeCardName'" [header]="'Size Card'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                </igx-column>
+                <igx-column [field]="'unitCode'" [header]="'Unit'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                </igx-column>               
+                <igx-column [field]="'measurement'" [header]="'Measurement'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                </igx-column>
+                <igx-column [field]="'salesPrice'" [header]="'SalesPrice'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                </igx-column>
+                <igx-column [field]="'lastCostPrice'" [header]="'LastCostPrice'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                </igx-column>
+                <igx-column [field]="'avgCostPrice'" [header]="'AvgCostPrice'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                </igx-column>
+                <igx-column [field]="'maxCostPrice'" [header]="'MaxCostPrice'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                </igx-column>
+                <igx-row-island [key]="'FlexFields'">
+                    <igx-column [field]="'flexFieldName'" [header]="'FieldName'" [resizable]="true" [dataType]="'string'" 
+                            [sortable]="true" [width]="'200px'" >
+                    </igx-column>
+                    <igx-column [field]="'flexFieldValue'" [header]="'FieldValue'" [resizable]="true" [dataType]="'string'" 
+                            [sortable]="true" [width]="'120px'" >
+                    </igx-column>
+                </igx-row-island>
+            </igx-hierarchical-grid>
+        </div>
+    </form>
+</igx-dialog>
+
+<!-- <igx-dialog #form [closeOnOutsideSelect]="false">
     <igx-dialog-title>
         <div class="col-md-11">
             <h5 class="bg-secondary">
@@ -572,7 +617,6 @@
         <div class="col-md-1">
             <div igxButton (click)="form.close()">
                 <igx-icon>clear</igx-icon>
-                <!-- <button igxButton (click)="form.close()"></button> -->
             </div>
         </div>
     </igx-dialog-title>
@@ -620,9 +664,7 @@
         <igx-column [field]="'unitCode'" [width]="'100px'" [header]="'Unit'" [resizable]="true" [dataType]="'string'"
             [sortable]="true">
         </igx-column>
-        <!-- <igx-column [field]="'materialCode'" [width]="'100px'" [header]="'Material'" [resizable]="true"
-            [dataType]="'string'" [sortable]="true">
-        </igx-column> -->
+   
         <igx-column [field]="'catCode'" [width]="'100px'" [header]="'Category'" [resizable]="true" [dataType]="'string'"
             [sortable]="true">
         </igx-column>
@@ -633,8 +675,4 @@
             [sortable]="true">
         </igx-column>
     </igx-grid>
-
-    <!-- <div igxDialogActions>
-        <button igxButton (click)="form.close()">Close</button>
-    </div> -->
-</igx-dialog>
+</igx-dialog> -->

@@ -1,24 +1,15 @@
 <div class="card card-default">
     <div class="card-header">
-        <h3 class="card-title">Master Units</h3>
-        <!-- <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse">
-            <i class="fas fa-minus"></i>
-          </button>
-          <button type="button" class="btn btn-tool" data-card-widget="remove">
-            <i class="fas fa-times"></i>
-          </button>
-        </div> -->
+        <h3 class="card-title"> Units</h3>  
     </div>
 
     <form [formGroup]="mstrUnits" (ngSubmit)="mstrUnits.valid"  autocomplete="off">
-        <div class="card-body">
-        
+        <div class="card-body">        
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
                         <igx-input-group>
-                            <input igxInput type="text"  formControlName="Name"/>
+                            <input igxInput type="text"  formControlName="name"/>
                             <label igxLabel > Name</label>
                         </igx-input-group>
                     </div>
@@ -27,29 +18,25 @@
                 <div class="col-md-2">
                     <div class="form-group">
                         <igx-input-group>
-                            <input igxInput type="text" formControlName="Code" />
-                            <label igxLabel > Code</label>
+                            <input igxInput type="text" formControlName="code" />
+                            <label igxLabel> Code </label>
                         </igx-input-group>
                     </div>
                 </div>
 
-                <div class="col-md-1 offset-md-5">
-                    <div class="form-group">
-                        <button type="button" 
-                            class="btn btn-block btn-success" [disabled]="!mstrUnits.valid" (click)="EditUnit()">Save</button>
-                    </div>
-                </div>
-
                 <div class="col-md-1">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-block btn-default" (click)="resetControls()">New</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default mr-3" (click)="resetControls()">
+                            <i class="fas fa-broom"></i> </button>
+                        <button type="button" class="btn btn-success" [disabled]="!mstrUnits.valid" (click)="saveUnit()">
+                            <i class="fas fa-save"></i> </button>
                     </div>
-                </div>                
+                </div>                    
             </div>
 
             <div class="row">
                 <div class="col-md-12">
-                    <igx-grid #sizeGrid [data]="sizeUnitList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+                    <igx-grid #unitGrid [data]="unitList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
                         [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
                         height="500px" displayDensity="compact" [allowFiltering]="true"
                         [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true" [rowSelection]="'Single'">

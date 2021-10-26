@@ -420,18 +420,36 @@ namespace API.Controllers.CCSystem.Master
         #endregion "Special Instruction"
 
 
-        #region "CodeSettings"
+        #region "CodeDefinition"
 
-        // [HttpGet("CodeSett")]
-        // public async Task<IActionResult> GetCodeSettingDetails() 
-        // {
-        //     var result = await _context.MstrCodeDefinition
-        //         .Select(x => new {x.ProdGroupId , x.ProdTypeId , x.isLength , x.isWidth , x.isHeight})
-        //         .ToListAsync();
-        //     return Ok(result);
-        // }
+        [HttpPost("CodeDef")]
+        public async Task<IActionResult> GetCodeSettingDetails(MstrCodeDefinition codeDef) 
+        {
+            var result = await _context.MstrCodeDefinition
+                .Where(x => x.CategoryId == codeDef.CategoryId && x.ProdTypeId == codeDef.ProdTypeId 
+                            && x.ProdGroupId == codeDef.ProdGroupId)
+                .Select(x => new { x.AutoId , x.FlexFieldId , x.FieldName , x.IsCode 
+                    , x.IsCounter , x.IsName , x.IsValue , x.IsSeperator , x.Seperator , x.CounterPad , x.CounterStart
+                    , x.IsProductField , x.SeqNo , x.SortOrder})
+                .ToListAsync();
+            return Ok(result);
+        }
 
-        #endregion "CodeSettings"
+        [HttpPost("SaveCDef")]
+        public async Task<IActionResult> SaveCodeDefinition(MstrCodeDefinition codeDefinition)
+        {
+            var result = await _masterRepository.SaveCodeDefinitionAsync(codeDefinition);
+            return Ok(result);
+        }
+
+        [HttpPost("DeleteCDef")]
+        public async Task<IActionResult> DeleteCodeDefinition(MstrCodeDefinition codeDefinition)
+        {
+            var result = await _masterRepository.DeleteCodeDefinitionAsync(codeDefinition);
+            return Ok(result);
+        }
+
+        #endregion "CodeDefinition"
 
    
         #region "CustomerHeader"
@@ -666,6 +684,13 @@ namespace API.Controllers.CCSystem.Master
             return Ok(addressList);
         }
 
+        [HttpPost("SaveAddType")]
+        public async Task<ActionResult> SaveAddressType(MstrAddressType addressType)
+        {
+            var result = await _masterRepository.SaveAddressTypeAsync(addressType);
+            return Ok(result);
+        }
+
         #endregion "AddressType"
 
 
@@ -712,6 +737,7 @@ namespace API.Controllers.CCSystem.Master
                 .Join(_context.MstrUnits , tc => tc.c.ToUnitId ,  t => t.AutoId ,
                     ( tc , t) => new 
                     {
+                        autoId = tc.c.AutoId,
                         toUnit = t.Code,
                         fromUnitId = tc.c.FromUnitId,
                         toUnitId = tc.c.ToUnitId,
@@ -722,7 +748,25 @@ namespace API.Controllers.CCSystem.Master
             return Ok(result);
         }
 
+        [HttpPost("SaveUC")]
+        public async Task<ActionResult> SaveUnitConversion(MstrUnitConversion unitConv)
+        {
+            var result = await _masterRepository.SaveUnitConversionAsync(unitConv);
+            return Ok(result);
+        }
+
         #endregion "Unit Conversion"
+
+        #region "Flute Type"
+
+        [HttpPost("SaveFT")]
+        public async Task<ActionResult> SaveFluteType(MstrFluteTypes fluteTypes)
+        {
+            var result = await _masterRepository.SaveFluteTypeAsync(fluteTypes);
+            return Ok(result);
+        }
+
+        #endregion "FLute Type"
 
         #region "Process"
 
@@ -887,6 +931,14 @@ namespace API.Controllers.CCSystem.Master
             return Ok(payTermList);
         }
 
+        [HttpPost("SavePT")]
+        public async Task<IActionResult> SavePaymentTerms(MstrPaymentTerm paymentTerm)
+        {
+            var result = await _masterRepository.SavePaymentTermsAsync(paymentTerm);
+            return Ok(result);
+        }
+
+
         #endregion "PaymentTerms" 
 
 
@@ -896,10 +948,17 @@ namespace API.Controllers.CCSystem.Master
         public async Task<IActionResult> GetCountries()
         {
             var countryList = await _context.MstrCountries
-                .Select(x => new {x.Name , x.Code , x.AutoId})
+                .Select(x => new {x.Name , x.Code , x.AutoId , x.Alpha3Code , x.Alpha2Code , x.Numeric})
                 .ToListAsync();
           
             return Ok(countryList);
+        }
+
+        [HttpPost("SaveCou")]
+        public async Task<IActionResult> SaveCountries(MstrCountries countries)
+        {
+            var result = await _masterRepository.SaveCountriesAsync(countries);
+            return Ok(result);
         }
 
         #endregion "Countries"
@@ -911,10 +970,17 @@ namespace API.Controllers.CCSystem.Master
         public async Task<IActionResult> GetCurrency()
         {
             var currencyList = await _context.MstrCurrency
-            .Select(x => new {x.AutoId , x.Code , x.Name})
+            .Select(x => new {x.AutoId , x.Code , x.Name , x.Symbol})
             .ToListAsync();
 
             return Ok(currencyList);
+        }
+
+        [HttpPost("SaveCurr")]
+        public async Task<IActionResult> SaveCurrency(MstrCurrency currency)
+        {
+            var result = await _masterRepository.SaveCurrencyAsync(currency);
+            return Ok(result);
         }
 
         #endregion "Currency"
@@ -922,14 +988,22 @@ namespace API.Controllers.CCSystem.Master
 
         #region "SalesAgent"
 
-        [HttpGet("SalesAgent")]
-        public async Task<IActionResult> GetSalesAgent()
+        [HttpGet("SalesAgent/{id}")]
+        public async Task<IActionResult> GetSalesAgent(int id)
         {
-            var agentList = await _context.MstrSalesAgent
-                .Select(x => new {x.Name , x.AutoId})
+            var result = await _context.MstrSalesAgent
+                .Where(x => x.LocationId == id)
+                .Select(x => new {x.Name , x.AutoId , x.Email , x.bActive})
                 .ToListAsync();
 
-            return Ok(agentList);
+            return Ok(result);
+        }
+
+        [HttpPost("SaveSA")]
+        public async Task<IActionResult> SaveSalesAgent(MstrSalesAgent salesAgent)
+        {
+            var result = await _masterRepository.SaveSalesAgentAsync(salesAgent);
+            return Ok(result);
         }
 
         #endregion "SalesAgent"
@@ -1168,24 +1242,25 @@ namespace API.Controllers.CCSystem.Master
         #endregion "Flute Type"   
 
 
-        #region "Serial No Details"
+        #region "Sequence Settings"
 
-        [HttpGet("SerialNoDt/{locId}")]
-        public async Task<IActionResult> GetSerialNoDetails(int locId)
+        [HttpGet("SeqSettDt/{locId}")]
+        public async Task<IActionResult> GetSequenceSettings(int locId)
         {
-            var result = await _context.MstrSerialNoDetails
-                .Where(x => x.LocationId == locId).ToListAsync();
+            var result = await _context.TransSequenceSettings                
+                .Where(x => x.LocationId == locId)
+                .Select(x => new {x.TransType , x.Prefix , x.SeqLength , x.SeqNo , x.CurrentYear , x.AutoId}) .ToListAsync();
             return Ok(result);
         }
         
-        [HttpPost("SaveSerialNo")]
-        public async Task<ActionResult> SaveSerialNoDetails(MstrSerialNoDetails MstrSerialNoD)
+        [HttpPost("SaveSeqSett")]
+        public async Task<ActionResult> SaveSequenceSettings(TransSequenceSettings sequenceSett)
         {
-            var result = await _masterRepository.SaveSerialNoDtAsync(MstrSerialNoD);
+            var result = await _masterRepository.SaveSequenceSetAsync(sequenceSett);
             return Ok(result);
         }
 
-        #endregion "Serial No Details"
+        #endregion "Sequence Settings"
        
          // [HttpGet("ProductionDefinition")]
         // public async Task<IActionResult> getProductionDefinition()
@@ -1282,14 +1357,22 @@ namespace API.Controllers.CCSystem.Master
 
         #region  Reject Reason
 
-        [HttpGet("RejetReason")]
-        public async Task<IActionResult> GetRejectReason()
+        [HttpGet("RejReason/{id}")]
+        public async Task<IActionResult> GetRejectReason(int id)
         {
             var rejReasonList = await _context.MstrRejeReasons
+                .Where(x => x.LocationId == id )
                 .Select(x => new { x.AutoId , x.Details , x.IsActive})
-                .Where(x => x.IsActive == true).ToListAsync();
+                .ToListAsync();
 
             return Ok(rejReasonList);
+        }
+
+        [HttpPost("SaveRReason")]
+        public async Task<IActionResult> SaveRejectReason(MstrRejectionReasons rejReason)
+        {
+            var result = await _masterRepository.SaveRejectReasonAsync(rejReason);
+            return Ok(result);
         }
 
         #endregion Reject Reason

@@ -686,6 +686,111 @@ namespace API.Repository
         #endregion Unit
 
 
+        #region Unit Conversion
+
+        public async Task<int> SaveUnitConversionAsync(MstrUnitConversion unitConv)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , unitConv.AutoId);
+            para.Add("FromUnitId", unitConv.FromUnitId);
+            para.Add("ToUnitId", unitConv.ToUnitId);
+            para.Add("Value", unitConv.Value);
+            para.Add("UserId", unitConv.CreateUserId);            
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrUnitConversionSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+
+        #endregion Unit Conversion
+
+        #region Flute Type
+
+        public async Task<int> SaveFluteTypeAsync(MstrFluteTypes fluteTypes)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , fluteTypes.AutoId);
+            para.Add("Factor", fluteTypes.Factor);
+            para.Add("Code", fluteTypes.Code.ToUpper());
+            para.Add("LocationId", fluteTypes.LocationId);
+            para.Add("UserId", fluteTypes.CreateUserId);            
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrFluteTypesSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        #endregion Flute Type
+
+        #region Sales Agent
+
+        public async Task<int> SaveSalesAgentAsync(MstrSalesAgent salesAgent)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , salesAgent.AutoId);
+            para.Add("Name", salesAgent.Name);
+            para.Add("Email", salesAgent.Email);
+            para.Add("LocationId", salesAgent.LocationId);
+            para.Add("UserId", salesAgent.CreateUserId);            
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrSalesAgentSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        #endregion Sales Agent
+
+        #region Currency
+
+        public async Task<int> SaveCurrencyAsync(MstrCurrency currency)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , currency.AutoId);
+            para.Add("Name", currency.Name);
+            para.Add("Code", currency.Code.ToUpper());
+            para.Add("Symbol", currency.Symbol);
+            para.Add("UserId", currency.CreateUserId);            
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrCurrencySave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        #endregion Currency
+
+        #region Address Type
+
+        public async Task<int> SaveAddressTypeAsync(MstrAddressType addressType)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , addressType.AutoId);
+            para.Add("AddressCode", addressType.AddressCode.ToUpper().Trim());
+            para.Add("AddressName", addressType.AddressCodeName);
+            para.Add("UserId", addressType.CreateUserId);            
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrAddressTypeSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        #endregion Address Type
+
         #region Process
                    
         public async Task<int> SaveProcessAsync(MstrProcess masterProcess)
@@ -705,6 +810,75 @@ namespace API.Repository
         }
 
         #endregion Process
+
+        #region Code Definition
+                   
+        public async Task<int> SaveCodeDefinitionAsync(MstrCodeDefinition codeDefinition)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , codeDefinition.AutoId);
+            para.Add("CategoryId", codeDefinition.CategoryId);
+            para.Add("ProdTypeId", codeDefinition.ProdTypeId);
+            para.Add("ProdGroupId", codeDefinition.ProdGroupId);
+            para.Add("SortOrder", codeDefinition.SortOrder);
+            para.Add("IsProductField", codeDefinition.IsProductField);
+            para.Add("FlexFieldId", codeDefinition.FlexFieldId);
+            para.Add("FieldName", codeDefinition.FieldName);
+            para.Add("IsCode", codeDefinition.IsCode);
+            para.Add("IsName", codeDefinition.IsName);
+            para.Add("IsCounter", codeDefinition.IsName);
+            para.Add("IsValue", codeDefinition.IsValue);
+            para.Add("CounterPad", codeDefinition.CounterPad);
+            para.Add("CounterStart", codeDefinition.CounterStart);
+            para.Add("SeqNo", codeDefinition.SeqNo);
+            para.Add("IsSeperator", codeDefinition.IsSeperator);
+            para.Add("Seperator", codeDefinition.Seperator);
+            para.Add("UserId", codeDefinition.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrCodeDefinitionSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<int> DeleteCodeDefinitionAsync(MstrCodeDefinition codeDefinition)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , codeDefinition.AutoId);            
+            para.Add("UserId", codeDefinition.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrCodeDefinitionDelete", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        #endregion Code Definition
+
+
+        #region Reject Reason
+                   
+        public async Task<int> SaveRejectReasonAsync(MstrRejectionReasons rejReasons)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , rejReasons.AutoId);
+            para.Add("Details", rejReasons.Details.Trim());
+            para.Add("UserId", rejReasons.CreateUserId);
+            para.Add("LocationId", rejReasons.LocationId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrRejectReasonSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        #endregion Reject Reason
 
 
         #region StoreSite
@@ -726,6 +900,49 @@ namespace API.Repository
         }
 
         #endregion StoreSite
+
+        #region Countries
+                  
+        public async Task<int> SaveCountriesAsync(MstrCountries countries)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , countries.AutoId);
+            para.Add("Code", countries.Code.ToUpper().Trim());
+            para.Add("Name", countries.Name.Trim());
+            para.Add("Alpha2Code", countries.Alpha2Code.ToUpper().Trim());
+            para.Add("Alpha3Code", countries.Alpha3Code.ToUpper().Trim());
+            para.Add("Numeric", countries.Numeric);
+            para.Add("UserId", countries.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrCountriesSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        #endregion Countries
+
+        #region Payment Terms
+                  
+        public async Task<int> SavePaymentTermsAsync(MstrPaymentTerm paymentTerm)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , paymentTerm.AutoId);
+            para.Add("Code", paymentTerm.Code.ToUpper().Trim());
+            para.Add("Name", paymentTerm.Name.Trim());
+            para.Add("UserId", paymentTerm.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrPaymentTermsSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        #endregion Payment Terms
 
 
         #region Customer Header
@@ -1400,21 +1617,21 @@ namespace API.Repository
 
         #region Serial No Details
 
-        public async Task<int> SaveSerialNoDtAsync(MstrSerialNoDetails serialNoDt)
+        public async Task<int> SaveSequenceSetAsync(TransSequenceSettings seqSettings)
         {
             DynamicParameters para = new DynamicParameters();
 
-            para.Add("AutoId" , serialNoDt.AutoId);
-            para.Add("ModuleId", serialNoDt.ModuleId);
-            para.Add("Name", serialNoDt.Name.Trim());
-            para.Add("Prefix", serialNoDt.Prefix.Trim().ToUpper());
-            para.Add("NoOfDigits", serialNoDt.NoOfDigits);
-            para.Add("Counter", serialNoDt.Counter);
-            para.Add("LocationId", serialNoDt.LocationId);
-            para.Add("UserId", serialNoDt.CreateUserId);
+            para.Add("AutoId" , seqSettings.AutoId);
+            para.Add("TransType", seqSettings.TransType);
+            para.Add("Prefix", seqSettings.Prefix.Trim().ToUpper());
+            para.Add("SeqLength", seqSettings.SeqLength);
+            para.Add("SeqNo", seqSettings.SeqNo);
+            // para.Add("CurrentYea", seqSettings.CurrentYear);
+            para.Add("LocationId", seqSettings.LocationId);
+            para.Add("UserId", seqSettings.CreateUserId);
             para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
 
-            var result = await DbConnection.ExecuteAsync("spMstrSerialNoDetailsSave", para 
+            var result = await DbConnection.ExecuteAsync("spTransSequenceSettingsSave", para 
                     , commandType: CommandType.StoredProcedure);            
 
             return para.Get<int>("Result");

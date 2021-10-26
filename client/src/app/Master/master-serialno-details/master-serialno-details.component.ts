@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
+import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxDatePickerComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
 import { Category } from 'src/app/_models/category';
+import { SequenceSettings } from 'src/app/_models/sequenceSettings';
 import { SerialNo } from 'src/app/_models/serialNo';
 import { User } from 'src/app/_models/user';
 import { AccountService } from '_services/account.service';
@@ -15,7 +16,7 @@ import { MasterService } from '_services/master.service';
 })
 export class MasterSerialnoDetailsComponent implements OnInit {
   serialNoForm: FormGroup;
-  serialNoList: SerialNo[];
+  serialNoList: SequenceSettings[];
   user: User;
   validationErrors: string[] = [];
   categoryList: Category[];
@@ -25,15 +26,15 @@ export class MasterSerialnoDetailsComponent implements OnInit {
   public nWidth: string;
 
   @ViewChild('SerialNoGrid', { static: true })
-  public SerialNoGrid: IgxGridComponent;
+  public SerialNoGrid: IgxGridComponent;   
 
   constructor(private accountService: AccountService, private fb: FormBuilder
     ,private masterService: MasterService ,private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.initilizeForm();
-    this.loadCategory();
-    this.loadSerialNoDetails();
+    // this.loadCategory();
+    this.loadSeqSettings();
   }
 
   initilizeForm() {
@@ -44,10 +45,11 @@ export class MasterSerialnoDetailsComponent implements OnInit {
     this.serialNoForm = this.fb.group({
       autoId: [0],
       createUserId: this.user.userId,
-      name: ['', [Validators.required, Validators.maxLength(100)]],
-      prefix: ['', [Validators.required, Validators.maxLength(5)]],
-      noOfDigits: ['', Validators.required],
-      counter: ['', Validators.required],
+      transType: ['', [Validators.required, Validators.maxLength(50)]],
+      prefix: ['', [Validators.required, Validators.maxLength(10)]],
+      seqLength: ['', Validators.required],
+      seqNo: ['', Validators.required],
+      // currentYear: [''],
     });
   }
 
@@ -57,11 +59,11 @@ export class MasterSerialnoDetailsComponent implements OnInit {
     }
   }
 
-  loadCategory() {
-    this.masterService.getCategory().subscribe((cardList) => {
-      this.categoryList = cardList;
-    });
-  }
+  // loadCategory() {
+  //   this.masterService.getCategory().subscribe((cardList) => {
+  //     this.categoryList = cardList;
+  //   });
+  // }
 
   public onResize(event) {
     this.col = event.column;
@@ -69,40 +71,39 @@ export class MasterSerialnoDetailsComponent implements OnInit {
     this.nWidth = event.newWidth;
   }
 
-  loadSerialNoDetails() {
+  loadSeqSettings() {
     var user: User = JSON.parse(localStorage.getItem('user'));
-    this.masterService.getSerialNoDetails(user.locationId).subscribe((cardList) => {
+    this.masterService.getSeqSettings(user.locationId).subscribe((cardList) => {
       this.serialNoList = cardList;
     });
   }
-
 
   saveSerialNo() {
     var user: User = JSON.parse(localStorage.getItem('user'));
 
     var obj = {
       createUserId: this.user.userId,
-      name: this.serialNoForm.get('name').value.trim(),
+      transType: this.serialNoForm.get('transType').value.trim(),
       prefix: this.serialNoForm.get('prefix').value.trim(),
-      noOfDigits: this.serialNoForm.get('noOfDigits').value,
-      counter: this.serialNoForm.get('counter').value,
+      seqLength: this.serialNoForm.get('seqLength').value,
+      seqNo: this.serialNoForm.get('seqNo').value,
       autoId: this.serialNoForm.get('autoId').value,
-      moduleId: 1,
+      // currentYear: this.serialNoForm.get('currentYear').value == null ? 0 : this.serialNoForm.get('currentYear').value,
       locationId: user.locationId,
     };
 
-    this.masterService.saveSerialNoDetails(obj).subscribe(
+    this.masterService.saveSeqSettings(obj).subscribe(
       (result) => {
         if (result == 1) {
-          this.toastr.success('Serial No save Successfully !!!');
-          this.loadSerialNoDetails();
+          this.toastr.success('Seq Settings save Successfully !!!');
+          this.loadSeqSettings();
           this.clearControls();
         } else if (result == 2) {
-          this.toastr.success('Serial No update Successfully !!!');
-          this.loadSerialNoDetails();
+          this.toastr.success('Seq Settings update Successfully !!!');
+          this.loadSeqSettings();
           this.clearControls();
         } else if (result == -1) {
-          this.toastr.warning('Serial No already exists !!!');
+          this.toastr.warning('Seq Settings already exists !!!');
         } else {
           this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
         }
@@ -119,8 +120,8 @@ export class MasterSerialnoDetailsComponent implements OnInit {
     this.serialNoForm.get('autoId').setValue(0);
     this.serialNoForm.get('createUserId').setValue(this.user.userId);
 
-    this.serialNoForm.get('name').enable();
-    this.serialNoForm.get('prefix').enable();
+    // this.serialNoForm.get('name').enable();
+    // this.serialNoForm.get('prefix').enable();
   }
 
  
@@ -131,13 +132,11 @@ export class MasterSerialnoDetailsComponent implements OnInit {
       return record.autoId == ids;
     });
 
-    this.serialNoForm.get('name').setValue(selectedRowData[0]['name']);
+    this.serialNoForm.get('transType').setValue(selectedRowData[0]['transType']);
     this.serialNoForm.get('prefix').setValue(selectedRowData[0]['prefix']);
-    this.serialNoForm.get('noOfDigits').setValue(selectedRowData[0]['noOfDigits']);
-    this.serialNoForm.get('counter').setValue(selectedRowData[0]['counter']);
+    this.serialNoForm.get('seqLength').setValue(selectedRowData[0]['seqLength']);
+    this.serialNoForm.get('seqNo').setValue(selectedRowData[0]['seqNo']);
+    // this.serialNoForm.get('currentYear').setValue(selectedRowData[0]['currentYear']);
     this.serialNoForm.get('autoId').setValue(selectedRowData[0]['autoId']);
-
-    this.serialNoForm.get('name').disable();
-    this.serialNoForm.get('prefix').disable();
   }
 }

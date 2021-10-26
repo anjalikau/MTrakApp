@@ -154,6 +154,4 @@ export class MenuListComponent implements OnInit {
     this.menuListForm.get('AgentLevelId').setValue([selectedRowData[0]["iCategoryLevel"]]);
   }
 
-
-
 }

@@ -10,10 +10,11 @@ namespace API.Entities
         [Key]
         public int AutoId {get;set;}
 	    public string Details {get;set;}
+        public int LocationId {get;set;}
 	    public bool IsActive {get;set;}
-	    public int CreateUserId {get;set;}
-	    public DateTime CreateDateTime {get;set;}
-	    public int UpdateUserId {get;set;}
-	    public DateTime UpdateDateTime {get;set;}   
+	    public int ? CreateUserId {get;set;}
+	    public DateTime ? CreateDateTime {get;set;}
+	    public int ? UpdateUserId {get;set;}
+	    public DateTime ? UpdateDateTime {get;set;}   
     }
 }

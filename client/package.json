@@ -34,6 +34,7 @@
     "ngx-select-dropdown": "^2.1.0",
     "ngx-ssrs-reportviewer": "^3.1.1",
     "ngx-toastr": "^13.2.1",
+    "ngy-year-picker": "^2.0.0",
     "react-number-format": "^4.6.3",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

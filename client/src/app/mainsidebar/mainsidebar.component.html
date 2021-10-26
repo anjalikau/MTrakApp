@@ -151,6 +151,22 @@
               </a>
             </li>
           </ul>
+          <ul class="nav nav-treeview" *ngIf="userPermit">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/CodeDefinition" routerLinkActive="active" (click)="menuClose()">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Code Definition</p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/SerialNoDetails" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>SerialNo Details</p>
+              </a>
+            </li>
+          </ul>
         </li>
         <li class="nav-item" *ngIf="masterGroup">
           <!--menu-open-->
@@ -179,7 +195,7 @@
           </ul>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a class="nav-link" routerLink="/MasterUnits" routerLinkActive="active">
+              <a class="nav-link" routerLink="/Unit" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Units</p>
               </a>
@@ -219,12 +235,53 @@
           </ul>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a class="nav-link" routerLink="/SerialNoDetails" routerLinkActive="active">
+              <a class="nav-link" routerLink="/FluteType" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
-                <p>SerialNo Details</p>
+                <p>Flute Type</p>
               </a>
             </li>
           </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/SalesAgent" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Sales Agent</p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/Currency" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Currency</p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/Countries" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Countries</p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/PayTerms" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Payment Terms</p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/RejReason" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Reject Reason</p>
+              </a>
+            </li>
+          </ul>
+          
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a class="nav-link" routerLink="/ProductMenu" routerLinkActive="active">
@@ -254,6 +311,15 @@
               <a class="nav-link" routerLink="/MasterCategory" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Category</p>
+              </a>
+            </li>
+          </ul>
+
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/AddressType" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Address Type</p>
               </a>
             </li>
           </ul>

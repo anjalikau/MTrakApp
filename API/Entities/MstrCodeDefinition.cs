@@ -13,15 +13,15 @@ namespace API.Entities
         public int ProdTypeId {get;set;}
         public int ProdGroupId {get;set;}
         public int SortOrder {get;set;}
-        public int IsProductFeild {get;set;}
-        public int FlexFeildId {get;set;}
+        public bool IsProductField {get;set;}
+        public int FlexFieldId {get;set;}
         public string FieldName {get;set;}
         public bool IsCode {get;set;}
         public bool IsName {get;set;}
-        public int IsCounter {get;set;}
-        public int IsValue {get;set;}
+        public bool IsCounter {get;set;}
+        public bool IsValue {get;set;}
         public int CounterPad {get;set;}
-        public string CounterStart {get;set;}
+        public int CounterStart {get;set;}
         public int SeqNo {get;set;}
         public bool IsSeperator {get;set;}
         public string Seperator {get;set;}

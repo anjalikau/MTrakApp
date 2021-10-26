@@ -31,7 +31,7 @@ import { MasterSizeCardComponent } from './master/size/master-size-card/master-s
 import { DatePipe } from '@angular/common';
 import { SalesOrderComponent } from './transaction/sales-order/sales-order.component';
 import { MasterStoresiteComponent } from './master/master-storesite/master-storesite.component';
-import { MasterUnitsComponent } from './master/master-units/master-units.component';
+import { MasterUnitsComponent } from './master/unit/master-units/master-units.component';
 import { MasterProcessComponent } from './master/master-process/master-process.component';
 import { JobCreationComponent } from './transaction/job-creation/job-creation.component';
 import { MasterBrandComponent } from './master/master-brand/master-brand.component';
@@ -71,12 +71,6 @@ import { ReportViewerComponent } from './report/report-viewer/report-viewer.comp
 import { ReportViewerModule } from 'ngx-ssrs-reportviewer';
 import { BoldReportViewerModule } from '@boldreports/angular-reporting-components';
 
-// Report viewer
-// import '@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min';
-
-// data-visualization
-// import '@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.bulletgraph.min';
-// import '@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.chart.min';
 import { BoldreportViewerComponent } from './report/boldreport-viewer/boldreport-viewer.component';
 import { ColorTabComponent } from './master/color/color-tab/color-tab.component';
 import { ColorAllocCardComponent } from './master/color/color-alloc-card/color-alloc-card.component';
@@ -87,6 +81,24 @@ import { CostListComponent } from './transaction/cost-list/cost-list.component';
 import { ArticleTabComponent } from './master/article/article-tab/article-tab.component';
 import { AssignColorComponent } from './master/article/assign-color/assign-color.component';
 import { AssignSizeComponent } from './master/article/assign-size/assign-size.component';
+import { UnitConversionComponent } from './master/unit/unit-conversion/unit-conversion.component';
+import { UnitTabComponent } from './master/unit/unit-tab/unit-tab.component';
+import { FluteTypeComponent } from './master/flute-type/flute-type.component';
+import { SalesAgentComponent } from './master/sales-agent/sales-agent.component';
+import { CurrencyComponent } from './master/currency/currency.component';
+import { CountriesComponent } from './master/countries/countries.component';
+import { PaymentTermsComponent } from './master/payment-terms/payment-terms.component';
+import { RejectReasonComponent } from './master/reject-reason/reject-reason.component';
+import { CodeDefinitionComponent } from './users/code-definition/code-definition.component';
+import { AddressTypeComponent } from './master/address-type/address-type.component';
+import { NgYasYearPickerModule } from 'ngy-year-picker';
+
+// Report viewer
+// import '@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min';
+
+// data-visualization
+// import '@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.bulletgraph.min';
+// import '@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.chart.min';
 
 @NgModule({
   declarations: [
@@ -156,7 +168,17 @@ import { AssignSizeComponent } from './master/article/assign-size/assign-size.co
     CostListComponent,
     ArticleTabComponent,
     AssignColorComponent,
-    AssignSizeComponent
+    AssignSizeComponent,
+    UnitConversionComponent,
+    UnitTabComponent,
+    FluteTypeComponent,
+    SalesAgentComponent,
+    CurrencyComponent,
+    CountriesComponent,
+    PaymentTermsComponent,
+    RejectReasonComponent,
+    CodeDefinitionComponent,
+    AddressTypeComponent
   ],
   imports: [
     BrowserModule,
@@ -184,7 +206,8 @@ import { AssignSizeComponent } from './master/article/assign-size/assign-size.co
 	  IgxDividerModule,
     ReportViewerModule,
     BoldReportViewerModule,
-    IgxHierarchicalGridModule
+    IgxHierarchicalGridModule,
+    NgYasYearPickerModule
   ],
   providers: [
     DatePipe,

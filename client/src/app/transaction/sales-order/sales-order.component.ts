@@ -19,6 +19,9 @@ import { User } from 'src/app/_models/user';
 import { AccountService } from '_services/account.service';
 import { MasterService } from '_services/master.service';
 import { SalesorderService } from '_services/salesorder.service';
+import { ProductType } from 'src/app/_models/productType';
+import { Category } from 'src/app/_models/category';
+import { ProductGroup } from 'src/app/_models/productGroup';
 
 @Component({
   selector: 'app-sales-order',
@@ -40,6 +43,9 @@ export class SalesOrderComponent implements OnInit {
   user: User;
   customerList: CustomerHd[];
   customerDtList: CustomerLoc[];
+  prodTypeList: ProductType[];
+  prodGroupList: ProductGroup[];
+  categoryList: Category[];
   customerUserList: any[];
   customerCurrList: any[];
   salesCatList: any[];
@@ -49,8 +55,9 @@ export class SalesOrderComponent implements OnInit {
   salesAgentList: any[];
   validationErrors: string[] = [];
   public date: Date = new Date(Date.now());
-  showArtiForm: boolean = false;
-  showArticle: boolean = true;
+  // showArtiForm: boolean = false;
+  // showArticle: boolean = true;
+  isView: boolean = false;  
   showColor: boolean = true;
   showSize: boolean = true;
   btnStatus: string = '';
@@ -105,14 +112,22 @@ export class SalesOrderComponent implements OnInit {
   public division: IgxComboComponent;
   @ViewChild('delivLocation', { read: IgxComboComponent })
   public delivLocation: IgxComboComponent;
+  @ViewChild('category', { read: IgxComboComponent })
+  public category: IgxComboComponent;
+  @ViewChild('prodType', { read: IgxComboComponent })
+  public prodType: IgxComboComponent;
+  @ViewChild('prodGroup', { read: IgxComboComponent })
+  public prodGroup: IgxComboComponent;
 
   @ViewChild('chkIsCharge', { read: IgxCheckboxComponent })
   public chkIsCharge: IgxCheckboxComponent;
 
+  @ViewChild('articleDialog', { read: IgxDialogComponent })
+  public articleDialog: IgxDialogComponent;
   @ViewChild('dialog', { read: IgxDialogComponent })
   public dialog: IgxDialogComponent;
-  @ViewChild('form', { read: IgxDialogComponent })
-  public form: IgxDialogComponent;
+  // @ViewChild('form', { read: IgxDialogComponent })
+  // public form: IgxDialogComponent;
 
   //// FORMAT PRICE
   public options = {
@@ -132,13 +147,13 @@ export class SalesOrderComponent implements OnInit {
 
   ngOnInit(): void {
     this.initilizeForm();
-    //this.soDeliveyForm.disable();
     this.getSalesOrderRefNo();
     this.loadCustomer();
     this.loadSalesCategory();
     this.loadCountries();
     this.loadPaymentTerms();
     this.loadSalesAgent();
+    this.loadCategory();
     //this.LoadArticle();
     //this.LoadDelRef();
   }
@@ -170,20 +185,16 @@ export class SalesOrderComponent implements OnInit {
     });
 
     this.articleForm = this.fb.group({
-      articleId: [{ value: '', disabled: true }, Validators.required],
-      articleName: [{ value: '', disabled: true }],
-      articleDes1: [{ value: '', disabled: true }],
-      articleDes2: [{ value: '', disabled: true }],
-      articleCode: [{ value: '', disabled: true }],
-      category: [{ value: '', disabled: true }],
-      unit: [{ value: '', disabled: true }],
-      prodGroup: [{ value: '', disabled: true }],
-      prodType: [{ value: '', disabled: true }],
+      category: ['', Validators.required],
+      prodType: ['', Validators.required],
+      prodGroup: ['', Validators.required],
     });
 
     this.soItemForm = this.fb.group({
       itemId: [0],
-      //articleId: ['', Validators.required],
+      articleId: [0],
+      articleName: [{ value: '', disabled: true }],
+      articleCode: [{ value: '', disabled: true }],
       colorId: ['', Validators.required],
       sizeId: ['', Validators.required],
       qty: ['', Validators.required],
@@ -191,16 +202,16 @@ export class SalesOrderComponent implements OnInit {
     });
 
     this.soDeliveyForm = this.fb.group({
-      itemId: [{ value: 0, disabled: true }],
-      deliveryId: [{ value: 0, disabled: true }],
-      article: [{ value: '', disabled: true }, Validators.required],
+      itemId: [0],
+      deliveryId: [0],
+      articleId: [0],
+      articleName: [{ value: '', disabled: true }, Validators.required],
       color: [{ value: '', disabled: true }, Validators.required],
       size: [{ value: '', disabled: true }, Validators.required],
-      qty: [{ value: 0, disabled: true }, Validators.required],
-      // price: [{ value: 0, disabled: true }, Validators.required],
-      deliCustLocId: [{ value: '', disabled: true }],
-      deliveryRef: [{ value: '', disabled: true }, Validators.required],
-      deliveryDate: [{ value: '', disabled: true }, Validators.required],
+      qty: [0, Validators.required],
+      deliCustLocId: [0],
+      deliveryRef: ['', Validators.required],
+      deliveryDate: ['', Validators.required],
     });
   }
 
@@ -217,26 +228,26 @@ export class SalesOrderComponent implements OnInit {
     this.nWidth = event.newWidth;
   }
 
-  deliveryFormEnable() {
-    this.soDeliveyForm.get("deliCustLocId").enable();
-    this.soDeliveyForm.get("qty").enable();
-    this.soDeliveyForm.get("deliveryRef").enable();
-    this.soDeliveyForm.get("deliveryDate").enable();
-  }
+  // deliveryFormEnable() {
+  //   this.soDeliveyForm.get("deliCustLocId").enable();
+  //   this.soDeliveyForm.get("qty").enable();
+  //   this.soDeliveyForm.get("deliveryRef").enable();
+  //   this.soDeliveyForm.get("deliveryDate").enable();
+  // }
 
-  deliveryFormDisable() {
-    this.soDeliveyForm.get("deliCustLocId").disable();
-    this.soDeliveyForm.get("qty").disable();
-    this.soDeliveyForm.get("deliveryRef").disable();
-    this.soDeliveyForm.get("deliveryDate").disable();
-  }
+  // deliveryFormDisable() {
+  //   this.soDeliveyForm.get("deliCustLocId").disable();
+  //   this.soDeliveyForm.get("qty").disable();
+  //   this.soDeliveyForm.get("deliveryRef").disable();
+  //   this.soDeliveyForm.get("deliveryDate").disable();
+  // }
 
   //// ORDER REFERANCE NO KEY UP EVENT
   onKey(event: any) {
     //this.soDeliveyForm.disable();
     //console.log(event.keyCode);
     if (event.keyCode != 13) {
-      this.deliveryFormDisable();
+      // this.deliveryFormDisable();
       this.customer.disabled = false;
       this.soHeaderForm.get('customerRef').enable();
       this.articleForm.reset();
@@ -275,6 +286,128 @@ export class SalesOrderComponent implements OnInit {
     }
   }
 
+   //// LOADS CATEGORY
+   loadCategory() {
+    this.masterServices.getCategory().subscribe((result) => {
+      this.categoryList = result;
+    });
+  }
+
+  loadProductType(catId: number) {
+    this.masterServices.getProductTypeDetils(catId).subscribe((result) => {
+      this.prodTypeList = result;
+      //  console.log(this.prodTypeList);
+    });
+  }
+
+  loadProductGroup(typeId: number) {
+    // console.log(typeId);
+    this.masterServices.getProductGroupDt(typeId).subscribe((result) => {
+      this.prodGroupList = result;
+    });
+    // console.log(this.prodGroupList);
+  }
+
+  onSelectCategory(event) {
+    this.articleForm.get('prodType').reset();
+    this.articleForm.get('prodGroup').reset();
+    this.prodTypeList = [];
+    this.prodGroupList = [];
+    this.articleList = [];
+
+    for (const item of event.added) {
+      this.loadProductType(item);
+    }
+  }
+
+  onSelectProdType(event) {
+    this.articleForm.get('prodGroup').reset();
+    this.prodGroupList = [];
+    this.articleList = [];
+
+    for (const item of event.added) {
+      this.loadProductGroup(item);
+      //this.loadFlexFields(item);
+    }
+  }
+
+  //// LOADS ARTICLES BASED ON CATEGORY , PROD TYPE AND GROUP
+  onSelectProdGroup(event) {
+    this.articleList = [];
+    var articles: any[];
+    for (const item of event.added) {
+      var obj = {
+        categoryId: this.articleForm.get('category').value[0],
+        proTypeId: this.articleForm.get('prodType').value[0],
+        proGroupId: item,
+      };
+      //console.log(obj);
+      this.masterServices.getArticleDetails(obj).subscribe(
+        (result) => {
+          articles = result;
+        },
+        (error) => {
+          this.validationErrors = error;
+        },
+        () => {
+          if (articles.length > 0) {
+            var autoId = 0,
+              flexLine = [];
+            // console.log(articles);
+  
+            ///// Get Unique Article List
+            var uniqeArticle = articles.filter(
+              (arr, index, self) =>
+                index === self.findIndex((t) => t.autoId === arr.autoId)
+            );
+  
+            ///// PUSH FLEX FIELD ARTICLE LIST
+            for (let b = 0; b < uniqeArticle.length; b++) {
+              autoId = uniqeArticle[b]['autoId'];
+              var fieldLine: any = uniqeArticle[b]; 
+              
+              // console.log(uniqeArticle);
+              //// GET FLEX FIELD LIST FOR SAME ARTICLE
+              var flexFieldList = articles.filter((x) => x.autoId == autoId);
+              flexLine = [];
+  
+              //// CREATE CHILD OBJECT AS FLEX FIELD
+              for (let a = 0; a < flexFieldList.length; a++) {
+                const element = flexFieldList[a];
+                var flexValue = 0;
+  
+                if (element['dataType'] == 'F')
+                  flexValue = element['fFlexFeildValue'];
+                else if (element['dataType'] == 'N')
+                  flexValue = element['iFlexFeildValue'];
+                else if (element['dataType'] == 'T')
+                  flexValue = element['cFlexFeildValue'];
+                else if (element['dataType'] == 'B')
+                  flexValue = element['bFlexFeildValue'];
+                else if (element['dataType'] == 'D')
+                  flexValue = element['dFlexFeildValue'];
+  
+                var obj = {
+                  dataType: element['dataType'],
+                  flexFieldId: element['flexFieldId'],
+                  flexFieldName: element['flexFieldName'],
+                  flexFieldCode : element['flexFieldCode'],
+                  flexFieldValue: flexValue,
+                  valueList: element['valueList'],
+                };
+                flexLine.push(obj);
+              }
+  
+              fieldLine.FlexFields = flexLine;
+            }
+            this.articleList = uniqeArticle;
+            // console.log(this.articleList);
+          }
+        }
+      );
+    }
+  }
+
   loadSalesCategory() {
     this.masterServices.getSalesCategory().subscribe((salesCat) => {
       this.salesCatList = salesCat;
@@ -295,7 +428,11 @@ export class SalesOrderComponent implements OnInit {
   }
 
   loadSalesAgent() {
-    this.masterServices.getSalesAgent().subscribe((agents) => {
+    this.salesAgentList = [];
+    var user: User = JSON.parse(localStorage.getItem('user'));
+    //console.log(user);
+    var locationId = user.locationId;
+    this.masterServices.getSalesAgent(locationId).subscribe((agents) => {
       this.salesAgentList = agents;
     });
     //console.log(this.salesAgentList);
@@ -353,36 +490,14 @@ export class SalesOrderComponent implements OnInit {
     }
   }
 
-  loadArticle() {
-    if (this.soHeaderForm.get('headerId').value == 0) {
-      this.masterServices.getArticlesAll().subscribe(
-        (art) => {
-          // console.log(art);
-          this.articleList = art;
-          this.form.open();
-        },
-        // The 2nd callback handles errors.
-        (err) => console.error(err),
-        // The 3rd callback handles the "complete" event.
-        () => {
-          // console.log('observable complete');
-          // console.log(this.articleId);
-        }
-      );
-    }
-  }
-
-  /// SELECT ARTICLE IN MODAL AND LOADS DATA TO ARTICLE FORM
+ /// SELECT ARTICLE IN MODAL AND LOADS DATA TO ARTICLE FORM
   selectArticle(event, cellId) {
     /// CLEAR CONTROLS AND GRIDS
-    this.clearDeliveryControls();
-    this.clearItemControls();
-    this.soItemList = [];
-    this.soDelivList = [];
-
-    this.soItemList = [];
-    this.soDelivList = [];
-    this.showArtiForm = true;
+    // this.clearDeliveryControls();
+    // this.clearItemControls();
+    // this.soItemList = [];
+    // this.soDelivList = [];
+    // this.showArtiForm = true;
 
     const ids = cellId.rowID;
     const selectedRowData = this.articleGrid.data.filter((record) => {
@@ -391,26 +506,11 @@ export class SalesOrderComponent implements OnInit {
 
     var articleId = selectedRowData[0]['autoId'];
     //console.log(selectedRowData);
-    this.articleForm.get('articleId').setValue(selectedRowData[0]['autoId']);
-    this.articleForm.get('articleName').setValue(selectedRowData[0]['articleName']);
-    this.articleForm.get('articleDes1').setValue(selectedRowData[0]['description1']);
-    this.articleForm.get('articleDes2')
-      .setValue(selectedRowData[0]['description2']);
-    this.articleForm
-      .get('articleCode')
-      .setValue(selectedRowData[0]['stockCode']);
-    this.articleForm
-      .get('category')
-      .setValue(selectedRowData[0]['category']);
-    this.articleForm.get('unit').setValue(selectedRowData[0]['unitCode']);
-    this.articleForm
-      .get('prodGroup')
-      .setValue(selectedRowData[0]['prodGroupName']);
-    this.articleForm
-      .get('prodType')
-      .setValue(selectedRowData[0]['prodTypeCode']);
+    this.soItemForm.get('articleId').setValue(selectedRowData[0]['autoId']);
+    this.soItemForm.get('articleName').setValue(selectedRowData[0]['articleName']);
+    this.soItemForm.get('articleCode').setValue(selectedRowData[0]['stockCode']);  
 
-    this.form.close();
+    this.articleDialog.close();
     this.loadColor(articleId);
     this.loadSize(articleId);
   }
@@ -421,6 +521,7 @@ export class SalesOrderComponent implements OnInit {
     //console.log(item);
     this.masterServices.getArticleColor(articleId).subscribe((color) => {
       this.colorList = color;
+      console.log(this.colorList);
     });
   }
 
@@ -432,11 +533,17 @@ export class SalesOrderComponent implements OnInit {
     });
   }
 
+  onClearArticle(){
+    this.soItemForm.get('articleId').setValue(0);
+    this.soItemForm.get('articleName').setValue('');
+    this.soItemForm.get('articleCode').setValue('');
+  }
+
   /// ADD NEW ITEM TO GRID / UPDATE
   addItemRow() {
     if (this.checkIsEditable()) {
       //console.log(this.soItemForm.value);
-      //var canUpdate = true;
+      var status = true;
       var itemId = this.soItemForm.get('itemId').value;
       var qty = this.soItemForm.get('qty').value;
       var price = this.soItemForm.get('price').value;
@@ -457,11 +564,17 @@ export class SalesOrderComponent implements OnInit {
         this.itemGrid.updateCell(qty, itemId, 'qty');
         this.itemGrid.updateCell(price, itemId, 'price');
       } else {
+        /// INITIAL TIME BLOCK DELIVERY BREACKDOWN
+        if ( this.soHeaderForm.get('headerId').value == 0 )
+          status = true;
+        else 
+          status = false;
+
         //// ADD NEW ITEM ENTRY
         itemId = this.findMaxItemId(this.itemGrid.data) + 1;
         //console.log(itemId);
         //itemId = this.itemGrid.dataLength + 1;
-        var articleId = this.articleForm.get('articleId').value;
+        var articleId = this.soItemForm.get('articleId').value;
         var colorId = this.soItemForm.get('colorId').value[0];
         var sizeId = this.soItemForm.get('sizeId').value[0];
 
@@ -484,15 +597,15 @@ export class SalesOrderComponent implements OnInit {
             size: this.cmbsize.value,
             colorId: colorId,
             color: this.cmbcolor.value,
-            // saleOrderId: 0,
             articleId: articleId,
-            article: this.articleForm.get('articleName').value,
+            articleName: this.soItemForm.get('articleName').value,
+            articleCode: this.soItemForm.get('articleCode').value,
             costingId: 0,
             costRef: ' ',
             qty: qty,
             price: price,
             isIntendCreated: false,
-            status: false,
+            status: status,
           };
           // console.log(obj);
           this.itemGrid.addRow(obj);
@@ -548,11 +661,12 @@ export class SalesOrderComponent implements OnInit {
       if (isIntent == false) {
         //// fill article details from item details
         this.soDeliveyForm.get('itemId').setValue(selectedRowData[0]['itemId']);
-        this.soDeliveyForm.get('article').setValue(selectedRowData[0]['article']);
+        this.soDeliveyForm.get('articleId').setValue(selectedRowData[0]['articleId']);
+        this.soDeliveyForm.get('articleName').setValue(selectedRowData[0]['articleName']);
         this.soDeliveyForm.get('color').setValue(selectedRowData[0]['color']);
         this.soDeliveyForm.get('size').setValue(selectedRowData[0]['size']);
         this.transferItem = selectedRowData;
-      }else {
+      } else {
         this.toastr.warning('Intent already created !!!');
       }
     }
@@ -562,6 +676,8 @@ export class SalesOrderComponent implements OnInit {
     //this.masterColor.reset();
     this.soItemForm.get('itemId').setValue(0);
     // this.soItemForm.get('articleId').setValue('');
+    // this.soItemForm.get('articleName').setValue('');
+    // this.soItemForm.get('articleCode').setValue('');
     this.soItemForm.get('colorId').setValue('');
     this.soItemForm.get('sizeId').setValue('');
     this.soItemForm.get('qty').setValue('');
@@ -658,7 +774,7 @@ export class SalesOrderComponent implements OnInit {
   onDeliveryEdit(event, cellId) {
     if (this.checkIsEditable()) {
       this.clearDeliveryControls();
-      this.deliveryFormEnable();
+      // this.deliveryFormEnable();
       const ids = cellId.rowID;
 
       const selectedRowData = this.deliveryGrid.data.filter((record) => {
@@ -674,12 +790,12 @@ export class SalesOrderComponent implements OnInit {
         });
         
         if(itemRowData.length == 0 ) {
-          // console.log(selectedRowData[0]);
+          console.log(selectedRowData[0]);
           var trasDate: Date = new Date(selectedRowData[0]['deliveryDate']);
 
           this.soDeliveyForm.get('deliveryId').setValue(selectedRowData[0]['deliveryId']);
           this.soDeliveyForm.get('itemId').setValue(selectedRowData[0]['itemId']);
-          this.soDeliveyForm.get('article').setValue(selectedRowData[0]['article']);
+          this.soDeliveyForm.get('articleName').setValue(selectedRowData[0]['article']);
           this.soDeliveyForm.get('deliveryRef').setValue(selectedRowData[0]['deliveryRef']);
           this.soDeliveyForm.get('deliveryDate').setValue(trasDate);
           this.soDeliveyForm.get('color').setValue(selectedRowData[0]['color']);
@@ -690,7 +806,6 @@ export class SalesOrderComponent implements OnInit {
         } else {
           this.toastr.warning("Intent already created !!!");
         }
-
       }
     }
     //this.deliveryRef.setSelectedItem(selectedRowData[0]['deliveryRef'], true);
@@ -718,7 +833,9 @@ export class SalesOrderComponent implements OnInit {
       if(isIntendCreated == false) {
          // console.log(selectedRowData);
         this.soItemForm.get('itemId').setValue(selectedRowData[0]['itemId']);
-        //this.soItemForm.get('articleId').setValue(selectedRowData[0]['article']);
+        this.soItemForm.get('articleId').setValue(selectedRowData[0]['articleId']);
+        this.soItemForm.get('articleCode').setValue(selectedRowData[0]['articleCode']);
+        this.soItemForm.get('articleName').setValue(selectedRowData[0]['articleName']);
         this.soItemForm.get('colorId').setValue(selectedRowData[0]['color']);
         this.soItemForm.get('sizeId').setValue(selectedRowData[0]['size']);
         this.soItemForm.get('qty').setValue(selectedRowData[0]['qty']);
@@ -740,7 +857,7 @@ export class SalesOrderComponent implements OnInit {
         status: boolean = false;
       var deliveryId = this.soDeliveyForm.get('deliveryId').value;
       var qty = this.soDeliveyForm.get('qty').value;
-      var article = this.soDeliveyForm.get('article').value;
+      var article = this.soDeliveyForm.get('articleName').value;
       var color = this.soDeliveyForm.get('color').value;
       var size = this.soDeliveyForm.get('size').value;
       var deliveryRef = this.soDeliveyForm.get('deliveryRef').value;
@@ -839,7 +956,6 @@ export class SalesOrderComponent implements OnInit {
           this.deliveryGrid.addRow(obj);
         }
       }
-
       this.clearDeliveryControls();
     }
   }
@@ -873,10 +989,11 @@ export class SalesOrderComponent implements OnInit {
   }
 
   clearDeliveryControls() {
-    //this.masterColor.reset();
+    //this.soDeliveyForm.reset();
     this.soDeliveyForm.get('itemId').setValue(0);
     this.soDeliveyForm.get('deliveryId').setValue(0);
-    //this.soDeliveyForm.get('article').setValue('');
+    this.soDeliveyForm.get('articleId').setValue('');
+    this.soDeliveyForm.get('articleName').setValue('');
     this.soDeliveyForm.get('color').setValue('');
     this.soDeliveyForm.get('size').setValue('');
     this.soDeliveyForm.get('qty').setValue('');
@@ -911,7 +1028,7 @@ export class SalesOrderComponent implements OnInit {
           'yyyy-MM-dd'
         ),
         createUserId: this.user.userId,
-        articleId: this.articleForm.get('articleId').value,
+        // articleId: this.articleForm.get('articleId').value,
         customerDivId: this.soHeaderForm.get('customerDivId').value[0],
       };
 
@@ -927,7 +1044,7 @@ export class SalesOrderComponent implements OnInit {
       itemRows.forEach((items) => {
         var itemdata = {
           autoId: items.itemId,
-          articleId: this.articleForm.get('articleId').value,
+          articleId: items.articleId,
           sizeId: items.sizeId,
           colorId: items.colorId,
           costingId: items.costingId,
@@ -992,11 +1109,12 @@ export class SalesOrderComponent implements OnInit {
     this.clearItemControls();
     this.soItemList = [];
     this.soDelivList = [];
+    this.isView = true;
     //var locationId = 0;
 
     //// validate sales order number is exists
     if (this.soHeaderForm.get('orderRef').value != '') {
-      this.deliveryFormDisable();
+      // this.deliveryFormDisable();
       var salesOrderRef = this.soHeaderForm.get('orderRef').value;
 
       this.salesOrderServices.getSalesOrderDT(salesOrderRef).subscribe(
@@ -1080,38 +1198,19 @@ export class SalesOrderComponent implements OnInit {
                 this.soHeaderForm.get('trnsDate').setValue(trnsDate);
 
                 //// LOADS ARTICLE DETAILS
-                this.articleForm
-                  .get('articleId')
-                  .setValue(orderDt[index]['articleId']);
-
-                this.articleForm
-                  .get('articleName')
-                  .setValue(orderDt[index]['article']);
-                this.articleForm
-                  .get('articleDes1')
-                  .setValue(orderDt[index]['description1']);
-                this.articleForm
-                  .get('articleDes2')
-                  .setValue(orderDt[index]['description2']);
-                this.articleForm
-                  .get('articleCode')
-                  .setValue(orderDt[index]['stockCode']);
-                this.articleForm
-                  .get('category')
-                  .setValue(orderDt[index]['category']);
-                this.articleForm
-                  .get('unit')
-                  .setValue(orderDt[index]['unitCode']);
-                this.articleForm
-                  .get('prodGroup')
-                  .setValue(orderDt[index]['prodGroupName']);
-                this.articleForm
-                  .get('prodType')
-                  .setValue(orderDt[index]['prodTypeCode']);
+                // this.articleForm.get('articleId').setValue(orderDt[index]['articleId']);
+                // this.articleForm.get('articleName').setValue(orderDt[index]['article']);
+                // this.articleForm.get('articleDes1').setValue(orderDt[index]['description1']);
+                // this.articleForm.get('articleDes2').setValue(orderDt[index]['description2']);
+                // this.articleForm.get('articleCode').setValue(orderDt[index]['stockCode']);
+                // this.articleForm.get('category').setValue(orderDt[index]['category']);
+                // this.articleForm.get('unit').setValue(orderDt[index]['unitCode']);
+                // this.articleForm.get('prodGroup').setValue(orderDt[index]['prodGroupName']);
+                // this.articleForm.get('prodType').setValue(orderDt[index]['prodTypeCode']);
 
                 //// LOADS COLOR AND SIZE
-                this.loadColor(orderDt[index]['articleId']);
-                this.loadSize(orderDt[index]['articleId']);
+                // this.loadColor(orderDt[index]['articleId']);
+                // this.loadSize(orderDt[index]['articleId']);
               }
 
               /// check item already added to the grid or not
@@ -1129,7 +1228,8 @@ export class SalesOrderComponent implements OnInit {
                   colorId: orderDt[index]['colorId'],
                   color: orderDt[index]['color'],
                   articleId: orderDt[index]['articleId'],
-                  article: orderDt[index]['article'],
+                  articleName: orderDt[index]['article'],
+                  articleCode : orderDt[index]['stockCode'],                 
                   costingId: orderDt[index]['costingId'],
                   costRef: orderDt[index]['costRef'],
                   qty: orderDt[index]['itemQty'],
@@ -1239,7 +1339,8 @@ export class SalesOrderComponent implements OnInit {
   refreshSalesOrder() {
     // console.log('here');
     //this.isNewSO = true;
-    this.deliveryFormDisable();
+    this.isView = false;
+    // this.deliveryFormDisable();
     this.customer.disabled = false;
     this.soHeaderForm.get('customerRef').enable();
     this.articleForm.reset();
@@ -1272,6 +1373,10 @@ export class SalesOrderComponent implements OnInit {
     this.getSalesOrderRefNo();
     this.clearItemControls();
     this.clearDeliveryControls();
+
+    this.soItemForm.get('articleId').setValue(0);
+    this.soItemForm.get('articleName').setValue('');
+    this.soItemForm.get('articleCode').setValue('');
 
     this.soItemList = [];
     this.soDelivList = [];

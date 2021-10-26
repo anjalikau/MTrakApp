@@ -64,7 +64,7 @@ namespace API.Repository
             SOHeader.Columns.Add("paymentTermId", typeof(int));
             SOHeader.Columns.Add("customerDiviId", typeof(int));
             SOHeader.Columns.Add("isChargeable", typeof(bool));
-            SOHeader.Columns.Add("articleId", typeof(int));
+            // SOHeader.Columns.Add("articleId", typeof(int));
 
             SOItem.Columns.Add("autoId", typeof(int));
             SOItem.Columns.Add("articleId", typeof(int));
@@ -101,8 +101,7 @@ namespace API.Repository
                         , item.SalesOrderHd.CountryId
                         , item.SalesOrderHd.PaymentTermId
                         , item.SalesOrderHd.CustomerDivId
-                        , item.SalesOrderHd.IsChargeable
-                        , item.SalesOrderHd.ArticleId );
+                        , item.SalesOrderHd.IsChargeable);
                 }
                 else if (item.SalesItemDt != null)
                 {

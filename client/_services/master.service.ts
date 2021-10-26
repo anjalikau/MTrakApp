@@ -38,6 +38,13 @@ import { SizeAllocCard } from 'src/app/_models/sizeAllocCard';
 import { UnitConversion } from 'src/app/_models/unitConversion';
 import { FluteType } from 'src/app/_models/fluteType';
 import { SpecialInstruction } from 'src/app/_models/specialInstruction';
+import { SalesAgent } from 'src/app/_models/salesAgent';
+import { Currency } from 'src/app/_models/currency';
+import { Countries } from 'src/app/_models/countries';
+import { PaymentTerm } from 'src/app/_models/paymentTerm';
+import { RejectReasons } from 'src/app/_models/RejectReasons';
+import { CodeDefinition } from 'src/app/_models/codeDefinition';
+import { SequenceSettings } from 'src/app/_models/sequenceSettings';
 
 var usertoken: any;
 if (localStorage.length > 0) {
@@ -259,13 +266,21 @@ export class MasterService {
 
   //#endregion "Article"
 
-  //#region "Code Settings"
+  //#region "CodeDefinition"
 
-  // getCodeSettings() {
-  //   return this.http.get<any[]>(this.baseUrl + 'Master/CodeSett' , httpOptions);
-  // }
+  getCodeDefinition(codeDef: any) {
+    return this.http.post<CodeDefinition[]>(this.baseUrl + 'Master/CodeDef', codeDef , httpOptions);
+  }
 
-  //#endregion "Code Settings"
+  saveCodeDefinition(codeDef: CodeDefinition) {
+    return this.http.post(this.baseUrl + 'Master/SaveCDef' , codeDef , httpOptions)
+  }
+
+  deleteCodeDefinition(codeDef: any) {
+    return this.http.post(this.baseUrl + 'Master/DeleteCDef' , codeDef , httpOptions)
+  }
+
+  //#endregion "CodeDefinition"
 
   //#region "Units"
 
@@ -303,6 +318,10 @@ export class MasterService {
 
   getUnitConversion() {
     return this.http.get<UnitConversion[]>(this.baseUrl + 'Master/UnitConv', httpOptions);
+  }
+
+  saveUnitConversion(unitConv: UnitConversion) {
+    return this.http.post(this.baseUrl + 'Master/SaveUC', unitConv , httpOptions);
   }
 
   //#endregion "Unit Conversion"
@@ -422,6 +441,14 @@ export class MasterService {
   getAddressType() {
     return this.http.get<AddressType[]>(
       this.baseUrl + 'Master/AddressType',
+      httpOptions
+    );
+  }
+
+  saveAddressType(model: any) {
+    return this.http.post(
+      this.baseUrl + 'Master/SaveAddType',
+      model,
       httpOptions
     );
   }
@@ -618,15 +645,23 @@ export class MasterService {
   //#region  "Payment Terms"
 
   getPaymentTerms() {
-    return this.http.get<any>(this.baseUrl + 'Master/PayTerms', httpOptions);
+    return this.http.get<PaymentTerm[]>(this.baseUrl + 'Master/PayTerms', httpOptions);
+  }
+
+  savePaymentTerms(payTerms: PaymentTerm) {
+    return this.http.post(this.baseUrl + 'Master/SavePT', payTerms , httpOptions);
   }
 
   //#endregion "Payment Terms"
 
   //#region  "Sales Agent"
 
-  getSalesAgent() {
-    return this.http.get<any>(this.baseUrl + 'Master/SalesAgent', httpOptions);
+  getSalesAgent(locId: number) {
+    return this.http.get<SalesAgent[]>(this.baseUrl + 'Master/SalesAgent/' + locId, httpOptions);
+  }
+
+  saveSalesAgent(salesAgent: SalesAgent) {
+    return this.http.post(this.baseUrl + 'Master/SaveSA', salesAgent , httpOptions);
   }
 
   //#endregion "Sales Agent"
@@ -637,12 +672,20 @@ export class MasterService {
     return this.http.get<any>(this.baseUrl + 'Master/Countries', httpOptions);
   }
 
+  saveCountries(countries: Countries) {
+    return this.http.post(this.baseUrl + 'Master/SaveCou', countries , httpOptions);
+  }
+
   //#endregion "Countries"
 
   //#region "Currency"
 
   getCurrency() {
-    return this.http.get<any>(this.baseUrl + 'Master/Currency', httpOptions);
+    return this.http.get<Currency[]>(this.baseUrl + 'Master/Currency', httpOptions);
+  }
+
+  saveCurrency(currency: Currency) {
+    return this.http.post(this.baseUrl + 'Master/SaveCurr', currency , httpOptions);
   }
 
   //#endregion "Currency"
@@ -651,7 +694,7 @@ export class MasterService {
 
   getArticleUOMConversion(articleId: number) {
     return this.http.get<any[]>( this.baseUrl + 'Master/ArtBase/' + articleId, httpOptions );
-  }
+  } 
 
   //#endregion "Article UOM Conversion"
 
@@ -714,21 +757,28 @@ export class MasterService {
     );
   }
 
+  saveFluteType(fluteType: FluteType) {
+    return this.http.post(
+      this.baseUrl + 'Master/SaveFT', fluteType ,
+      httpOptions
+    );
+  }
+
   //#endregion "Flute Type" 
 
 
   //#region "Serial No"
 
-  saveSerialNoDetails(serialNo: SerialNo) {
+  saveSeqSettings(serialNo: SequenceSettings) {
     return this.http.post(
-      this.baseUrl + 'Master/SaveSerialNo', serialNo ,
+      this.baseUrl + 'Master/SaveSeqSett', serialNo ,
       httpOptions
     );
   }
 
-  getSerialNoDetails(locId: number) {
-    return this.http.get<SerialNo[]>(
-      this.baseUrl + 'Master/SerialNoDt/' + locId,
+  getSeqSettings(locId: number) {
+    return this.http.get<SequenceSettings[]>(
+      this.baseUrl + 'Master/SeqSettDt/' + locId,
       httpOptions
     );
   }
@@ -869,8 +919,12 @@ export class MasterService {
   
   //#region "Reject Reason"
 
-  getRejectReason() {
-    return this.http.get<any>(this.baseUrl + 'Master/RejetReason' ,httpOptions);
+  getRejectReason(locId: number) {
+    return this.http.get<RejectReasons[]>(this.baseUrl + 'Master/RejReason/' + locId ,httpOptions);
+  }
+
+  saveRejectReason(rejReason: RejectReasons) {
+    return this.http.post(this.baseUrl + 'Master/SaveRReason' , rejReason , httpOptions);
   }
 
   //#endregion

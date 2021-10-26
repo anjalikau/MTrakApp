@@ -10,7 +10,7 @@ namespace API.Entities
         [Key]
         public int AutoId {get;set;}
         public string Code {get;set;}
-        public double Factor {get;set;}
+        public decimal Factor {get;set;}
         public bool IsActive {get;set;}
         public int LocationId {get;set;}
         public int ? CreateUserId {get;set;}

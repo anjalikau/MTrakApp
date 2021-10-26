@@ -93,7 +93,11 @@ export class QualityControlComponent implements OnInit {
 
   //// LOADS REJECT REASON
   loadRejectReason() {
-    this.masterServices.getRejectReason().subscribe((result) => {
+    this.rejReasonList = [];
+    var user: User = JSON.parse(localStorage.getItem('user'));
+    //console.log(user);
+    var locationId = user.locationId;
+    this.masterServices.getRejectReason(locationId).subscribe((result) => {
       this.rejReasonList = result;
     });
   }

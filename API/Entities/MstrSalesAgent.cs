@@ -9,13 +9,14 @@ namespace API.Entities
     {
         [Key]
         public int AutoId {get;set;}
-        public string Name {get;set;}
-        public bool bActive {get;set;}
-        public int CreateUserId {get;set;}
-        public DateTime CreateDateTime {get;set;}
-        public int UpdateUserId {get;set;}
-        public DateTime UpdateDateTime {get;set;}
+        public string Name {get;set;}        
+        public string Email {get;set;}
         public int LocationId {get;set;}
+        public bool bActive {get;set;}
+        public int ? CreateUserId {get;set;}
+        public DateTime ? CreateDateTime {get;set;}
+        public int ? UpdateUserId {get;set;}
+        public DateTime ? UpdateDateTime {get;set;}        
         public virtual MstrLocation Location {get; set;}
     }
 }

@@ -135,3 +135,8 @@ p {
     min-width: 0.5rem;   
     min-height: 2.25rem;   
 }
+
+igx-radio {
+    margin: 8px;
+}
+

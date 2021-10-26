@@ -61,7 +61,7 @@ namespace API.Data
         public DbSet<TransFtyProductionProcessOrder> TransFtyProdProcessOrder { get;  set ; }        
         public DbSet<TransFtyProductionProcessOrderDt> TransFtyProdProcessOrderDt { get;  set ; }
         public DbSet<MstrCostingGroup> MstrCostingGroup { get;  set ; }
-        public DbSet<MstrSerialNoDetails> MstrSerialNoDetails { get;  set ; }
+        public DbSet<TransSequenceSettings> TransSequenceSettings { get;  set ; }
         public DbSet<MstrFlexFieldDetails> MstrFlexFieldDetails { get;  set ; }
         public DbSet<MstrFlexFieldValueList> MstrFlexFieldValueList { get;  set ; }
         public DbSet<MstrCatProductType> MstrCatProductType { get;  set ; }
