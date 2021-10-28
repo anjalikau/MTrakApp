@@ -544,25 +544,25 @@ export class CostingComponent implements OnInit {
   }
 
   loadFluteType() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
-    var locationId = user.locationId;
+    // var user: User = JSON.parse(localStorage.getItem('user'));
+    var locationId = this.user.locationId;
     this.masterServices.getFluteType(locationId).subscribe((result) => {
       this.fluteTypeList = result;
     });
   }
 
   loadCostingGroup() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
-    var locationId = user.locationId;
+    // var user: User = JSON.parse(localStorage.getItem('user'));
+    var locationId = this.user.locationId;
     this.masterServices.getCostingGroup(locationId).subscribe((result) => {
       this.costGroupList = result;
     });
   }
 
   loadCustomer() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
+    // var user: User = JSON.parse(localStorage.getItem('user'));
     //console.log(user);
-    var locationId = user.locationId;
+    var locationId = this.user.locationId;
     this.masterServices.getCustomer(locationId).subscribe((customer) => {
       this.customerList = customer;
     });

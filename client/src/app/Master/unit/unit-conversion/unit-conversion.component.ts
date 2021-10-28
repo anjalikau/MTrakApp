@@ -95,8 +95,8 @@ export class UnitConversionComponent implements OnInit {
     return (group: FormGroup): { [key: string]: any } => {
       let f = group.controls[from];
       let t = group.controls[to];
-      console.log(f.value[0]);
-      console.log(t.value[0]);
+      // console.log(f.value[0]);
+      // console.log(t.value[0]);
 
       if (f.value[0] != undefined && t.value[0] != undefined) {
         if (f.value[0] == t.value[0]) {

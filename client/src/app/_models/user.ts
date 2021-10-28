@@ -6,6 +6,7 @@ export interface User {
     moduleId: number;
     userName: string;
     token: string;
+    locations: any;
     permitMenus?: PermitMenu[];
 }
 

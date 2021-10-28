@@ -3,14 +3,15 @@ import { Injectable } from '@angular/core';
 import { MenuList } from 'src/app/_models/menuList';
 import { MenuUser } from 'src/app/_models/menuUser';
 import { PermitUser } from 'src/app/_models/permitUser';
-import { UserLocation } from 'src/app/_models/userLocation';
+import { User } from 'src/app/_models/user';
 import { environment } from 'src/environments/environment';
+import { LocalService } from './local.service';
 
 var usertoken: any;
 //console.log(localStorage);
 if (localStorage.length > 0) {
-  usertoken = JSON.parse(localStorage.getItem('user')).token;
-  //console.log(usertoken);
+  usertoken = localStorage.getItem('token');
+  // console.log(usertoken);
 }
 
 const httpOptions = {
@@ -25,17 +26,9 @@ const httpOptions = {
 export class AdminService {
   baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private localService: LocalService) { }
 
-  // getAuthMenuList(){
-  //   //var userId = JSON.parse(localStorage.getItem('user')).userId;
-  //   var model = {
-  //     "UserId" : JSON.parse(localStorage.getItem('user')).userId,
-  //     "ModuleId" : JSON.parse(localStorage.getItem('user')).moduleId
-  //   };
-
-  //   return this.http.post<MenuList[]>(this.baseUrl + 'Master/AuthMenus' , model );
-  // }
+  user: User = this.localService.getJsonValue('user');
 
   saveMenuList(model: any) {
     return this.http.post(this.baseUrl + 'Menu/MenuSave' , model , httpOptions);
@@ -46,7 +39,8 @@ export class AdminService {
   }
 
   getPermitedUsers() {
-    var userId = JSON.parse(localStorage.getItem('user')).userId;
+    // var userId = JSON.parse(localStorage.getItem('user')).userId;
+    var userId = this.user.userId;
     return this.http.get<PermitUser[]>(this.baseUrl + 'Agents/Users/' + userId , httpOptions);
   }
 

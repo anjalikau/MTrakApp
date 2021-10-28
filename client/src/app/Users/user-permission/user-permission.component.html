@@ -50,14 +50,14 @@
 
                     <igx-grid #PermitMgrid [data]="permitMenus" [autoGenerate]="false" [paging]="true"
                         [rowEditable]="false" [primaryKey]="'menuId'" cellSelection="none"
-                        (onColumnResized)="onResize($event)" [perPage]="10" height="400px" displayDensity="compact"
+                        (onColumnResized)="onResize($event)" [perPage]="100" height="400px" displayDensity="compact"
                         [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
                         [rowSelection]="'multiple'">
 
-                        <igx-column [field]="'groupName'" [header]="'Group Name'" [resizable]="true"
+                        <igx-column [field]="'groupName'" [header]="'Group Name'" [resizable]="true" [width]="'130px'"
                             [dataType]="'string'" [sortable]="true">
                         </igx-column>
-                        <igx-column [field]="'mType'" [header]="'Type'" [resizable]="true" [dataType]="'string'"
+                        <igx-column [field]="'mType'" [header]="'Type'" [resizable]="true" [dataType]="'string'" [width]="'100px'"
                             [sortable]="true">
                         </igx-column>
                         <igx-column [field]="'menuName'" [header]="'Menu Name'" [resizable]="true" [dataType]="'string'"
@@ -72,14 +72,14 @@
                 <div class="col-sm-6">
                     <igx-grid #Menugrid [data]="nPermitMenus" [autoGenerate]="false" [paging]="true"
                         [rowEditable]="false" [primaryKey]="'menuId'" cellSelection="none"
-                        (onColumnResized)="onResize($event)" [perPage]="10" height="400px" displayDensity="compact"
+                        (onColumnResized)="onResize($event)" [perPage]="100" height="400px" displayDensity="compact"
                         [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
                         [rowSelection]="'multiple'">
 
-                        <igx-column [field]="'groupName'" [header]="'Group Name'" [resizable]="true"
+                        <igx-column [field]="'groupName'" [header]="'Group Name'" [resizable]="true" [width]="'130px'"
                             [dataType]="'string'" [sortable]="true">
                         </igx-column>
-                        <igx-column [field]="'mType'" [header]="'Type'" [resizable]="true" [dataType]="'string'"
+                        <igx-column [field]="'mType'" [header]="'Type'" [resizable]="true" [dataType]="'string'" [width]="'100px'"
                             [sortable]="true">
                         </igx-column>
                         <igx-column [field]="'menuName'" [header]="'Menu Name'" [resizable]="true" [dataType]="'string'"

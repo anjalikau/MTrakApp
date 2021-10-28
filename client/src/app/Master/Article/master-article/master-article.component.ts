@@ -526,8 +526,6 @@ export class MasterArticleComponent implements OnInit {
       var flexList = [] ;
       var bFlexFieldValue = false, dFlexFieldValue = "1990-01-01", iFlexFeildValue = 0 , fFlexFeildValue= 0
         , cFlexFeildValue = "";
-      var user: User = JSON.parse(localStorage.getItem('user'));
-      // console.log(this.articleForm.get('itemType').value);
 
       var obj = {
         createUserId: this.user.userId,
@@ -595,7 +593,7 @@ export class MasterArticleComponent implements OnInit {
         maxCostPrice:
           this.articleForm.get('maxCostPrice').value == null
             ? 0
-            : this.articleForm.get('maxCostPrice').value       
+            : this.articleForm.get('maxCostPrice').value               
       };
 
       ////// ---------============= FLEX FIELD GRID DETAILS ==============------------------
@@ -631,6 +629,7 @@ export class MasterArticleComponent implements OnInit {
       var artiObj = {
         flexField : flexList,
         article: obj
+        // locationId: user.locationId
       }
 
       // console.log(this.articleForm.get('pODate').value);

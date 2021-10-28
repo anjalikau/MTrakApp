@@ -624,6 +624,7 @@ namespace API.Repository
             para.Add("AvgCostPrice", article.Article.AvgCostPrice);
             para.Add("LastCostPrice", article.Article.LastCostPrice);
             para.Add("MaxCostPrice", article.Article.MaxCostPrice);
+            // para.Add("LoactionId", article.LocationId);
             para.Add("UserId", article.Article.CreateUserId);
 
             foreach (var item in article.FlexField)

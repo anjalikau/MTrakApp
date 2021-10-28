@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 
 var usertoken: any;
 if (localStorage.length > 0) {
-  usertoken = JSON.parse(localStorage.getItem('user')).token;
+  // usertoken = JSON.parse(localStorage.getItem('token'));
+  usertoken = localStorage.getItem('token');
   //console.log(usertoken);
 }
 

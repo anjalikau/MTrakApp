@@ -5,11 +5,11 @@
                 
                 <div class="card-header p-0 pt-1 border-bottom-0">
                     <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
-                        <li class="nav-item">
+                        <li class="nav-item" *ngIf="units">
                             <a class="nav-link active" id="custom-tabs-unit-tab" data-toggle="pill" href="#unit-tab" 
                                 role="tab" aria-controls="unit-tab" aria-selected="true"> Unit </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" *ngIf="unitConv">
                             <a class="nav-link" id="custom-tabs-conversion-tab" data-toggle="pill" href="#conversion-tab"
                                 role="tab" aria-controls="conversion-tab" aria-selected="false">Unit Conversion</a>
                         </li>                                      

@@ -3,14 +3,17 @@ import { Injectable } from '@angular/core';
 import { DelUserModule } from 'src/app/_models/delUserModule';
 import { Member } from 'src/app/_models/member';
 import { SysModule } from 'src/app/_models/sysModule';
+import { User } from 'src/app/_models/user';
 import { UserLevel } from 'src/app/_models/userLevel';
 import { UserLocation } from 'src/app/_models/userLocation';
 import { UserModule } from 'src/app/_models/userModule';
 import { environment } from 'src/environments/environment';
+import { LocalService } from './local.service';
 
 var usertoken: any;
 if (localStorage.length > 0) {
-  usertoken = JSON.parse(localStorage.getItem('user')).token;
+  // usertoken = JSON.parse(localStorage.getItem('token'));
+  usertoken = localStorage.getItem('token');
   //console.log(usertoken);
 }
 
@@ -26,7 +29,7 @@ const httpOptions = {
 export class RegisterService {
   baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private localService: LocalService) { }
 
   getUsres() {
     return this.http.get<Member[]>(this.baseUrl + 'Agents' , httpOptions);
@@ -57,8 +60,10 @@ export class RegisterService {
  }
 
   getUserLevel() {
-    var userId = JSON.parse(localStorage.getItem('user')).userId;
-    console.log(httpOptions);
+    const user: User = this.localService.getJsonValue('user');
+    var userId = user.userId;
+    // var userId = JSON.parse(localStorage.getItem('user')).userId;
+    // console.log(httpOptions);
     return this.http.get<UserLevel[]>(this.baseUrl + 'Agents/AgentLevel/' + userId , httpOptions);
   }
 

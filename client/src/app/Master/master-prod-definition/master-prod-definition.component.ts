@@ -114,9 +114,9 @@ export class MasterProdDefinitionComponent implements OnInit {
 
   //// LOADS PROCESS BASED ON LOCATION
   loadProcess() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
+    // var user: User = JSON.parse(localStorage.getItem('user'));
 
-    this.masterService.getProcess(user.locationId).subscribe((cardList) => {
+    this.masterService.getProcess(this.user.locationId).subscribe((cardList) => {
       this.processList = cardList;
     });
   }

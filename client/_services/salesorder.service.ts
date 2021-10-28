@@ -10,7 +10,8 @@ import { environment } from 'src/environments/environment';
 var usertoken: any;
 //console.log(localStorage);
 if (localStorage.length > 0) {
-  usertoken = JSON.parse(localStorage.getItem('user')).token;
+  // usertoken = JSON.parse(localStorage.getItem('token'));
+  usertoken = localStorage.getItem('token');
   //console.log(usertoken);
 }
 

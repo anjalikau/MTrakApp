@@ -33,23 +33,21 @@ export class MasterProcessComponent implements OnInit {
   }
 
   loadProcess(){
-    var user: User = JSON.parse(localStorage.getItem('user'));
-
-    this.masterService.getProcess(user.locationId).subscribe(cardList => {
+    // var user: User = JSON.parse(localStorage.getItem('user'));
+    this.masterService.getProcess(this.user.locationId).subscribe(cardList => {
       this.sizeProcessList = cardList;
     })
     //console.log("sss",this.sizeProcessList);
   }
 
   SaveProcess() { 
-    var user: User = JSON.parse(localStorage.getItem('user'));
-
+    // var user: User = JSON.parse(localStorage.getItem('user'));
     var obj = {
-      "createUserId": this.user.userId,
-      "Process" : this.mstrProcess.get('Process').value.trim(),
-      "autoId" : this.mstrProcess.get('AutoId').value,
-      "LocationId" : user.locationId
-    }
+      createUserId: this.user.userId,
+      Process: this.mstrProcess.get('Process').value.trim(),
+      autoId: this.mstrProcess.get('AutoId').value,
+      LocationId: this.user.locationId,
+    };
    
     this.masterService.saveProcess(obj).subscribe((result) => {    
       if (result == 1) {

@@ -55,21 +55,21 @@ export class RejectReasonComponent implements OnInit {
 
   loadRejectReason() {   
     this.rejReasonList = [];
-    var user: User = JSON.parse(localStorage.getItem('user'));
+    // var user: User = JSON.parse(localStorage.getItem('user'));
     //console.log(user);
-    var locationId = user.locationId;
+    var locationId = this.user.locationId;
     this.masterService.getRejectReason(locationId).subscribe((result) => {
       this.rejReasonList = result;
     });
   }  
 
   saveRejectReason() {
-    var loc: User = JSON.parse(localStorage.getItem('user'));
+    // var loc: User = JSON.parse(localStorage.getItem('user'));
     var obj = {
       autoId: this.rejReasonForm.get('autoId').value,
       createUserId: this.user.userId,
       details: this.rejReasonForm.get('details').value.trim(),     
-      locationId: loc.locationId
+      locationId: this.user.locationId
     };
 
     // console.log(this.saveobj);

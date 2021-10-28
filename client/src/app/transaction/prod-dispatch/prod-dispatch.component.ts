@@ -116,9 +116,9 @@ export class ProdDispatchComponent implements OnInit {
 
   //// GET CUSTOMER LIST REALTED TO THE LOGGING LOACTION
   loadCustomer() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
+    // var user: User = JSON.parse(localStorage.getItem('user'));
     //console.log(user);
-    var locationId = user.locationId;
+    var locationId = this.user.locationId;
     this.masterServices.getCustomer(locationId).subscribe((result) => {
       this.custometList = result;
     });
@@ -322,7 +322,7 @@ export class ProdDispatchComponent implements OnInit {
     //// CHECK DISPATCH DETAILS IS EXISTS
     if (!this.isDisplayMode) {
       if (this.dispatchGrid.dataLength > 0) {
-        var user: User = JSON.parse(localStorage.getItem('user'));
+        // var user: User = JSON.parse(localStorage.getItem('user'));
         var dispatchList = [];
 
         var DispHeader = {
@@ -334,7 +334,7 @@ export class ProdDispatchComponent implements OnInit {
             this.dispatchForm.get('reason').value == undefined
               ? ''
               : this.dispatchForm.get('reason').value.trim(),
-          locationId: user.locationId,
+          locationId: this.user.locationId,
           createUserId: this.user.userId,
         };
 

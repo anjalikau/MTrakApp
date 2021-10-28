@@ -58,9 +58,8 @@ export class CustomerBrandComponent implements OnInit {
   }
 
   loadBrand() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
-
-    this.masterService.getBrand(user.locationId).subscribe(cardList => {
+    // var user: User = JSON.parse(localStorage.getItem('user'));
+    this.masterService.getBrand(this.user.locationId).subscribe(cardList => {
       this.brandList = cardList;
     })
   }
@@ -79,8 +78,8 @@ export class CustomerBrandComponent implements OnInit {
   }
 
   loadCustomer() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
-    this.masterService.getCustomer(user.locationId).subscribe((cusList) => {
+    // var user: User = JSON.parse(localStorage.getItem('user'));
+    this.masterService.getCustomer(this.user.locationId).subscribe((cusList) => {
       this.customerList = cusList;
     });
   }

@@ -109,8 +109,8 @@ export class CustomerAddressComponent implements OnInit {
 
   /// Loads Customer List
   loadCustomer() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
-    this.masterService.getCustomer(user.locationId).subscribe((cusList) => {
+    // var user: User = JSON.parse(localStorage.getItem('user'));
+    this.masterService.getCustomer(this.user.locationId).subscribe((cusList) => {
       this.customerList = cusList;
     });
   }

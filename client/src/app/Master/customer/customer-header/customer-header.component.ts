@@ -106,14 +106,14 @@ export class CustomerHeaderComponent implements OnInit {
   }
 
   loadCustomerheader() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
-    this.masterService.getCustomerHdAll(user.locationId).subscribe((cusList) => {
+    // var user: User = JSON.parse(localStorage.getItem('user'));
+    this.masterService.getCustomerHdAll(this.user.locationId).subscribe((cusList) => {
       this.customerHdList = cusList;
     });
   }
 
   saveCustomerHd() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
+    // var user: User = JSON.parse(localStorage.getItem('user'));
     //console.log(this.customerHdForm.get('countryId').value);
 
     var obj = {
@@ -163,11 +163,10 @@ export class CustomerHeaderComponent implements OnInit {
         this.customerHdForm.get('creditDays').value == null
           ? 0
           : this.customerHdForm.get('creditDays').value,
-      locationId: user.locationId,
+      locationId: this.user.locationId,
     };
 
     //console.log(obj);
-
     this.masterService.saveCustomerHeader(obj).subscribe(
       (result) => {
         //console.log(result);

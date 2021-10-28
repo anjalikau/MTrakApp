@@ -63,14 +63,14 @@ export class CurrencyComponent implements OnInit {
   }  
 
   saveCurrency() {
-    var loc: User = JSON.parse(localStorage.getItem('user'));
+    // var loc: User = JSON.parse(localStorage.getItem('user'));
     var obj = {
       createUserId: this.user.userId,
       name: this.currencyForm.get('name').value.trim(),
       code: this.currencyForm.get('code').value.trim(),
       symbol: this.currencyForm.get('symbol').value.trim(),
       autoId: this.currencyForm.get('autoId').value,
-      locationId: loc.locationId
+      locationId: this.user.locationId
     };
 
     // console.log(this.saveobj);

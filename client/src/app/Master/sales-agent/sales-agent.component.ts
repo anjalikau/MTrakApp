@@ -57,22 +57,22 @@ export class SalesAgentComponent implements OnInit {
 
   loadSalesAgent() {
     this.salesAgentList = [];
-    var user: User = JSON.parse(localStorage.getItem('user'));
+    // var user: User = JSON.parse(localStorage.getItem('user'));
     //console.log(user);
-    var locationId = user.locationId;
+    var locationId = this.user.locationId;
     this.masterService.getSalesAgent(locationId).subscribe((result) => {
       this.salesAgentList = result;
     });
   }  
 
   saveSalesAgent() {
-    var loc: User = JSON.parse(localStorage.getItem('user'));
+    // var loc: User = JSON.parse(localStorage.getItem('user'));
     var obj = {
       createUserId: this.user.userId,
       name: this.salesAgentForm.get('name').value.trim(),
       email: this.salesAgentForm.get('email').value == null ? "" : this.salesAgentForm.get('email').value.trim(),
       autoId: this.salesAgentForm.get('autoId').value,
-      locationId: loc.locationId
+      locationId: this.user.locationId
     };
 
     // console.log(this.saveobj);

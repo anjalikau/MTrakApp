@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { AccountService } from '_services/account.service';
+import { LocalService } from '_services/local.service';
 import { User } from './_models/user';
 
 @Component({
@@ -15,7 +16,7 @@ export class AppComponent implements OnInit {
   users: any;
   visible:boolean=false;
 
-  constructor(private http: HttpClient, public accountServices: AccountService) {}
+  constructor(private http: HttpClient, public accountServices: AccountService , private localService: LocalService) {}
 
   ngOnInit() {
    //this.getUsers();
@@ -23,7 +24,8 @@ export class AppComponent implements OnInit {
   }
 
   setCurrentUser() {
-    const user: User = JSON.parse(localStorage.getItem('user'));
+    const user: User = this.localService.getJsonValue('user');
+    // const user: User = JSON.parse(localStorage.getItem('user'));
     this.accountServices.setCurrentUser(user);
     // const menu: any = JSON.parse(localStorage.getItem('menus'));
     // console.log(menu);

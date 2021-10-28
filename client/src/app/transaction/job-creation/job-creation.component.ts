@@ -153,9 +153,9 @@ export class JobCreationComponent implements OnInit {
   }
 
   loadCustomer() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
+    // var user: User = JSON.parse(localStorage.getItem('user'));
     //console.log(user);
-    var locationId = user.locationId;
+    var locationId = this.user.locationId;
     this.masterServices.getCustomer(locationId).subscribe((customer) => {
       this.customerList = customer;
     });
@@ -599,7 +599,7 @@ export class JobCreationComponent implements OnInit {
 
   saveJobCard() {
     if (this.validateJobCard()) {
-      var user: User = JSON.parse(localStorage.getItem('user'));
+      // var user: User = JSON.parse(localStorage.getItem('user'));
       var jobCardList = [],
         customerId = 0,
         articleId = 0,
@@ -637,7 +637,7 @@ export class JobCreationComponent implements OnInit {
         delivLocationId: this.jobHeaderForm.get('customerDtId').value[0],
         totQty: this.jobHeaderForm.get('totQty').value,
         planQty: this.jobHeaderForm.get('planQty').value,
-        locationId: user.locationId,
+        locationId: this.user.locationId,
         createUserId: this.user.userId,
         planDate: this.datePipe.transform(
           this.jobHeaderForm.get('planDate').value,

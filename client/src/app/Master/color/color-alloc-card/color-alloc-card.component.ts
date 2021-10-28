@@ -21,7 +21,7 @@ export class ColorAllocCardComponent implements OnInit {
   aColorList: ColorAllocation[];
   naColorList: ColorAllocation[];
   user: User;
-  userObj: User;
+  // userObj: User;
   authMenus: PermitMenu[];
   removeButton: boolean = false;
   saveButton: boolean = false;
@@ -84,9 +84,8 @@ export class ColorAllocCardComponent implements OnInit {
     }
   }
 
-  getButtonPermission() {    
-    this.userObj = JSON.parse(localStorage.getItem('user'));  
-    this.authMenus = this.userObj.permitMenus;  
+  getButtonPermission() {   
+    this.authMenus = this.user.permitMenus;  
     
     if(this.authMenus != null) {
     if(this.authMenus.filter(x => x.menuName == 'SaveColorAllocation' && x.mType == 'B').length > 0) {

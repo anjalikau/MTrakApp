@@ -25,13 +25,13 @@ export class NavComponent implements OnInit {
       ,private router: Router) { }
 
   ngOnInit(): void {    
-    this.loadUserLocation();
+    // this.loadUserLocation();
     //this.navMenu.nativeElement.click();    
   }
 
-  ngAfterViewInit() {    
-    this.navMenu.nativeElement.click(); 
-  }
+  // ngAfterViewInit() {    
+  //   this.navMenu.nativeElement.click(); 
+  // }
 
   // login() {
   //   this.accountServices.login(this.model).subscribe(response =>
@@ -42,53 +42,54 @@ export class NavComponent implements OnInit {
   //     });    
   // }
 
-  public singleSelection(event: IComboSelectionChangeEventArgs) {
-    if (event.added.length) {
-      event.newSelection = event.added;
-    }
-  }
+  // public singleSelection(event: IComboSelectionChangeEventArgs) {
+  //   if (event.added.length) {
+  //     event.newSelection = event.added;
+  //   }
+  // }
   
-  loadUserLocation() {
-    //var compList = []; var locations: any = [];
-    this.accountServices.currentUser$.forEach(element => {
-      this.user = element;
-      });    
+  // loadUserLocation() {
+  //   //var compList = []; var locations: any = [];
+  //   console.log("a");
+  //   this.accountServices.currentUser$.forEach(element => {
+  //     this.user = element;
+  //     });    
 
-    var obj = {
-      "SysModuleId": this.user.moduleId,
-      "UserId": this.user.userId
-    }
+  //   var obj = {
+  //     "SysModuleId": this.user.moduleId,
+  //     "UserId": this.user.userId
+  //   }
 
-    this.registerServices.getUserLocation(obj).subscribe(locList => { 
-      //console.log(locList);
-      var user: User = JSON.parse(localStorage.getItem('user'));      
-      this.userLoc = locList;
-      var selectRow = this.userLoc.filter(x => x.isDefault == true);
+  //   this.registerServices.getUserLocation(obj).subscribe(locList => {       
+  //     var user: User = JSON.parse(localStorage.getItem('user'));      
+  //     this.userLoc = locList;
+  //     var selectRow = this.userLoc.filter(x => x.isDefault == true);
+  //     console.log(this.userLoc);
 
-      selectRow.forEach(element => {
-        user["locationId"] = element.companyId;
-        localStorage.setItem('user', JSON.stringify(user));
-        this.selectedNoValueKey = [element.companyId];
-      });
-    });
+  //     selectRow.forEach(element => {
+  //       user["locationId"] = element.companyId;
+  //       localStorage.setItem('user', JSON.stringify(user));
+  //       this.selectedNoValueKey = [element.companyId];
+  //     });
+  //   });
     
-  }
+  // }
   
-  selectLocation(event) {
-    var user: User = JSON.parse(localStorage.getItem('user'));
-    for(const item of event.added) {
-      /// loads locations
-      user["locationId"] = item; 
-      localStorage.setItem('user', JSON.stringify(user));
-      //console.log(user);   
-    }
-  }
+  // selectLocation(event) {
+  //   var user: User = JSON.parse(localStorage.getItem('user'));
+  //   for(const item of event.added) {
+  //     /// loads locations
+  //     user["locationId"] = item; 
+  //     localStorage.setItem('user', JSON.stringify(user));
+  //     //console.log(user);   
+  //   }
+  // }
 
-  logout() {
-    this.accountServices.logout();
-    this.accountServices.decodedToken = null;
-    this.router.navigateByUrl('/');
-  }
+  // logout() {
+  //   this.accountServices.logout();
+  //   this.accountServices.decodedToken = null;
+  //   this.router.navigateByUrl('/');
+  // }
 
 
 

@@ -151,7 +151,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview" *ngIf="userPermit">
+          <ul class="nav nav-treeview" *ngIf="codeDefi">
             <li class="nav-item">
               <a class="nav-link" routerLink="/CodeDefinition" routerLinkActive="active" (click)="menuClose()">
                 <i class="far fa-circle nav-icon"></i>
@@ -159,7 +159,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="serialNoDt">
             <li class="nav-item">
               <a class="nav-link" routerLink="/SerialNoDetails" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -193,7 +193,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="units">
             <li class="nav-item">
               <a class="nav-link" routerLink="/Unit" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -201,7 +201,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="storeSite">
             <li class="nav-item">
               <a class="nav-link" routerLink="/MasterStoresite" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -209,7 +209,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="process">
             <li class="nav-item">
               <a class="nav-link" routerLink="/MasterProess" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -217,7 +217,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="prodDef">
             <li class="nav-item">
               <a class="nav-link" routerLink="/ProdDefinition" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -225,7 +225,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="costingGroup">
             <li class="nav-item">
               <a class="nav-link" routerLink="/CostingGroup" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -233,7 +233,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="fluteType">
             <li class="nav-item">
               <a class="nav-link" routerLink="/FluteType" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -241,7 +241,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="salesAgent">
             <li class="nav-item">
               <a class="nav-link" routerLink="/SalesAgent" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -249,7 +249,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="currency">
             <li class="nav-item">
               <a class="nav-link" routerLink="/Currency" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -257,7 +257,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="countries">
             <li class="nav-item">
               <a class="nav-link" routerLink="/Countries" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -265,7 +265,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="paymentTerms">
             <li class="nav-item">
               <a class="nav-link" routerLink="/PayTerms" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -273,7 +273,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="rejReason">
             <li class="nav-item">
               <a class="nav-link" routerLink="/RejReason" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -282,7 +282,7 @@
             </li>
           </ul>
           
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="product"> 
             <li class="nav-item">
               <a class="nav-link" routerLink="/ProductMenu" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -290,7 +290,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="brand">
             <li class="nav-item">
               <a class="nav-link" routerLink="/MasterBrandCode" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -298,7 +298,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="materialType">
             <li class="nav-item">
               <a class="nav-link" routerLink="/MasterMaterialtype" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -306,7 +306,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="category">
             <li class="nav-item">
               <a class="nav-link" routerLink="/MasterCategory" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -315,7 +315,7 @@
             </li>
           </ul>
 
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="addressType">
             <li class="nav-item">
               <a class="nav-link" routerLink="/AddressType" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -324,7 +324,7 @@
             </li>
           </ul>
 
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="customer">
             <li class="nav-item">
               <a class="nav-link" routerLink="/MasterCustomer" routerLinkActive="active" (click)="menuClose()">
                 <i class="far fa-circle nav-icon"></i>
@@ -333,7 +333,7 @@
             </li>
           </ul>
 
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="flexField">
             <li class="nav-item">
               <a class="nav-link" routerLink="/FlexField" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
@@ -342,7 +342,7 @@
             </li>
           </ul>
 
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="article">
             <li class="nav-item">
               <a class="nav-link" routerLink="/Article" routerLinkActive="active" (click)="menuClose()">
                 <i class="far fa-circle nav-icon"></i>
@@ -389,7 +389,7 @@
           </ul>
         </li>
 
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="productionGroup">
           <a href="#" class="nav-link">
             <i class="nav-icon fas fa-cart-arrow-down"></i>
             <!-- <i class="fas fa-cart-arrow-down"></i> -->
@@ -398,7 +398,7 @@
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="jobCard">
             <li class="nav-item">
               <a class="nav-link" routerLink="/Job" routerLinkActive="active" (click)="menuClose()">
                 <i class="far fa-circle nav-icon"></i>
@@ -407,7 +407,7 @@
             </li>
           </ul>
 
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="fpo">
             <li class="nav-item">
               <a class="nav-link" routerLink="/FPO" routerLinkActive="active" (click)="menuClose()">
                 <i class="far fa-circle nav-icon"></i>
@@ -416,7 +416,7 @@
             </li>
           </ul>
 
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="fpoIn">
             <li class="nav-item">
               <a class="nav-link" routerLink="/FPPOIn" routerLinkActive="active" (click)="menuClose()">
                 <i class="far fa-circle nav-icon"></i>
@@ -425,7 +425,7 @@
             </li>
           </ul>
 
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="fpoOut">
             <li class="nav-item">
               <a class="nav-link" routerLink="/FPPOOut" routerLinkActive="active" (click)="menuClose()">
                 <i class="far fa-circle nav-icon"></i>
@@ -434,7 +434,7 @@
             </li>
           </ul>
 
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="qualityCon">
             <li class="nav-item">
               <a class="nav-link" routerLink="/QualityC" routerLinkActive="active" (click)="menuClose()">
                 <i class="far fa-circle nav-icon"></i>
@@ -443,7 +443,7 @@
             </li>
           </ul>
 
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="dispatch">
             <li class="nav-item">
               <a class="nav-link" routerLink="/Dispatch" routerLinkActive="active" (click)="menuClose()">
                 <i class="far fa-circle nav-icon"></i>
@@ -453,7 +453,7 @@
           </ul>
         </li>
 
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="costing">
           <!--menu-open-->
             <a class="nav-link" routerLink="/Costing" routerLinkActive="active" (click)="menuClose()">
               <i class="fas fa-copy nav-icon"></i>

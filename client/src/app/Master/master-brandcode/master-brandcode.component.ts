@@ -61,9 +61,9 @@ export class MasterBrandcodeComponent implements OnInit {
   }
 
   LoadBrand() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
+    // var user: User = JSON.parse(localStorage.getItem('user'));
 
-    this.masterService.getBrand(user.locationId).subscribe(cardList => {
+    this.masterService.getBrand(this.user.locationId).subscribe(cardList => {
       this.Brand = cardList;
     })
   }

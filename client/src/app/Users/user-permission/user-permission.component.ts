@@ -77,8 +77,8 @@ export class UserPermissionComponent implements OnInit {
   }
 
   GetButtonPermission() {    
-    this.userObj = JSON.parse(localStorage.getItem('user'));  
-    this.authMenus = this.userObj.permitMenus;  
+    // this.userObj = JSON.parse(localStorage.getItem('user'));  
+    this.authMenus = this.user.permitMenus;  
     
     if(this.authMenus != null) {
     if(this.authMenus.filter(x => x.menuName == 'SaveMenuPermission' && x.mType == 'B').length > 0) {
@@ -180,8 +180,5 @@ export class UserPermissionComponent implements OnInit {
     this.permitMenus = [];
     this.nPermitMenus = [];   
   }
-
- 
- 
 
 }

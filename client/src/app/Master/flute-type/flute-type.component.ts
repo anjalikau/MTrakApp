@@ -57,22 +57,22 @@ export class FluteTypeComponent implements OnInit {
   }
 
   loadFluteType() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
+    // var user: User = JSON.parse(localStorage.getItem('user'));
     //console.log(user);
-    var locationId = user.locationId;
+    var locationId = this.user.locationId;
     this.masterService.getFluteType(locationId).subscribe((result) => {
       this.fluteList = result;
     });
   }  
 
   saveFluteType() {
-    var loc: User = JSON.parse(localStorage.getItem('user'));
+    // var loc: User = JSON.parse(localStorage.getItem('user'));
     var obj = {
       createUserId: this.user.userId,
       code: this.fluteTypeForm.get('code').value.trim(),
       factor: this.fluteTypeForm.get('factor').value,
       autoId: this.fluteTypeForm.get('autoId').value,
-      locationId: loc.locationId
+      locationId: this.user.locationId
     };
 
     this.saveobj = Object.assign({}, obj);

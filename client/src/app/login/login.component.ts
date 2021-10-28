@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AccountService } from '_services/account.service';
 import { AdminService } from '_services/admin.service';
+import { LocalService } from '_services/local.service';
 import { RegisterService } from '_services/register.service';
 import { SysModule } from '../_models/sysModule';
 import { User } from '../_models/user';
@@ -20,7 +21,7 @@ export class LoginComponent implements OnInit {
   submitted = false;
 
   constructor(public accountServices: AccountService, private router: Router ,private fb: FormBuilder
-      ,private adminService: AdminService , private registerService: RegisterService) { }
+      , private registerService: RegisterService, private localService: LocalService) { }
 
   ngOnInit(): void {
     this.initilizeForm();
@@ -63,10 +64,9 @@ export class LoginComponent implements OnInit {
   }
 
   setCurrentUser() {
-    const user: User = JSON.parse(localStorage.getItem('user'));
-    this.accountServices.setCurrentUser(user);
-    //this.getAuthMenuList();
-    //console.log(user);
+    const user: User = this.localService.getJsonValue('user');
+    // const user: User = JSON.parse(localStorage.getItem('user'));
+    this.accountServices.setCurrentUser(user);   
   }
 
   // getAuthMenuList() {    

@@ -86,7 +86,7 @@ export class MasterProdGroupComponent implements OnInit {
 
   saveProductGroup() { 
     // var prodTypeId = this.prodGroupForm.get('prodTypeId').value[0];
-    var user: User = JSON.parse(localStorage.getItem('user'));
+    // var user: User = JSON.parse(localStorage.getItem('user'));
 
     var obj = {
       createUserId: this.user.userId,
@@ -94,7 +94,7 @@ export class MasterProdGroupComponent implements OnInit {
       prodGroupCode: this.prodGroupForm.get('prodGroupCode').value.trim(),
       autoId: this.prodGroupForm.get('autoId').value,
       // prodTypeId: this.prodGroupForm.get('prodTypeId').value[0],
-      locationId: user.locationId
+      locationId: this.user.locationId
     };
 
     this.masterService.saveProductGroup(obj).subscribe((result) => {    

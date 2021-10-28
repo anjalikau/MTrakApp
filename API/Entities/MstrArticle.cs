@@ -29,10 +29,6 @@ namespace API.Entities
 	    public decimal AvgCostPrice {get;set;}
 	    public decimal LastCostPrice {get;set;}
 	    public decimal MaxCostPrice {get;set;}
-        // public double Length {get;set;}
-	    // public double Width {get;set;}
-	    // public double Height {get;set;}
-        // public DateTime PODate {get;set;}
         public int ? CreateUserId { get; set; }
         public DateTime ? CreateDateTime { get; set; }
         public int ? UpdateUserId { get; set; }

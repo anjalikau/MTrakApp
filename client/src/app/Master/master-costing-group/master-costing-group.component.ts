@@ -62,22 +62,20 @@ export class MasterCostingGroupComponent implements OnInit {
   }
 
   loadCostingGroup(){
-    var user: User = JSON.parse(localStorage.getItem('user'));
-
-    this.masterService.getCostingGroup(user.locationId).subscribe(cardList => {
+    // var user: User = JSON.parse(localStorage.getItem('user'));
+    this.masterService.getCostingGroup(this.user.locationId).subscribe(cardList => {
       this.costGroupList = cardList;
     })
   }
 
   saveCostingGroup() { 
-    var user: User = JSON.parse(localStorage.getItem('user'));
-
+    // var user: User = JSON.parse(localStorage.getItem('user'));
     var obj = {
       createUserId: this.user.userId,
       name: this.costGroupForm.get('name').value.trim(),
       autoId: this.costGroupForm.get('autoId').value,
       isMaterialAllocated: this.chkIsMatAllocated.checked,
-      locationId: user.locationId,
+      locationId: this.user.locationId,
     };
 
     this.masterService.saveCostingGroup(obj).subscribe((result) => {    

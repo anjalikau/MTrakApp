@@ -21,10 +21,12 @@ namespace API.Controllers.Admin
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
         private readonly IMasterRepository _masterRepository;
+        private readonly IAdminRepository _adminRepository;
 
         public AccountController(IApplicationAdminDbContext context, ITokenService tokenService, IMapper mapper
-            , IMasterRepository masterRepository)
+            , IMasterRepository masterRepository, IAdminRepository adminRepository)
         {
+            _adminRepository = adminRepository;
             _mapper = mapper;
             _tokenService = tokenService;
             _context = context;
@@ -47,10 +49,10 @@ namespace API.Controllers.Admin
             user.bActive = true;
             user.cPassword = registerDto.cPassword;
             user.passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.cPassword));
-            user.passwordSalt = hmac.Key;     
-            
+            user.passwordSalt = hmac.Key;
+
             _context.MstrAgents.Add(user);
-            await _context.SaveChangesAsync(default);           
+            await _context.SaveChangesAsync(default);
 
             return Ok();
         }
@@ -61,31 +63,33 @@ namespace API.Controllers.Admin
         {
             var saveExists = false;
 
-              foreach (var item in userModule)
-              {
-                  if(await UserModuleExists(item))
-                  {
+            foreach (var item in userModule)
+            {
+                if (await UserModuleExists(item))
+                {
                     continue;
-                  }
-                  else
-                  {
+                }
+                else
+                {
                     _context.MstrAgentModule.Add(item);
                     saveExists = true;
-                  }
-              } 
+                }
+            }
 
-            if (saveExists) 
+            if (saveExists)
                 await _context.SaveChangesAsync(default);
-            else 
+            else
                 return BadRequest("User Module Exists");
 
-              return Ok(); 
+            return Ok();
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             IEnumerable<PermitMenuDto> menuList = Enumerable.Empty<PermitMenuDto>();
+            IEnumerable<UserLocationDto> locationList ;
+
             var user = await _context.MstrAgents
                 .SingleOrDefaultAsync(x => x.cAgentName == loginDto.cAgentName);
 
@@ -100,27 +104,36 @@ namespace API.Controllers.Admin
             }
 
             int userId = int.Parse(user.idAgents.ToString());
-            int moduleId = int.Parse(loginDto.ModuleId.ToString());
+            int moduleId = int.Parse(loginDto.ModuleId.ToString()); 
 
             var usermod = await _context.MstrAgentModule
                     .SingleOrDefaultAsync(x => x.UserId == userId && x.SysModuleId == moduleId);
 
-            if(usermod == null) return Unauthorized("Invalid Module");   
-            else {
+            if (usermod == null) return Unauthorized("Invalid Module");
+            else
+            {
+                ///// GET USER LOCATION LIST 
+                MstrAgentModule agentModule = new MstrAgentModule();
+                agentModule.UserId = userId;
+                agentModule.SysModuleId = moduleId;
+
+                locationList = await _adminRepository.GetUserLocAsync(agentModule);
+
                 /// GET PERMITED MENU LIST FOR LOGGED USER
                 UserDto userDto = new UserDto();
 
-                userDto.UserId = user.idAgents ;
+                userDto.UserId = user.idAgents;
                 userDto.ModuleId = usermod.SysModuleId;
 
                 menuList = await _masterRepository.GetAuthMenuListAsync(userDto);
-            }     
+            }
 
             return new UserDto
             {
                 ModuleId = usermod.SysModuleId,
                 UserId = user.idAgents,
                 UserName = user.cAgentName,
+                Locations = locationList,
                 Token = _tokenService.CreateToken(user),
                 permitMenus = menuList
             };

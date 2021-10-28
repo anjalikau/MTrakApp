@@ -72,14 +72,14 @@ export class MasterSerialnoDetailsComponent implements OnInit {
   }
 
   loadSeqSettings() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
-    this.masterService.getSeqSettings(user.locationId).subscribe((cardList) => {
+    // var user: User = JSON.parse(localStorage.getItem('user'));
+    this.masterService.getSeqSettings(this.user.locationId).subscribe((cardList) => {
       this.serialNoList = cardList;
     });
   }
 
   saveSerialNo() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
+    // var user: User = JSON.parse(localStorage.getItem('user'));
 
     var obj = {
       createUserId: this.user.userId,
@@ -89,7 +89,7 @@ export class MasterSerialnoDetailsComponent implements OnInit {
       seqNo: this.serialNoForm.get('seqNo').value,
       autoId: this.serialNoForm.get('autoId').value,
       // currentYear: this.serialNoForm.get('currentYear').value == null ? 0 : this.serialNoForm.get('currentYear').value,
-      locationId: user.locationId,
+      locationId: this.user.locationId
     };
 
     this.masterService.saveSeqSettings(obj).subscribe(

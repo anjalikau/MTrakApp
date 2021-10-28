@@ -79,9 +79,9 @@ export class CustomerLocationsComponent implements OnInit {
   }
 
   loadHeaderlist(){
-    var user: User = JSON.parse(localStorage.getItem('user'));
+    // var user: User = JSON.parse(localStorage.getItem('user'));
 
-    this.masterService.getCustomer(user.locationId).subscribe(cardList => {
+    this.masterService.getCustomer(this.user.locationId).subscribe(cardList => {
       this.customerHdList = cardList;
     })
   }

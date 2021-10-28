@@ -429,9 +429,9 @@ export class SalesOrderComponent implements OnInit {
 
   loadSalesAgent() {
     this.salesAgentList = [];
-    var user: User = JSON.parse(localStorage.getItem('user'));
+    // var user: User = JSON.parse(localStorage.getItem('user'));
     //console.log(user);
-    var locationId = user.locationId;
+    var locationId = this.user.locationId;
     this.masterServices.getSalesAgent(locationId).subscribe((agents) => {
       this.salesAgentList = agents;
     });
@@ -447,9 +447,9 @@ export class SalesOrderComponent implements OnInit {
   }
 
   loadCustomer() {
-    var user: User = JSON.parse(localStorage.getItem('user'));
+    // var user: User = JSON.parse(localStorage.getItem('user'));
     //console.log(user);
-    var locationId = user.locationId;
+    var locationId = this.user.locationId;
     this.masterServices.getCustomer(locationId).subscribe((customer) => {
       this.customerList = customer;
     });
