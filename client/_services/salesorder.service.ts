@@ -37,6 +37,14 @@ export class SalesorderService {
     return this.http.get<any>(this.baseUrl + 'SalesOrder/SO/' + OrderRef , httpOptions);
   }
 
+  getPendCostSalesOrders(customerId: number) {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/PendSO/' + customerId , httpOptions);
+  }
+
+  getPendSalesHeader(soHeaderId: number) {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/SOHead/' + soHeaderId , httpOptions);
+  }
+
   saveSalesOrder(model: any) {
     return this.http.post(this.baseUrl + 'SalesOrder/SOSave' , model , httpOptions);
   }
@@ -139,6 +147,18 @@ export class SalesorderService {
 
   getCostSheetDetails(costHeaderId: any) {
     return this.http.get<any>(this.baseUrl + 'SalesOrder/CostDt/' + costHeaderId , httpOptions );
+  }
+
+  getCostSheetHeader(artColorSizeId: any) {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/CostHd/' + artColorSizeId , httpOptions );
+  }
+
+  attachCostSheet(soItem: any) {
+    return this.http.post(this.baseUrl + 'SalesOrder/AttachCS' , soItem , httpOptions );
+  }
+
+  removeCostSheet(soItem: any) {
+    return this.http.post(this.baseUrl + 'SalesOrder/RemoveCS' , soItem , httpOptions );
   }
 
 }

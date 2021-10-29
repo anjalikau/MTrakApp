@@ -387,6 +387,15 @@
               </a>
             </li>
           </ul>
+
+          <ul class="nav nav-treeview" *ngIf="costAttach">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/CostAttach" routerLinkActive="active" (click)="menuClose()">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Attach CostSheet</p>
+              </a>
+            </li>
+          </ul>
         </li>
 
         <li class="nav-item" *ngIf="productionGroup">

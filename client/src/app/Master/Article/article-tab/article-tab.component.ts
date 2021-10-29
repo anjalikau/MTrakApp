@@ -12,6 +12,7 @@ export class ArticleTabComponent implements OnInit {
   article: boolean = false;
   articleColor: boolean = false;
   articleSize: boolean = false;
+  articleUOM: boolean = false;
 
   constructor(public accountServices: AccountService) { }
 
@@ -33,6 +34,8 @@ export class ArticleTabComponent implements OnInit {
         this.articleColor = true;
     if (formMenus.filter(x => x.autoIdx == 79).length > 0)
         this.articleSize = true;
+    if (formMenus.filter(x => x.autoIdx == 88).length > 0)
+        this.articleUOM = true;
   }
 
 }

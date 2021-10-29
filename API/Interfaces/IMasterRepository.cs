@@ -95,6 +95,8 @@ namespace API.Interfaces
         Task<int> SaveCodeDefinitionAsync(MstrCodeDefinition codeDefinition);
         Task<int> DeleteCodeDefinitionAsync(MstrCodeDefinition codeDefinition);
         Task<int> SaveAddressTypeAsync(MstrAddressType addressType);
+        Task<int> SaveArticleUOMConvAsync(MstrArticleUOMConversion articleUOM);
+        Task<int> ActiveArticleUOMConvAsync(MstrArticleUOMConversion articleUOM);
 
     }
 }

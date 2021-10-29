@@ -75,6 +75,8 @@ namespace API.Data
         public DbSet<MstrFluteTypes> MstrFluteTypes {get; set;}
         public DbSet<MstrSpecialInstruction> MstrSpecialInstruction {get; set;}
         public DbSet<MstrArticleUOMConversion> MstrArticleUOMConversion {get; set;}
+        public DbSet<TransSalesOrderHd> TransSalesOrderHeader { get; set;}
+        public DbSet<TransSalesOrderItemDt> TransSalesOrderItemDt { get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

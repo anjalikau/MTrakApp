@@ -15,7 +15,11 @@
                         <li class="nav-item" *ngIf="articleSize">
                             <a class="nav-link" id="custom-tabs-assignsize-tab" data-toggle="pill" href="#customer-assignsize-tab"
                                 role="tab" aria-controls="customer-assignsize-tab" aria-selected="false">Assign Size</a>
-                        </li>                          
+                        </li> 
+                        <li class="nav-item" *ngIf="articleUOM">
+                            <a class="nav-link" id="custom-tabs-articleuom-tab" data-toggle="pill" href="#customer-articleuom-tab"
+                                role="tab" aria-controls="customer-articleuom-tab" aria-selected="false">Article UOM</a>
+                        </li>                              
                     </ul>
                 </div>
                 <div class="tab-content" id="custom-tabs-two-tabContent">
@@ -30,7 +34,11 @@
                     <div class="tab-pane fade" id="customer-assignsize-tab" role="tabpanel"
                         aria-labelledby="custom-tabs-assignsize-tab">
                         <app-assign-size></app-assign-size>
-                </div>                     
+                    </div>  
+                    <div class="tab-pane fade" id="customer-articleuom-tab" role="tabpanel"
+                        aria-labelledby="custom-tabs-articleuom-tab">
+                        <app-article-umo-conversion></app-article-umo-conversion>
+                    </div>                      
                     <!-- /.modal -->
                 </div>
             </div>

@@ -9,9 +9,9 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label> Article </label>
-                        <igx-combo #article id="article" class="combo" displayKey="articleName" valueKey="autoId"
+                        <igx-combo #carticle id="carticle" class="combo" displayKey="articleName" valueKey="autoId"
                             [itemsMaxHeight]="250" [data]="articleList" placeholder="Article"
-                            (onSelectionChange)="singleSelection($event)" formControlName="article"
+                            (onSelectionChange)="singleSelection($event)" formControlName="carticle"
                             (onSelectionChange)="onSelectArticle($event)"
                             searchPlaceholder="Search...">
                         </igx-combo>

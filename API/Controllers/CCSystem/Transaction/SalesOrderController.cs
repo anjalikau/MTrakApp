@@ -34,13 +34,36 @@ namespace API.Controllers.CCSystem.Transaction
         {
             var saleOredrList = await _salesRepository.GetSalesOrderAsync(orderRef);
             return Ok(saleOredrList);
-        }
+        }        
 
         [HttpPost("SOSave")]
         public async Task<IActionResult> SaveSalesOrder(List<SalesOrderDeliveryDto> salesOrder)
         {
             var result = await _salesRepository.SaveSalesOrderAsync(salesOrder);
             return Ok(result);
+        }
+
+        [HttpGet("PendSO/{customerId}")]
+        public async Task<IActionResult> GetPendCostSalesOrders(int customerId)
+        {
+            var result = await _context.TransSalesOrderHeader 
+                .Where(x => x.CustomerId == customerId)               
+                .Join(_context.TransSalesOrderItemDt , h => h.AutoId , d => d.SOHeaderId ,
+                    (h , d ) => new {
+                       autoId = h.AutoId,
+                       orderRef = h.OrderRef,
+                       costingId = d.CostingId
+                    })
+                .Where(d => d.costingId == 0).Distinct()
+                .ToListAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("SOHead/{SOHeaderId}")]
+        public async Task<IActionResult> GetPendSalesOrderItem(int SOHeaderId)
+        {
+            var saleOredrList = await _salesRepository.GetPendSalesOrderItemAsync(SOHeaderId);
+            return Ok(saleOredrList);
         }
 
         [HttpGet("JobPedItems/{id}")]
@@ -239,14 +262,26 @@ namespace API.Controllers.CCSystem.Transaction
             return Ok(result);
         }
 
-        [HttpGet("CostDt/{id}")]
-        public async Task<IActionResult> GetCostingDetails(int id)
+        [HttpGet("CostHd/{id}")]
+        public async Task<IActionResult> GetCostHeader(int id)
         {
-            var result = await _salesRepository.GetCostingDetailsAsync(id);
+            var result = await _salesRepository.GetCostHeaderAsync(id);
             return Ok(result);
-        }
+        }   
 
-       
+        [HttpPost("AttachCS")]
+        public async Task<IActionResult> AttachCostSheetSO(TransSalesOrderItemDt soItem)
+        {
+            var result = await _salesRepository.AttachCostSheetSOAsync(soItem);
+            return Ok(result);
+        }   
+
+        [HttpPost("RemoveCS")]
+        public async Task<IActionResult> RemoveCostSheetSO(TransSalesOrderItemDt soItem)
+        {
+            var result = await _salesRepository.RemoveCostSheetSOAsync(soItem);
+            return Ok(result);
+        }     
 
     }
 }

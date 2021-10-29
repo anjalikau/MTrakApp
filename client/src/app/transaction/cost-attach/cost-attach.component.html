@@ -1,0 +1,147 @@
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">Attach CostSheet</h3>
+    </div>
+    <form [formGroup]="costAttachForm" autocomplete="on">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label> Customer</label>
+                        <igx-combo #customer id="customer" class="combo" displayKey="name" valueKey="autoId" [itemsMaxHeight]="250"
+                            [data]="customerList" placeholder="Customer" (onSelectionChange)="singleSelection($event)" 
+                            (onSelectionChange)="onSelectCustomer($event)" formControlName="customer" searchPlaceholder="Search...">
+                        </igx-combo>                       
+                    </div>                   
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label> Sales Order </label>
+                        <igx-combo #salesOrder id="salesOrder" class="combo" displayKey="orderRef" valueKey="autoId" [itemsMaxHeight]="250"
+                            [data]="pendSOList" placeholder="Sales Order" (onSelectionChange)="singleSelection($event)" 
+                            formControlName="salesOrder" (onSelectionChange)="onSelectSalesOrder($event)" searchPlaceholder="Search...">
+                        </igx-combo>                       
+                    </div>                   
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <igx-grid #salesDtGrid [data]="soHeaderList" [autoGenerate]="false" [paging]="true"
+                        [rowEditable]="false" [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" 
+                        [perPage]="10" height="500px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
+                        [rowSelection]="'Single'">                       
+                        <igx-column [field]="'articleName'" [header]="'Article Name'" [resizable]="true" [dataType]="'string'"
+                            [sortable]="true" [width]="'200px'">
+                        </igx-column>
+                        <igx-column [field]="'color'" [header]="'Color'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'size'" [header]="'Size'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'refNo'" [header]="'Cost Ref'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [width]="'50px'" [field]="'refNo'" [header]="' '" [selectable]="false" [sortable]="false" [resizable]="false">
+                            <ng-template igxCell let-cell="cell">
+                                <div *ngIf="cell.value; then thenBlock else elseBlock"></div>
+                                <ng-template #thenBlock>
+                                    <button igxButton="icon" class="fab-compact">
+                                        <igx-icon class="icon-red" family="material">visibility_off</igx-icon>
+                                    </button>
+                                </ng-template>
+                                <ng-template #elseBlock>
+                                    <button igxButton="icon" class="fab-compact" data-toggle="modal" data-target="#modalCost" (click)="onLoadCostSheet($event,cell.cellID)">
+                                        <igx-icon class="icon-green" family="material">visibility</igx-icon>
+                                    </button>
+                                </ng-template> 
+                            </ng-template>
+                        </igx-column>
+                        <igx-column [field]="'qty'" [header]="'Qty'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'price'" [header]="'Price'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>
+                    </igx-grid>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="modalCost">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> Cost Sheet List </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card-body">
+                    <div class="row">
+                        <igx-grid #costDtGrid [data]="costHeaderList" [autoGenerate]="false" [paging]="true"
+                        [rowEditable]="false" [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" 
+                        [perPage]="10" height="300px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
+                        [rowSelection]="'Single'">  
+                        <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                            <ng-template igxCell let-cell="cell">
+                                <button igxButton="icon" class="fab-compact" (click)="onAttachCostSheet($event,cell.cellID)">
+                                    <igx-icon family="material">visibility</igx-icon>
+                                </button>
+                            </ng-template>
+                        </igx-column>                     
+                        <igx-column [field]="'refNo'" [header]="'Ref No'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'200px'">
+                        </igx-column>
+                        <igx-column [field]="'combination'" [header]="'Combination'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'brandCode'" [header]="'Brand Code'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                        </igx-column>                        
+                        <igx-column [field]="'boardLength'" [header]="'Board Length'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'boardWidth'" [header]="'Board Width'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'sqm'" [header]="'SQM'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'actualReal'" [header]="'ActualReal'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'reelSize'" [header]="'ReelSize'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'trimWaste'" [header]="'TrimWaste'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'noOfUps'" [header]="'NoOfUps'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'totNetWeight'" [header]="'TotNetWeight'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'markup'" [header]="'Markup'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'moqCost'" [header]="'MoqCost'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'totGrossWeight'" [header]="'Tot GrossWeight'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>                       
+                        <!-- <igx-column [field]="'profitMarkup'" [header]="'Profit Markup'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>                       
+                        <igx-column [field]="'sellingPrice'" [header]="'SellingPrice'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>                       
+                        <igx-column [field]="'tollerence'" [header]="'tollerence'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>                       
+                        <igx-column [field]="'totMOQCost'" [header]="'TotMOQCost'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>                        
+                        <igx-column [field]="'totalBoxCost'" [header]="'TotalBoxCost'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column> -->
+                        
+                    </igx-grid>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default mr-3">
+                        <i class="fas fa-broom"></i> </button>
+                    <button type="button" class="btn btn-success" [disabled]="!costAttachForm.valid">
+                        <i class="fas fa-save"></i> </button>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

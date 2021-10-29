@@ -19,8 +19,8 @@ export class AssignSizeComponent implements OnInit {
   npSizeList: Size[];
   user: User;
 
-  @ViewChild('article', { read: IgxComboComponent })
-  public article: IgxComboComponent;
+  @ViewChild('sarticle', { read: IgxComboComponent })
+  public sarticle: IgxComboComponent;
 
   @ViewChild('npSizeGrid', { static: true })
   public npSizeGrid: IgxGridComponent;
@@ -50,7 +50,7 @@ export class AssignSizeComponent implements OnInit {
     this.assignSizeForm = this.fb.group({
       userId: this.user.userId,     
       sizeCard: [{value: '' , disabled: true }],     
-      article: ['']     
+      sarticle: ['']     
     });   
   }
 
@@ -98,7 +98,7 @@ export class AssignSizeComponent implements OnInit {
 
   saveArticleSize() {
     var selectedRows = this.npSizeGrid.selectedRows;
-    var articleId = this.assignSizeForm.get("article").value[0];
+    var articleId = this.assignSizeForm.get("sarticle").value[0];
     var sizeList =[];
 
     selectedRows.forEach(sizeId => {      
@@ -129,7 +129,7 @@ export class AssignSizeComponent implements OnInit {
 
   deleteArticleSize() {
     var selectedRows = this.pSizeGrid.selectedRows;
-    var articleId = this.assignSizeForm.get("article").value[0];
+    var articleId = this.assignSizeForm.get("sarticle").value[0];
     var sizeList =[];
 
     selectedRows.forEach(sizeId => {      

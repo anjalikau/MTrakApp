@@ -12,7 +12,7 @@ namespace API.Entities
         public byte Version {get;set;}
         public long ArticleId {get;set;}
         public int UnitId {get;set;}
-        public double Value {get;set;}
+        public decimal Value {get;set;}
         public bool IsActive {get;set;}
         public int ? CreateUserId {get;set;}
         public DateTime ? CreateDateTime {get;set;}

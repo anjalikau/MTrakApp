@@ -357,11 +357,19 @@
                     <igx-column [field]="'price'" [header]="'Price'" [resizable]="true" [dataType]="'number'" [pipeArgs]="formatPrice"
                          [sortable]="true">
                     </igx-column>
-                    <!-- <igx-column field="UnitPrice" [width]="'100px'" header="Unit Price" [sortable]="true" [editable]="true"
-                            [pipeArgs]="formatOptions" [dataType]="'number'" resizable="true">
-                    </igx-column> -->
-                    <igx-column [field]="'costRef'" [header]="'Cost. Ref'" [resizable]="true" [dataType]="'string'"
+                    <igx-column [field]="'costingRef'" [header]="'Cost. Ref'" [resizable]="true" [dataType]="'string'"
                         [sortable]="true" [editable]="false">
+                    </igx-column>
+                    <igx-column [width]="'50px'" [field]="'costingRef'" [header]="' '" [selectable]="false" [sortable]="false" [resizable]="false">
+                        <ng-template igxCell let-cell="cell">
+                            <div *ngIf="cell.value; then thenBlock else elseBlock"></div>                           
+                            <ng-template #thenBlock>
+                                <button igxButton="icon" class="fab-compact" data-toggle="modal" data-target="#modalCost" 
+                                        (click)="onRemoveCostSheet($event,cell.cellID)">
+                                    <igx-icon class="icon-red" family="material">cancel</igx-icon>
+                                </button>
+                            </ng-template> 
+                        </ng-template>
                     </igx-column>
                     <igx-column [field]="'isIntendCreated'" [header]="'Intend Created'" [resizable]="true"
                         [dataType]="'boolean'" [sortable]="true" [editable]="false">

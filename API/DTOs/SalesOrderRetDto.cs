@@ -47,6 +47,7 @@ namespace API.DTOs
         public int DelQty { get; set; }
         public int JobQty { get; set; }
         public bool JobCreated { get; set; }
+        public string CostingRef { get; set; }
  
     }
 }

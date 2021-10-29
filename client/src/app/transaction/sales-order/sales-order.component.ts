@@ -9,7 +9,7 @@ import {
   IgxDialogComponent,
   IgxGridComponent,
 } from 'igniteui-angular';
-import { ToastrService } from 'ngx-toastr';
+import { Toast, ToastrService } from 'ngx-toastr';
 import { Article } from 'src/app/_models/article';
 import { Color } from 'src/app/_models/color';
 import { CustomerLoc } from 'src/app/_models/customerLoc';
@@ -601,7 +601,7 @@ export class SalesOrderComponent implements OnInit {
             articleName: this.soItemForm.get('articleName').value,
             articleCode: this.soItemForm.get('articleCode').value,
             costingId: 0,
-            costRef: ' ',
+            costingRef: ' ',
             qty: qty,
             price: price,
             isIntendCreated: false,
@@ -1092,7 +1092,7 @@ export class SalesOrderComponent implements OnInit {
             this.soHeaderForm.get('orderRef').setValue(result['refNum']);
             this.loadSalesOrderDt();
           } else if (result['result'] == -1) {
-            this.toastr.success('Sales Order update Successfully !!!');
+            this.toastr.error('Sales Order update Successfully !!!');
             this.loadSalesOrderDt();
           } else {
             this.toastr.warning(
@@ -1119,7 +1119,7 @@ export class SalesOrderComponent implements OnInit {
 
       this.salesOrderServices.getSalesOrderDT(salesOrderRef).subscribe(
         (orderDt) => {
-          // console.log(orderDt);
+          console.log(orderDt);
           var salesOrderId = 0,
             soSavedItemList = [],
             soSavedDelList = [];
@@ -1231,7 +1231,7 @@ export class SalesOrderComponent implements OnInit {
                   articleName: orderDt[index]['article'],
                   articleCode : orderDt[index]['stockCode'],                 
                   costingId: orderDt[index]['costingId'],
-                  costRef: orderDt[index]['costRef'],
+                  costingRef: orderDt[index]['costingRef'],
                   qty: orderDt[index]['itemQty'],
                   price: orderDt[index]['price'],
                   //saleOrderId: salesOrderId,
@@ -1417,5 +1417,41 @@ export class SalesOrderComponent implements OnInit {
     // }
 
     return true;
+  }
+
+  ///// REMOVE COST SHEET
+  onRemoveCostSheet(event,cellId) {
+    const itemId = cellId.rowID;
+    //// CHECK ITEM LINE HAS JOB QTY 
+    const selectedRowData = this.deliveryGrid.data.filter((record) => {
+      return record.itemId == itemId && record.jobQty > 0;
+    });
+
+    console.log(selectedRowData);
+
+    /// IF JOB QTY AVAILABLE CAN NOT REMOVE COST SHEET
+    if(selectedRowData.length > 0) {
+      this.toastr.warning("Remove fail, Job Card already created !!!");
+    } else {
+
+      var obj = {
+        autoId: itemId,
+        createUserId: this.user.userId
+      }
+
+      this.salesOrderServices.removeCostSheet(obj).subscribe(result => {
+        if (result == 1) {
+          this.toastr.success('CostSheet remove Successfully !!!');
+          this.loadSalesOrderDt();
+        } else if (result['result'] == -1) {
+          this.toastr.error('CostSheet remove fail !!!');
+          this.loadSalesOrderDt();
+        } else {
+          this.toastr.warning(
+            'Contact Admin. Error No:- ' + result.toString()
+          );
+        }
+      });
+    }
   }
 }

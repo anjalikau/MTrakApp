@@ -92,6 +92,8 @@ import { RejectReasonComponent } from './master/reject-reason/reject-reason.comp
 import { CodeDefinitionComponent } from './users/code-definition/code-definition.component';
 import { AddressTypeComponent } from './master/address-type/address-type.component';
 import { NgYasYearPickerModule } from 'ngy-year-picker';
+import { CostAttachComponent } from './transaction/cost-attach/cost-attach.component';
+import { ArticleUmoConversionComponent } from './master/article/article-umo-conversion/article-umo-conversion.component';
 
 // Report viewer
 // import '@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min';
@@ -178,7 +180,9 @@ import { NgYasYearPickerModule } from 'ngy-year-picker';
     PaymentTermsComponent,
     RejectReasonComponent,
     CodeDefinitionComponent,
-    AddressTypeComponent
+    AddressTypeComponent,
+    CostAttachComponent,
+    ArticleUmoConversionComponent
   ],
   imports: [
     BrowserModule,

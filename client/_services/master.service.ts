@@ -45,6 +45,8 @@ import { PaymentTerm } from 'src/app/_models/paymentTerm';
 import { RejectReasons } from 'src/app/_models/RejectReasons';
 import { CodeDefinition } from 'src/app/_models/codeDefinition';
 import { SequenceSettings } from 'src/app/_models/sequenceSettings';
+import { ArrayType } from '@angular/compiler';
+import { ArticleUOMConv } from 'src/app/_models/articleUOMConv';
 
 var usertoken: any;
 if (localStorage.length > 0) {
@@ -696,6 +698,18 @@ export class MasterService {
   getArticleUOMConversion(articleId: number) {
     return this.http.get<any[]>( this.baseUrl + 'Master/ArtBase/' + articleId, httpOptions );
   } 
+
+  getArticleUOMConvAll(articleId: number) {
+    return this.http.get<any[]>( this.baseUrl + 'Master/ArtBaseAll/' + articleId, httpOptions );
+  } 
+
+  saveArticleUOMConv(artUOMConv: ArticleUOMConv) {
+    return this.http.post(this.baseUrl + 'Master/SaveAUOM', artUOMConv , httpOptions);
+  }
+
+  activeArticleUOMConv(artUOMConv: any) {
+    return this.http.post(this.baseUrl + 'Master/ActiveAUOM', artUOMConv , httpOptions);
+  }
 
   //#endregion "Article UOM Conversion"
 

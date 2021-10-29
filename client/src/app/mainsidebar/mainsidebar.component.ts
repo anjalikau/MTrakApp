@@ -53,6 +53,7 @@ export class MainsidebarComponent implements OnInit {
   qualityCon: boolean = false;
   dispatch: boolean = false;
   costing: boolean = false;
+  costAttach: boolean = false;
   isCollapsed = false;
   userLoc: UserLocation[];
   user: User;
@@ -86,8 +87,7 @@ export class MainsidebarComponent implements OnInit {
   }
 
   loadUserLocation() {
-    console.log(this.user);
-
+    // console.log(this.user);
     this.userLoc = this.user.locations;
     var selectRow = this.userLoc.filter((x) => x.isDefault == true);
 
@@ -137,7 +137,7 @@ export class MainsidebarComponent implements OnInit {
 
   checkMenuPermission() {
     var menus = this.user.permitMenus;
-    console.log(menus);
+    // console.log(menus);
 
     var formMenus = menus.filter((x) => x.mType == 'F');   
 
@@ -210,7 +210,9 @@ export class MainsidebarComponent implements OnInit {
 
       //// SUB MENU OF Order GROUP
       if (formMenus.filter((x) => x.autoIdx == 34).length > 0 )
-        this.salesOrder = true;     
+        this.salesOrder = true;  
+      if (formMenus.filter((x) => x.autoIdx == 87).length > 0 )
+        this.costAttach = true;      
       
     }
     if (formMenus.filter((x) => x.groupName == 'Production').length > 0) {

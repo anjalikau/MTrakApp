@@ -75,6 +75,8 @@ namespace API.Interfaces
         DbSet<MstrFluteTypes> MstrFluteTypes {get; set;}        
         DbSet<MstrSpecialInstruction> MstrSpecialInstruction {get; set;}
         DbSet<MstrArticleUOMConversion> MstrArticleUOMConversion {get; set;}
+        DbSet<TransSalesOrderHd> TransSalesOrderHeader { get; set;}
+        DbSet<TransSalesOrderItemDt> TransSalesOrderItemDt { get; set;}
 
     }
 }

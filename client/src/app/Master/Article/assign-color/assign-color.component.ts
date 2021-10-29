@@ -21,8 +21,8 @@ export class AssignColorComponent implements OnInit {
   npColorList: Color[];
   user: User;
 
-  @ViewChild('article', { read: IgxComboComponent })
-  public article: IgxComboComponent;
+  @ViewChild('carticle', { read: IgxComboComponent })
+  public carticle: IgxComboComponent;
 
   @ViewChild('npColorGrid', { static: true })
   public npColorGrid: IgxGridComponent;
@@ -52,7 +52,7 @@ export class AssignColorComponent implements OnInit {
     this.assignColorForm = this.fb.group({
       userId: this.user.userId,     
       colorCard: [{value: '' , disabled: true }],     
-      article: ['']     
+      carticle: ['']     
     });   
   }
 
@@ -101,7 +101,7 @@ export class AssignColorComponent implements OnInit {
 
   saveArticleColor() {
     var selectedRows = this.npColorGrid.selectedRows;
-    var articleId = this.assignColorForm.get("article").value[0];
+    var articleId = this.assignColorForm.get("carticle").value[0];
     var colorList =[];
 
     selectedRows.forEach(colorId => {      
@@ -132,7 +132,7 @@ export class AssignColorComponent implements OnInit {
 
   deleteArticleColor() {
     var selectedRows = this.pColorGrid.selectedRows;
-    var articleId = this.assignColorForm.get("article").value[0];
+    var articleId = this.assignColorForm.get("carticle").value[0];
     var colorList =[];
 
     selectedRows.forEach(colorId => {      

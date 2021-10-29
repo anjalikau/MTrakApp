@@ -41,6 +41,19 @@ namespace API.Repository
             
             return salOrderList;
         } 
+
+        public async Task<IEnumerable<SalesItemDto>> GetPendSalesOrderItemAsync(int SOHeaderId)
+        {   
+            IEnumerable<SalesItemDto> salesItemList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("SOHeaderId" , SOHeaderId);
+
+            salesItemList = await DbConnection.QueryAsync<SalesItemDto>("spTransSalesOrderPendItems" , para
+                    , commandType: CommandType.StoredProcedure);
+            
+            return salesItemList;
+        } 
         
         public async Task<ReturnDto> SaveSalesOrderAsync(List<SalesOrderDeliveryDto> salesOrder)
         {
@@ -689,7 +702,47 @@ namespace API.Repository
             return costSheet;
         }
 
+        public async Task<IEnumerable<CostHeaderDto>> GetCostHeaderAsync(int ArticleColorSizeId)
+        {   
+            IEnumerable<CostHeaderDto> costHeaderList;
+            DynamicParameters para = new DynamicParameters();
 
+            para.Add("ArticleColorSizeId" , ArticleColorSizeId);
+
+            costHeaderList = await DbConnection.QueryAsync<CostHeaderDto>("spTransCostingGetHeader" , para
+                    , commandType: CommandType.StoredProcedure);
+            
+            return costHeaderList;
+        }
+
+        public async Task<int> AttachCostSheetSOAsync(TransSalesOrderItemDt soItemDt)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("SalesItemId" , soItemDt.AutoId); 
+            para.Add("CostId" , soItemDt.CostingId);  
+            para.Add("UserId" , soItemDt.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+            var result = await DbConnection.ExecuteAsync("spTransSalesOrderAttachCS" , para
+                    , commandType: CommandType.StoredProcedure);
+                    
+            return para.Get<int>("Result");
+        } 
+
+        public async Task<int> RemoveCostSheetSOAsync(TransSalesOrderItemDt soItemDt)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("SalesItemId" , soItemDt.AutoId);
+            para.Add("UserId" , soItemDt.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+            var result = await DbConnection.ExecuteAsync("spTransSalesOrderRemoveCS" , para
+                    , commandType: CommandType.StoredProcedure);
+                    
+            return para.Get<int>("Result");
+        } 
 
     }
 }

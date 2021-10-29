@@ -112,7 +112,7 @@ export class MenuListComponent implements OnInit {
     this.menuListForm.get('AgentLevelId').setValue(this.menuListForm.get('AgentLevelId').value[0]);
     this.menuListForm.get('AgentId').setValue(this.user.userId);
     
-    console.log(this.menuListForm.value);
+    // console.log(this.menuListForm.value);
     this.adminService.saveMenuList(this.menuListForm.value).subscribe((result) => {  
       if (result == 1) {
         this.toastr.success("Menu List save Successfully !!!");

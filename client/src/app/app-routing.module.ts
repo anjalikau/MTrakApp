@@ -45,6 +45,8 @@ import { PaymentTermsComponent } from './master/payment-terms/payment-terms.comp
 import { RejectReasonComponent } from './master/reject-reason/reject-reason.component';
 import { CodeDefinitionComponent } from './users/code-definition/code-definition.component';
 import { AddressTypeComponent } from './master/address-type/address-type.component';
+import { CostAttachComponent } from './transaction/cost-attach/cost-attach.component';
+import { ArticleUmoConversionComponent } from './master/article/article-umo-conversion/article-umo-conversion.component';
 
 const routes: Routes = [
   {path:'', component: LoginComponent},
@@ -91,7 +93,9 @@ const routes: Routes = [
       {path:'PayTerms', component: PaymentTermsComponent},
       {path:'RejReason', component: RejectReasonComponent},
       {path:'CodeDefinition', component: CodeDefinitionComponent},
-      {path:'AddressType', component: AddressTypeComponent}
+      {path:'AddressType', component: AddressTypeComponent},
+      {path:'CostAttach', component: CostAttachComponent},
+      {path:'ArticleUOM', component: ArticleUmoConversionComponent}
     ]
   },  
   {path:'not-found', component: NotFoundComponent},

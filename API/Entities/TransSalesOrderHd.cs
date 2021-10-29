@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Entities
 {
-    [Table("Trans.SalesOrderHd")]
+    [Table("Trans.SalesOderHd")]
     public class TransSalesOrderHd
     {
         [Key]

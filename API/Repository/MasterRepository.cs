@@ -55,7 +55,6 @@ namespace API.Repository
         
         }
 
-
         #endregion
 
 
@@ -173,6 +172,42 @@ namespace API.Repository
         }
 
         #endregion Location
+
+        #region Article UOM Conversion
+
+        public async Task<int> SaveArticleUOMConvAsync(MstrArticleUOMConversion articleUOM)
+        {            
+            DynamicParameters para = new DynamicParameters();
+           
+            para.Add("@AutoId", articleUOM.AutoId);
+            para.Add("@ArticleId", articleUOM.ArticleId);
+            para.Add("@UnitId", articleUOM.UnitId);
+            para.Add("@Value", articleUOM.Value);
+            para.Add("@UserId", articleUOM.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);             
+
+            var result = await DbConnection.ExecuteAsync("spMstrArticleUOMConversionSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<int> ActiveArticleUOMConvAsync(MstrArticleUOMConversion articleUOM)
+        {            
+            DynamicParameters para = new DynamicParameters();
+           
+            para.Add("@AutoId", articleUOM.AutoId);           
+            para.Add("@UserId", articleUOM.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);             
+
+            var result = await DbConnection.ExecuteAsync("spMstrArticleUOMConversionActive", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        #endregion Article UOM Conversion
+
 
         #region Article Color Allocation
 

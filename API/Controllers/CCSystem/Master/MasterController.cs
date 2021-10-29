@@ -403,6 +403,42 @@ namespace API.Controllers.CCSystem.Master
             return Ok(result);
         }
 
+        [HttpGet("ArtBaseAll/{id}")]
+        public async Task<IActionResult> GetArticleUOMConversionAll(int id) 
+        {
+            var result = await _context.MstrArticleUOMConversion
+                .Where(x => x.ArticleId == id)
+                .Join(_context.MstrArticle , u => u.ArticleId , a => a.AutoId , (u,a) => new {u,a})
+                .Join(_context.MstrUnits , x => x.u.UnitId , b => b.AutoId , (x,b) =>
+                    new {
+                        articleName = x.a.ArticleName,
+                        autoId = x.u.AutoId,
+                        articleId = x.u.ArticleId,
+                        unitId = x.u.UnitId,
+                        value = x.u.Value,
+                        version = x.u.Version,
+                        isActive = x.u.IsActive,
+                        unit = b.Code
+                    })
+                .ToListAsync();
+
+            return Ok(result);
+        }
+
+        [HttpPost("SaveAUOM")]
+        public async Task<IActionResult> SaveArticleUOMConv(MstrArticleUOMConversion uOMConversion)
+        {
+            var result = await _masterRepository.SaveArticleUOMConvAsync(uOMConversion);
+            return Ok(result);
+        }
+
+        [HttpPost("ActiveAUOM")]
+        public async Task<IActionResult> ActiveArticleUOMConv(MstrArticleUOMConversion uOMConversion)
+        {
+            var result = await _masterRepository.ActiveArticleUOMConvAsync(uOMConversion);
+            return Ok(result);
+        }
+
         #endregion "Article UOM Conversion"
 
 
