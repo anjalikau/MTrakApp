@@ -16,6 +16,7 @@ export class MasterCostingGroupComponent implements OnInit {
   costGroupForm: FormGroup;
   costGroupList: CostingGroup[];
   user: User;
+  saveButton: boolean = false;
   validationErrors: string[] = [];
   
   public col: IgxColumnComponent;
@@ -40,6 +41,14 @@ export class MasterCostingGroupComponent implements OnInit {
     this.accountService.currentUser$.forEach(element => {
       this.user = element;
       });
+
+      var authMenus = this.user.permitMenus;
+
+      if (authMenus != null) {
+        if (authMenus.filter((x) => x.autoIdx == 106).length > 0) {
+          this.saveButton = true;
+        }
+      }
 
     this.costGroupForm = this.fb.group ({
       autoId : [0],
@@ -69,6 +78,7 @@ export class MasterCostingGroupComponent implements OnInit {
   }
 
   saveCostingGroup() { 
+    if(this.saveButton == true) {
     // var user: User = JSON.parse(localStorage.getItem('user'));
     var obj = {
       createUserId: this.user.userId,
@@ -96,6 +106,9 @@ export class MasterCostingGroupComponent implements OnInit {
     }, error => {
       this.validationErrors = error;
     }) 
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   clearControls() {

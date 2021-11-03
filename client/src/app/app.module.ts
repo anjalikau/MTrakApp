@@ -34,8 +34,8 @@ import { MasterStoresiteComponent } from './master/master-storesite/master-store
 import { MasterUnitsComponent } from './master/unit/master-units/master-units.component';
 import { MasterProcessComponent } from './master/master-process/master-process.component';
 import { JobCreationComponent } from './transaction/job-creation/job-creation.component';
-import { MasterBrandComponent } from './master/master-brand/master-brand.component';
-import { MasterBrandcodeComponent } from './master/master-brandcode/master-brandcode.component';
+import { MasterBrandComponent } from './master/brand/master-brand/master-brand.component';
+import { MasterBrandcodeComponent } from './master/brand/master-brandcode/master-brandcode.component';
 import { MasterMaterialtypeComponent } from './master/master-materialtype/master-materialtype.component';
 import { MasterCategoryComponent } from './master/master-category/master-category.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -94,6 +94,7 @@ import { AddressTypeComponent } from './master/address-type/address-type.compone
 import { NgYasYearPickerModule } from 'ngy-year-picker';
 import { CostAttachComponent } from './transaction/cost-attach/cost-attach.component';
 import { ArticleUmoConversionComponent } from './master/article/article-umo-conversion/article-umo-conversion.component';
+import { BrandTabComponent } from './master/brand/brand-tab/brand-tab.component';
 
 // Report viewer
 // import '@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min';
@@ -182,7 +183,8 @@ import { ArticleUmoConversionComponent } from './master/article/article-umo-conv
     CodeDefinitionComponent,
     AddressTypeComponent,
     CostAttachComponent,
-    ArticleUmoConversionComponent
+    ArticleUmoConversionComponent,
+    BrandTabComponent
   ],
   imports: [
     BrowserModule,

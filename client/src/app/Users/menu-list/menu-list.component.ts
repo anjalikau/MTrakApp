@@ -24,6 +24,7 @@ export class MenuListComponent implements OnInit {
   menuListForm: FormGroup;
   validationErrors: string[] = [];
   user: User;
+  saveButton: boolean = false;
 
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -49,6 +50,14 @@ export class MenuListComponent implements OnInit {
     this.accountService.currentUser$.forEach(element => {
       this.user = element;
       });
+
+      var authMenus = this.user.permitMenus;
+
+      if (authMenus != null) {
+        if (authMenus.filter((x) => x.autoIdx == 92).length > 0) {
+          this.saveButton = true;
+        }
+      }
 
     this.menuListForm = this.fb.group ({
       autoIdx : [0],
@@ -107,6 +116,7 @@ export class MenuListComponent implements OnInit {
   }
 
   saveMenuList() {
+    if(this.saveButton == true) {
     this.menuListForm.get('groupName').setValue(this.menuListForm.get('groupName').value[0]);
     this.menuListForm.get('mType').setValue(this.menuListForm.get('mType').value[0]);
     this.menuListForm.get('AgentLevelId').setValue(this.menuListForm.get('AgentLevelId').value[0]);
@@ -131,6 +141,9 @@ export class MenuListComponent implements OnInit {
     }, error => {
       this.validationErrors = error;
     }) 
+    } else {
+      this.toastr.error('Save permission denied !!!');
+    }
   }
   
   /// Cancel Menu List Form

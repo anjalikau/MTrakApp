@@ -40,7 +40,7 @@
                 </div>
                 <div class="col-sm-1">
                     <button type="button" class="btn btn-danger" (click)="deleteSizeAllocation()" 
-                    [disabled]="!(this.aSizeGrid.selectedRows.length>0 && removeButton)" igxRipple>
+                    [disabled]="!(this.aSizeGrid.selectedRows.length>0)" igxRipple>
                         <i class="fas fa-trash-alt"></i> </button>
                 </div>
                 <div class="col-sm-5">
@@ -48,7 +48,7 @@
                 </div>
                 <div class="col-sm-1">
                     <button type="button" class="btn btn-success" (click)="saveSizeAllocation()" 
-                    [disabled]="!(this.naSizeGrid.selectedRows.length>0 && saveButton)">
+                    [disabled]="!(this.naSizeGrid.selectedRows.length>0)">
                         <i class="fas fa-plus-square"></i> </button>
                 </div>
             </div>

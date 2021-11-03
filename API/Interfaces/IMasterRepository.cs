@@ -97,6 +97,7 @@ namespace API.Interfaces
         Task<int> SaveAddressTypeAsync(MstrAddressType addressType);
         Task<int> SaveArticleUOMConvAsync(MstrArticleUOMConversion articleUOM);
         Task<int> ActiveArticleUOMConvAsync(MstrArticleUOMConversion articleUOM);
+        Task<int> DisableCusDivisionAsync(MstrCustomerDivision cusDivision);
 
     }
 }

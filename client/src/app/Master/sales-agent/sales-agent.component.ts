@@ -17,6 +17,7 @@ export class SalesAgentComponent implements OnInit {
   salesAgentForm: FormGroup;
   salesAgentList: SalesAgent[]; 
   user: User;
+  saveButton: boolean = false;
   validationErrors: string[] = [];
 
   public col: IgxColumnComponent;
@@ -40,6 +41,14 @@ export class SalesAgentComponent implements OnInit {
     this.accountService.currentUser$.forEach((element) => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 108).length > 0) {
+        this.saveButton = true;
+      }
+    }
 
     this.salesAgentForm = this.fb.group({
       autoId: [0],
@@ -66,6 +75,7 @@ export class SalesAgentComponent implements OnInit {
   }  
 
   saveSalesAgent() {
+    if(this.saveButton == true) {
     // var loc: User = JSON.parse(localStorage.getItem('user'));
     var obj = {
       createUserId: this.user.userId,
@@ -97,6 +107,9 @@ export class SalesAgentComponent implements OnInit {
       (error) => {
         this.validationErrors = error;
       });
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
   onEditSalesAgent(event, cellId) {

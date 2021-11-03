@@ -19,6 +19,7 @@ export class MasterUnitsComponent implements OnInit {
   unitList: Units[]; 
   user: User;
   saveobj: Units;
+  uSaveButton: boolean = false;
   validationErrors: string[] = [];
 
   public col: IgxColumnComponent;
@@ -57,6 +58,14 @@ export class MasterUnitsComponent implements OnInit {
       this.user = element;
     });
 
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 101).length > 0) {
+        this.uSaveButton = true;
+      }
+    }
+
     this.mstrUnits = this.fb.group({
       autoId: [0],
       createUserId: this.user.userId,
@@ -66,6 +75,7 @@ export class MasterUnitsComponent implements OnInit {
   }
 
   saveUnit() {
+    if(this.uSaveButton == true) {
     var obj = {
       createUserId: this.user.userId,
       code: this.mstrUnits.get('code').value.trim(),
@@ -97,6 +107,9 @@ export class MasterUnitsComponent implements OnInit {
         this.validationErrors = error;
       }
     );
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
   onEdit(event, cellId) {

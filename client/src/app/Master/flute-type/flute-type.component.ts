@@ -17,6 +17,7 @@ export class FluteTypeComponent implements OnInit {
   fluteList: FluteType[]; 
   user: User;
   saveobj: FluteType;
+  saveButton: boolean = false;
   validationErrors: string[] = [];
 
   public col: IgxColumnComponent;
@@ -42,6 +43,14 @@ export class FluteTypeComponent implements OnInit {
       this.user = element;
     });
 
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 107).length > 0) {
+        this.saveButton = true;
+      }
+    }
+
     this.fluteTypeForm = this.fb.group({
       autoId: [0],
       createUserId: this.user.userId,
@@ -66,6 +75,7 @@ export class FluteTypeComponent implements OnInit {
   }  
 
   saveFluteType() {
+    if(this.saveButton == true) {
     // var loc: User = JSON.parse(localStorage.getItem('user'));
     var obj = {
       createUserId: this.user.userId,
@@ -99,6 +109,9 @@ export class FluteTypeComponent implements OnInit {
         this.validationErrors = error;
       }
     );
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
   onEditFluteType(event, cellId) {

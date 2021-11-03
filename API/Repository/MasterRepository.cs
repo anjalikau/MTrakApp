@@ -1185,6 +1185,21 @@ namespace API.Repository
             return para.Get<int>("Result");
         }
 
+        public async Task<int> DisableCusDivisionAsync(MstrCustomerDivision cusDivision)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("IsActive" , cusDivision.bActive);
+            para.Add("CusDivisionId", cusDivision.AutoId);
+            para.Add("UserId", cusDivision.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrCustomerDivisionDeactive", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }  
+
         #endregion Customer Division
 
         #region Customer Brand

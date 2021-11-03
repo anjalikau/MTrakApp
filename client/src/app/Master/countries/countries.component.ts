@@ -16,6 +16,7 @@ export class CountriesComponent implements OnInit {
   countriesForm: FormGroup;
   countriesList: Countries[]; 
   user: User;
+  saveButton: boolean = false;
   validationErrors: string[] = [];
 
   public col: IgxColumnComponent;
@@ -39,6 +40,14 @@ export class CountriesComponent implements OnInit {
     this.accountService.currentUser$.forEach((element) => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 110).length > 0) {
+        this.saveButton = true;
+      }
+    }
 
     this.countriesForm = this.fb.group({
       autoId: [0],
@@ -64,6 +73,7 @@ export class CountriesComponent implements OnInit {
   }  
 
   saveCountries() {
+    if(this.saveButton == true) {
     var obj = {
       createUserId: this.user.userId,
       name: this.countriesForm.get('name').value.trim(),
@@ -95,6 +105,9 @@ export class CountriesComponent implements OnInit {
       (error) => {
         this.validationErrors = error;
       });
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
   onEditCountries(event, cellId) {

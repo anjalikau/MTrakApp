@@ -7,7 +7,7 @@
     <form [formGroup]="addTypeForm" (ngSubmit)="addTypeForm.valid"  autocomplete="off">
         <div class="card-body">        
             <div class="row">
-                <div class="col-md-1">
+                <div class="col-md-2">
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="text"  formControlName="addressCode"/>
@@ -29,7 +29,7 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-default mr-3" (click)="resetControls()">
                             <i class="fas fa-broom"></i> </button>
-                        <button type="button" class="btn btn-success" [disabled]="!addTypeForm.valid" (click)="saveCountries()">
+                        <button type="button" class="btn btn-success" [disabled]="!addTypeForm.valid" (click)="saveAddressType()">
                             <i class="fas fa-save"></i> </button>
                     </div>
                 </div>                    

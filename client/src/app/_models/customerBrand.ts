@@ -1,7 +1,7 @@
 export interface CustomerBrand {
     autoId: number;
-    customerId: number;
+    customerId?: number;
     brandId: number;
-    createUserId: number | null;
+    createUserId?: number;
 }
 

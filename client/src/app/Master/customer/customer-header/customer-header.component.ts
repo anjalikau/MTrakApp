@@ -20,6 +20,8 @@ export class CustomerHeaderComponent implements OnInit {
   user: User;
   customerHdList: CustomerHd[];
   validationErrors: string[] = [];
+  chSaveButton: boolean = false;
+  chDisableButton: boolean = false;
   public col: IgxColumnComponent;
   public pWidth: string;
   public nWidth: string;
@@ -53,6 +55,16 @@ export class CustomerHeaderComponent implements OnInit {
       this.user = element;
       //console.log(this.user.userId);
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 122).length > 0) {
+        this.chSaveButton = true;
+      } if (authMenus.filter((x) => x.autoIdx == 147).length > 0) {
+        this.chDisableButton = true;
+      }
+    }
 
     this.customerHdForm = this.fb.group({
       autoId: [0],
@@ -113,6 +125,7 @@ export class CustomerHeaderComponent implements OnInit {
   }
 
   saveCustomerHd() {
+    if(this.chSaveButton == true) {
     // var user: User = JSON.parse(localStorage.getItem('user'));
     //console.log(this.customerHdForm.get('countryId').value);
 
@@ -188,6 +201,9 @@ export class CustomerHeaderComponent implements OnInit {
         this.validationErrors = error;
       }
     );
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
   deactive(cellValue, cellId) {
@@ -219,6 +235,7 @@ export class CustomerHeaderComponent implements OnInit {
   }
 
   deactiveCustomer(obj, status) {
+    if(this.chDisableButton == true) {
     this.masterService.deactiveCustomerHeader(obj).subscribe(
       (result) => {
         if (result == 1) {
@@ -237,6 +254,9 @@ export class CustomerHeaderComponent implements OnInit {
         this.validationErrors = error;
       }
     );
+    } else {
+      this.toastr.error('Disable Permission denied !!!');
+    }
   }
 
   clearCustomerHd() {

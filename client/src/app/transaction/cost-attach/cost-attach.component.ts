@@ -20,6 +20,7 @@ export class CostAttachComponent implements OnInit {
   pendSOList: any[];
   soHeaderList: any[];
   costHeaderList: any[];
+  saveButton: boolean = false;
   validationErrors: string[] = [];  
   
   public col: IgxColumnComponent;
@@ -53,6 +54,14 @@ export class CostAttachComponent implements OnInit {
     this.accountServices.currentUser$.forEach((element) => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 153).length > 0) {
+        this.saveButton = true;
+      }
+    }
 
     this.costAttachForm = this.fb.group({
       customer: ['', Validators.required],
@@ -128,6 +137,7 @@ export class CostAttachComponent implements OnInit {
   }
 
   onAttachCostSheet(event, cellId) {
+    if(this.saveButton == true) {
     const ids = cellId.rowID;
     var soHeaderId = this.costAttachForm.get("salesOrder").value;
 
@@ -151,6 +161,9 @@ export class CostAttachComponent implements OnInit {
     }, error => {
       this.validationErrors = error;
     }) 
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
  
 

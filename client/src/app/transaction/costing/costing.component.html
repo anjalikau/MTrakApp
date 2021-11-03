@@ -679,7 +679,7 @@
         </div>
         <div class="row">
             <igx-grid #brandCodeGrid [data]="brandCodeList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
-            [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="300px"
+            [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="100" height="300px"
             displayDensity="compact" width="400px" [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [rowSelection]="'Single'">
             <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
                 <ng-template igxCell let-cell="cell">
@@ -742,7 +742,7 @@
         </div> 
         <div class="row">
             <igx-hierarchical-grid #articleGrid [data]="articleList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
-                [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
+                [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="100"
                 height="500px" displayDensity="compact" width="1200px" [allowFiltering]="true"
                 [filterMode]="'excelStyleFilter'" [rowSelection]="'Single'">
                 <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
@@ -819,7 +819,7 @@
                         <igx-grid #costListGrid class="hierarchicalGrid" [data]="costNumberList" (columnResized)="onResize($event)"
                         [autoGenerate]="false" [paging]="true" [rowEditable]="false" cellSelection="none" height="500px" displayDensity="compact"
                          [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [primaryKey]="'autoId'" [allowAdvancedFiltering]="true"
-                         [rowSelection]="'Single'" [groupingExpressions]='exprCost' > 
+                         [rowSelection]="'Single'" [groupingExpressions]='exprCost' [perPage]="500" > 
                         <igx-column [width]="'80px'" [selectable]="false" [sortable]="false" [resizable]="false">
                             <ng-template igxCell let-cell="cell">                            
                                 <button igxButton="icon" class="fab-compact" (click)="onViewCostingDetails($event,cell.cellID)" data-dismiss="modal">

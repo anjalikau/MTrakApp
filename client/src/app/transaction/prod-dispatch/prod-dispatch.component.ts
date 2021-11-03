@@ -36,6 +36,9 @@ export class ProdDispatchComponent implements OnInit {
   isCustomer: boolean = false;
   isFromSite: boolean = false;
   article: string = '';
+  saveButton: boolean = false;
+  cancelButton: boolean = false;
+  printButton: boolean = false;
 
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -77,6 +80,18 @@ export class ProdDispatchComponent implements OnInit {
     this.accountService.currentUser$.forEach((element) => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 163).length > 0) {
+        this.saveButton = true;
+      } if (authMenus.filter((x) => x.autoIdx == 164).length > 0) {
+        this.cancelButton = true;
+      } if (authMenus.filter((x) => x.autoIdx == 165).length > 0) {
+        this.printButton = true;
+      }
+    }
 
     this.dispatchForm = this.fb.group({
       autoId: [0],
@@ -319,6 +334,7 @@ export class ProdDispatchComponent implements OnInit {
 
   /////// SAVE DISPATCH NOTE
   saveDispatchNote() {
+    if(this.saveButton == true) {
     //// CHECK DISPATCH DETAILS IS EXISTS
     if (!this.isDisplayMode) {
       if (this.dispatchGrid.dataLength > 0) {
@@ -377,9 +393,13 @@ export class ProdDispatchComponent implements OnInit {
     } else {
       this.toastr.warning('Dispatch Note already Saved !!!');
     }
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   cancelDispatchNote() {
+    if(this.cancelButton == true) {
     if (this.dispatchForm.get('autoId').value > 0) {
       var obj = {
         autoId: this.dispatchForm.get('autoId').value,
@@ -396,6 +416,9 @@ export class ProdDispatchComponent implements OnInit {
         }
       });
     }
+  } else {
+    this.toastr.error('Cancel Permission denied !!!');
+  }
   }
 
   refreshControls() {
@@ -533,6 +556,7 @@ export class ProdDispatchComponent implements OnInit {
   }
 
   printDispatchNote() {
+    if(this.printButton == true) {
     // this.router.navigate(['/boldreport']);
     var obj = {
       dispatchNo: this.dispatchForm.get('dispatchNo').value.trim(),
@@ -541,7 +565,9 @@ export class ProdDispatchComponent implements OnInit {
     /// STORE OBJECT IN LOCAL STORAGE
     localStorage.setItem('params', JSON.stringify(obj));
     window.open('/boldreport', '_blank');
-
-    // this.router.navigateByUrl('/boldreport', { state: obj });
+  } else {
+    this.toastr.error('Print Permission denied !!!');
   }
+  }
+
 }

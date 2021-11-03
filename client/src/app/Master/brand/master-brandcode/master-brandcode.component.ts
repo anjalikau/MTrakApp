@@ -19,6 +19,7 @@ export class MasterBrandcodeComponent implements OnInit {
   BrandCode: BrandCode[];
   user: User;
   saveobj: BrandCode;
+  bcSaveButton: boolean = false;
   validationErrors: string[] = [];
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -39,6 +40,14 @@ export class MasterBrandcodeComponent implements OnInit {
     this.accountService.currentUser$.forEach(element => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 117).length > 0) {
+        this.bcSaveButton = true;
+      }
+    }
 
     this.brandCodeForm = this.fb.group({
       AutoId: [0],
@@ -62,7 +71,6 @@ export class MasterBrandcodeComponent implements OnInit {
 
   LoadBrand() {
     // var user: User = JSON.parse(localStorage.getItem('user'));
-
     this.masterService.getBrand(this.user.locationId).subscribe(cardList => {
       this.Brand = cardList;
     })
@@ -87,6 +95,7 @@ export class MasterBrandcodeComponent implements OnInit {
   }
 
   saveBrandCode() {
+    if(this.bcSaveButton == true) {
     var brandid = this.brandCodeForm.get('BrandId').value[0];
     var obj = {
       createUserId: this.user.userId,
@@ -114,6 +123,9 @@ export class MasterBrandcodeComponent implements OnInit {
     }, error => {
       this.validationErrors = error;
     })
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   clearControls() {

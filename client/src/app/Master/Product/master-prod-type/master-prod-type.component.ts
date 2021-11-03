@@ -17,6 +17,8 @@ export class MasterProdTypeComponent implements OnInit {
   prodTypeForm: FormGroup;
   ProdTypList: ProductType[];
   user: User;
+  ptSaveButton: boolean = false;
+  ptDisableButton: boolean = false;
   validationErrors: string[] = [];
   // CategoryList: Category[];
 
@@ -47,6 +49,16 @@ export class MasterProdTypeComponent implements OnInit {
     this.accountService.currentUser$.forEach((element) => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 113).length > 0) {
+        this.ptSaveButton = true;
+      } if (authMenus.filter((x) => x.autoIdx == 142).length > 0) {
+        this.ptDisableButton = true;
+      }       
+    }
 
     this.prodTypeForm = this.fb.group({
       autoId: [0],
@@ -112,6 +124,7 @@ export class MasterProdTypeComponent implements OnInit {
   }
 
   deactiveProdType(obj, status) {
+    if(this.ptDisableButton == true ) {
     // var categoryId = this.prodTypeForm.get('categoryId').value[0];
 
     this.masterService.deactiveProductType(obj).subscribe(
@@ -132,9 +145,13 @@ export class MasterProdTypeComponent implements OnInit {
         this.validationErrors = error;
       }
     );
+    } else {
+      this.toastr.error('Disable Permission denied !!!');
+    }
   }
 
   saveProductType() {
+    if(this.ptSaveButton == true) {
     // var categoryId = this.prodTypeForm.get('categoryId').value[0];
     var obj = {
       createUserId: this.user.userId,
@@ -166,6 +183,9 @@ export class MasterProdTypeComponent implements OnInit {
         this.validationErrors = error;
       }
     );
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   clearControls() {

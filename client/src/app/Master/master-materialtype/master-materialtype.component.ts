@@ -22,6 +22,7 @@ export class MasterMaterialtypeComponent implements OnInit {
   public col: IgxColumnComponent;
   public pWidth: string;
   public nWidth: string;
+  saveButton: boolean = false;
 
   @ViewChild("MatGrid", { static: true })
   public MatGrid: IgxGridComponent;
@@ -54,6 +55,14 @@ export class MasterMaterialtypeComponent implements OnInit {
       this.user = element;
     });
 
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 119).length > 0) {
+        this.saveButton = true;
+      }
+    }
+
     this.matTypeForm = this.fb.group({
       AutoId: [0],
       CreateUserId: this.user.userId,
@@ -63,7 +72,7 @@ export class MasterMaterialtypeComponent implements OnInit {
   }
 
   SaveMaterialType() {
-
+    if(this.saveButton == true) {
     var obj = {
       "createUserId": this.user.userId,
       "code": this.matTypeForm.get('Code').value.trim(),
@@ -88,7 +97,10 @@ export class MasterMaterialtypeComponent implements OnInit {
     }, error => {
       this.validationErrors = error;
     })
+  } else {
+    this.toastr.error('Save Permission denied !!!');
   }
+}
 
   onEdit(event, cellId) {
     const ids = cellId.rowID;

@@ -16,6 +16,7 @@ export class RejectReasonComponent implements OnInit {
   rejReasonForm: FormGroup;
   rejReasonList: RejectReasons[]; 
   user: User;
+  saveButton: boolean = false;
   validationErrors: string[] = [];
 
   public col: IgxColumnComponent;
@@ -39,6 +40,14 @@ export class RejectReasonComponent implements OnInit {
     this.accountService.currentUser$.forEach((element) => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 112).length > 0) {
+        this.saveButton = true;
+      }
+    }
 
     this.rejReasonForm = this.fb.group({
       autoId: [0],
@@ -64,6 +73,7 @@ export class RejectReasonComponent implements OnInit {
   }  
 
   saveRejectReason() {
+    if(this.saveButton == true) {
     // var loc: User = JSON.parse(localStorage.getItem('user'));
     var obj = {
       autoId: this.rejReasonForm.get('autoId').value,
@@ -93,6 +103,9 @@ export class RejectReasonComponent implements OnInit {
       (error) => {
         this.validationErrors = error;
       });
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
   onEditRejReason(event, cellId) {

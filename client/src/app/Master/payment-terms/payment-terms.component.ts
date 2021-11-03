@@ -17,6 +17,7 @@ export class PaymentTermsComponent implements OnInit {
   payTermsList: PaymentTerm[]; 
   user: User;
   validationErrors: string[] = [];
+  saveButton:boolean = false;
 
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -40,6 +41,14 @@ export class PaymentTermsComponent implements OnInit {
       this.user = element;
     });
 
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 111).length > 0) {
+        this.saveButton = true;
+      }
+    }
+
     this.payTermsForm = this.fb.group({
       autoId: [0],
       createUserId: this.user.userId,
@@ -62,6 +71,7 @@ export class PaymentTermsComponent implements OnInit {
   }  
 
   savePaymentTerms() {
+    if(this.saveButton == true) {
     var obj = {
       createUserId: this.user.userId,
       name: this.payTermsForm.get('name').value.trim(),
@@ -91,6 +101,9 @@ export class PaymentTermsComponent implements OnInit {
       (error) => {
         this.validationErrors = error;
       });
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
   onEditPaymentTerms(event, cellId) {

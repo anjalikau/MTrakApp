@@ -26,6 +26,8 @@ export class FacProdOrderComponent implements OnInit {
   isDisplayMode: boolean = false;
   clickFPODelete: boolean = false;
   fpoStatus: string = '';
+  saveButton: boolean = false;
+  removeButton: boolean = false;
 
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -68,6 +70,17 @@ export class FacProdOrderComponent implements OnInit {
     this.accountService.currentUser$.forEach((element) => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 158).length > 0) {
+        this.saveButton = true;
+      }
+      if (authMenus.filter((x) => x.autoIdx == 159).length > 0) {
+        this.removeButton = true;
+      }
+    }
 
     this.fpoHeaderForm = this.fb.group({
       fpoId: [0],
@@ -347,6 +360,7 @@ export class FacProdOrderComponent implements OnInit {
 
   //// SAVE FPO
   saveFPO() {
+    if(this.saveButton == true) {
     if (this.validateFPO()) {
       var FPOList = [];
 
@@ -402,6 +416,9 @@ export class FacProdOrderComponent implements OnInit {
           );
         }
       });
+    }
+    } else {
+      this.toastr.error('Save Permission denied !!!');
     }
   }
 
@@ -544,6 +561,7 @@ export class FacProdOrderComponent implements OnInit {
   }
 
   deleteFPO() {
+    if (this.removeButton == true) {
     if (this.fpoHeaderForm.get('statusId').value == 1) {
       var FPOList = {
         FPOId: this.fpoHeaderForm.get('fpoId').value,
@@ -567,5 +585,10 @@ export class FacProdOrderComponent implements OnInit {
     } else {
       this.toastr.success('Delete Failed, Production has started !!!');
     }
+  } else {
+    this.toastr.error('Delete Permission denied !!!');
   }
+}
+
+
 }

@@ -11,7 +11,7 @@ import { MasterService } from '_services/master.service';
 @Component({
   selector: 'app-master-size',
   templateUrl: './master-size.component.html',
-  styleUrls: ['./master-size.component.css']
+  styleUrls: ['./master-size.component.css'],
 })
 export class MasterSizeComponent implements OnInit {
   mstrSize: FormGroup;
@@ -19,17 +19,22 @@ export class MasterSizeComponent implements OnInit {
   sizeList: Size[];
   user: User;
   saveobj: Size;
+  sSaveButton: boolean = false;
   validationErrors: string[] = [];
-  
+
   public col: IgxColumnComponent;
   public pWidth: string;
   public nWidth: string;
 
-  @ViewChild("sizeGrid", { static: true }) 
+  @ViewChild('sizeGrid', { static: true })
   public sizeGrid: IgxGridComponent;
-  
-  constructor(private accountService: AccountService, private fb: FormBuilder
-    ,private masterService: MasterService ,private toastr: ToastrService) { }
+
+  constructor(
+    private accountService: AccountService,
+    private fb: FormBuilder,
+    private masterService: MasterService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.initilizeForm();
@@ -38,18 +43,26 @@ export class MasterSizeComponent implements OnInit {
   }
 
   initilizeForm() {
-    this.accountService.currentUser$.forEach(element => {
+    this.accountService.currentUser$.forEach((element) => {
       this.user = element;
-      });
+    });
 
-    this.mstrSize = this.fb.group ({
-      AutoId : [0],
-      CreateUserId : this.user.userId,
-      Code: ['', [Validators.required , Validators.maxLength(10)]],
-      Name: ['', [Validators.required , Validators.maxLength(50)]],
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 98).length > 0) {
+        this.sSaveButton = true;
+      }
+    }
+
+    this.mstrSize = this.fb.group({
+      AutoId: [0],
+      CreateUserId: this.user.userId,
+      Code: ['', [Validators.required, Validators.maxLength(10)]],
+      Name: ['', [Validators.required, Validators.maxLength(50)]],
       // LinkSizeCard: ['',Validators.required]
-    })
-  } 
+    });
+  }
 
   public singleSelection(event: IComboSelectionChangeEventArgs) {
     if (event.added.length) {
@@ -69,18 +82,18 @@ export class MasterSizeComponent implements OnInit {
   //   })
   // }
 
-  LoadSizeList() {    
-      this.masterService.getSize().subscribe(sizes => {
-        this.sizeList = sizes;
-      })
-  } 
-  
+  LoadSizeList() {
+    this.masterService.getSize().subscribe((sizes) => {
+      this.sizeList = sizes;
+    });
+  }
+
   // loadGridDetails(event){
   //   this.clearGridRows();
   //   for(const item of event.added) {
   //     //console.log(item);
   //     this.LoadSizeList(item);
-  //   }    
+  //   }
   // }
 
   clearGridRows() {
@@ -92,67 +105,72 @@ export class MasterSizeComponent implements OnInit {
   //   this.LoadSizeCard();
   // }
 
-  saveSize() { 
+  saveSize() {
     // var sizeCard = this.mstrSize.get('LinkSizeCard').value[0];
     // var code = this.mstrSize.get('Code').value;
     // var name = this.mstrSize.get('Name').value;
+    if (this.sSaveButton == true) {
+      var obj = {
+        createUserId: this.user.userId,
+        // "linkSizeCard" : sizeCard,
+        code: this.mstrSize.get('Code').value.trim(),
+        name: this.mstrSize.get('Name').value.trim(),
+        autoId: this.mstrSize.get('AutoId').value,
+      };
 
-    var obj = {
-      "createUserId": this.user.userId,
-      // "linkSizeCard" : sizeCard,
-      "code" : this.mstrSize.get('Code').value.trim() ,
-      "name" : this.mstrSize.get('Name').value.trim(),
-      "autoId" : this.mstrSize.get('AutoId').value
+      this.saveobj = Object.assign({}, obj);
+      //console.log(this.saveobj);
+      this.masterService.saveSize(this.saveobj).subscribe(
+        (result) => {
+          if (result == 1) {
+            this.toastr.success('Size save Successfully !!!');
+            this.LoadSizeList();
+            this.clearControls();
+          } else if (result == 2) {
+            this.toastr.success('Size update Successfully !!!');
+            this.LoadSizeList();
+            this.clearControls();
+          } else if (result == -1) {
+            this.toastr.warning('Size already exists !!!');
+          } else {
+            this.toastr.warning(
+              'Contact Admin. Error No:- ' + result.toString()
+            );
+          }
+        },
+        (error) => {
+          this.validationErrors = error;
+        });
+    } else {
+      this.toastr.error('Save permission denied !!!');
     }
-
-    this.saveobj = Object.assign({}, obj);
-    //console.log(this.saveobj);
-    this.masterService.saveSize(this.saveobj).subscribe((result) => {    
-      if (result == 1) {
-        this.toastr.success("Size save Successfully !!!");
-        this.LoadSizeList();
-        this.clearControls();
-      } else if (result == 2) {
-        this.toastr.success("Size update Successfully !!!");
-        this.LoadSizeList();
-        this.clearControls();
-      } else if (result == -1) {
-        this.toastr.warning("Size already exists !!!");
-      } else {
-        this.toastr.warning("Contact Admin. Error No:- " + result.toString());
-      }    
-       
-    }, error => {
-      this.validationErrors = error;
-    }) 
   }
 
   clearControls() {
     //this.masterColor.reset();
     this.mstrSize.get('AutoId').setValue(0);
     this.mstrSize.get('CreateUserId').setValue(this.user.userId);
-    this.mstrSize.get('Code').setValue("");
-    this.mstrSize.get('Name').setValue("");
+    this.mstrSize.get('Code').setValue('');
+    this.mstrSize.get('Name').setValue('');
   }
 
-  resetControls(){
+  resetControls() {
     // this.mstrSize.reset();
     this.clearControls();
     // this.clearGridRows();
   }
 
-   //// EDIT ROW LOADS DETAILS TO CONTROL 
-   onEdit(event,cellId) {
+  //// EDIT ROW LOADS DETAILS TO CONTROL
+  onEdit(event, cellId) {
     //console.log(cellId.rowID);
-    const ids = cellId.rowID;    
+    const ids = cellId.rowID;
     const selectedRowData = this.sizeGrid.data.filter((record) => {
-        return record.autoId == ids;
+      return record.autoId == ids;
     });
 
     //console.log(selectedRowData);
-    this.mstrSize.get('Name').setValue(selectedRowData[0]["name"]);
-    this.mstrSize.get('AutoId').setValue(selectedRowData[0]["autoId"]);
-    this.mstrSize.get('Code').setValue(selectedRowData[0]["code"]); 
+    this.mstrSize.get('Name').setValue(selectedRowData[0]['name']);
+    this.mstrSize.get('AutoId').setValue(selectedRowData[0]['autoId']);
+    this.mstrSize.get('Code').setValue(selectedRowData[0]['code']);
   }
-
 }

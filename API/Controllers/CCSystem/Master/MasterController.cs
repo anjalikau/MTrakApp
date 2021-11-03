@@ -614,14 +614,14 @@ namespace API.Controllers.CCSystem.Master
             return Ok(currencyList);
         } 
 
-        [HttpPost("SaveCusCurrency")]  
+        [HttpPost("SaveCusC")]  
         public async Task<IActionResult> SaveCusCurrency(MstrCustomerCurrency cusCurrency)
         {
             var result = await _masterRepository.SaveCustomerCurrencyAsync(cusCurrency);
             return Ok(result);
         }  
 
-        [HttpPost("DeleteCusCurrency")]  
+        [HttpPost("DeleteCusC")]  
         public async Task<IActionResult> DeleteCusCurrency(MstrCustomerCurrency cusCurrency)
         {
             var result = await _masterRepository.DeleteCusCurrencyAsync(cusCurrency);
@@ -649,14 +649,14 @@ namespace API.Controllers.CCSystem.Master
             return Ok(brandList);
         }
 
-        [HttpPost("Save/CusBrand")]
+        [HttpPost("SaveCB")]
         public async Task<IActionResult> SaveCustomerBrand(MstrCustomerBrand cusBrand)
         {
             var result = await _masterRepository.SaveCustomerBrandAsync(cusBrand);
             return Ok(result);
         }
 
-        [HttpPost("Delete/CusBrand")]
+        [HttpPost("DeleteCB")]
         public async Task<IActionResult> DeleteCusBrand(MstrCustomerBrand cusBrand)
         {
             var result = await _masterRepository.DeleteCusBrandAsync(cusBrand);
@@ -680,10 +680,17 @@ namespace API.Controllers.CCSystem.Master
             return Ok(divisionList);
         }
 
-        [HttpPost("SaveCusDivision")]
+        [HttpPost("SaveCD")]
         public async Task<IActionResult> SaveCustomerDivision(MstrCustomerDivision cusDivision)
         {
             var result = await _masterRepository.SaveCustomerDivisionAsync(cusDivision);
+            return Ok(result);
+        }
+
+        [HttpPost("DisableCD")]
+        public async Task<IActionResult> DisableCustomerDivision(MstrCustomerDivision cusDivision)
+        {
+            var result = await _masterRepository.DisableCusDivisionAsync(cusDivision);
             return Ok(result);
         }
 

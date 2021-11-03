@@ -145,8 +145,8 @@ export class SalesorderService {
     return this.http.get<any>(this.baseUrl + 'SalesOrder/CostList/' + custId , httpOptions);  
   }
 
-  getCostSheetDetails(costHeaderId: any) {
-    return this.http.get<any>(this.baseUrl + 'SalesOrder/CostDt/' + costHeaderId , httpOptions );
+  getCostSheetDetails(costHeaderId: number) {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/CSDt/' + costHeaderId , httpOptions );
   }
 
   getCostSheetHeader(artColorSizeId: any) {

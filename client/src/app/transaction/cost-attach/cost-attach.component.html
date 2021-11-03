@@ -136,7 +136,7 @@
                 <div class="btn-group">
                     <button type="button" class="btn btn-default mr-3">
                         <i class="fas fa-broom"></i> </button>
-                    <button type="button" class="btn btn-success" [disabled]="!costAttachForm.valid">
+                    <button type="button" class="btn btn-success" [disabled]="!(this.costDtGrid.selectedRows.length>0)">
                         <i class="fas fa-save"></i> </button>
                 </div>
             </div>

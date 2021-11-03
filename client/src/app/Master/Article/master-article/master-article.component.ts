@@ -44,6 +44,7 @@ export class MasterArticleComponent implements OnInit {
   comboField: boolean = false;
   radioField: boolean = false;
   dateField: boolean = false;
+  aSaveButton: boolean = false;
   nameValuePairs: any[];
   rowId: number = 0;
   
@@ -112,6 +113,14 @@ export class MasterArticleComponent implements OnInit {
       this.user = element;
       //console.log(this.user.userId);
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 133).length > 0) {
+        this.aSaveButton = true;
+      } 
+    }
 
     this.articleForm = this.fb.group({
       autoId: [0],
@@ -522,6 +531,7 @@ export class MasterArticleComponent implements OnInit {
   }
 
   saveArticle() {
+    if(this.aSaveButton == true) {
     if (this.validationControls()) {
       var flexList = [] ;
       var bFlexFieldValue = false, dFlexFieldValue = "1990-01-01", iFlexFeildValue = 0 , fFlexFeildValue= 0
@@ -664,6 +674,9 @@ export class MasterArticleComponent implements OnInit {
         }
       );
     }
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   disableArticleControls() {

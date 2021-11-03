@@ -21,6 +21,7 @@ export class CustomerLocationsComponent implements OnInit {
   user: User;
   saveobj: CustomerLoc;
   validationErrors: string[] = [];
+  clSaveButton: boolean = false;
   formTitle: string = "New Location";
   isEditMode: boolean = false;
   isCustomerSel: boolean = false;
@@ -47,6 +48,14 @@ export class CustomerLocationsComponent implements OnInit {
     this.accountService.currentUser$.forEach(element => {
       this.user = element;
       });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 122).length > 0) {
+        this.clSaveButton = true;
+      } 
+    }
 
     this.customerLocForm = this.fb.group ({
       autoId : [0],
@@ -116,6 +125,7 @@ export class CustomerLocationsComponent implements OnInit {
   }
 
   saveDetails() { 
+    if(this.clSaveButton == true) {
     var customerId = this.customerLocForm.get('customerId').value[0];
     //console.log("xx");
     var obj = {
@@ -158,6 +168,9 @@ export class CustomerLocationsComponent implements OnInit {
     }, error => {
       this.validationErrors = error;
     }) 
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   clearControls() {

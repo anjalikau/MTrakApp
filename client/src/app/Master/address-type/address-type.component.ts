@@ -17,6 +17,7 @@ export class AddressTypeComponent implements OnInit {
   addTypeList: AddressType[]; 
   user: User;
   validationErrors: string[] = [];
+  saveButton: boolean = false;
 
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -40,6 +41,14 @@ export class AddressTypeComponent implements OnInit {
       this.user = element;
     });
 
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 121).length > 0) {
+        this.saveButton = true;
+      }
+    }
+
     this.addTypeForm = this.fb.group({
       autoId: [0],
       createUserId: this.user.userId,
@@ -60,7 +69,8 @@ export class AddressTypeComponent implements OnInit {
     });
   }  
 
-  saveCountries() {
+  saveAddressType() {
+    if(this.saveButton == true) {
     var obj = {
       createUserId: this.user.userId,
       addressCode: this.addTypeForm.get('addressCode').value.trim(),
@@ -89,6 +99,9 @@ export class AddressTypeComponent implements OnInit {
       (error) => {
         this.validationErrors = error;
       });
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
   onEditAddressType(event, cellId) {

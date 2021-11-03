@@ -20,6 +20,7 @@ export class MasterSerialnoDetailsComponent implements OnInit {
   user: User;
   validationErrors: string[] = [];
   categoryList: Category[];
+  saveButton: boolean = false;
 
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -41,6 +42,14 @@ export class MasterSerialnoDetailsComponent implements OnInit {
     this.accountService.currentUser$.forEach((element) => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 93).length > 0) {
+        this.saveButton = true;
+      }
+    }
 
     this.serialNoForm = this.fb.group({
       autoId: [0],
@@ -79,6 +88,7 @@ export class MasterSerialnoDetailsComponent implements OnInit {
   }
 
   saveSerialNo() {
+    if(this.saveButton == true) {
     // var user: User = JSON.parse(localStorage.getItem('user'));
 
     var obj = {
@@ -110,8 +120,10 @@ export class MasterSerialnoDetailsComponent implements OnInit {
       },
       (error) => {
         this.validationErrors = error;
-      }
-    );
+      });
+    } else {
+      this.toastr.error('Save permission denied !!!');
+    }
   }
 
   clearControls() {

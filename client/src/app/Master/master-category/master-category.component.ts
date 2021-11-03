@@ -18,6 +18,7 @@ export class MasterCategoryComponent implements OnInit {
   CategoryList: Category[];
   user: User;
   saveobj: Category;
+  saveButton: boolean = false;
   validationErrors: string[] = [];
 
   public col: IgxColumnComponent;
@@ -55,6 +56,14 @@ export class MasterCategoryComponent implements OnInit {
       this.user = element;
     });
 
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 120).length > 0) {
+        this.saveButton = true;
+      }
+    }
+
     this.categoryForm = this.fb.group({
       AutoId: [0],
       CreateUserId: this.user.userId,
@@ -65,6 +74,7 @@ export class MasterCategoryComponent implements OnInit {
   }
 
   saveCategory() {
+    if(this.saveButton == true) {
     var obj = {
       "createUserId": this.user.userId,
       "code": this.categoryForm.get('Code').value.trim(),
@@ -90,6 +100,9 @@ export class MasterCategoryComponent implements OnInit {
     }, error => {
       this.validationErrors = error;
     })
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   onEdit(event, cellId) {

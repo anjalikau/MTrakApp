@@ -101,6 +101,7 @@ export class CostingComponent implements OnInit {
   headerSize: number = 0;
   btnStatus: string = '';
   isActive: boolean = true;
+  saveButton: boolean = false;
   validationErrors: string[] = [];
   // totCostBox: number = 0;
   // totCostMOQ: number = 0;
@@ -250,6 +251,14 @@ export class CostingComponent implements OnInit {
     this.accountService.currentUser$.forEach((element) => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 166).length > 0) {
+        this.saveButton = true;
+      }
+    }
 
     this.costingHdForm = this.fb.group({
       autoId: [0],
@@ -618,7 +627,7 @@ export class CostingComponent implements OnInit {
     });
     var articleId = selectedRowData[0]['autoId'];
 
-    console.log(selectedRowData[0]);
+    // console.log(selectedRowData[0]);
 
     if (this.isArtiHdSel == true) {
       this.clearHeaderArticle();
@@ -1421,6 +1430,7 @@ export class CostingComponent implements OnInit {
 
   /// SAVE COSTING DEATILS
   saveCosting() {
+    if(this.saveButton == true) {
     if (this.validateCosting()) {
       var costList = [],
         itemList = [],
@@ -1522,6 +1532,9 @@ export class CostingComponent implements OnInit {
         }
       });
     }
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   ///// VALIDATION BEFORE SAVE SALES ORDER
@@ -1602,15 +1615,14 @@ export class CostingComponent implements OnInit {
     // });
     this.salesOrderServices.getCostSheetDetails(costHeaderId).subscribe(
       (result) => {
-        // console.log(result);
+        console.log(result);
         // console.log(result.costHeader);
         var costMatList = [],
           specialList = [];
-        this.isArtiHdSel = true;
-        var costHeaderRow = result.costHeader;
-        var costDetailList = result.costDetails;
-        var costSpecInsList = result.costSpecials;
+        this.isArtiHdSel = true;   
 
+        if( result.costHeader != null) {
+          var costHeaderRow = result.costHeader;
         ///---------============= LOADS COST HEADER ================-------------
         var articleId = costHeaderRow[0]['articleId'];
 
@@ -1622,7 +1634,7 @@ export class CostingComponent implements OnInit {
 
         if (this.isActive == true)
           this.costingHdForm.get('isActive').setValue('Active');
-        else this.costingHdForm.get('isActive').setValue('Cancelled');
+        else this.costingHdForm.get('isActive').setValue('Deactive');
 
         this.costingHdForm.get('autoId').setValue(costHeaderId);
         this.costingHdForm.get('refNo').setValue(costHeaderRow[0]['refNo']);
@@ -1702,6 +1714,10 @@ export class CostingComponent implements OnInit {
         this.subTotalForm
           .get('sellPriceCom')
           .setValue(costHeaderRow[0]['commSelPrice']);
+        }
+
+        if( result.costDetails != null) {   
+        var costDetailList = result.costDetails;
 
         ////----------============= LOADS COST DETAIL ====================------------------
         for (let index = 0; index < costDetailList.length; index++) {
@@ -1735,7 +1751,10 @@ export class CostingComponent implements OnInit {
           };
           costMatList.push(obj);
         }
+      }
 
+      if( result.costSpecials != null) {
+          var costSpecInsList = result.costSpecials;
         ////----------============ LOADS SPECIAL INSTRUCTION ==================----------------
         for (let index = 0; index < costSpecInsList.length; index++) {
           var specialdata = {
@@ -1745,6 +1764,7 @@ export class CostingComponent implements OnInit {
           };
           specialList.push(specialdata);
         }
+      }
 
         this.costDetailsList = costMatList;
         this.instructList = specialList;

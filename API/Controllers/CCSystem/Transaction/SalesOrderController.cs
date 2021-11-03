@@ -267,7 +267,14 @@ namespace API.Controllers.CCSystem.Transaction
         {
             var result = await _salesRepository.GetCostHeaderAsync(id);
             return Ok(result);
-        }   
+        }  
+
+        [HttpGet("CSDt/{id}")]
+        public async Task<IActionResult> GetCostingDetails(long id)
+        {
+            var result = await _salesRepository.GetCostingDetailsAsync(id);
+            return Ok(result);
+        }    
 
         [HttpPost("AttachCS")]
         public async Task<IActionResult> AttachCostSheetSO(TransSalesOrderItemDt soItem)

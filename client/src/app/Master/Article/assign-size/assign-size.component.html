@@ -51,7 +51,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <igx-grid #npSizeGrid [data]="npSizeList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
-                        [primaryKey]="'sizeId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="500px"
+                        [primaryKey]="'sizeId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="450px"
                         displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
                         [allowAdvancedFiltering]="true" [rowSelection]="'multiple'">
                         <igx-column [field]="'code'" [header]="'Code'" [resizable]="true" [dataType]="'string'" [sortable]="true">
@@ -63,7 +63,7 @@
 
                 <div class="col-md-6">
                     <igx-grid #pSizeGrid [data]="pSizeList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
-                        [primaryKey]="'sizeId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="500px"
+                        [primaryKey]="'sizeId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="450px"
                         displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
                         [allowAdvancedFiltering]="true" [rowSelection]="'multiple'">
                         <igx-column [field]="'code'" [header]="'Code'" [resizable]="true" [dataType]="'string'" [sortable]="true">

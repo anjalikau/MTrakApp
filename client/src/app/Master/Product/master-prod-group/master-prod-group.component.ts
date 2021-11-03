@@ -19,6 +19,8 @@ export class MasterProdGroupComponent implements OnInit {
   // prodTypeList: ProductType[];
   user: User;
   validationErrors: string[] = [];
+  pgSaveButton: boolean = false;
+  pgDisableButton: boolean = false;
   public col: IgxColumnComponent;
   public pWidth: string;
   public nWidth: string;
@@ -39,6 +41,16 @@ export class MasterProdGroupComponent implements OnInit {
     this.accountService.currentUser$.forEach(element => {
       this.user = element;
       });
+
+      var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 114).length > 0) {
+        this.pgSaveButton = true;
+      } if (authMenus.filter((x) => x.autoIdx == 143).length > 0) {
+        this.pgDisableButton = true;
+      }       
+    }
 
     this.prodGroupForm = this.fb.group ({
       autoId : [0],
@@ -85,6 +97,7 @@ export class MasterProdGroupComponent implements OnInit {
 
 
   saveProductGroup() { 
+    if(this.pgSaveButton == true) {
     // var prodTypeId = this.prodGroupForm.get('prodTypeId').value[0];
     // var user: User = JSON.parse(localStorage.getItem('user'));
 
@@ -115,6 +128,9 @@ export class MasterProdGroupComponent implements OnInit {
     }, error => {
       this.validationErrors = error;
     }) 
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   clearControls() {
@@ -152,6 +168,7 @@ export class MasterProdGroupComponent implements OnInit {
   }
 
   deactiveProdGroup(obj, status) {
+    if(this.pgDisableButton == true) {
     // console.log(obj);
     // var prodTypeId = this.prodGroupForm.get('prodTypeId').value[0];
 
@@ -173,6 +190,9 @@ export class MasterProdGroupComponent implements OnInit {
         this.validationErrors = error;
       }
     );
+    } else {
+      this.toastr.error('Disable permission denied !!!');
+    }
   }
  
    //// EDIT ROW LOADS DETAILS TO CONTROL 

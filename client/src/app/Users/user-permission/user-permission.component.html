@@ -18,7 +18,7 @@
                 <div class="col-sm-2">
                     <igx-combo id="users" class="combo" displayKey="cAgentName" valueKey="idAgents"
                         [itemsMaxHeight]="250" [data]="permitUsers" placeholder="User Name"
-                        (onSelectionChange)='LoadMenusEvent($event)' (onSelectionChange)="singleSelection($event)"
+                        (onSelectionChange)='loadMenusEvent($event)' (onSelectionChange)="singleSelection($event)"
                         formControlName="Agent" searchPlaceholder="Search...">
                     </igx-combo>
                 </div>
@@ -31,16 +31,16 @@
                     <h4>Permitted Menu</h4>
                 </div>                
                 <div class="col-sm-1">
-                    <button type="button" class="btn btn-danger" (click)="DeleteUserMenuList()" 
-                    [disabled]="!(this.PermitMgrid.selectedRows.length>0 && removeButton)" igxRipple>
+                    <button type="button" class="btn btn-danger" (click)="deleteUserMenuList()" 
+                    [disabled]="!(this.PermitMgrid.selectedRows.length>0)" igxRipple>
                         <i class="fas fa-trash-alt"></i> </button>                    
                 </div>
                 <div class="col-sm-5">
                     <h4>Not-Permitted Menu</h4>
                 </div>
                 <div class="col-sm-1">
-                    <button type="button" class="btn btn-success" (click)="SaveUserMenuList()" 
-                    [disabled]="!(this.Menugrid.selectedRows.length>0 && saveButton)">
+                    <button type="button" class="btn btn-success" (click)="saveUserMenuList()" 
+                    [disabled]="!(this.Menugrid.selectedRows.length>0)">
                         <i class="fas fa-plus-square"></i> </button>
                 </div>
             </div>

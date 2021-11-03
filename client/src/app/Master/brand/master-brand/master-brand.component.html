@@ -1,37 +1,34 @@
 <div class="card card-default">
     <div class="card-header">
-        <h3 class="card-title"> Process</h3>       
+        <h3 class="card-title"> Brand </h3>
     </div>
 
-    <form [formGroup]="mstrProcess" (ngSubmit)="mstrProcess.valid"  autocomplete="on">
-        <div class="card-body">        
+    <form [formGroup]="brandForm" (ngSubmit)="brandForm.valid" autocomplete="off">
+        <div class="card-body">
+
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
                         <igx-input-group>
-                            <input igxInput type="text"  formControlName="Process"/>
-                            <label igxLabel > Process</label>
+                            <input igxInput type="text" formControlName="Name" />
+                            <label igxLabel for="Name"> Name</label>
                         </igx-input-group>
                     </div>
                 </div>
 
-                <div class="col-md-1 offset-md-7">
-                    <div class="form-group">
-                        <button type="button" 
-                            class="btn btn-block btn-success" [disabled]="!mstrProcess.valid " (click)="SaveProcess()">Save</button>
+                <div class="col-md-1">
+                    <div class="btn-group">                
+                        <button type="button" class="btn btn-success mr-3" [disabled]="!brandForm.valid" (click)="saveBrand()">
+                            <i class="fas fa-save"></i> </button>
+                        <button type="button" class="btn btn-default" (click)="cancelBrand()">
+                            <i class="fas fa-broom"></i> </button>
                     </div>
                 </div>
 
-                <div class="col-md-1">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-block btn-default" (click)="resetControls()">New</button>
-                    </div>
-                </div>                
             </div>
-
             <div class="row">
-                <div class="col-md-12">
-                    <igx-grid #sizeGrid [data]="sizeProcessList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+                <div class="col-md-6">
+                    <igx-grid #brandgrid [data]="brandList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
                         [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
                         height="500px" displayDensity="compact" [allowFiltering]="true"
                         [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
@@ -43,9 +40,10 @@
                                 </button>
                             </ng-template>
                         </igx-column>
-                        <igx-column [field]="'process'" [header]="'Process'" [resizable]="true" [dataType]="'string'"
+                        <igx-column [field]="'name'" [header]="'Name'" [resizable]="true" [dataType]="'string'"
                             [sortable]="true">
                         </igx-column>
+
                     </igx-grid>
                 </div>
             </div>

@@ -49,10 +49,11 @@
                 </div>
             </div>
             
+            
             <div class="row">
                 <div class="col-md-6">
                     <igx-grid #npColorGrid [data]="npColorList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
-                        [primaryKey]="'colorId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="500px"
+                        [primaryKey]="'colorId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="450px"
                         displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
                         [allowAdvancedFiltering]="true" [rowSelection]="'multiple'">
                         <igx-column [field]="'code'" [header]="'Code'" [resizable]="true" [dataType]="'string'" [sortable]="true">
@@ -64,7 +65,7 @@
 
                 <div class="col-md-6">
                     <igx-grid #pColorGrid [data]="pColorList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
-                        [primaryKey]="'colorId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="500px"
+                        [primaryKey]="'colorId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="450px"
                         displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
                         [allowAdvancedFiltering]="true" [rowSelection]="'multiple'">
                         <igx-column [field]="'code'" [header]="'Code'" [resizable]="true" [dataType]="'string'" [sortable]="true">
@@ -77,4 +78,6 @@
         </form>
     </div>
 </div>
+
+<p> {{this.npColorGrid.selectedRows}}</p>
 

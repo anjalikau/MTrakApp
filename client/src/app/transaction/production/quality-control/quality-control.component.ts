@@ -35,6 +35,7 @@ export class QualityControlComponent implements OnInit {
   todayTotQty: number = 0;
   todayTotList: any;
   rejReasonList: any[];
+  saveButton: boolean = false;
 
   constructor(
     private accountService: AccountService,
@@ -55,6 +56,14 @@ export class QualityControlComponent implements OnInit {
     this.accountService.currentUser$.forEach((element) => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 162).length > 0) {
+        this.saveButton = true;
+      }
+    }
 
     this.qualityCForm = this.fb.group(
       {
@@ -182,6 +191,7 @@ export class QualityControlComponent implements OnInit {
   }
 
   saveFPPORejectDetails() {
+    if(this.saveButton == true) {
     var reasonList = this.qualityCForm.get('reasonId').value;
     var rejectList = [];
 
@@ -215,6 +225,9 @@ export class QualityControlComponent implements OnInit {
         }
         this.loadProductionTotal();
       });
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
   clearControls() {

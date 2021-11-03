@@ -27,6 +27,8 @@ export class MasterProdDefinitionComponent implements OnInit {
   public pWidth: string;
   public nWidth: string;
   isEditMode: boolean = false;
+  saveButton: boolean = false;
+  removeButton: boolean = false;
   formTitle: string = 'New Production Definition';
   isProdDefSel: boolean = false;
 
@@ -55,6 +57,17 @@ export class MasterProdDefinitionComponent implements OnInit {
     this.accountService.currentUser$.forEach((element) => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 105).length > 0) {
+        this.saveButton = true;
+      }
+      if (authMenus.filter((x) => x.autoIdx == 141).length > 0) {
+        this.removeButton = true;
+      }
+    }
 
     this.prodDefiForm = this.fb.group({
       autoId: [0],
@@ -122,6 +135,7 @@ export class MasterProdDefinitionComponent implements OnInit {
   }
 
   saveProdDefinition() {
+    if (this.saveButton == true) {
     if (this.validateControls()) {
       var pdHeaderId =
         this.prodDefiForm.get('pdHeaderId').value == null
@@ -168,9 +182,13 @@ export class MasterProdDefinitionComponent implements OnInit {
         }
       );
     }
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
-  onDelete(event, cellId) {    
+  onDelete(event, cellId) {  
+    if(this.removeButton == true) {  
     const ids = cellId.rowID;
     const selectedRowData = this.ProdDefiGrid.data.filter((record) => {
       return record.autoId == ids;
@@ -194,7 +212,10 @@ export class MasterProdDefinitionComponent implements OnInit {
             'Contact Admin. Error No:- ' + result['result'].toString()
           );
         }
-      });    
+      });  
+    } else {
+      this.toastr.error('Delete permission denied !!!');
+    }  
   }
 
   validateControls() {

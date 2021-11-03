@@ -18,6 +18,8 @@ export class FlexFieldDetailsComponent implements OnInit {
   prodTypeList: any[];
   moduleList: any[];
   dataTypeList: any[];
+  fdSaveButton: boolean = false;
+  fdDisableButton: boolean = false;
   user: User;
   flexFieldDt: FlexFieldDetails[];
   validationErrors: string[] = [];
@@ -65,6 +67,15 @@ export class FlexFieldDetailsComponent implements OnInit {
       this.user = element;
       //console.log(this.user.userId);
     });
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 130).length > 0) {
+        this.fdSaveButton = true;
+      } if (authMenus.filter((x) => x.autoIdx == 146).length > 0) {
+        this.fdDisableButton = true;
+      }
+    }
 
     this.flexFieldForm = this.fb.group({
       autoId: [0],
@@ -133,6 +144,7 @@ export class FlexFieldDetailsComponent implements OnInit {
 
   ///// LOADS ALL FLEX FIELDS DETAILS
   loadFlexFields(categoryId) {
+    
     var flexFieldList : any[];
     this.masterService.getFlexFieldDetails(categoryId).subscribe((flexList) => {
       flexFieldList = flexList;
@@ -156,6 +168,7 @@ export class FlexFieldDetailsComponent implements OnInit {
   }
 
   saveFlexFieldDetails() {
+    if(this.fdSaveButton == true) {
     var categoryId =  this.flexFieldForm.get('categoryId').value[0];   
     var obj = {
       createUserId: this.user.userId,
@@ -192,6 +205,9 @@ export class FlexFieldDetailsComponent implements OnInit {
         this.validationErrors = error
       }
     );
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
   deactive(cellValue, cellId) {
@@ -217,7 +233,8 @@ export class FlexFieldDetailsComponent implements OnInit {
   }
 
   deactiveFlexField(obj, status) {
-    console.log(obj);
+    if(this.fdDisableButton == true) {
+    // console.log(obj);
     var categoryId =  this.flexFieldForm.get('categoryId').value[0]; 
     this.masterService.deactiveFlexFieldDt(obj).subscribe(
       (result) => {
@@ -237,6 +254,9 @@ export class FlexFieldDetailsComponent implements OnInit {
         this.validationErrors = error;
       }
     );
+    } else {
+      this.toastr.error('Disable Permission denied !!!');
+    }
   }
 
   clearFlexFieldDetails() {

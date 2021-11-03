@@ -19,6 +19,7 @@ export class MasterProcessComponent implements OnInit {
   sizeList: Size[];
   user: User;
   saveobj: Process;
+  saveButton: boolean = false;
   validationErrors: string[] = [];
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -41,6 +42,7 @@ export class MasterProcessComponent implements OnInit {
   }
 
   SaveProcess() { 
+    if(this.saveButton == true) {
     // var user: User = JSON.parse(localStorage.getItem('user'));
     var obj = {
       createUserId: this.user.userId,
@@ -66,6 +68,9 @@ export class MasterProcessComponent implements OnInit {
     }, error => {
       this.validationErrors = error;
     }) 
+  } else {
+    this.toastr.error('Save permission denied !!!');
+  }
  }
 
  public singleSelection(event: IComboSelectionChangeEventArgs) {
@@ -79,6 +84,14 @@ export class MasterProcessComponent implements OnInit {
     this.accountService.currentUser$.forEach(element => {
       this.user = element;
       });
+
+      var authMenus = this.user.permitMenus;
+
+      if (authMenus != null) {
+        if (authMenus.filter((x) => x.autoIdx == 104).length > 0) {
+          this.saveButton = true;
+        }
+      }
      
     this.mstrProcess = this.fb.group ({
       AutoId : [0],

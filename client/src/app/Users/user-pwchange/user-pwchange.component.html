@@ -14,7 +14,7 @@
                     <igx-icon>search</igx-icon>
                 </button>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <div class="form-group">
                     <igx-input-group>
                         <input igxInput type="text" formControlName="OldPassword" />
@@ -22,7 +22,7 @@
                     </igx-input-group>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <div class="form-group">
                     <igx-input-group>
                         <input igxInput type="password" formControlName="cPassword" />
@@ -30,7 +30,7 @@
                     </igx-input-group>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <div class="form-group">
                     <igx-input-group>
                         <input igxInput type="password" formControlName="confirmPassword" />
@@ -38,7 +38,17 @@
                     </igx-input-group>
                 </div>
             </div>
-        </div>        
+
+            <div class="col-sm-2">
+                <div class="btn-group">        
+                    <button type="submit" class="btn btn-success mr-3" [disabled]="!pwChangeForm.valid">
+                        <i class="fas fa-save"></i> </button>
+                    <button type="button" class="btn btn-default" (click)="resetForm()">
+                        <i class="fas fa-broom"></i> </button>
+                </div>
+            </div>
+        </div>  
+
         <div class="row" *ngIf="validationErrors.length > 0">
             <ul class="text-danger text-left">
                 <li *ngFor="let error of validationErrors">
@@ -46,7 +56,8 @@
                 </li>
             </ul>
         </div>
-        <div class="row">
+
+        <!-- <div class="row">           
             <div class="col-sm-1 offset-md-10">
                 <div class="button-sample">
                     <button type="submit" [disabled]="!pwChangeForm.valid" igxButton="raised"
@@ -58,6 +69,6 @@
                     <button type="button" (click)="resetForm()" igxButton="flat">New</button>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </form>

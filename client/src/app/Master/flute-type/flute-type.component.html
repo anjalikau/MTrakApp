@@ -6,7 +6,7 @@
     <form [formGroup]="fluteTypeForm" (ngSubmit)="fluteTypeForm.valid"  autocomplete="off">
         <div class="card-body">        
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="text"  formControlName="code"/>
@@ -15,7 +15,7 @@
                     </div>
                 </div>              
 
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="number" formControlName="factor" />
@@ -35,7 +35,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <igx-grid #fluteTypeGrid [data]="fluteList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
                         [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
                         height="500px" displayDensity="compact" [allowFiltering]="true"

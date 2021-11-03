@@ -17,6 +17,8 @@ export class AssignSizeComponent implements OnInit {
   articleList: any[];
   pSizeList: Size[];
   npSizeList: Size[];
+  asSaveButton: boolean = false;
+  asRemoveButton: boolean = false;
   user: User;
 
   @ViewChild('sarticle', { read: IgxComboComponent })
@@ -46,6 +48,17 @@ export class AssignSizeComponent implements OnInit {
       this.user = element;
       //console.log(this.user.userId);
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 136).length > 0) {
+        this.asSaveButton = true;
+      }
+      if (authMenus.filter((x) => x.autoIdx == 137).length > 0) {
+        this.asRemoveButton = true;
+      }
+    }
 
     this.assignSizeForm = this.fb.group({
       userId: this.user.userId,     
@@ -97,6 +110,7 @@ export class AssignSizeComponent implements OnInit {
   }
 
   saveArticleSize() {
+    if(this.asSaveButton == true) {
     var selectedRows = this.npSizeGrid.selectedRows;
     var articleId = this.assignSizeForm.get("sarticle").value[0];
     var sizeList =[];
@@ -125,9 +139,13 @@ export class AssignSizeComponent implements OnInit {
         this.toastr.warning("Contact Admin. Error No:- " + result.toString());
       }
     })
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   deleteArticleSize() {
+    if(this.asRemoveButton == true) {
     var selectedRows = this.pSizeGrid.selectedRows;
     var articleId = this.assignSizeForm.get("sarticle").value[0];
     var sizeList =[];
@@ -156,6 +174,9 @@ export class AssignSizeComponent implements OnInit {
         this.toastr.warning("Contact Admin. Error No:- " + result.toString());
       }
     })
+  } else {
+    this.toastr.error('Delete Permission denied !!!');
+  }
   }
 
   clearGridDetails(){

@@ -11,12 +11,11 @@ import { AdminService } from '_services/admin.service';
 @Component({
   selector: 'app-user-permission',
   templateUrl: './user-permission.component.html',
-  styleUrls: ['./user-permission.component.css']
+  styleUrls: ['./user-permission.component.css'],
 })
 export class UserPermissionComponent implements OnInit {
   user: User;
   userObj: User;
-  authMenus: any[];
   permitUsers: PermitUser[];
   permitMenus: MenuList[];
   nPermitMenus: MenuList[];
@@ -27,70 +26,70 @@ export class UserPermissionComponent implements OnInit {
   public col: IgxColumnComponent;
   public pWidth: string;
   public nWidth: string;
-  @ViewChild("Menugrid", { static: true }) 
+  @ViewChild('Menugrid', { static: true })
   public Menugrid: IgxGridComponent;
-  @ViewChild("PermitMgrid", { static: true }) 
+  @ViewChild('PermitMgrid', { static: true })
   public PermitMgrid: IgxGridComponent;
 
-  constructor(private accountService: AccountService ,private fb: FormBuilder, public adminServices: AdminService
-          , private toastr: ToastrService) { }
+  constructor(
+    private accountService: AccountService,
+    private fb: FormBuilder,
+    public adminServices: AdminService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.initilizeForm();
-    this.GetButtonPermission()
-    this.LoadPermitedUsers();
+    this.getButtonPermission();
+    this.loadPermitedUsers();
   }
 
   initilizeForm() {
-    this.accountService.currentUser$.forEach(element => {
+    this.accountService.currentUser$.forEach((element) => {
       this.user = element;
-      });
+    });
 
-    this.userPermitForm = this.fb.group ({
-      AgentId : this.user.userId,     
-      Agent: ['', Validators.required]
-    })
+    this.userPermitForm = this.fb.group({
+      AgentId: this.user.userId,
+      Agent: ['', Validators.required],
+    });
   }
 
-  LoadPermitedUsers(){
-    this.adminServices.getPermitedUsers().subscribe(userList => {
+  loadPermitedUsers() {
+    this.adminServices.getPermitedUsers().subscribe((userList) => {
       this.permitUsers = userList;
       //console.log(userList);
     });
   }
 
   /// combo on selection change event loads menus details
-  LoadMenusEvent(event){
-    /// clear grid data   
-    this.ClearGridRows();
-    for(const item of event.added) {
-      this.LoadUserMenuList(item);
+  loadMenusEvent(event) {
+    /// clear grid data
+    this.clearGridRows();
+    for (const item of event.added) {
+      this.loadUserMenuList(item);
     }
   }
 
   /// loads menus details related to the selected user
-  LoadUserMenuList(userId) {
-    this.adminServices.getUserMenuList(userId).subscribe(menuList => {      
-      this.permitMenus = menuList.filter(x => x.isPermit == 1); 
-      this.nPermitMenus = menuList.filter(x => x.isPermit == 0);
-    })
+  loadUserMenuList(userId) {
+    this.adminServices.getUserMenuList(userId).subscribe((menuList) => {
+      this.permitMenus = menuList.filter((x) => x.isPermit == 1);
+      this.nPermitMenus = menuList.filter((x) => x.isPermit == 0);
+    });
   }
 
-  GetButtonPermission() {    
-    // this.userObj = JSON.parse(localStorage.getItem('user'));  
-    this.authMenus = this.user.permitMenus;  
-    
-    if(this.authMenus != null) {
-    if(this.authMenus.filter(x => x.menuName == 'SaveMenuPermission' && x.mType == 'B').length > 0) {
-      this.saveButton = true;
+  getButtonPermission() {
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 32).length > 0) {
+        this.saveButton = true;
+      }
+      if (authMenus.filter((x) => x.autoIdx == 33).length > 0) {
+        this.removeButton = true;
+      }
     }
-    if(this.authMenus.filter(x => x.menuName == 'DeleteMenuPermission' && x.mType == 'B').length > 0) {
-      this.removeButton = true;
-    }
-  }
-    // console.log(this.authMenus);
-    // console.log(this.saveButton);
-    // console.log(this.removeButton);
   }
 
   public onResize(event) {
@@ -106,79 +105,83 @@ export class UserPermissionComponent implements OnInit {
     }
   }
 
-  SaveUserMenuList() {
-    var selectedRows = this.Menugrid.selectedRows;
-    //console.log(this.userPermitForm.get("Agent").value[0]);
-    var selUserId = this.userPermitForm.get("Agent").value[0];
-    var menuList =[];
+  saveUserMenuList() {
+    if (this.saveButton == true) {
+      var selectedRows = this.Menugrid.selectedRows;
+      //console.log(this.userPermitForm.get("Agent").value[0]);
+      var selUserId = this.userPermitForm.get('Agent').value[0];
+      var menuList = [];
 
-    selectedRows.forEach(menuId => {      
-      var data = {
-        agentId: selUserId,
-        menuId: menuId,
-        creUserID: this.user.userId,
-      };
+      selectedRows.forEach((menuId) => {
+        var data = {
+          agentId: selUserId,
+          menuId: menuId,
+          creUserID: this.user.userId,
+        };
+        menuList.push(data);
+      });
 
-      menuList.push(data);
-    });
-
-    //console.log(JSON.stringify(menuList));
-    this.adminServices.saveUserMenuList(menuList).subscribe((result) =>{
-      if(result == 1) {
-        this.toastr.success("User Menu save Successfully !!!");
-        this.ClearGridRows();
-        this.LoadUserMenuList(selUserId);
-      } else if (result == -1) {
-        this.toastr.warning("User Menu save failed !!!");
-        this.ClearGridRows();
-        this.LoadUserMenuList(selUserId);
-      } else {
-        this.toastr.warning("Contact Admin. Error No:- " + result.toString());
-      }
-    })
-
+      //console.log(JSON.stringify(menuList));
+      this.adminServices.saveUserMenuList(menuList).subscribe((result) => {
+        if (result == 1) {
+          this.toastr.success('User Menu save Successfully !!!');
+          this.clearGridRows();
+          this.loadUserMenuList(selUserId);
+        } else if (result == -1) {
+          this.toastr.warning('User Menu save failed !!!');
+          this.clearGridRows();
+          this.loadUserMenuList(selUserId);
+        } else {
+          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+        }
+      });
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
-  DeleteUserMenuList() {
-    //console.log(this.PermitMgrid.selectedRows);
-    var selectedRows = this.PermitMgrid.selectedRows;
-    var selUserId = this.userPermitForm.get("Agent").value[0];
-    var menuList =[];
+  deleteUserMenuList() {
+    if (this.removeButton == true) {
+      //console.log(this.PermitMgrid.selectedRows);
+      var selectedRows = this.PermitMgrid.selectedRows;
+      var selUserId = this.userPermitForm.get('Agent').value[0];
+      var menuList = [];
 
-    selectedRows.forEach((menuId) => {
-      var data = {
-        agentId: selUserId,
-        menuId: menuId,
-        creUserID: this.user.userId,
-      };
+      selectedRows.forEach((menuId) => {
+        var data = {
+          agentId: selUserId,
+          menuId: menuId,
+          creUserID: this.user.userId,
+        };
+        menuList.push(data);
+      });
 
-      menuList.push(data);
-    });
-
-    //console.log(JSON.stringify(menuList));
-    this.adminServices.deleteUserMenuList(menuList).subscribe((result) =>{
-      if(result == 1) {
-        this.toastr.success("User Menu delete Successfully !!!");
-        this.LoadUserMenuList(selUserId);
-      } else if (result == -1) {
-        this.toastr.warning("User Menu delete failed !!!");
-        this.LoadUserMenuList(selUserId);
-      } else {
-        this.toastr.warning("Contact Admin. Error No:- " + result.toString());
-      }
-    })
+      //console.log(JSON.stringify(menuList));
+      this.adminServices.deleteUserMenuList(menuList).subscribe((result) => {
+        if (result == 1) {
+          this.toastr.success('User Menu delete Successfully !!!');
+          this.loadUserMenuList(selUserId);
+        } else if (result == -1) {
+          this.toastr.warning('User Menu delete failed !!!');
+          this.loadUserMenuList(selUserId);
+        } else {
+          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+        }
+      });
+    } else {
+      this.toastr.error('Delete permission denied !!!');
+    }
   }
 
-  ClearControls() {
-    this.ClearGridRows();
+  clearControls() {
+    this.clearGridRows();
     this.userPermitForm.get('Agent').setValue('');
   }
 
-  ClearGridRows() {
+  clearGridRows() {
     this.Menugrid.deselectAllRows();
     this.PermitMgrid.deselectAllRows();
     this.permitMenus = [];
-    this.nPermitMenus = [];   
+    this.nPermitMenus = [];
   }
-
 }

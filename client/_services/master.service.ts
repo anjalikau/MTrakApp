@@ -522,7 +522,15 @@ export class MasterService {
 
   saveCustomerDivision(cusDivision: CustomerDivision) {
     return this.http.post(
-      this.baseUrl + 'Master/SaveCusDivision',
+      this.baseUrl + 'Master/SaveCD',
+      cusDivision,
+      httpOptions
+    );
+  }
+
+  disableCustomerDivision(cusDivision: CustomerDivision) {
+    return this.http.post(
+      this.baseUrl + 'Master/DisableCD',
       cusDivision,
       httpOptions
     );
@@ -594,7 +602,7 @@ export class MasterService {
 
   saveCustomerBrand(customerBrand: CustomerBrand) {
     return this.http.post(
-      this.baseUrl + 'Master/Save/CusBrand',
+      this.baseUrl + 'Master/SaveCB',
       customerBrand,
       httpOptions
     );
@@ -602,7 +610,7 @@ export class MasterService {
 
   deleteCustomerBrand(customerBrand: CustomerBrand) {
     return this.http.post(
-      this.baseUrl + 'Master/Delete/CusBrand',
+      this.baseUrl + 'Master/DeleteCB',
       customerBrand,
       httpOptions
     );
@@ -621,7 +629,7 @@ export class MasterService {
 
   saveCustomerCurrency(cusCurrency: CustomerCurrency) {
     return this.http.post(
-      this.baseUrl + 'Master/SaveCusCurrency/',
+      this.baseUrl + 'Master/SaveCusC/',
       cusCurrency,
       httpOptions
     );
@@ -629,7 +637,7 @@ export class MasterService {
 
   deleteCustomerCurrency(cusCurrency: any) {
     return this.http.post(
-      this.baseUrl + 'Master/DeleteCusCurrency/',
+      this.baseUrl + 'Master/DeleteCusC/',
       cusCurrency,
       httpOptions
     );

@@ -20,6 +20,7 @@ export class MasterColorComponent implements OnInit {
   ColorList: Color[];
   user: User;
   saveobj: Color;
+  cSaveButton: boolean = false;
   validationErrors: string[] = [];
   
   public col: IgxColumnComponent;
@@ -41,6 +42,14 @@ export class MasterColorComponent implements OnInit {
     this.accountService.currentUser$.forEach(element => {
       this.user = element;
       });
+
+      var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 100).length > 0) {
+        this.cSaveButton = true;
+      }
+    }
 
     this.masterColor = this.fb.group ({
       AutoId : [0],
@@ -93,6 +102,7 @@ export class MasterColorComponent implements OnInit {
   // }
 
   saveColor() { 
+    if(this.cSaveButton == true ) {
     // var colorCard = this.masterColor.get('LinkColorCard').value[0];
     var obj = {
       "createUserId": this.user.userId,
@@ -122,6 +132,9 @@ export class MasterColorComponent implements OnInit {
     }, error => {
       this.validationErrors = error;
     }) 
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   clearControls() {

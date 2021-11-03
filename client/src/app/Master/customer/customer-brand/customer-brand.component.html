@@ -18,7 +18,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label> Brand </label>
                         <igx-combo #brand id="brandId" class="combo" displayKey="name" valueKey="autoId" [itemsMaxHeight]="250"
@@ -27,7 +27,7 @@
                         </igx-combo>
                     </div>
                 </div>
-                <div class="col-md-1 offset-5">
+                <div class="col-md-1">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default mr-3" (click)="clearCustomerBrand()">
                             <i class="fas fa-broom"></i> </button>
@@ -39,13 +39,14 @@
         </div>
     </form>
     <div class="row">
+        <div class="col-md-6">
         <igx-grid #customerBrandGrid [data]="cusBrandList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
             [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
             height="400px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
             [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
             <igx-column [width]="'60px'" [selectable]="false" [sortable]="false" [resizable]="false">
                 <ng-template igxCell let-cell="cell">
-                    <button igxButton="icon" class="fab-compact">
+                    <button igxButton="icon" class="fab-compact" (click)="openDelivDialog($event,cell.cellID)">
                         <igx-icon family="material">delete</igx-icon>
                     </button>
                 </ng-template>
@@ -53,5 +54,11 @@
             <igx-column [field]="'brand'" [header]="'Brand'" [resizable]="true" [dataType]="'string'" [sortable]="true">
             </igx-column>            
         </igx-grid>
+        </div>
     </div>
 </div>
+
+<igx-dialog #dialog title="Confirmation" leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()"
+    rightButtonLabel="OK" (onRightButtonSelect)="onDialogOKSelected($event)"
+    message="Are you sure you want to delete the record ?">
+</igx-dialog>

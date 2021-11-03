@@ -9,8 +9,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { FlexFieldTabComponent } from './master/article/flex-field-tab/flex-field-tab.component';
 import { CustomerTabComponent } from './master/customer/customer-tab/customer-tab.component';
-import { MasterBrandComponent } from './master/master-brand/master-brand.component';
-import { MasterBrandcodeComponent } from './master/master-brandcode/master-brandcode.component';
+import { MasterBrandcodeComponent } from './master/brand/master-brandcode/master-brandcode.component';
 import { MasterCategoryComponent } from './master/master-category/master-category.component';
 import { MasterCostingGroupComponent } from './master/master-costing-group/master-costing-group.component';
 import { MasterMaterialtypeComponent } from './master/master-materialtype/master-materialtype.component';
@@ -47,6 +46,7 @@ import { CodeDefinitionComponent } from './users/code-definition/code-definition
 import { AddressTypeComponent } from './master/address-type/address-type.component';
 import { CostAttachComponent } from './transaction/cost-attach/cost-attach.component';
 import { ArticleUmoConversionComponent } from './master/article/article-umo-conversion/article-umo-conversion.component';
+import { BrandTabComponent } from './master/brand/brand-tab/brand-tab.component';
 
 const routes: Routes = [
   {path:'', component: LoginComponent},
@@ -64,7 +64,7 @@ const routes: Routes = [
       {path:'SizeTab', component: SizeTabComponent},
       {path:'MasterStoresite', component: MasterStoresiteComponent},
       {path:'MasterProess', component: MasterProcessComponent},
-      {path:'MasterBrand', component: MasterBrandComponent},
+      {path:'Brand', component: BrandTabComponent},
       {path:'MasterBrandCode', component: MasterBrandcodeComponent},
       {path:'MasterMaterialtype', component: MasterMaterialtypeComponent},
       {path:'MasterCategory', component: MasterCategoryComponent},

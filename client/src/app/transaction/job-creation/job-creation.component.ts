@@ -48,6 +48,7 @@ export class JobCreationComponent implements OnInit {
   showSize: boolean = true;
   selectedCusLoc: number;
   isFPOCreated: boolean = false;
+  saveButton: boolean = false;
   delivLocation: number = 0;
 
   public col: IgxColumnComponent;
@@ -101,6 +102,14 @@ export class JobCreationComponent implements OnInit {
     this.accountService.currentUser$.forEach((element) => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 157).length > 0) {
+        this.saveButton = true;
+      }
+    }
 
     this.jobHeaderForm = this.fb.group({
       headerId: [0],
@@ -598,6 +607,7 @@ export class JobCreationComponent implements OnInit {
   }
 
   saveJobCard() {
+    if(this.saveButton == true) {
     if (this.validateJobCard()) {
       // var user: User = JSON.parse(localStorage.getItem('user'));
       var jobCardList = [],
@@ -683,6 +693,9 @@ export class JobCreationComponent implements OnInit {
         }
       });
     }
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   ///// VALIDATION BEFORE SAVE JOB CARD

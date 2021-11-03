@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxComboComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
+import { flatMap } from 'rxjs/operators';
 import { AddressType } from 'src/app/_models/addressType';
 import { CustomerHd } from 'src/app/_models/customerHd';
 import { CustomerLoc } from 'src/app/_models/customerLoc';
@@ -23,6 +24,8 @@ export class CustomerAddressComponent implements OnInit {
   countryList: any[];
   cusAddList: any[];
   cusLocList: CustomerLoc[];
+  caSaveButton: boolean = false;
+  caDisableButton: boolean = false;
   public col: IgxColumnComponent;
   public pWidth: string;
   public nWidth: string;
@@ -65,6 +68,16 @@ export class CustomerAddressComponent implements OnInit {
       this.user = element;
       //console.log(this.user.userId);
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 125).length > 0) {
+        this.caSaveButton = true;
+      } if (authMenus.filter((x) => x.autoIdx == 149).length > 0) {
+        this.caDisableButton = true;
+      }
+    }
 
     this.custAddressForm = this.fb.group({
       autoId: [0],
@@ -228,6 +241,7 @@ export class CustomerAddressComponent implements OnInit {
 
 
   saveCustmerAddress() {
+    if(this.caSaveButton == true) {
     var customerId = this.custAddressForm.get('customerAId').value[0];
     var obj = {
       autoId: this.custAddressForm.get('autoId').value,
@@ -282,6 +296,9 @@ export class CustomerAddressComponent implements OnInit {
         this.validationErrors = error;
       }
     );
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
   

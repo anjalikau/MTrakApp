@@ -19,6 +19,8 @@ export class AssignColorComponent implements OnInit {
   articleList: any[];
   pColorList: Color[];
   npColorList: Color[];
+  acSaveButton: boolean = false;
+  acRemoveButton: boolean = false;
   user: User;
 
   @ViewChild('carticle', { read: IgxComboComponent })
@@ -48,6 +50,17 @@ export class AssignColorComponent implements OnInit {
       this.user = element;
       //console.log(this.user.userId);
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 134).length > 0) {
+        this.acSaveButton = true;
+      }
+      if (authMenus.filter((x) => x.autoIdx == 135).length > 0) {
+        this.acRemoveButton = true;
+      }
+    }
 
     this.assignColorForm = this.fb.group({
       userId: this.user.userId,     
@@ -100,6 +113,7 @@ export class AssignColorComponent implements OnInit {
   }
 
   saveArticleColor() {
+    if (this.acSaveButton == true) {
     var selectedRows = this.npColorGrid.selectedRows;
     var articleId = this.assignColorForm.get("carticle").value[0];
     var colorList =[];
@@ -110,7 +124,6 @@ export class AssignColorComponent implements OnInit {
         articleId: articleId,
         createUserId: this.user.userId,
       };
-
       colorList.push(data);
     });
 
@@ -128,9 +141,13 @@ export class AssignColorComponent implements OnInit {
         this.toastr.warning("Contact Admin. Error No:- " + result.toString());
       }
     })
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   deleteArticleColor() {
+    if (this.acRemoveButton == true) {
     var selectedRows = this.pColorGrid.selectedRows;
     var articleId = this.assignColorForm.get("carticle").value[0];
     var colorList =[];
@@ -159,6 +176,9 @@ export class AssignColorComponent implements OnInit {
         this.toastr.warning("Contact Admin. Error No:- " + result.toString());
       }
     })
+  } else {
+    this.toastr.error('Delete permission denied !!!');
+  }
   }
 
   clearGridDetails(){

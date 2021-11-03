@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxComboComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
+import { flatMap } from 'rxjs/operators';
 import { UnitConversion } from 'src/app/_models/unitConversion';
 import { Units } from 'src/app/_models/units';
 import { User } from 'src/app/_models/user';
@@ -18,6 +19,7 @@ export class UnitConversionComponent implements OnInit {
   fromUnitList: Units[];
   toUnitList: Units[];
   unitConvList: UnitConversion[];
+  ucSaveButton: boolean = false;
   user: User;
   validationErrors: string[] = [];
 
@@ -78,6 +80,14 @@ export class UnitConversionComponent implements OnInit {
       this.user = element;
     });
 
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 102).length > 0) {
+        this.ucSaveButton = true;
+      }
+    }
+
     this.unitConvForm = this.fb.group(
       {
         autoId: [0],
@@ -110,6 +120,7 @@ export class UnitConversionComponent implements OnInit {
   }
 
   saveUnit() {
+    if(this.ucSaveButton == true) {
     var obj = {
       createUserId: this.user.userId,
       fromUnitId: this.unitConvForm.get('fromUnit').value[0],
@@ -142,6 +153,9 @@ export class UnitConversionComponent implements OnInit {
         this.validationErrors = error;
       }
     );
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
   onEdit(event, cellId) {

@@ -31,6 +31,7 @@ export class ProductionInComponent implements OnInit {
   transDate: Date = new Date(Date.now());
   todayTotQty: number = 0;
   todayTotList: any;
+  saveButton: boolean = false;
 
   constructor(
     private accountService: AccountService,
@@ -49,6 +50,14 @@ export class ProductionInComponent implements OnInit {
     this.accountService.currentUser$.forEach((element) => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 160).length > 0) {
+        this.saveButton = true;
+      }
+    }
 
     this.fppoInForm = this.fb.group(
       {
@@ -151,6 +160,7 @@ export class ProductionInComponent implements OnInit {
   }
 
   saveFPPOInDetails() {
+    if(this.saveButton == true) {
     var obj = {
       fPPODId: this.fppoInForm.get('fPPODId').value,
       validationQty: this.fppoInForm.get('balQty').value,
@@ -169,6 +179,9 @@ export class ProductionInComponent implements OnInit {
         this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
       }
     });
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   clearControls() {

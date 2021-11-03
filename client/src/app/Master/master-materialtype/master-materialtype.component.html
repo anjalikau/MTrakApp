@@ -1,6 +1,6 @@
 <div class="card card-default">
     <div class="card-header">
-        <h3 class="card-title">Master Material Type</h3>
+        <h3 class="card-title"> Material Type</h3>
 
     </div>
 
@@ -8,15 +8,6 @@
         <div class="card-body">
 
             <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <igx-input-group>
-                            <input igxInput type="text" formControlName="Name" />
-                            <label igxLabel> Name</label>
-                        </igx-input-group>
-                    </div>
-                </div>
-
                 <div class="col-md-2">
                     <div class="form-group">
                         <igx-input-group>
@@ -26,22 +17,27 @@
                     </div>
                 </div>
 
-                <div class="col-md-1 offset-md-5">
+                <div class="col-md-3">
                     <div class="form-group">
-                        <button type="button" class="btn btn-block btn-success" [disabled]="!matTypeForm.valid"
-                            (click)="SaveMaterialType()">Save</button>
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="Name" />
+                            <label igxLabel> Name</label>
+                        </igx-input-group>
                     </div>
-                </div>
-
+                </div>   
+                
                 <div class="col-md-1">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-block btn-default" (click)="resetControls()">New</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default mr-3" (click)="resetControls()">
+                            <i class="fas fa-broom"></i> </button>
+                        <button type="button" class="btn btn-success" [disabled]="!matTypeForm.valid" (click)="SaveMaterialType()">
+                            <i class="fas fa-save"></i> </button>
                     </div>
-                </div>
+                </div>                 
             </div>
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <igx-grid #MatGrid [data]="materialTypeList" [autoGenerate]="false" [paging]="true"
                         [rowEditable]="false" [primaryKey]="'autoId'" cellSelection="none"
                         (onColumnResized)="onResize($event)" [perPage]="10" height="500px" displayDensity="compact"

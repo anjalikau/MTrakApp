@@ -55,9 +55,9 @@ export class SalesOrderComponent implements OnInit {
   salesAgentList: any[];
   validationErrors: string[] = [];
   public date: Date = new Date(Date.now());
-  // showArtiForm: boolean = false;
-  // showArticle: boolean = true;
-  isView: boolean = false;  
+  saveButton: boolean = false;
+  csRemoveButton: boolean = false;
+  isView: boolean = false;
   showColor: boolean = true;
   showSize: boolean = true;
   btnStatus: string = '';
@@ -163,6 +163,17 @@ export class SalesOrderComponent implements OnInit {
     this.accountService.currentUser$.forEach((element) => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 153).length > 0) {
+        this.saveButton = true;
+      }
+      if (authMenus.filter((x) => x.autoIdx == 156).length > 0) {
+        this.csRemoveButton = true;
+      }
+    }
 
     this.soHeaderForm = this.fb.group({
       headerId: [0],
@@ -286,8 +297,8 @@ export class SalesOrderComponent implements OnInit {
     }
   }
 
-   //// LOADS CATEGORY
-   loadCategory() {
+  //// LOADS CATEGORY
+  loadCategory() {
     this.masterServices.getCategory().subscribe((result) => {
       this.categoryList = result;
     });
@@ -354,28 +365,28 @@ export class SalesOrderComponent implements OnInit {
             var autoId = 0,
               flexLine = [];
             // console.log(articles);
-  
+
             ///// Get Unique Article List
             var uniqeArticle = articles.filter(
               (arr, index, self) =>
                 index === self.findIndex((t) => t.autoId === arr.autoId)
             );
-  
+
             ///// PUSH FLEX FIELD ARTICLE LIST
             for (let b = 0; b < uniqeArticle.length; b++) {
               autoId = uniqeArticle[b]['autoId'];
-              var fieldLine: any = uniqeArticle[b]; 
-              
+              var fieldLine: any = uniqeArticle[b];
+
               // console.log(uniqeArticle);
               //// GET FLEX FIELD LIST FOR SAME ARTICLE
               var flexFieldList = articles.filter((x) => x.autoId == autoId);
               flexLine = [];
-  
+
               //// CREATE CHILD OBJECT AS FLEX FIELD
               for (let a = 0; a < flexFieldList.length; a++) {
                 const element = flexFieldList[a];
                 var flexValue = 0;
-  
+
                 if (element['dataType'] == 'F')
                   flexValue = element['fFlexFeildValue'];
                 else if (element['dataType'] == 'N')
@@ -386,18 +397,18 @@ export class SalesOrderComponent implements OnInit {
                   flexValue = element['bFlexFeildValue'];
                 else if (element['dataType'] == 'D')
                   flexValue = element['dFlexFeildValue'];
-  
+
                 var obj = {
                   dataType: element['dataType'],
                   flexFieldId: element['flexFieldId'],
                   flexFieldName: element['flexFieldName'],
-                  flexFieldCode : element['flexFieldCode'],
+                  flexFieldCode: element['flexFieldCode'],
                   flexFieldValue: flexValue,
                   valueList: element['valueList'],
                 };
                 flexLine.push(obj);
               }
-  
+
               fieldLine.FlexFields = flexLine;
             }
             this.articleList = uniqeArticle;
@@ -480,17 +491,18 @@ export class SalesOrderComponent implements OnInit {
         this.customerCurrList = customerCurr;
         // console.log(this.customerCurrList);
       });
-      
 
       //// LOADS CUSTOMER DIVISION
-      this.masterServices.getCustomerDivision(item).subscribe((customerDivi) => {
+      this.masterServices
+        .getCustomerDivision(item)
+        .subscribe((customerDivi) => {
           this.divisionList = customerDivi;
         });
       //console.log(this.divisionList);
     }
   }
 
- /// SELECT ARTICLE IN MODAL AND LOADS DATA TO ARTICLE FORM
+  /// SELECT ARTICLE IN MODAL AND LOADS DATA TO ARTICLE FORM
   selectArticle(event, cellId) {
     /// CLEAR CONTROLS AND GRIDS
     // this.clearDeliveryControls();
@@ -507,8 +519,12 @@ export class SalesOrderComponent implements OnInit {
     var articleId = selectedRowData[0]['autoId'];
     //console.log(selectedRowData);
     this.soItemForm.get('articleId').setValue(selectedRowData[0]['autoId']);
-    this.soItemForm.get('articleName').setValue(selectedRowData[0]['articleName']);
-    this.soItemForm.get('articleCode').setValue(selectedRowData[0]['stockCode']);  
+    this.soItemForm
+      .get('articleName')
+      .setValue(selectedRowData[0]['articleName']);
+    this.soItemForm
+      .get('articleCode')
+      .setValue(selectedRowData[0]['stockCode']);
 
     this.articleDialog.close();
     this.loadColor(articleId);
@@ -533,7 +549,7 @@ export class SalesOrderComponent implements OnInit {
     });
   }
 
-  onClearArticle(){
+  onClearArticle() {
     this.soItemForm.get('articleId').setValue(0);
     this.soItemForm.get('articleName').setValue('');
     this.soItemForm.get('articleCode').setValue('');
@@ -565,10 +581,8 @@ export class SalesOrderComponent implements OnInit {
         this.itemGrid.updateCell(price, itemId, 'price');
       } else {
         /// INITIAL TIME BLOCK DELIVERY BREACKDOWN
-        if ( this.soHeaderForm.get('headerId').value == 0 )
-          status = true;
-        else 
-          status = false;
+        if (this.soHeaderForm.get('headerId').value == 0) status = true;
+        else status = false;
 
         //// ADD NEW ITEM ENTRY
         itemId = this.findMaxItemId(this.itemGrid.data) + 1;
@@ -661,8 +675,12 @@ export class SalesOrderComponent implements OnInit {
       if (isIntent == false) {
         //// fill article details from item details
         this.soDeliveyForm.get('itemId').setValue(selectedRowData[0]['itemId']);
-        this.soDeliveyForm.get('articleId').setValue(selectedRowData[0]['articleId']);
-        this.soDeliveyForm.get('articleName').setValue(selectedRowData[0]['articleName']);
+        this.soDeliveyForm
+          .get('articleId')
+          .setValue(selectedRowData[0]['articleId']);
+        this.soDeliveyForm
+          .get('articleName')
+          .setValue(selectedRowData[0]['articleName']);
         this.soDeliveyForm.get('color').setValue(selectedRowData[0]['color']);
         this.soDeliveyForm.get('size').setValue(selectedRowData[0]['size']);
         this.transferItem = selectedRowData;
@@ -747,25 +765,25 @@ export class SalesOrderComponent implements OnInit {
       this.btnStatus = '';
 
       const selectedRowData = this.deliveryGrid.data.filter((record) => {
-        return record.deliveryId == rowIndex
+        return record.deliveryId == rowIndex;
       });
       // console.log(selectedRowData);
 
-      if (selectedRowData.length > 0) {   
+      if (selectedRowData.length > 0) {
         var itemId = parseInt(selectedRowData[0]['itemId']);
 
         /// CHECK IF INTENT IS CREATED
         const itemRowData = this.itemGrid.data.filter((record) => {
           return record.itemId == itemId && record.isIntendCreated == true;
-        });  
+        });
 
-        if(itemRowData.length == 0) {
-           ///// update the status of the item details        
+        if (itemRowData.length == 0) {
+          ///// update the status of the item details
           this.itemGrid.updateCell(false, itemId, 'status');
           /// DELETE DELVERY RECORDS
           this.deliveryGrid.deleteRow(rowIndex);
         } else {
-          this.toastr.warning("Intent already created !!!");
+          this.toastr.warning('Intent already created !!!');
         }
       }
     }
@@ -784,27 +802,38 @@ export class SalesOrderComponent implements OnInit {
       if (selectedRowData.length > 0) {
         var itemId = parseInt(selectedRowData[0]['itemId']);
 
-         /// CHECK IF INTENT IS CREATED
+        /// CHECK IF INTENT IS CREATED
         const itemRowData = this.itemGrid.data.filter((record) => {
           return record.itemId == itemId && record.isIntendCreated == true;
         });
-        
-        if(itemRowData.length == 0 ) {
+
+        if (itemRowData.length == 0) {
           console.log(selectedRowData[0]);
           var trasDate: Date = new Date(selectedRowData[0]['deliveryDate']);
 
-          this.soDeliveyForm.get('deliveryId').setValue(selectedRowData[0]['deliveryId']);
-          this.soDeliveyForm.get('itemId').setValue(selectedRowData[0]['itemId']);
-          this.soDeliveyForm.get('articleName').setValue(selectedRowData[0]['article']);
-          this.soDeliveyForm.get('deliveryRef').setValue(selectedRowData[0]['deliveryRef']);
+          this.soDeliveyForm
+            .get('deliveryId')
+            .setValue(selectedRowData[0]['deliveryId']);
+          this.soDeliveyForm
+            .get('itemId')
+            .setValue(selectedRowData[0]['itemId']);
+          this.soDeliveyForm
+            .get('articleName')
+            .setValue(selectedRowData[0]['article']);
+          this.soDeliveyForm
+            .get('deliveryRef')
+            .setValue(selectedRowData[0]['deliveryRef']);
           this.soDeliveyForm.get('deliveryDate').setValue(trasDate);
           this.soDeliveyForm.get('color').setValue(selectedRowData[0]['color']);
           this.soDeliveyForm.get('size').setValue(selectedRowData[0]['size']);
           this.soDeliveyForm.get('qty').setValue(selectedRowData[0]['qty']);
           //this.soDeliveyForm.get('deliCustLocId').setValue(selectedRowData[0]['deliCustLocId']);
-          this.delivLocation.setSelectedItem(selectedRowData[0]['deliCustLocId'],true);
+          this.delivLocation.setSelectedItem(
+            selectedRowData[0]['deliCustLocId'],
+            true
+          );
         } else {
-          this.toastr.warning("Intent already created !!!");
+          this.toastr.warning('Intent already created !!!');
         }
       }
     }
@@ -824,24 +853,30 @@ export class SalesOrderComponent implements OnInit {
 
       const ids = cellId.rowID;
       const selectedRowData = this.itemGrid.data.filter((record) => {
-        return record.itemId == ids ;
+        return record.itemId == ids;
       });
 
       var isIntendCreated = selectedRowData[0]['isIntendCreated'];
 
-      //// CHECK IF INTENT IS CREATED OR NOT 
-      if(isIntendCreated == false) {
-         // console.log(selectedRowData);
+      //// CHECK IF INTENT IS CREATED OR NOT
+      if (isIntendCreated == false) {
+        // console.log(selectedRowData);
         this.soItemForm.get('itemId').setValue(selectedRowData[0]['itemId']);
-        this.soItemForm.get('articleId').setValue(selectedRowData[0]['articleId']);
-        this.soItemForm.get('articleCode').setValue(selectedRowData[0]['articleCode']);
-        this.soItemForm.get('articleName').setValue(selectedRowData[0]['articleName']);
+        this.soItemForm
+          .get('articleId')
+          .setValue(selectedRowData[0]['articleId']);
+        this.soItemForm
+          .get('articleCode')
+          .setValue(selectedRowData[0]['articleCode']);
+        this.soItemForm
+          .get('articleName')
+          .setValue(selectedRowData[0]['articleName']);
         this.soItemForm.get('colorId').setValue(selectedRowData[0]['color']);
         this.soItemForm.get('sizeId').setValue(selectedRowData[0]['size']);
         this.soItemForm.get('qty').setValue(selectedRowData[0]['qty']);
         this.soItemForm.get('price').setValue(selectedRowData[0]['price']);
       } else {
-        this.toastr.warning("Intent already created !!!");
+        this.toastr.warning('Intent already created !!!');
       }
       // this.cmbarticle.setSelectedItem(selectedRowData[0]["article"], true);
       // this.cmbcolor.setSelectedItem(selectedRowData[0]["color"], true);
@@ -1004,102 +1039,106 @@ export class SalesOrderComponent implements OnInit {
 
   /// SAVE SALES ORDER
   saveSalesOrder() {
-    if (this.validateSalesOrder() && this.checkIsEditable()) {
-      var salesOrderList = [],
-        itemOrderList = [];
+    if (this.saveButton == true) {
+      if (this.validateSalesOrder() && this.checkIsEditable()) {
+        var salesOrderList = [],
+          itemOrderList = [];
 
-      //console.log(this.chkIsCharge.checked);
-      ////--------=========== SALES ORDER HEADER =======================---------
-      var headerData = {
-        autoId: this.soHeaderForm.get('headerId').value,
-        orderRef: this.soHeaderForm.get('orderRef').value,
-        customerRef: this.soHeaderForm.get('customerRef').value,
-        customerId: this.soHeaderForm.get('customerId').value[0],
-        customerUserId: this.soHeaderForm.get('customerUserId').value[0],
-        salesCategoryId: this.soHeaderForm.get('salesCategoryId').value[0],
-        cusCurrencyId: this.soHeaderForm.get('cusCurrencyId').value[0],
-        countryId: this.soHeaderForm.get('countryId').value[0],
-        paymentTermId: this.soHeaderForm.get('paymentTermId').value[0],
-        salesAgentId: this.soHeaderForm.get('salesAgentId').value[0],
-        isChargeable: this.chkIsCharge.checked,
-        customerLocId: this.soHeaderForm.get('customerLocId').value[0],
-        delDate: this.datePipe.transform(
-          this.soHeaderForm.get('delDate').value,
-          'yyyy-MM-dd'
-        ),
-        createUserId: this.user.userId,
-        // articleId: this.articleForm.get('articleId').value,
-        customerDivId: this.soHeaderForm.get('customerDivId').value[0],
-      };
-
-      var objHead = {
-        SalesOrderHd: headerData,
-      };
-
-      salesOrderList.push(objHead);
-
-      ////--------=========== SALES ORDER ITEMS =======================---------
-      var itemRows = this.itemGrid.data;
-
-      itemRows.forEach((items) => {
-        var itemdata = {
-          autoId: items.itemId,
-          articleId: items.articleId,
-          sizeId: items.sizeId,
-          colorId: items.colorId,
-          costingId: items.costingId,
-          qty: items.qty,
-          isIntendCreated: items.isIntendCreated,
-          price: items.price,
+        //console.log(this.chkIsCharge.checked);
+        ////--------=========== SALES ORDER HEADER =======================---------
+        var headerData = {
+          autoId: this.soHeaderForm.get('headerId').value,
+          orderRef: this.soHeaderForm.get('orderRef').value,
+          customerRef: this.soHeaderForm.get('customerRef').value,
+          customerId: this.soHeaderForm.get('customerId').value[0],
+          customerUserId: this.soHeaderForm.get('customerUserId').value[0],
+          salesCategoryId: this.soHeaderForm.get('salesCategoryId').value[0],
+          cusCurrencyId: this.soHeaderForm.get('cusCurrencyId').value[0],
+          countryId: this.soHeaderForm.get('countryId').value[0],
+          paymentTermId: this.soHeaderForm.get('paymentTermId').value[0],
+          salesAgentId: this.soHeaderForm.get('salesAgentId').value[0],
+          isChargeable: this.chkIsCharge.checked,
+          customerLocId: this.soHeaderForm.get('customerLocId').value[0],
+          delDate: this.datePipe.transform(
+            this.soHeaderForm.get('delDate').value,
+            'yyyy-MM-dd'
+          ),
+          createUserId: this.user.userId,
+          // articleId: this.articleForm.get('articleId').value,
+          customerDivId: this.soHeaderForm.get('customerDivId').value[0],
         };
-        itemOrderList.push(itemdata);
-      });
 
-      var objItem = {
-        SalesItemDt: itemOrderList,
-      };
-
-      salesOrderList.push(objItem);
-
-      ////--------=========== SALES ORDER DELIVERY BREKDOWN =======================---------
-      var deliveryRows = this.deliveryGrid.data;
-      deliveryRows.forEach((delivery) => {
-        var deliverydata = {
-          autoId: delivery.deliveryId,
-          soItemDtId: delivery.itemId,
-          //articleId: delivery.articleId,
-          // sizeId: delivery.sizeId,
-          // colorId: delivery.colorId,
-          deliveryRef: delivery.deliveryRef,
-          deliveryDate: delivery.deliveryDate,
-          qty: delivery.qty,
-          customerLocId: delivery.deliCustLocId,
-          //price: delivery.price,
+        var objHead = {
+          SalesOrderHd: headerData,
         };
-        salesOrderList.push(deliverydata);
-      });
 
-      // console.log(salesOrderList);
-      // // //console.log(JSON.stringify(menuList));
+        salesOrderList.push(objHead);
 
-      this.salesOrderServices
-        .saveSalesOrder(salesOrderList)
-        .subscribe((result) => {
-          //console.log(result);
-          if (result['result'] == 1) {
-            this.toastr.success('Sales Order save Successfully !!!');
-            this.soHeaderForm.get('headerId').setValue(result['refNumId']);
-            this.soHeaderForm.get('orderRef').setValue(result['refNum']);
-            this.loadSalesOrderDt();
-          } else if (result['result'] == -1) {
-            this.toastr.error('Sales Order update Successfully !!!');
-            this.loadSalesOrderDt();
-          } else {
-            this.toastr.warning(
-              'Contact Admin. Error No:- ' + result['result'].toString()
-            );
-          }
+        ////--------=========== SALES ORDER ITEMS =======================---------
+        var itemRows = this.itemGrid.data;
+
+        itemRows.forEach((items) => {
+          var itemdata = {
+            autoId: items.itemId,
+            articleId: items.articleId,
+            sizeId: items.sizeId,
+            colorId: items.colorId,
+            costingId: items.costingId,
+            qty: items.qty,
+            isIntendCreated: items.isIntendCreated,
+            price: items.price,
+          };
+          itemOrderList.push(itemdata);
         });
+
+        var objItem = {
+          SalesItemDt: itemOrderList,
+        };
+
+        salesOrderList.push(objItem);
+
+        ////--------=========== SALES ORDER DELIVERY BREKDOWN =======================---------
+        var deliveryRows = this.deliveryGrid.data;
+        deliveryRows.forEach((delivery) => {
+          var deliverydata = {
+            autoId: delivery.deliveryId,
+            soItemDtId: delivery.itemId,
+            //articleId: delivery.articleId,
+            // sizeId: delivery.sizeId,
+            // colorId: delivery.colorId,
+            deliveryRef: delivery.deliveryRef,
+            deliveryDate: delivery.deliveryDate,
+            qty: delivery.qty,
+            customerLocId: delivery.deliCustLocId,
+            //price: delivery.price,
+          };
+          salesOrderList.push(deliverydata);
+        });
+
+        // console.log(salesOrderList);
+        // // //console.log(JSON.stringify(menuList));
+
+        this.salesOrderServices
+          .saveSalesOrder(salesOrderList)
+          .subscribe((result) => {
+            //console.log(result);
+            if (result['result'] == 1) {
+              this.toastr.success('Sales Order save Successfully !!!');
+              this.soHeaderForm.get('headerId').setValue(result['refNumId']);
+              this.soHeaderForm.get('orderRef').setValue(result['refNum']);
+              this.loadSalesOrderDt();
+            } else if (result['result'] == -1) {
+              this.toastr.error('Sales Order update Successfully !!!');
+              this.loadSalesOrderDt();
+            } else {
+              this.toastr.warning(
+                'Contact Admin. Error No:- ' + result['result'].toString()
+              );
+            }
+          });
+      }
+    } else {
+      this.toastr.error('Save Permission denied !!!');
     }
   }
 
@@ -1229,7 +1268,7 @@ export class SalesOrderComponent implements OnInit {
                   color: orderDt[index]['color'],
                   articleId: orderDt[index]['articleId'],
                   articleName: orderDt[index]['article'],
-                  articleCode : orderDt[index]['stockCode'],                 
+                  articleCode: orderDt[index]['stockCode'],
                   costingId: orderDt[index]['costingId'],
                   costingRef: orderDt[index]['costingRef'],
                   qty: orderDt[index]['itemQty'],
@@ -1265,7 +1304,7 @@ export class SalesOrderComponent implements OnInit {
                 jobQty: orderDt[index]['jobQty'],
               };
 
-              if (orderDt[index]['jobQty'] > 0) this.isJobCreated = true;              
+              if (orderDt[index]['jobQty'] > 0) this.isJobCreated = true;
 
               soSavedDelList.push(orderDeliv);
             }
@@ -1410,7 +1449,7 @@ export class SalesOrderComponent implements OnInit {
     if (this.isJobCreated == true) {
       this.toastr.warning('Job already created');
       return false;
-    } 
+    }
     // else if(this.isIntentCreated == true) {
     //   this.toastr.warning('Intent already created');
     //   return false;
@@ -1420,38 +1459,42 @@ export class SalesOrderComponent implements OnInit {
   }
 
   ///// REMOVE COST SHEET
-  onRemoveCostSheet(event,cellId) {
-    const itemId = cellId.rowID;
-    //// CHECK ITEM LINE HAS JOB QTY 
-    const selectedRowData = this.deliveryGrid.data.filter((record) => {
-      return record.itemId == itemId && record.jobQty > 0;
-    });
-
-    console.log(selectedRowData);
-
-    /// IF JOB QTY AVAILABLE CAN NOT REMOVE COST SHEET
-    if(selectedRowData.length > 0) {
-      this.toastr.warning("Remove fail, Job Card already created !!!");
-    } else {
-
-      var obj = {
-        autoId: itemId,
-        createUserId: this.user.userId
-      }
-
-      this.salesOrderServices.removeCostSheet(obj).subscribe(result => {
-        if (result == 1) {
-          this.toastr.success('CostSheet remove Successfully !!!');
-          this.loadSalesOrderDt();
-        } else if (result['result'] == -1) {
-          this.toastr.error('CostSheet remove fail !!!');
-          this.loadSalesOrderDt();
-        } else {
-          this.toastr.warning(
-            'Contact Admin. Error No:- ' + result.toString()
-          );
-        }
+  onRemoveCostSheet(event, cellId) {
+    if (this.csRemoveButton == true) {
+      const itemId = cellId.rowID;
+      //// CHECK ITEM LINE HAS JOB QTY
+      const selectedRowData = this.deliveryGrid.data.filter((record) => {
+        return record.itemId == itemId && record.jobQty > 0;
       });
+
+      // console.log(selectedRowData);
+
+      /// IF JOB QTY AVAILABLE CAN NOT REMOVE COST SHEET
+      if (selectedRowData.length > 0) {
+        this.toastr.warning('Remove fail, Job Card already created !!!');
+      } else {
+        var obj = {
+          autoId: itemId,
+          createUserId: this.user.userId,
+        };
+
+        this.salesOrderServices.removeCostSheet(obj).subscribe((result) => {
+          if (result == 1) {
+            this.toastr.success('CostSheet remove Successfully !!!');
+            this.loadSalesOrderDt();
+          } else if (result['result'] == -1) {
+            this.toastr.error('CostSheet remove fail !!!');
+            this.loadSalesOrderDt();
+          } else {
+            this.toastr.warning(
+              'Contact Admin. Error No:- ' + result.toString()
+            );
+          }
+        });
+      }
+    } else {
+      this.toastr.error('Delete Permission denied !!!');
     }
   }
+
 }

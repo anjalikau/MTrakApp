@@ -11,12 +11,14 @@ import { MasterService } from '_services/master.service';
 @Component({
   selector: 'app-flex-field-value-list',
   templateUrl: './flex-field-value-list.component.html',
-  styleUrls: ['./flex-field-value-list.component.css']
+  styleUrls: ['./flex-field-value-list.component.css'],
 })
 export class FlexFieldValueListComponent implements OnInit {
   flexFieldValForm: FormGroup;
-  flexFieldList: any[];  
+  flexFieldList: any[];
   user: User;
+  fvSaveButton: boolean = false;
+  fvRemoveButton: boolean = false;
   flexFieldValList: FlexFieldDetails[];
   validationErrors: string[] = [];
   rowId: number = 0;
@@ -34,10 +36,12 @@ export class FlexFieldValueListComponent implements OnInit {
   @ViewChild('dialog', { read: IgxDialogComponent })
   public dialog: IgxDialogComponent;
 
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     private accountService: AccountService,
     private masterService: MasterService,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.initilizeForm();
@@ -50,21 +54,32 @@ export class FlexFieldValueListComponent implements OnInit {
       //console.log(this.user.userId);
     });
 
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 131).length > 0) {
+        this.fvSaveButton = true;
+      }
+      if (authMenus.filter((x) => x.autoIdx == 132).length > 0) {
+        this.fvRemoveButton = true;
+      }
+    }
+
     this.flexFieldValForm = this.fb.group({
       autoId: [0],
       userId: this.user.userId,
-      flexFieldId: ['', Validators.required],     
-      flexFieldValue: ['', [Validators.required, Validators.maxLength(100)]]
+      flexFieldId: ['', Validators.required],
+      flexFieldValue: ['', [Validators.required, Validators.maxLength(100)]],
     });
   }
 
   loadFlexFieldList() {
-    this.masterService.getFlexFieldDtList().subscribe(result => {
-      this.flexFieldList = result
+    this.masterService.getFlexFieldDtList().subscribe((result) => {
+      this.flexFieldList = result;
     });
   }
 
-   //// ALOW SINGLE SILECTION ONLY COMBO EVENT
+  //// ALOW SINGLE SILECTION ONLY COMBO EVENT
   singleSelection(event: IComboSelectionChangeEventArgs) {
     if (event.added.length) {
       event.newSelection = event.added;
@@ -78,69 +93,79 @@ export class FlexFieldValueListComponent implements OnInit {
   }
 
   onSelectFlexFieldDt(event) {
-    for (const item of event.added) { 
+    for (const item of event.added) {
       this.loadsFlexFieldValList(item);
     }
   }
 
   ///LOADS FLEX FIELD VALUE LIST
   loadsFlexFieldValList(flexFldId) {
-    this.masterService.getFlexFieldValList(flexFldId).subscribe(result => {
-      this.flexFieldValList = result
+    this.masterService.getFlexFieldValList(flexFldId).subscribe((result) => {
+      this.flexFieldValList = result;
     });
-  } 
+  }
 
   saveFlexFieldValue() {
-    var flexFieldId =  this.flexFieldValForm.get('flexFieldId').value[0];   
-    var obj = {
-      createUserId: this.user.userId,
-      flexFieldId: flexFieldId,
-      autoId: this.flexFieldValForm.get('autoId').value,
-      flexFeildVlaue: this.flexFieldValForm.get('flexFieldValue').value.trim()
-    };
-    //console.log(obj);
-    this.masterService.saveFlexFieldValList(obj).subscribe(
-      (result) => {
-        //console.log(result);
-        if (result == 1) {
-          this.toastr.success('Flex Field ValueList save successfully !!!');
-          this.loadsFlexFieldValList(flexFieldId);
-          this.clearFlexFieldValue();
-        } else if (result == 2) {
-          this.toastr.success('Flex Field ValueList update successfully !!!');
-          this.loadsFlexFieldValList(flexFieldId);
-          this.clearFlexFieldValue();
-        } else if (result == -1 ) {
-          this.toastr.warning('Flex Field Value already exists !!!');
-        } else if ( result == -2) {
-          this.toastr.warning('Update fail, value already assigned !!!');
-        } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+    if (this.fvSaveButton == true) {
+      var flexFieldId = this.flexFieldValForm.get('flexFieldId').value[0];
+      var obj = {
+        createUserId: this.user.userId,
+        flexFieldId: flexFieldId,
+        autoId: this.flexFieldValForm.get('autoId').value,
+        flexFeildVlaue: this.flexFieldValForm
+          .get('flexFieldValue')
+          .value.trim(),
+      };
+      //console.log(obj);
+      this.masterService.saveFlexFieldValList(obj).subscribe(
+        (result) => {
+          //console.log(result);
+          if (result == 1) {
+            this.toastr.success('Flex Field ValueList save successfully !!!');
+            this.loadsFlexFieldValList(flexFieldId);
+            this.clearFlexFieldValue();
+          } else if (result == 2) {
+            this.toastr.success('Flex Field ValueList update successfully !!!');
+            this.loadsFlexFieldValList(flexFieldId);
+            this.clearFlexFieldValue();
+          } else if (result == -1) {
+            this.toastr.warning('Flex Field Value already exists !!!');
+          } else if (result == -2) {
+            this.toastr.warning('Update fail, value already assigned !!!');
+          } else {
+            this.toastr.warning(
+              'Contact Admin. Error No:- ' + result.toString()
+            );
+          }
+        },
+        (error) => {
+          this.validationErrors = error;
         }
-      },
-      (error) => {
-        this.validationErrors = error
-      }
-    );
+      );
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
   clearFlexFieldValue() {
     this.flexFieldValForm.get('flexFieldValue').reset();
     this.flexFieldValForm.get('autoId').setValue(0);
-    this.flexFieldValForm.get('userId').setValue(this.user.userId);   
+    this.flexFieldValForm.get('userId').setValue(this.user.userId);
     this.flexFieldValForm.get('flexFieldId').enable();
   }
 
   onEditFlexFieldValList(event, cellId) {
     this.clearFlexFieldValue();
-    
+
     const ids = cellId.rowID;
     const selectedRowData = this.flexFieldValGrid.data.filter((record) => {
       return record.autoId == ids;
     });
 
-    this.flexFieldValForm.get('flexFieldValue').setValue(selectedRowData[0]['flexFeildVlaue']);
-    this.flexFieldValForm.get('autoId').setValue(selectedRowData[0]['autoId']); 
+    this.flexFieldValForm
+      .get('flexFieldValue')
+      .setValue(selectedRowData[0]['flexFeildVlaue']);
+    this.flexFieldValForm.get('autoId').setValue(selectedRowData[0]['autoId']);
     this.flexFieldValForm.get('flexFieldId').disable();
   }
 
@@ -150,35 +175,43 @@ export class FlexFieldValueListComponent implements OnInit {
     this.dialog.open();
   }
 
-  //// DELETE FLEX FIELD VALUE 
+  //// DELETE FLEX FIELD VALUE
   public onDialogOKSelected(event) {
-    var flexFieldId =  this.flexFieldValForm.get('flexFieldId').value[0];   
     event.dialog.close();
-    //console.log(this.rowId);
+    if (this.fvRemoveButton == true) {
+      var flexFieldId = this.flexFieldValForm.get('flexFieldId').value[0];      
+      //console.log(this.rowId);
 
-    if (this.rowId > 0) {
-      var obj = {
-        createUserId: this.user.userId,
-        autoId: this.rowId,
-      };
+      if (this.rowId > 0) {
+        var obj = {
+          createUserId: this.user.userId,
+          autoId: this.rowId,
+        };
 
-      this.masterService.deleteFlexFieldValList(obj).subscribe(result => {
-        //console.log(result);
-        if (result == 1) {
-          this.toastr.success('Flex Field ValueList Delete successfully !!!');
-          this.loadsFlexFieldValList(flexFieldId);
-          this.clearFlexFieldValue();        
-        } else if (result == -1 ) {
-          this.toastr.warning('Delete fail, Value already assigned !!!');
-        } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
-        }
-      },
-      (error) => {
-        this.validationErrors = error
-      })
+        this.masterService.deleteFlexFieldValList(obj).subscribe(
+          (result) => {
+            //console.log(result);
+            if (result == 1) {
+              this.toastr.success(
+                'Flex Field ValueList Delete successfully !!!'
+              );
+              this.loadsFlexFieldValList(flexFieldId);
+              this.clearFlexFieldValue();
+            } else if (result == -1) {
+              this.toastr.warning('Delete fail, Value already assigned !!!');
+            } else {
+              this.toastr.warning(
+                'Contact Admin. Error No:- ' + result.toString()
+              );
+            }
+          },
+          (error) => {
+            this.validationErrors = error;
+          }
+        );
+      }
+    } else {
+      this.toastr.error('Delete Permission denied !!!');
     }
   }
-
-
 }

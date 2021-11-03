@@ -88,10 +88,10 @@ export class ColorAllocCardComponent implements OnInit {
     this.authMenus = this.user.permitMenus;  
     
     if(this.authMenus != null) {
-    if(this.authMenus.filter(x => x.menuName == 'SaveColorAllocation' && x.mType == 'B').length > 0) {
+    if(this.authMenus.filter(x => x.autoIdx == 38).length > 0) {
       this.saveButton = true;
     }
-    if(this.authMenus.filter(x => x.menuName == 'DeleteColorAllocation' && x.mType == 'B').length > 0) {
+    if(this.authMenus.filter(x => x.autoIdx == 40).length > 0) {
       this.removeButton = true;
     }
   }
@@ -111,6 +111,7 @@ export class ColorAllocCardComponent implements OnInit {
   }
 
   saveColorAllocation() {
+    if(this.saveButton == true) {
     var selectedRows = this.naColorGrid.selectedRows;
     var colorCardId = this.colorAllocForm.get("colorCard").value[0];
     var colorList =[];
@@ -139,6 +140,9 @@ export class ColorAllocCardComponent implements OnInit {
         this.toastr.warning("Contact Admin. Error No:- " + result.toString());
       }
     })
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   clearGridRows() {
@@ -149,6 +153,7 @@ export class ColorAllocCardComponent implements OnInit {
   }
 
   deleteColorAllocation() {
+    if(this.removeButton == true) {
     var selectedRows = this.aColorGrid.selectedRows;
     var colorCardId = this.colorAllocForm.get("colorCard").value[0];
     var colorList =[];
@@ -163,7 +168,7 @@ export class ColorAllocCardComponent implements OnInit {
       // colorList.push(data);
     });
 
-    console.log(colorList);
+    // console.log(colorList);
     this.masterService.deleteColorAllocation(colorList).subscribe((result) =>{
       if(result == 1) {
         this.toastr.success("Color remove Successfully !!!");
@@ -176,7 +181,10 @@ export class ColorAllocCardComponent implements OnInit {
       } else {
         this.toastr.warning("Contact Admin. Error No:- " + result.toString());
       }
-    })
+    }) 
+  } else {
+    this.toastr.error('Delete permission denied !!!');
+  }
   }
 
 

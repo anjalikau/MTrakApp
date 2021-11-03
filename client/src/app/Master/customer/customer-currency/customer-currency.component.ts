@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxComboComponent, IgxDialogComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
+import { flatMap } from 'rxjs/operators';
 import { CustomerHd } from 'src/app/_models/customerHd';
 import { User } from 'src/app/_models/user';
 import { AccountService } from '_services/account.service';
@@ -18,6 +19,8 @@ export class CustomerCurrencyComponent implements OnInit {
   customerList: CustomerHd[];
   currencyList: any[];
   cusCurrencyList: any[];
+  ccSaveButton: boolean = false;
+  ccRemoveButton: boolean = false;
   public col: IgxColumnComponent;
   public pWidth: string;
   public nWidth: string;
@@ -51,6 +54,16 @@ export class CustomerCurrencyComponent implements OnInit {
       this.user = element;
       //console.log(this.user.userId);
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 129).length > 0) {
+        this.ccSaveButton = true;
+      } if (authMenus.filter((x) => x.autoIdx == 151).length > 0) {
+        this.ccRemoveButton = true;
+      }
+    }
 
     this.custCurrencyForm = this.fb.group({
       autoId: [0],
@@ -111,6 +124,7 @@ export class CustomerCurrencyComponent implements OnInit {
   }
 
   saveCustomerCurrency() {
+    if(this.ccSaveButton == true) {
     var customerId = this.custCurrencyForm.get('customerCId').value[0];
     var obj = {
       createUserId: this.user.userId,
@@ -137,10 +151,14 @@ export class CustomerCurrencyComponent implements OnInit {
         this.validationErrors = error;
       }
     );
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
   /// delete currency event 
   onDeleteCusCurrency(event, cellId) {
+    if(this.ccRemoveButton == true) {
     var customerId = this.custCurrencyForm.get('customerCId').value[0];
 
     const ids = cellId.rowID;
@@ -154,8 +172,7 @@ export class CustomerCurrencyComponent implements OnInit {
       autoId: selectedRowData[0]['autoId']
     };
 
-    console.log(obj);
-
+    // console.log(obj);
     this.masterService.deleteCustomerCurrency(obj).subscribe(
       (result) => {
         //console.log(result);
@@ -172,6 +189,9 @@ export class CustomerCurrencyComponent implements OnInit {
         this.validationErrors = error;
       }
     );
+    } else {
+      this.toastr.error('Delete Permission denied !!!');
+    }
   }
 
   //// delete confirmation open dialog

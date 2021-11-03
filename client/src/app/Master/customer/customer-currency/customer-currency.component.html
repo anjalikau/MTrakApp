@@ -18,20 +18,22 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label> Currency </label>
-                        <igx-combo #currency id="currencyId" class="combo" displayKey="code" valueKey="autoId" [itemsMaxHeight]="250"
-                            [data]="currencyList" placeholder="Currency" (onSelectionChange)="singleSelection($event)"
-                            formControlName="currencyId" searchPlaceholder="Search...">
+                        <igx-combo #currency id="currencyId" class="combo" displayKey="code" valueKey="autoId"
+                            [itemsMaxHeight]="250" [data]="currencyList" placeholder="Currency"
+                            (onSelectionChange)="singleSelection($event)" formControlName="currencyId"
+                            searchPlaceholder="Search...">
                         </igx-combo>
                     </div>
                 </div>
-                <div class="col-md-1 offset-5">
+                <div class="col-md-1">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default mr-3" (click)="clearCustomerCurrency()">
                             <i class="fas fa-broom"></i> </button>
-                        <button type="button" class="btn btn-success" [disabled]="!custCurrencyForm.valid" (click)="saveCustomerCurrency()">
+                        <button type="button" class="btn btn-success" [disabled]="!custCurrencyForm.valid"
+                            (click)="saveCustomerCurrency()">
                             <i class="fas fa-save"></i> </button>
                     </div>
                 </div>
@@ -39,24 +41,29 @@
         </div>
     </form>
     <div class="row">
-        <igx-grid #cusCurrencyGrid [data]="cusCurrencyList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
-            [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
-            height="400px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
-            [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
-            <igx-column [width]="'60px'" [selectable]="false" [sortable]="false" [resizable]="false">
-                <ng-template igxCell let-cell="cell">
-                    <button igxButton="icon" class="fab-compact" (click)="openDelivDialog($event,cell.cellID)">
-                        <igx-icon family="material">delete</igx-icon>
-                    </button>
-                </ng-template>
-            </igx-column>
-            <igx-column [field]="'code'" [header]="'Currency'" [resizable]="true" [dataType]="'string'" [sortable]="true">
-            </igx-column> 
-            <igx-column [field]="'name'" [header]="'Name'" [resizable]="true" [dataType]="'string'" [sortable]="true">
-            </igx-column> 
-            <igx-column [field]="'symbol'" [header]="'Symbol'" [resizable]="true" [dataType]="'string'" [sortable]="true">
-            </igx-column>           
-        </igx-grid>
+        <div class="col-md-6">
+            <igx-grid #cusCurrencyGrid [data]="cusCurrencyList" [autoGenerate]="false" [paging]="true"
+                [rowEditable]="false" [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)"
+                [perPage]="10" height="400px" displayDensity="compact" [allowFiltering]="true"
+                [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
+                <igx-column [width]="'60px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                    <ng-template igxCell let-cell="cell">
+                        <button igxButton="icon" class="fab-compact" (click)="openDelivDialog($event,cell.cellID)">
+                            <igx-icon family="material">delete</igx-icon>
+                        </button>
+                    </ng-template>
+                </igx-column>
+                <igx-column [field]="'code'" [header]="'Currency'" [resizable]="true" [dataType]="'string'"
+                    [sortable]="true">
+                </igx-column>
+                <igx-column [field]="'name'" [header]="'Name'" [resizable]="true" [dataType]="'string'"
+                    [sortable]="true">
+                </igx-column>
+                <igx-column [field]="'symbol'" [header]="'Symbol'" [resizable]="true" [dataType]="'string'"
+                    [sortable]="true">
+                </igx-column>
+            </igx-grid>
+        </div>
     </div>
 </div>
 

@@ -16,6 +16,7 @@ export class MasterBrandComponent implements OnInit {
   brandForm: FormGroup;
   user: User;
   brandList: Brand[];
+  bSaveButton: boolean = false;
   validationErrors: string[] = [];
 
   public col: IgxColumnComponent;
@@ -36,6 +37,14 @@ export class MasterBrandComponent implements OnInit {
     this.accountService.currentUser$.forEach(element => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 118).length > 0) {
+        this.bSaveButton = true;
+      }
+    }
 
     this.brandForm = this.fb.group({
       AutoId: [0],
@@ -59,6 +68,7 @@ export class MasterBrandComponent implements OnInit {
   }
 
   saveBrand() {
+    if(this.bSaveButton == true) {
     var obj = {
       createUserId: this.user.userId,
       Name: this.brandForm.get('Name').value.trim(),
@@ -83,6 +93,9 @@ export class MasterBrandComponent implements OnInit {
     }, error => {
       this.validationErrors = error;
     })
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   cancelBrand() {

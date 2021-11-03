@@ -16,7 +16,7 @@
                         </igx-combo>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="text" formControlName="details"/>
@@ -24,7 +24,7 @@
                         </igx-input-group>
                     </div>
                 </div>
-                <div class="col-md-1 offset-5">
+                <div class="col-md-1">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default mr-3" (click)="clearCustomerDivision()">
                             <i class="fas fa-broom"></i> </button>
@@ -36,6 +36,7 @@
         </div>
     </form>
     <div class="row">
+        <div class="col-md-6">
         <igx-grid #cusDivisionGrid [data]="cusDivisionList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
             [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
             height="400px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
@@ -63,5 +64,6 @@
             <igx-column [field]="'bActive'" [header]="'Is Active'" [resizable]="true" [dataType]="'boolean'" [sortable]="true">
             </igx-column>             
         </igx-grid>
+    </div>
     </div>
 </div>

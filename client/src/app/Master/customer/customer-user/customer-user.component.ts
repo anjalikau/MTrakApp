@@ -21,6 +21,8 @@ export class CustomerUserComponent implements OnInit {
   public col: IgxColumnComponent;
   public pWidth: string;
   public nWidth: string;
+  cuSaveButton: boolean = false;
+  cuDisableButton: boolean = false;
   isEditMode: boolean = false;
   formTitle: string = 'New User';
   validationErrors: string[] = [];
@@ -52,6 +54,16 @@ export class CustomerUserComponent implements OnInit {
       this.user = element;
       //console.log(this.user.userId);
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 124).length > 0) {
+        this.cuSaveButton = true;
+      }  if (authMenus.filter((x) => x.autoIdx == 148).length > 0) {
+        this.cuDisableButton = true;
+      }
+    }
 
     this.custUserForm = this.fb.group({
       autoId: [0],
@@ -130,6 +142,7 @@ export class CustomerUserComponent implements OnInit {
   }
 
   saveCustmerUser() {
+    if(this.cuSaveButton == true) {
     var customerId = this.custUserForm.get('customerUId').value[0];
     var obj = {
       createUserId: this.user.userId,
@@ -167,6 +180,9 @@ export class CustomerUserComponent implements OnInit {
         this.validationErrors = error;
       }
     );
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
 
   onEditCustomerUser(event, cellId) {
@@ -220,6 +236,7 @@ export class CustomerUserComponent implements OnInit {
   //// active and deactive customer user
   /// deactive only if user not exists in the sales order header
   deactiveUser(obj, status) {
+    if(this.cuDisableButton == true) {
     var customerId = this.custUserForm.get('customerUId').value[0];
 
     this.masterService.deactiveCustomerUser(obj).subscribe(
@@ -240,5 +257,10 @@ export class CustomerUserComponent implements OnInit {
         this.validationErrors = error;
       }
     );
+    } else {
+      this.toastr.error('Disable Permission denied !!!');
+
+    }
+
   }
 }

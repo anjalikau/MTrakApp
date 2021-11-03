@@ -18,6 +18,8 @@ export class AssignProdtypeCatComponent implements OnInit {
   assignPTypeList: CatProdType[];
   nAssignPTypeList: CatProdType[];
   user: User;
+  aPTSaveButton: boolean = false;
+  aPTDeleteButton: boolean = false;
   validationErrors: string[] = [];
   CategoryList: Category[];
 
@@ -45,6 +47,16 @@ export class AssignProdtypeCatComponent implements OnInit {
     this.accountService.currentUser$.forEach((element) => {
       this.user = element;
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 115).length > 0) {
+        this.aPTSaveButton = true;
+      } if (authMenus.filter((x) => x.autoIdx == 144).length > 0) {
+        this.aPTDeleteButton = true;
+      }
+    }
 
     this.assignPTypeForm = this.fb.group({
       autoId: [0],
@@ -89,6 +101,7 @@ export class AssignProdtypeCatComponent implements OnInit {
   } 
 
   assignProductType() {
+    if(this.aPTSaveButton == true) {
     var selectedRows = this.nAssignPTypeGrid.selectedRows;
     var categoryId = this.assignPTypeForm.get("categoryId").value[0];
     var prodList =[];
@@ -116,9 +129,13 @@ export class AssignProdtypeCatComponent implements OnInit {
         this.toastr.warning("Contact Admin. Error No:- " + result.toString());
       }
     })
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   deleteProductType() {
+    if(this.aPTDeleteButton == true) {
     var selectedRows = this.assignPTypeGrid.selectedRows;
     var categoryId = this.assignPTypeForm.get("categoryId").value[0];
     var prodList =[];
@@ -145,7 +162,9 @@ export class AssignProdtypeCatComponent implements OnInit {
         this.toastr.warning("Contact Admin. Error No:- " + result.toString());
       }
     })
-
+  } else {
+    this.toastr.error('Delete permission denied !!!');
+  }
   }
 
   clearGridRows() {

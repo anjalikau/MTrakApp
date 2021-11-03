@@ -72,7 +72,7 @@
 
       <div class="row">
         <igx-grid #Menugrid [data]="menuList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
-          [primaryKey]="'autoIdx'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="100"
+          [primaryKey]="'autoIdx'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="500"
           height="400px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
           [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
           <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
@@ -92,7 +92,7 @@
           <igx-column [field]="'levelDescription'" [header]="'Level'" [resizable]="true" [dataType]="'string'" [width]="'130px'"
             [sortable]="true">
           </igx-column>
-          <igx-column [field]="'menuName'" [header]="'Menu Name'" [resizable]="true" [dataType]="'string'"
+          <igx-column [field]="'menuName'" [header]="'Menu Name'" [resizable]="true" [dataType]="'string'" [width]="'200px'"
             [sortable]="true">
           </igx-column>
           <igx-column [field]="'menuDescription'" [header]="'Description'" [resizable]="true" [dataType]="'string'"

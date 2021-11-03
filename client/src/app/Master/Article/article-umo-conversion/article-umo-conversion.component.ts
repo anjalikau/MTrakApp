@@ -19,6 +19,8 @@ export class ArticleUmoConversionComponent implements OnInit {
   artUOMConvList: any[];
   UnitList: Units[];
   user: User;
+  auSaveButton: boolean = false;
+  auEnableButton: boolean = false;
 
   @ViewChild('uarticle', { read: IgxComboComponent })
   public uarticle: IgxComboComponent;
@@ -48,6 +50,17 @@ export class ArticleUmoConversionComponent implements OnInit {
       this.user = element;
       //console.log(this.user.userId);
     });
+
+    var authMenus = this.user.permitMenus;
+
+    if (authMenus != null) {
+      if (authMenus.filter((x) => x.autoIdx == 133).length > 0) {
+        this.auSaveButton = true;
+      }
+      if (authMenus.filter((x) => x.autoIdx == 152).length > 0) {
+        this.auEnableButton = true;
+      }
+    }
 
     this.articleUOMForm = this.fb.group({
       autoId: [0],     
@@ -98,6 +111,7 @@ export class ArticleUmoConversionComponent implements OnInit {
   }
 
   saveArticleUOMConv() {
+    if(this.auSaveButton == true) {
     var articleId = this.articleUOMForm.get("uarticle").value[0];
     var obj = {
       autoId: this.articleUOMForm.get("autoId").value,     
@@ -121,6 +135,9 @@ export class ArticleUmoConversionComponent implements OnInit {
         );
       }
     })
+  } else {
+    this.toastr.error('Save Permission denied !!!');
+  }
   }
 
   clearControls() {
@@ -131,6 +148,7 @@ export class ArticleUmoConversionComponent implements OnInit {
   }  
 
   activeArticleUOM(event ,cellId) {
+    if(this.auEnableButton == true) {
     const autoId = cellId.rowID;
     var articleId = this.articleUOMForm.get("uarticle").value[0];
 
@@ -152,6 +170,9 @@ export class ArticleUmoConversionComponent implements OnInit {
         );
       }
     });
+  } else {
+    this.toastr.error('Enable Permission denied !!!');
+  }
   }
 
 }
