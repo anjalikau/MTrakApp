@@ -24,11 +24,10 @@
                 </div>
                 <div class="card-body">
                     <div class="tab-content" id="custom-tabs-three-tabContent">
-                        <div class="tab-pane fade show active" id="user-register-tab" role="tabpanel"
-                            aria-labelledby="custom-tabs-user-tab">
+                        <div class="tab-pane fade show active" id="user-register-tab" role="tabpanel" aria-labelledby="custom-tabs-user-tab">
                             <form [formGroup]="registerForm" (ngSubmit)="registerForm.valid && register()" autocomplete="off">
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="form-group">
                                             <igx-input-group>
                                                 <input igxInput type="text" formControlName="cAgentName" />
@@ -36,7 +35,7 @@
                                             </igx-input-group>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="form-group">
                                             <igx-input-group>
                                                 <input igxInput type="password" formControlName="cPassword" />
@@ -44,7 +43,7 @@
                                             </igx-input-group>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="form-group">
                                             <igx-input-group>
                                                 <input igxInput type="password" formControlName="confirmPassword" />
@@ -52,7 +51,7 @@
                                             </igx-input-group>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="form-group">
                                             <label>User Level</label>
                                             <igx-combo #combo class="combo" displayKey="levelDescription" valueKey="autoId"
@@ -62,9 +61,7 @@
                                             </igx-combo>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <div class="form-group">
                                             <igx-input-group>
                                                 <input igxInput type="text" formControlName="cEmail" />
@@ -72,26 +69,50 @@
                                             </igx-input-group>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-1">
+                                        <div class="btn-group">
+                                            <button type="submit" class="btn btn-success mr-2" [disabled]="!registerForm.valid">
+                                                <i class="fas fa-user-plus"></i> </button>
+                                            <button type="button" (click)="cancelRegister()" class="btn btn-default">
+                                                <i class="fas fa-broom"></i></button>                                    
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">  
+                                    <div class="col-sm-4">
                                         <div class="form-group">
                                             <igx-input-group>
                                                 <input igxInput type="text" formControlName="cDescription" />
                                                 <label igxLabel for="cDescription"> Description</label>
                                             </igx-input-group>
                                         </div>
-                                    </div>
-                                    <div class="col-1">
-                                        <div class="btn-group">
-                                            <div class="button-sample">
-                                                <button type="submit" class="btn btn-success mr-3" [disabled]="!registerForm.valid">
-                                                    <i class="fas fa-user-plus"></i> </button>
-                                            </div>
-                                            <div class="button-sample">
-                                                <button type="button" (click)="cancelRegister()" class="btn btn-default">
-                                                    <i class="fas fa-broom"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    </div>                                  
+                                    
+                                </div>
+                                <div class="row">
+                                    <igx-grid #regUserGrid [data]="regUserList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+                                        [primaryKey]="'idAgents'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="100" height="400px"
+                                        displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
+                                        [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
+                                
+                                        <!-- <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                                            <ng-template igxCell let-cell="cell">
+                                                <button igxButton="icon" class="fab-compact" (click)="onEdit($event,cell.cellID)">
+                                                    <igx-icon family="material">edit</igx-icon>
+                                                </button>
+                                            </ng-template>
+                                        </igx-column> -->
+                                        <igx-column [field]="'agentName'" [header]="'User Name'" [resizable]="true" [width]="'150px'" [dataType]="'string'" [sortable]="true">
+                                        </igx-column>
+                                        <igx-column [field]="'email'" [header]="'E-mail'" [resizable]="true" [width]="'150px'" [dataType]="'string'" [sortable]="true">
+                                        </igx-column>
+                                        <igx-column [field]="'description'" [header]="'Description'" [resizable]="true" [width]="'150px'" [dataType]="'string'" [sortable]="true">
+                                        </igx-column>
+                                        <igx-column [field]="'levelDescription'" [header]="'Level'" [resizable]="true" [width]="'150px'" [dataType]="'string'" [sortable]="true">
+                                        </igx-column>
+                                        <igx-column [field]="'bActive'" [header]="'IsActive'" [resizable]="true" [width]="'100px'" [dataType]="'boolean'" [sortable]="true">
+                                        </igx-column>
+                                    </igx-grid>
                                 </div>
                             </form>
                         </div>

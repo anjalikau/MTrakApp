@@ -40,12 +40,12 @@ namespace API.Controllers
         public void OnInitReportOptions(ReportViewerOptions reportOption)
         {
             // ////Add SSRS Report Server credential
-            reportOption.ReportModel.ReportServerCredential = new System.Net.NetworkCredential("Maliban\\Anjalid","Kaush.1234");
+            reportOption.ReportModel.ReportServerCredential = new System.Net.NetworkCredential("MALIBAN\\Administrator","Dc~Admin@EMAh0");
             reportOption.ReportModel.DataSourceCredentials.Add(new BoldReports.Web.DataSourceCredentials("CCSDataSource", "sa", "Sqlserver2017"));
             
-            // reportOption.ReportModel.ReportServerCredential = new System.Net.NetworkCredential("eamadmin","Welc0me@eamvm");
-            // reportOption.ReportModel.DataSourceCredentials.Add(new BoldReports.Web.DataSourceCredentials("MPlusPTrackDataSource", "sa", "Sqlserver2017"));
-            
+            // reportOption.ReportModel.ReportServerCredential = new System.Net.NetworkCredential("Maliban\\Anjalid","Kaush.1234");
+            // reportOption.ReportModel.DataSourceCredentials.Add(new BoldReports.Web.DataSourceCredentials("CCSDataSource", "sa", "Sqlserver2017"));
+                        
             // string basePath = _hostingEnvironment.WebRootPath;
             // // Here, we have loaded the sales-order-detail.rdl report from application the folder wwwroot\Resources. sales-order-detail.rdl should be there in wwwroot\Resources application folder.
             // System.IO.FileStream reportStream = new System.IO.FileStream(basePath + @"\Resources\sales-order-detail.rdl", System.IO.FileMode.Open, System.IO.FileAccess.Read);

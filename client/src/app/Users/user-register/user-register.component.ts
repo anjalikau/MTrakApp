@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { IComboSelectionChangeEventArgs } from 'igniteui-angular';
+import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
 import { SysModule } from 'src/app/_models/sysModule';
 import { User } from 'src/app/_models/user';
@@ -24,8 +24,16 @@ export class UserRegisterComponent implements OnInit {
   moduleReg: boolean = false;
   changePswd: boolean = false;
   showPassword = false;
+  regUserList: any;
   user: User;
   validationErrors: string[] = [];
+
+  public col: IgxColumnComponent;
+  public pWidth: string;
+  public nWidth: string;
+
+  @ViewChild('regUserGrid', { static: true })
+  public regUserGrid: IgxGridComponent;
 
   constructor(
     private registerService: RegisterService,
@@ -39,6 +47,7 @@ export class UserRegisterComponent implements OnInit {
     this.getUserPermmision();
     this.LoadModules();
     this.LoadUserLevel();
+    this.loadRegisterdUsers();
   }
 
   toggleShow() {
@@ -53,7 +62,7 @@ export class UserRegisterComponent implements OnInit {
     });
 
     this.registerForm = this.fb.group({
-      cAgentName: ['', Validators.required],
+      cAgentName: ['', [Validators.required , Validators.maxLength(20)]],
       cPassword: [
         '',
         [
@@ -89,6 +98,20 @@ export class UserRegisterComponent implements OnInit {
     if (event.added.length) {
       event.newSelection = event.added;
     }
+  }
+
+  public onResize(event) {
+    this.col = event.column;
+    this.pWidth = event.prevWidth;
+    this.nWidth = event.newWidth;
+  }
+
+  loadRegisterdUsers() {
+    var userId = this.user.userId;
+    this.registerService.getRegisteredUsres(userId).subscribe(result => {
+      this.regUserList = result
+      console.log(this.regUserList);
+    })
   }
 
   getUserPermmision() {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 // Report viewer
 import '@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-boldreport-viewer',
@@ -9,6 +10,7 @@ import '@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.mi
   styleUrls: ['./boldreport-viewer.component.css']
 })
 export class BoldreportViewerComponent implements OnInit {
+  baseUrl = environment.apiUrl;
   title = 'reportviewerapp';
   public serviceUrl: string;
   public reportPath: string;
@@ -25,8 +27,8 @@ export class BoldreportViewerComponent implements OnInit {
   constructor() {
     // this.serviceUrl = 'https://localhost:5001/api/ReportViewer';
     // this.reportPath = '~/Resources/sales-order-detail.rdl';
-    this.serviceUrl = 'https://localhost:5001/api/ReportViewer';
-    this.serverUrl  = "http://anjali-lap/ReportServer"; //http://10.0.2.5:8080/ReportServer  
+    this.serviceUrl = this.baseUrl + 'ReportViewer';
+    this.serverUrl  = "http://192.168.1.211/ReportServer"; //http://10.0.2.5:8080/ReportServer  
     this.reportFolder =  "/CCSReport" 
     this.processMode = "Remote";
     this.isPrintMode = true;

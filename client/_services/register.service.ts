@@ -31,8 +31,8 @@ export class RegisterService {
 
   constructor(private http: HttpClient, private localService: LocalService) { }
 
-  getUsres() {
-    return this.http.get<Member[]>(this.baseUrl + 'Agents' , httpOptions);
+  getRegisteredUsres(userId: number) {
+    return this.http.get<any>(this.baseUrl + 'Agents/regUser/' + userId , httpOptions);
   }
 
   getUser(id: number){

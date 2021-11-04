@@ -34,11 +34,27 @@ namespace API.Controllers.Admin
         }
 
         //[AllowAnonymous]
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<RegisterDto>>> GetUsers()
+        [HttpGet("regUser/{logUserId}")]
+        public async Task<ActionResult> GetUsers(int logUserId)
         {
-            var users = await _userRepository.GetUsersAsync();
-            var usersToReturn = _mapper.Map<IEnumerable<RegisterDto>>(users);
+            var user = await _context.MstrAgents.Where(x => x.idAgents == logUserId).FirstOrDefaultAsync();
+            var level = await _context.MstrAgentLevel.Where(x => x.AutoId == user.iCategoryLevel).FirstOrDefaultAsync();
+
+            var usersToReturn = await _context.MstrAgents                    
+                    .Join(_context.MstrAgentLevel, a => a.iCategoryLevel , l => l.AutoId 
+                        , (a , l) => new {
+                        idAgents = a.idAgents ,
+                        agentName = a.cAgentName,
+                        bActive = a.bActive,
+                        email = a.cEmail,
+                        description = a.cDescription,
+                        levelDescription = l.LevelDescription,
+                        categoryLevel = a.iCategoryLevel,
+                        levelPrority = l.LevelPrority
+                    })
+                    .Where(s => s.bActive == true && s.levelPrority >= level.LevelPrority)
+                    .ToListAsync();
+
             return Ok(usersToReturn);
         }
 
