@@ -54,6 +54,8 @@ export class MainsidebarComponent implements OnInit {
   dispatch: boolean = false;
   costing: boolean = false;
   costAttach: boolean = false;
+  finance: boolean = false;
+  exchRate: boolean = false;
   isCollapsed = false;
   userLoc: UserLocation[];
   user: User;
@@ -236,7 +238,13 @@ export class MainsidebarComponent implements OnInit {
       if (formMenus.filter((x) => x.autoIdx == 86).length > 0 )
         this.costing = true;
     }
+    if (formMenus.filter((x) => x.groupName == 'Finance').length > 0) {
+      this.finance = true;
 
+      if (formMenus.filter((x) => x.autoIdx == 167).length > 0 )
+        this.exchRate = true;
+    }
     //console.log(this.adminGroup);
   }
+
 }

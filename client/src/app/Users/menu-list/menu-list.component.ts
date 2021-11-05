@@ -89,6 +89,7 @@ export class MenuListComponent implements OnInit {
                 { 'groupDesc': 'Orders' , 'groupName': 'Orders'},
                 { 'groupDesc': 'Production' , 'groupName': 'Production'},
                 { 'groupDesc': 'Costing' , 'groupName': 'Costing'},
+                { 'groupDesc': 'Finance' , 'groupName': 'Finance'},
               ];
     this.menuGroup = data;  
     //console.log(data);  

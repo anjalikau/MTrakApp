@@ -95,6 +95,7 @@ import { NgYasYearPickerModule } from 'ngy-year-picker';
 import { CostAttachComponent } from './transaction/cost-attach/cost-attach.component';
 import { ArticleUmoConversionComponent } from './master/article/article-umo-conversion/article-umo-conversion.component';
 import { BrandTabComponent } from './master/brand/brand-tab/brand-tab.component';
+import { ExchangeRateComponent } from './finance/exchange-rate/exchange-rate.component';
 
 // Report viewer
 // import '@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min';
@@ -184,7 +185,8 @@ import { BrandTabComponent } from './master/brand/brand-tab/brand-tab.component'
     AddressTypeComponent,
     CostAttachComponent,
     ArticleUmoConversionComponent,
-    BrandTabComponent
+    BrandTabComponent,
+    ExchangeRateComponent
   ],
   imports: [
     BrowserModule,

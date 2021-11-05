@@ -1,0 +1,104 @@
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">Exchange Rate</h3>       
+    </div>
+
+    <div class="card-body">
+        <form [formGroup]="exchangeRateForm" autocomplete="off">
+            <div class="row">                
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label> Currency From </label>
+                        <igx-combo #currFrom id="currencyFrom" class="combo" displayKey="code" valueKey="autoId"
+                            [itemsMaxHeight]="250" [data]="currencyList" placeholder="Currency From" formControlName="currencyFrom"
+                            (onSelectionChange)="singleSelection($event)" searchPlaceholder="Search...">
+                        </igx-combo>
+                    </div>
+                </div>  
+                
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label> Currency To </label>
+                        <igx-combo #currTo id="currencyTo" class="combo" displayKey="code" valueKey="autoId" [itemsMaxHeight]="250" 
+                            placeholder="Currency To" [data]="currencyList" (onSelectionChange)="singleSelection($event)" 
+                            formControlName="currencyTo" searchPlaceholder="Search...">
+                        </igx-combo>
+                    </div>
+                    <label class="text-danger" *ngIf="exchangeRateForm.errors">{{ exchangeRateForm.errors?.invalidCurrency | json }}</label>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="rate" />
+                            <label igxLabel for="rate"> Rate</label>
+                        </igx-input-group>
+                    </div>
+                </div> 
+
+                <div class="col-md-2">
+                    <div class="group">
+                        <igx-date-picker id="validFrom" formControlName="validFrom">
+                            <label igxLabel>Valid From</label>
+                        </igx-date-picker>
+                    </div>
+                </div>     
+                
+                <div class="col-md-2">
+                    <div class="group">
+                        <igx-date-picker id="validTo" formControlName="validTo">
+                            <label igxLabel>Valid To</label>
+                        </igx-date-picker>
+                        <label class="text-danger" *ngIf="exchangeRateForm.errors">{{ exchangeRateForm.errors?.invalidDate | json }}</label>
+                    </div>
+                </div>        
+
+                <div class="col-md-1">
+                    <div class="btn-group">                    
+                        <button type="button" class="btn btn-default mr-1" (click)="clearControls()">
+                            <i class="fas fa-broom"></i> </button>
+                        <button type="button" class="btn btn-success" [disabled]="!exchangeRateForm.valid" (click)="saveExchangeRate()">
+                            <i class="fas fa-save"></i> </button>
+                    </div>
+                </div>       
+            </div> 
+
+            <div class="row">           
+                <div class="col-md-10">
+                    <igx-grid #exchageRateGrid [data]="exchangeRateList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+                        [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="500px"
+                        displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
+                        [allowAdvancedFiltering]="true" [rowSelection]="'single'">
+                        <!-- <igx-column [width]="'50px'" [field]="'isActive'" [header]="' '" [selectable]="false" [sortable]="false" [resizable]="false">
+                            <ng-template igxCell let-cell="cell">                                
+                                <div *ngIf="!cell.value; then thenBlock else elseBlock"></div>
+                                <ng-template #thenBlock>
+                                    <button igxButton="icon" class="fab-compact" (click)="activeArticleUOM($event ,cell.cellID)">
+                                        <igx-icon class="icon-red" family="material">toggle_off</igx-icon>
+                                    </button>
+                                </ng-template>
+                            </ng-template>
+                        </igx-column> -->
+                        <igx-column [field]="'currencyFrom'" [header]="'Currency From'" [width]="'150px'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'currencyTo'" [header]="'Currency To'" [width]="'150px'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'rate'" [header]="'Rate'" [width]="'100px'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>
+                        <igx-column [field]="'validFrom'" [header]="'Valid From'" [width]="'120px'" [resizable]="true" [dataType]="'date'" 
+                            [sortable]="true" [pipeArgs]="formatDateOptions">
+                        </igx-column>
+                        <igx-column [field]="'validTo'" [header]="'Valid To'" [width]="'120px'" [resizable]="true" [dataType]="'date'" 
+                                [sortable]="true" [pipeArgs]="formatDateOptions">
+                        </igx-column>
+                    </igx-grid>
+                </div>                
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- <p> {{exchangeRateForm.value| json}} </p> -->
+
+
+

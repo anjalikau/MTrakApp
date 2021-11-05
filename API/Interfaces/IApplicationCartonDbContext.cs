@@ -77,6 +77,7 @@ namespace API.Interfaces
         DbSet<MstrArticleUOMConversion> MstrArticleUOMConversion {get; set;}
         DbSet<TransSalesOrderHd> TransSalesOrderHeader { get; set;}
         DbSet<TransSalesOrderItemDt> TransSalesOrderItemDt { get; set;}
+        DbSet<TransExchangeRate> TransExchangeRate { get; set;}
 
     }
 }

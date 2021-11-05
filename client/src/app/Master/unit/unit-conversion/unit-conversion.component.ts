@@ -100,7 +100,7 @@ export class UnitConversionComponent implements OnInit {
     );
   }
 
-  /// VALIDATE START DATE AND END DATE
+  /// compaire unit from and to
   unitCompaire(from: string, to: string) {
     return (group: FormGroup): { [key: string]: any } => {
       let f = group.controls[from];

@@ -29,6 +29,7 @@ namespace API.Extensions
             services.AddScoped<ITestRepository, TestRepository>(); 
             services.AddScoped<IAdminRepository,AdminRepository>();
             services.AddScoped<ISalesRepository,SalesRepository>();
+            services.AddScoped<IFinanceRepository,FinanceRepository>();
             services.AddScoped<IPTrackMasterRepository,PTrackMasterRepository>();
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);            
 

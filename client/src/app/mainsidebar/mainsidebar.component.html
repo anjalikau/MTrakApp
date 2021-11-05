@@ -465,13 +465,33 @@
         <li class="nav-item" *ngIf="costing">
           <!--menu-open-->
             <a class="nav-link" routerLink="/Costing" routerLinkActive="active" (click)="menuClose()">
-              <i class="fas fa-copy nav-icon"></i>
+              <i class="nav-icon fas fa-money-check"></i>
               <p>
                 Costing
                 <!-- <span class="right badge badge-danger">New</span> -->
               </p>
             </a>           
         </li> 
+
+        <li class="nav-item" *ngIf="finance">
+          <!--menu-open-->
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-file-invoice"></i>
+            <p>
+              Finance
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview" *ngIf="exchRate">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/ExchangeRate" routerLinkActive="active" (click)="menuClose()">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Exchange Rate</p>
+              </a>
+            </li>
+          </ul>        
+        </li>
+
       </ul>
     </nav>
     <!-- /.sidebar-menu -->
