@@ -61,8 +61,8 @@ export class CodeDefinitionComponent implements OnInit {
   @ViewChild('dialog', { read: IgxDialogComponent })
   public dialog: IgxDialogComponent;
 
-  @ViewChild('numbering', { read: IgxRadioGroupDirective })
-  public numbering: IgxRadioGroupDirective;
+  // @ViewChild('numbering', { read: IgxRadioGroupDirective })
+  // public numbering: IgxRadioGroupDirective;
 
   constructor(
     public registerService: RegisterService,
@@ -313,7 +313,7 @@ export class CodeDefinitionComponent implements OnInit {
   }
 
   validateControls() {
-    if (this.codeDefForm.get('numbering').value == 'c') {
+    if (this.chkIsCounter.checked == true) {
       if (
         this.codeDefForm.get('counterPad').value == 0 ||
         this.codeDefForm.get('counterStart').value == null
@@ -457,7 +457,7 @@ export class CodeDefinitionComponent implements OnInit {
   ///// value radio group checked changed event
   onChangeValue(event) {
     // console.log(event);
-    if (event.value == 'c') {
+    if (event.checked == true) {
       this.codeDefForm.get('counterPad').enable();
       this.codeDefForm.get('counterStart').enable();
       // this.codeDefForm.get("seqNo").enable();
