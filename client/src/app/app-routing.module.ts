@@ -48,6 +48,7 @@ import { CostAttachComponent } from './transaction/cost-attach/cost-attach.compo
 import { ArticleUmoConversionComponent } from './master/article/article-umo-conversion/article-umo-conversion.component';
 import { BrandTabComponent } from './master/brand/brand-tab/brand-tab.component';
 import { ExchangeRateComponent } from './finance/exchange-rate/exchange-rate.component';
+import { TaxComponent } from './finance/tax/tax.component';
 
 const routes: Routes = [
   {path:'', component: LoginComponent},
@@ -97,7 +98,8 @@ const routes: Routes = [
       {path:'AddressType', component: AddressTypeComponent},
       {path:'CostAttach', component: CostAttachComponent},
       {path:'ArticleUOM', component: ArticleUmoConversionComponent},
-      {path:'ExchangeRate', component: ExchangeRateComponent}
+      {path:'ExchangeRate', component: ExchangeRateComponent},
+      {path:'Tax', component: TaxComponent}
     ]
   },  
   {path:'not-found', component: NotFoundComponent},

@@ -56,6 +56,7 @@ export class MainsidebarComponent implements OnInit {
   costAttach: boolean = false;
   finance: boolean = false;
   exchRate: boolean = false;
+  tax: boolean = false;
   isCollapsed = false;
   userLoc: UserLocation[];
   user: User;
@@ -243,6 +244,8 @@ export class MainsidebarComponent implements OnInit {
 
       if (formMenus.filter((x) => x.autoIdx == 167).length > 0 )
         this.exchRate = true;
+      if (formMenus.filter((x) => x.autoIdx == 169).length > 0 )
+        this.tax = true;
     }
     //console.log(this.adminGroup);
   }

@@ -1,0 +1,68 @@
+
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title"> Tax </h3>  
+    </div>
+
+    <form [formGroup]="taxForm" (ngSubmit)="taxForm.valid"  autocomplete="off">
+        <div class="card-body">        
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text"  formControlName="description"/>
+                            <label igxLabel> Description </label>
+                        </igx-input-group>
+                    </div>
+                </div>    
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number"  formControlName="rate"/>
+                            <label igxLabel > Rate </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+                
+                <div class="col-md-1">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default mr-3" (click)="clearControls()">
+                            <i class="fas fa-broom"></i> </button>
+                        <button type="button" class="btn btn-success" [disabled]="!taxForm.valid" (click)="saveTax()">
+                            <i class="fas fa-save"></i> </button>
+                    </div>
+                </div>                    
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <igx-grid #taxGrid [data]="taxList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+                        [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
+                        height="500px" displayDensity="compact" [allowFiltering]="true"
+                        [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
+
+                        <!-- <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                            <ng-template igxCell let-cell="cell">
+                                <button igxButton="icon" class="fab-compact" (click)="onEditAddressType($event,cell.cellID)">
+                                    <igx-icon family="material">edit</igx-icon>
+                                </button>
+                            </ng-template>
+                        </igx-column> -->
+                        <igx-column [field]="'description'" [header]="'Description'" [resizable]="true" [dataType]="'string'"
+                            [sortable]="true">
+                        </igx-column>                           
+                        <igx-column [field]="'rate'" [header]="'Rate'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column> 
+                                   
+                    </igx-grid>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+

@@ -43,5 +43,23 @@ namespace API.Controllers.CCSystem.Transaction
 
             return Ok(result);
         }
+
+        [HttpGet("Rate")]
+        public async Task<IActionResult> GetRate() 
+        {
+            var result = await _context.MstrTax
+                    .Select(x => new { x.AutoId , x.Description , x.Rate })
+                    .ToListAsync();
+
+            return Ok(result);
+        }
+
+        [HttpPost("SaveTax")]
+        public async Task<IActionResult> SaveTax(MstrTax tax) 
+        {
+            var result = await _financeRepository.SaveTaxAsync(tax);
+            return Ok(result);
+        }
+
     }
 }

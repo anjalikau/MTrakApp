@@ -721,6 +721,7 @@ export class MasterArticleComponent implements OnInit {
     this.enableArticleControls();
 
     var prodTypeId = this.articleForm.get('proTypeId').value;
+    this.flexFieldDataList = [];
 
     ///// check article code is automatic or not
     var selProdType = this.prodTypeList.filter(

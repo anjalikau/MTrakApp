@@ -96,6 +96,7 @@ import { CostAttachComponent } from './transaction/cost-attach/cost-attach.compo
 import { ArticleUmoConversionComponent } from './master/article/article-umo-conversion/article-umo-conversion.component';
 import { BrandTabComponent } from './master/brand/brand-tab/brand-tab.component';
 import { ExchangeRateComponent } from './finance/exchange-rate/exchange-rate.component';
+import { TaxComponent } from './finance/tax/tax.component';
 
 // Report viewer
 // import '@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min';
@@ -186,7 +187,8 @@ import { ExchangeRateComponent } from './finance/exchange-rate/exchange-rate.com
     CostAttachComponent,
     ArticleUmoConversionComponent,
     BrandTabComponent,
-    ExchangeRateComponent
+    ExchangeRateComponent,
+    TaxComponent
   ],
   imports: [
     BrowserModule,

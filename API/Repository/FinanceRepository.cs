@@ -33,5 +33,22 @@ namespace API.Repository
 
             return para.Get<int>("Result");
         }
+
+        public async Task<int> SaveTaxAsync(MstrTax tax)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId", tax.AutoId);
+            para.Add("Description", tax.Description);
+            para.Add("Rate", tax.Rate);
+            para.Add("UserId", tax.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrTaxSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
     }
 }

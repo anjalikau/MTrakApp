@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ExchangeRate } from 'src/app/_models/exchangeRate';
+import { Tax } from 'src/app/_models/tax';
 import { environment } from 'src/environments/environment';
 
 var usertoken: any;
@@ -34,5 +35,12 @@ getExchangeRate() {
   return this.http.get<any>(this.baseUrl + 'Finance/ExRate' , httpOptions);
 }
 
+getTax() {
+  return this.http.get<any>(this.baseUrl + 'Finance/Rate' , httpOptions);
+}
+
+saveTax(tax: Tax) {
+  return this.http.post(this.baseUrl + 'Finance/SaveTax' , tax , httpOptions);
+}
 
 }

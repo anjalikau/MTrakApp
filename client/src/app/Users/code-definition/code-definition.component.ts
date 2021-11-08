@@ -53,6 +53,10 @@ export class CodeDefinitionComponent implements OnInit {
   public chkIsProdField: IgxCheckboxComponent;
   @ViewChild('chkIsSeperator', { read: IgxCheckboxComponent })
   public chkIsSeperator: IgxCheckboxComponent;
+  @ViewChild('chkIsCounter', { read: IgxCheckboxComponent })
+  public chkIsCounter: IgxCheckboxComponent;
+  @ViewChild('chkIsValue', { read: IgxCheckboxComponent })
+  public chkIsValue: IgxCheckboxComponent;
 
   @ViewChild('dialog', { read: IgxDialogComponent })
   public dialog: IgxDialogComponent;
@@ -98,13 +102,13 @@ export class CodeDefinitionComponent implements OnInit {
         prodGroup: ['', Validators.required],
         isProdField: [''],
         flexField: [''],
-        fieldName: ['', Validators.required],
+        fieldName: [''],
         display: ['c'],
-        numbering: ['v'],
+        // numbering: ['v'],
         isCode: [false],
         isName: [true],
         isCounter: [false],
-        isValue: [true],
+        isValue: [false],
         counterPad: [{ value: 0, disabled: true }],
         counterStart: [{ value: 0, disabled: true }],
         // seqNo: [{value: 0, disabled: true}],
@@ -156,6 +160,8 @@ export class CodeDefinitionComponent implements OnInit {
     this.codeDefForm.get('prodGroup').reset();
     this.prodTypeList = [];
     this.prodGroupList = [];
+    this.codeDefList = [];
+    
     for (const item of event.added) {
       this.loadProductType(item);
     }
@@ -172,6 +178,7 @@ export class CodeDefinitionComponent implements OnInit {
     this.flexFieldList = [];
     this.fieldList = [];
     this.prodGroupList = [];
+    this.codeDefList = [];
 
     this.codeDefForm.get('prodGroup').reset();
 
@@ -254,10 +261,10 @@ export class CodeDefinitionComponent implements OnInit {
           fieldName: fieldName,
           isCode: this.codeDefForm.get('display').value == 'c' ? true : false,
           isName: this.codeDefForm.get('display').value == 'n' ? true : false,
-          isCounter:
-            this.codeDefForm.get('numbering').value == 'c' ? true : false,
-          isValue:
-            this.codeDefForm.get('numbering').value == 'v' ? true : false,
+          isCounter: this.chkIsCounter.checked,
+            // this.codeDefForm.get('numbering').value == 'c' ? true : false,
+          isValue: this.chkIsValue.checked,
+            // this.codeDefForm.get('numbering').value == 'v' ? true : false,
           counterPad:
             this.codeDefForm.get('counterPad').value == null
               ? 0
@@ -323,12 +330,11 @@ export class CodeDefinitionComponent implements OnInit {
     // this.codeDefForm.reset();
     // console.log(this.flexFieldList);
     this.codeDefForm.get('autoId').setValue(0);
-    this.codeDefForm.get('numbering').setValue('v');
+    this.codeDefForm.get('isValue').setValue(false);
+    this.codeDefForm.get('isCounter').setValue(false);
     this.codeDefForm.get('display').setValue('c');
     this.codeDefForm.get('isProdField').setValue(false);
     this.codeDefForm.get('seperator').setValue('');
-    this.codeDefForm.get('numbering').setValue('v');
-    this.codeDefForm.get('display').setValue('c');
     this.codeDefForm.get('counterPad').setValue(0);
     this.codeDefForm.get('counterStart').setValue(0);
     this.codeDefForm.get('isSeperator').setValue(false);
@@ -377,14 +383,20 @@ export class CodeDefinitionComponent implements OnInit {
       .setValue(selectedRowData[0]['isSeperator']);
     this.codeDefForm.get('seperator').setValue(selectedRowData[0]['seperator']);
 
-    console.log(this.codeDefForm.get('numbering').value);
+    // console.log(this.codeDefForm.get('numbering').value);
 
+    this.codeDefForm
+      .get('isCounter')
+      .setValue(selectedRowData[0]['isCounter']);
+    this.codeDefForm
+      .get('isValue')
+      .setValue(selectedRowData[0]['isValue']);
     ///// SET COUNTER OR VALUE RADIO BUTTON
-    if (selectedRowData[0]['isCounter'] == true) {
-      this.codeDefForm.get('numbering').setValue('c');
-    } else {
-      this.codeDefForm.get('numbering').setValue('v');
-    }
+    // if (selectedRowData[0]['isCounter'] == true) {
+    //   this.codeDefForm.get('numbering').setValue('c');
+    // } else {
+    //   this.codeDefForm.get('numbering').setValue('v');
+    // }
 
     ///// SET NAME OR CODE RADIO BUTTON
     if (selectedRowData[0]['isCode'] == true) {

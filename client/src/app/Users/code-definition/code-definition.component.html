@@ -82,7 +82,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-2">
+                <!-- <div class="col-md-2">
                     <igx-radio-group name="numbering" formControlName="numbering" (change)="onChangeValue($event)">
                         <igx-radio class="radio-sample" value="c" >
                            IsCounter
@@ -91,7 +91,23 @@
                             IsValue
                          </igx-radio>
                     </igx-radio-group>
-                </div>
+                </div> -->
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-checkbox #chkIsCounter formControlName="isCounter" (change)="onChangeValue($event)" >
+                            IsCounter
+                        </igx-checkbox>
+                    </div>
+                </div>   
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-checkbox #chkIsValue formControlName="isValue" >
+                            IsValue
+                        </igx-checkbox>
+                    </div>
+                </div>   
 
                 <div class="col-md-1">
                     <div class="form-group">
@@ -180,6 +196,9 @@
                     <igx-column [field]="'isCounter'" [header]="'IsCounter'" [resizable]="true" [dataType]="'boolean'"
                         [sortable]="true">
                     </igx-column>
+                    <igx-column [field]="'isValue'" [header]="'IsValue'" [resizable]="true" [dataType]="'boolean'"
+                    [sortable]="true">
+                </igx-column>
                     <igx-column [field]="'counterPad'" [header]="'CounterPad'" [resizable]="true" [dataType]="'number'"
                         [sortable]="true">
                     </igx-column>

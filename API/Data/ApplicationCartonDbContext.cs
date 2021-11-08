@@ -78,6 +78,7 @@ namespace API.Data
         public DbSet<TransSalesOrderHd> TransSalesOrderHeader { get; set;}
         public DbSet<TransSalesOrderItemDt> TransSalesOrderItemDt { get; set;}
         public DbSet<TransExchangeRate> TransExchangeRate { get; set;}
+        public DbSet<MstrTax> MstrTax { get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

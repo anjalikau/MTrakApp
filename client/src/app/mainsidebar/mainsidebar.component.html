@@ -489,6 +489,14 @@
                 <p>Exchange Rate</p>
               </a>
             </li>
+          </ul>      
+          <ul class="nav nav-treeview" *ngIf="tax">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/Tax" routerLinkActive="active" (click)="menuClose()">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Tax</p>
+              </a>
+            </li>
           </ul>        
         </li>
 

@@ -16,7 +16,7 @@
                             searchPlaceholder="Search...">
                         </igx-combo>
                     </div>
-                </div>   
+                </div>  
 
                 <div class="col-md-3">
                     <div class="form-group">
@@ -25,7 +25,15 @@
                             <label igxLabel for="colorCard"> Color Card</label>
                         </igx-input-group>
                     </div>
-                </div>                  
+                </div>  
+                
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <button igxButton="icon" (click)="loadArticles()">
+                            <igx-icon>loop</igx-icon>
+                        </button>
+                    </div>
+                </div>
                 
             </div> 
 
@@ -79,5 +87,5 @@
     </div>
 </div>
 
-<p> {{this.npColorGrid.selectedRows}}</p>
+<!-- <p> {{this.npColorGrid.selectedRows}}</p> -->
 
