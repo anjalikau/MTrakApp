@@ -52,9 +52,9 @@ export class BoldreportViewerComponent implements OnInit {
 
   loadReports() {
     var reportName = this.paraObj["reportName"];
-    
-    if(reportName == "DispatchNoteFormat") {
-      this.reportPath = this.reportFolder + "/DispatchNoteFormat";
+    this.reportPath = this.reportFolder + "/" + reportName;
+
+    if(reportName == "DispatchNoteFormat") {      
       console.log(this.paraObj["dispatchNo"]);
 
       /// set parameters
@@ -62,6 +62,16 @@ export class BoldreportViewerComponent implements OnInit {
       name: 'DispatchNo',
       labels: ['Dispatch No'],
       values: [this.paraObj["dispatchNo"]],
+      nullable: false     
+      }]; 
+    } else if (reportName == "JobDetailsFormat") {
+      console.log(this.paraObj["jobCardNo"]);
+
+      /// set parameters
+      this.parameters = [{
+      name: 'JobHeaderId',
+      labels: ['JobHeader Id'],
+      values: [this.paraObj["jobCardNo"]],
       nullable: false     
       }]; 
     }

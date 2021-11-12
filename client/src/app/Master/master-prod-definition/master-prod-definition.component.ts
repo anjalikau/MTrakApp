@@ -169,6 +169,8 @@ export class MasterProdDefinitionComponent implements OnInit {
             this.clearFormControls();
           } else if (result['result'] == -1 || result['result'] == -2) {
             this.toastr.warning('Production Definition already exists !!!');
+          } else if (result['result'] == -4) {
+            this.toastr.warning('Process can not be same!!!');
           } else if (result['result'] == -3) {
             this.toastr.warning('Update fail, already assigned to Cost sheet!!!');
           } else {
@@ -204,6 +206,9 @@ export class MasterProdDefinitionComponent implements OnInit {
       (result) => {
         if (result == 1) {
           this.toastr.success('Production Definition delete Successfully !!!');
+          // this.loadProductDefinitionDt(selectedRowData[0]['pdHeaderId']);
+          this.loadProdDefinitionList();
+          this.ProdDefName.setSelectedItem(selectedRowData[0]['pdHeaderId'],true);
           this.loadProductDefinitionDt(selectedRowData[0]['pdHeaderId']);
         } else if (result == -1) {
           this.toastr.warning('Delete fail, already assigned to Cost sheet!!!');

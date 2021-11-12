@@ -7,7 +7,7 @@
         <!-- JOB HEADER -->
         <form [formGroup]="jobHeaderForm" autocomplete="off">
             <div class="row">
-                <div class="col-md-11">
+                <div class="col-md-10">
                     <h6 class="bg-secondary">
                         <!-- <i class="fas fa-file-alt"></i>  -->
                         Job Header
@@ -15,8 +15,11 @@
                 </div>
                 <div class="col-md-1">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-success mr-3" [disabled]="!jobHeaderForm.valid" (click)="saveJobCard()">
+                        <button type="button" class="btn btn-success mr-1" [disabled]="!jobHeaderForm.valid" (click)="saveJobCard()">
                             <i class="fas fa-save"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary mr-1" [disabled]="!isDisplayMode" target="_blank" (click)="printJobCard()">
+                            <i class="fas fa-print"></i>
                         </button>
                         <button type="button" class="btn btn-default" (click)="clearJobCardControls()">
                             <i class="fas fa-redo"></i>

@@ -14,7 +14,6 @@ import { CustomerHd } from 'src/app/_models/customerHd';
 import { User } from 'src/app/_models/user';
 import { AccountService } from '_services/account.service';
 import { MasterService } from '_services/master.service';
-import { RegisterService } from '_services/register.service';
 import { SalesorderService } from '_services/salesorder.service';
 
 @Component({
@@ -50,6 +49,8 @@ export class JobCreationComponent implements OnInit {
   isFPOCreated: boolean = false;
   saveButton: boolean = false;
   delivLocation: number = 0;
+  isDisplayMode: boolean = false;
+  printButton: boolean = false;
 
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -108,6 +109,8 @@ export class JobCreationComponent implements OnInit {
     if (authMenus != null) {
       if (authMenus.filter((x) => x.autoIdx == 157).length > 0) {
         this.saveButton = true;
+      } if (authMenus.filter((x) => x.autoIdx == 171).length > 0) {
+        this.printButton = true;
       }
     }
 
@@ -726,6 +729,7 @@ export class JobCreationComponent implements OnInit {
     (this.totQty = 0), (this.planQty = 0);
     var jobNo = this.jobHeaderForm.get('jobNo').value;
     var jobCardList = [];
+    this.isDisplayMode = true;
 
     this.salesOrderServices.getJobCardDetails(jobNo).subscribe(
       (jobCardDT) => {
@@ -834,6 +838,7 @@ export class JobCreationComponent implements OnInit {
   }
 
   refreshJobControls() {
+    this.isDisplayMode = false;
     this.pendOrderList = [];
     this.jobOrderList = [];
     this.articleList = [];
@@ -907,6 +912,22 @@ export class JobCreationComponent implements OnInit {
       this.enableControls();
     } else {
       this.loadJobCardDetails();
+    }
+  }
+
+  printJobCard() {
+    if(this.printButton == true) {
+      // this.router.navigate(['/boldreport']);
+      var obj = {
+        jobCardNo: this.jobHeaderForm.get('headerId').value,
+        reportName: "JobDetailsFormat"
+      }
+      console.log(this.jobHeaderForm.get('headerId').value);
+      /// STORE OBJECT IN LOCAL STORAGE
+      localStorage.setItem('params', JSON.stringify(obj));
+      window.open('/boldreport', '_blank');
+    } else {
+      this.toastr.error('Print Permission denied !!!');
     }
   }
 }

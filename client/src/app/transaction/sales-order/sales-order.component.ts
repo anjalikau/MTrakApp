@@ -1128,7 +1128,7 @@ export class SalesOrderComponent implements OnInit {
               this.soHeaderForm.get('orderRef').setValue(result['refNum']);
               this.loadSalesOrderDt();
             } else if (result['result'] == -1) {
-              this.toastr.error('Sales Order update Successfully !!!');
+              this.toastr.success('Sales Order update Successfully !!!');
               this.loadSalesOrderDt();
             } else {
               this.toastr.warning(
@@ -1311,7 +1311,8 @@ export class SalesOrderComponent implements OnInit {
             this.soItemList = soSavedItemList;
             this.soDelivList = soSavedDelList;
 
-            // console.log(this.deliveryGrid.data);
+            console.log(soSavedItemList);
+            console.log(soSavedDelList);
           }
         },
         (err) => console.error(err),
