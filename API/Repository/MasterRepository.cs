@@ -869,7 +869,7 @@ namespace API.Repository
             para.Add("CounterStart", codeDefinition.CounterStart);
             para.Add("SeqNo", codeDefinition.SeqNo);
             para.Add("IsSeperator", codeDefinition.IsSeperator);
-            para.Add("Seperator", codeDefinition.Seperator);
+            para.Add("Seperator", codeDefinition.Seperator.Trim());
             para.Add("UserId", codeDefinition.CreateUserId);
             para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
 
@@ -1038,7 +1038,7 @@ namespace API.Repository
             para.Add("Tel", mstrCustomerHeader.Tel.Trim());
             para.Add("LocationId", mstrCustomerHeader.LocationId);
             para.Add("ShortCode" , mstrCustomerHeader.ShortCode.ToUpper().Trim());
-            para.Add("CustomerID", mstrCustomerHeader.CustomerID);
+            para.Add("CustomerID", mstrCustomerHeader.CustomerID.Trim());
             para.Add("City", mstrCustomerHeader.City.Trim());
             para.Add("CountryId", mstrCustomerHeader.CountryId);
             para.Add("CurrencyId", mstrCustomerHeader.CurrencyId);
@@ -1047,6 +1047,7 @@ namespace API.Repository
             para.Add("TinNo", mstrCustomerHeader.TinNo.Trim());
             para.Add("ZipPostalCode", mstrCustomerHeader.ZipPostalCode.Trim());
             para.Add("CreditDays", mstrCustomerHeader.CreditDays);
+            para.Add("Attention", mstrCustomerHeader.Attention.Trim());
             para.Add("UserId", mstrCustomerHeader.CreateUserId);
             para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
 

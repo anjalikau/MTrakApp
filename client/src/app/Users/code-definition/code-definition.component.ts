@@ -113,7 +113,7 @@ export class CodeDefinitionComponent implements OnInit {
         counterStart: [{ value: 0, disabled: true }],
         // seqNo: [{value: 0, disabled: true}],
         isSeperator: [''],
-        seperator: [{ value: '', disabled: true }],
+        seperator: [{ value: '', disabled: true } , Validators.maxLength(1)],
       },
       { validators: this.checkSeperator('isSeperator', 'seperator') }
     );

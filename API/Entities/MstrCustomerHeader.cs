@@ -22,6 +22,7 @@ namespace API.Entities
 	    public string TaxNo {get;set;}
 	    public string TinNo {get;set;}
 	    public string ZipPostalCode {get;set;}
+        public string Attention {get;set;}
 	    public int CreditDays {get;set;}
         public bool bActive { get; set; }
         public int LocationId { get; set; }

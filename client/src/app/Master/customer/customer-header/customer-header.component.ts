@@ -84,6 +84,7 @@ export class CustomerHeaderComponent implements OnInit {
           Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$'),
         ],
       ],
+      attention: ['', Validators.maxLength(100)],
       vatNo: ['', Validators.maxLength(20)],
       taxNo: ['', Validators.maxLength(20)],
       tinNo: ['', Validators.maxLength(20)],
@@ -137,6 +138,10 @@ export class CustomerHeaderComponent implements OnInit {
         this.customerHdForm.get('address').value == undefined
           ? ''
           : this.customerHdForm.get('address').value.trim(),
+      attention:
+          this.customerHdForm.get('attention').value == undefined
+            ? ''
+            : this.customerHdForm.get('attention').value.trim(),
       email:
         this.customerHdForm.get('email').value == undefined
           ? ''
@@ -290,6 +295,7 @@ export class CustomerHeaderComponent implements OnInit {
     this.customerHdForm.get('address').setValue(selectedRowData[0]['address']);
     this.customerHdForm.get('email').setValue(selectedRowData[0]['email']);
     this.customerHdForm.get('phone').setValue(selectedRowData[0]['tel']);
+    this.customerHdForm.get('attention').setValue(selectedRowData[0]['attention']);
     this.customerHdForm
       .get('shortCode')
       .setValue(selectedRowData[0]['shortCode']);

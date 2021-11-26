@@ -492,12 +492,28 @@
           </ul>      
           <ul class="nav nav-treeview" *ngIf="tax">
             <li class="nav-item">
-              <a class="nav-link" routerLink="/Tax" routerLinkActive="active" (click)="menuClose()">
+              <a class="nav-link" routerLink="/Tax" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Tax</p>
               </a>
             </li>
-          </ul>        
+          </ul> 
+          <ul class="nav nav-treeview" *ngIf="bank">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/Bank" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Bank</p>
+              </a>
+            </li>
+          </ul> 
+          <ul class="nav nav-treeview" *ngIf="invoice" (click)="menuClose()">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/Invoice" routerLinkActive="active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Invoice</p>
+              </a>
+            </li>
+          </ul>      
         </li>
 
       </ul>

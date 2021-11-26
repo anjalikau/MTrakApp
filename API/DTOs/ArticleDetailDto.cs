@@ -22,7 +22,7 @@ namespace API.DTOs
         public int ColorCardId {get;set;}
         public int SizeCardId {get;set;}
         public decimal SalesPrice {get;set;}
-	    // public int QtyInStock {get;set;}
+	    
 	    public decimal AvgCostPrice {get;set;}
 	    public decimal LastCostPrice {get;set;}
 	    public decimal MaxCostPrice {get;set;}       
@@ -35,6 +35,7 @@ namespace API.DTOs
         public string cFlexFeildValue {get;set;}
         public string FlexFieldCode {get;set;}
         public string FlexFieldName {get;set;}
+        public string flexValName {get;set;}
         public char DataType {get;set;}
         public bool ValueList {get;set;}
         // public float Length {get;set;}

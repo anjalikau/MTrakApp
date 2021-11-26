@@ -1,0 +1,498 @@
+<div class="card card-default">
+    <!-- <div class="card-header">
+        <h3 class="card-title">Sales Order</h3>       
+    </div> -->
+
+    <div class="card-body">
+        <!-- FPO HEADER -->
+        <form [formGroup]="invoiceHdForm" (ngSubmit)="invoiceHdForm.valid" autocomplete="off">
+            <div class="row">
+                <div class="col-md-10">
+                    <h6 class="bg-secondary">
+                        <!-- <i class="fas fa-file-alt"></i>  -->
+                        Invoice Header
+                    </h6>                    
+                </div>
+                <div class="col-md-1">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success mr-1" [disabled]="!invoiceHdForm.valid" (click)="saveInvoice()">
+                            <i class="fas fa-save"></i>
+                        </button>      
+                        <button type="button" class="btn btn-info mr-1" [disabled]="!isDisplayMode" (click)="approveInvoice()">
+                            <i class="fas fa-thumbs-up"></i>
+                        </button>                    
+                        <button type="button" class="btn btn-default" (click)="refreshControls()">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label> Invoice No </label>
+                        <igx-input-group type="search">
+                            <input #input1 igxInput placeholder="Invoice No" formControlName="invoiceNo" (keyup)="onKey($event)" />
+                            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''" (click)="refreshControls()">
+                                <igx-icon>clear</igx-icon>
+                            </igx-suffix>
+                            <igx-prefix>
+                                <igx-icon>search</igx-icon>
+                            </igx-prefix>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label> Customer </label>
+                        <igx-combo #customer id="customerId" class="combo" displayKey="name" valueKey="autoId"
+                            [itemsMaxHeight]="250" [data]="custometList" placeholder="Customer"
+                            (onSelectionChange)="onCustomerSelect($event)" (onSelectionChange)="singleSelection($event)"
+                            formControlName="customerId" searchPlaceholder="Search...">
+                        </igx-combo>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label> Billing Address </label>
+                        <igx-combo #billAddress id="customerAddId" class="combo" displayKey="address" valueKey="autoId"
+                            [itemsMaxHeight]="250" [data]="addressList" placeholder="Billing Address"
+                            (onSelectionChange)="singleSelection($event)" formControlName="customerAddId" searchPlaceholder="Search...">
+                        </igx-combo>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="taxNo" />
+                            <label igxLabel for="taxNo"> Customer Tax </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="vatNo" />
+                            <label igxLabel for="vatNo"> Customer Vat </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+               <div class="col-md-1">
+                    <div class="group">
+                        <igx-date-picker id="transDate" formControlName="transDate">
+                            <label igxLabel>Trans Date</label>
+                        </igx-date-picker>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="invCurrency" />
+                            <label igxLabel for="invCurrency"> Currency </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="attention" />
+                            <label igxLabel for="attention"> Attention </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-2" *ngIf="isApproved">                    
+                    <h6 class="bg-success text-white"> {{ invoiceStatus }} </h6>
+                </div>
+
+                <div class="col-md-2" *ngIf="!isApproved">                    
+                    <h6 class="bg-warning text-white"> {{ invoiceStatus }} </h6>
+                </div>
+                
+            </div>
+        </form>
+
+        <!-- PENDING INVOICE DETAILS -->
+        <div class="grid__wrapper">
+            <div class="sample__header">
+                <h6 class="bg-secondary"> Pending Invoice Details</h6>                
+            </div>
+            <div class="row">
+                <igx-grid #pendInvoiceGrid [data]="pendInvoiceList" [autoGenerate]="false" [paging]="true" [primaryKey]="'dispatchDtId'" 
+                    cellSelection="none" [rowEditable]="false" (onColumnResized)="onResize($event)" [perPage]="100" height="300px" 
+                    displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
+                    [rowSelection]="'Single'">
+                    <igx-column [width]="'50px'" [field]="'status'" [header]="' '" [selectable]="false" [sortable]="false" [resizable]="false">
+                        <ng-template igxCell let-cell="cell">
+                            <div *ngIf="!cell.value; then completeBlock else elseBlock"></div>
+                            <ng-template #completeBlock>
+                                <button igxButton="icon" class="fab-compact" (click)="onPendInvoiceDown($event,cell.cellID)" [disabled]="isApproved">
+                                    <igx-icon fontSet="material" style="color:green">arrow_drop_down_circle</igx-icon>
+                                </button>
+                            </ng-template>
+                            <ng-template #elseBlock>
+                                <button igxButton="icon" class="fab-compact" [disabled]="'true'">
+                                    <igx-icon fontSet="material" style="color:mediumvioletred">arrow_drop_down_circle
+                                    </igx-icon>
+                                </button>
+                            </ng-template>
+                        </ng-template>
+                    </igx-column>
+                    <igx-column [field]="'dispatchNo'" [header]="'DispatchNo'" [width]="'150px'" [resizable]="true" [dataType]="'string'" 
+                        [sortable]="true">
+                    </igx-column>
+                    <igx-column [field]="'orderRef'" [header]="'OrderRef'" [width]="'150px'" [resizable]="true" [dataType]="'string'" 
+                        [sortable]="true">
+                    </igx-column>                   
+                    <igx-column [field]="'articleName'" [header]="'Article'" [width]="'150px'" [resizable]="true" [dataType]="'string'" 
+                        [sortable]="true">
+                    </igx-column>
+                    <igx-column field="color" [width]="'120px'" header="Color" [sortable]="true" [resizable]="true" [dataType]="'string'" 
+                        resizable="true">
+                    </igx-column>
+                    <igx-column [field]="'size'" [header]="'Size'" [width]="'100px'" [resizable]="true" [dataType]="'string'" 
+                        [sortable]="true">
+                    </igx-column>  
+                    <igx-column [field]="'uom'" [header]="'UOM'" [width]="'100px'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                    </igx-column>                     
+                    <igx-column [field]="'balQty'" [header]="'Bal Qty'" [width]="'100px'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                    </igx-column>
+                    <igx-column [field]="'price'" [header]="'Price'" [width]="'100px'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                    </igx-column>
+                    <igx-column [field]="'value'" [header]="'Value'" [width]="'100px'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                    </igx-column>
+                </igx-grid>
+            </div>
+        </div>
+
+        <form [formGroup]="invoiceDtForm" (ngSubmit)="invoiceDtForm.valid" autocomplete="off">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="dispatchNo" />
+                            <label igxLabel for="dispatchNo"> Dispatch No </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="salesOrderNo" />
+                            <label igxLabel for="salesOrderNo"> Sales OrderNo </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+                              
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="article" />
+                            <label igxLabel for="article"> Article </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="color" />
+                            <label igxLabel for="color"> Color </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="size" />
+                            <label igxLabel for="size"> Size </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+               
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="qty" (focusout)="onFocusOutEvent($event)" 
+                            (keyup)="onQtyKey($event)" />
+                            <label igxLabel for="qty"> Qty </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="uom" />
+                            <label igxLabel for="uom"> UOM </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="price" />
+                            <label igxLabel for="price"> Price </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="value" />
+                            <label igxLabel for="value"> Value </label>
+                        </igx-input-group>
+                    </div>
+                </div>               
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label> Tax Code </label>
+                        <igx-combo #taxCode id="taxCode" class="combo" displayKey="description" valueKey="autoId"
+                            [itemsMaxHeight]="250" [data]="taxList" placeholder="Tax Code" formControlName="taxCode" searchPlaceholder="Search..."
+                            (onSelectionChange)="singleSelection($event)" (onSelectionChange)="onTaxCodeChange($event)">
+                        </igx-combo>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="taxRate" />
+                            <label igxLabel for="taxRate"> Tax Rate </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="lineTax" />
+                            <label igxLabel for="lineTax"> Line Tax </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="grossAmount" />
+                            <label igxLabel for="grossAmount"> Gross Amount </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="discount" />
+                            <label igxLabel for="discount"> Discount % </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+
+                
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="disAmount" />
+                            <label igxLabel for="disAmount"> Discount Amount </label>
+                        </igx-input-group>
+                    </div>
+                </div>
+                
+                <!-- <div class="col-md-1">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="netTotal" />
+                            <label igxLabel for="netTotal"> Net Total </label>
+                        </igx-input-group>
+                    </div>
+                </div> -->
+                
+                <div class="col-sm-1">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success mr-3" [disabled]="!invoiceDtForm.valid && !isApproved" (click)="addInvoiceDetails()">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button type="button" class="btn btn-default" (click)="clearInvoiceDetails()">
+                            <i class="fas fa-broom"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- INVOICE DETAILS -->
+        <div class="grid__wrapper">
+            <div class="sample__header">
+                <h6 class="bg-secondary"> Invoice Details</h6>                
+            </div>
+            <div class="row">
+                <igx-grid #invoiceDtGrid [data]="invoiceDtList" [autoGenerate]="false" [paging]="true" [primaryKey]="'dispatchDtId'" 
+                    cellSelection="none" [rowEditable]="false" (onColumnResized)="onResize($event)" [perPage]="100" height="300px" 
+                    displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
+                    [rowSelection]="'Single'">  
+                    <igx-column [width]="'80px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                        <ng-template igxCell let-cell="cell">
+                            <button igxButton="icon" class="fab-compact" [disabled]="isApproved"
+                                (click)="openConfirmDialog($event,cell.cellID)">
+                                <igx-icon family="material">delete</igx-icon>
+                            </button>
+                            <button igxButton="icon" class="fab-compact" (click)="onInvoiceEdit($event,cell.cellID)" [disabled]="isApproved">
+                                <igx-icon family="material">edit</igx-icon>
+                            </button>
+                        </ng-template>
+                    </igx-column>         
+                    <igx-column [field]="'dispatchNo'" [header]="'DispatchNo'" [width]="'150px'" [resizable]="true" [dataType]="'string'" 
+                        [sortable]="true" >
+                    </igx-column>
+                    <igx-column [field]="'orderRef'" [header]="'OrderRef'" [width]="'150px'" [resizable]="true" [dataType]="'string'" 
+                        [sortable]="true" >
+                    </igx-column>                   
+                    <igx-column [field]="'articleName'" [header]="'Article'" [width]="'200px'" [resizable]="true" [dataType]="'string'" 
+                        [sortable]="true" >
+                    </igx-column>
+                    <igx-column field="color" header="Color" [width]="'120px'" [sortable]="true" [resizable]="true" [dataType]="'string'" 
+                        resizable="true" >
+                    </igx-column>
+                    <igx-column [field]="'size'" [header]="'Size'" [width]="'100px'" [resizable]="true" [dataType]="'string'" 
+                        [sortable]="true" >
+                    </igx-column>  
+                    <igx-column [field]="'uom'" [header]="'UOM'" [width]="'100px'" [resizable]="true" [dataType]="'string'"  
+                        [sortable]="true" >
+                    </igx-column> 
+                    <igx-column [field]="'balQty'" [header]="'Bal Qty'" [width]="'100px'" [resizable]="true" [dataType]="'number'" 
+                        [sortable]="true" >
+                    </igx-column>                    
+                    <igx-column [field]="'qty'" [header]="'Qty'" [width]="'100px'" [resizable]="true" [dataType]="'number'" 
+                        [sortable]="true" >
+                    </igx-column>
+                    <igx-column [field]="'price'" [header]="'Price'" [width]="'100px'" [resizable]="true" [dataType]="'number'" 
+                        [sortable]="true">
+                    </igx-column>
+                    <igx-column [field]="'value'" [header]="'Value'" [width]="'100px'" [resizable]="true" [dataType]="'number'" 
+                        [sortable]="true">
+                    </igx-column>
+                    <igx-column [field]="'taxCode'" [header]="'Tax Code'" [width]="'200px'" [resizable]="true" [dataType]="'string'" 
+                        [sortable]="true">
+                    </igx-column>
+                    <igx-column [field]="'taxRate'" [header]="'Tax Rate'" [width]="'100px'" [resizable]="true" [dataType]="'number'" 
+                        [sortable]="true">
+                    </igx-column>
+                    <igx-column [field]="'lineTax'" [header]="'Line Tax'" [width]="'100px'" [resizable]="true" [dataType]="'number'" 
+                        [sortable]="true" >
+                    </igx-column>
+                    <igx-column [field]="'grossAmount'" [header]="'Gross Amount'" [width]="'150px'" [resizable]="true" [dataType]="'number'" 
+                        [sortable]="true" >
+                    </igx-column>
+                    <igx-column [field]="'discount'" [header]="'Discount %'" [width]="'120px'" [resizable]="true" [dataType]="'number'" 
+                        [sortable]="true">
+                    </igx-column>
+                    <igx-column [field]="'disAmount'" [header]="'Discount Amount'" [width]="'150px'" [resizable]="true" [dataType]="'number'" 
+                        [sortable]="true" >
+                    </igx-column>
+                    <igx-column [field]="'netTotal'" [header]="'Net Total'" [width]="'150px'" [resizable]="true" [dataType]="'number'" 
+                        [sortable]="true">
+                    </igx-column>
+                </igx-grid>
+            </div>
+        </div> 
+
+        <!-- INVOICE  DETAILS -->
+        <div class="grid__wrapper">
+            <div class="sample__header">
+                <h6 class="bg-secondary"> Invoice Summary </h6>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <!-- <p class="lead">Payment Due 2/22/2014</p> -->
+        
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <th style="width:50%">Total Amount :</th>
+                                <td> {{totalAmount}} </td>
+                            </tr>
+                            <tr>
+                                <th>Tax Amount :</th>
+                                <td> {{taxAmount}} </td>
+                            </tr>
+                            <tr>
+                                <th>Gross Amount :</th>
+                                <td> {{grossAmount}} </td>
+                            </tr>
+                            <tr>
+                                <th>Discount :</th>
+                                <td> {{discount}} </td>
+                            </tr>
+                            <tr>
+                                <th>NBT {{nbtPr}}% :</th>
+                                <td> {{nbt}} </td>
+                            </tr>
+                            <tr>
+                                <th>Net Amount:</th>
+                                <td> {{netAmount}} </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <!-- <p class="lead"> </p> -->
+        
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <th style="width:50%">Default Currency :</th>
+                                <td> {{defCurrency}} </td>
+                            </tr>
+                            <tr>
+                                <th>Exchange Rate :</th>
+                                <td> {{exchRate}} </td>
+                            </tr>
+                            <tr>
+                                <th>Total Net Value :</th>
+                                <td> {{totNetValue}} </td>
+                            </tr>
+                            <tr>
+                                <th>Total Tax Value :</th>
+                                <td> {{totTaxValue}} </td>
+                            </tr>
+                            <tr>
+                                <th>Payment Due :</th>
+                                <td> {{paymentDue}} </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<igx-dialog #dialog title="Confirmation" leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()"
+    rightButtonLabel="OK" (onRightButtonSelect)="onDialogOKSelected($event)"
+    message="Are you sure you want to delete the record ?">
+</igx-dialog>
+
+<!-- <p> Form Value : {{jobCardForm.value | json }} </p>
+<p> Form Status : {{jobCardForm.status | json }} </p> -->

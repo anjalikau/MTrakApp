@@ -196,6 +196,7 @@ export class MasterArticleComponent implements OnInit {
   }
 
   onSelectFlexField(event) {
+    this.flexValueList = [];
     for (const item of event.added) {
       var selectField = this.flexFieldList.filter((x) => x.autoId == item);
 
@@ -205,6 +206,7 @@ export class MasterArticleComponent implements OnInit {
         this.numberField = false;
         this.dateField = false;
         this.radioField = false;
+        this.loadflexFieldValueList(item);
       } else if (selectField[0]['dataType'] == 'T') {
         this.comboField = false;
         this.textField = true;
@@ -231,6 +233,13 @@ export class MasterArticleComponent implements OnInit {
         this.radioField = true;
       }
     }
+  }
+
+  loadflexFieldValueList(item) {
+    this.masterService.getFlexFieldValList(item).subscribe(result => {
+      this.flexValueList = result
+      console.log(this.flexValueList);
+    })
   }
 
   loadArticleDetails(prodGroupId) {
@@ -277,23 +286,26 @@ export class MasterArticleComponent implements OnInit {
             // console.log(uniqeArticle);
             //// GET FLEX FIELD LIST FOR SAME ARTICLE
             var flexFieldList = articles.filter((x) => x.autoId == autoId);
-            flexLine = [];
+            flexLine = [];            
 
             //// CREATE CHILD OBJECT AS FLEX FIELD
             for (let a = 0; a < flexFieldList.length; a++) {
               const element = flexFieldList[a];
               var flexValue = 0;
+              console.log(element);
 
-              if (element['dataType'] == 'F')
+              if (element['dataType'] == 'F' && element["valueList"] == 0)
                 flexValue = element['fFlexFeildValue'];
-              else if (element['dataType'] == 'N')
+              else if (element['dataType'] == 'N' && element["valueList"] == 0)
                 flexValue = element['iFlexFeildValue'];
-              else if (element['dataType'] == 'T')
+              else if (element['dataType'] == 'T' && element["valueList"] == 0)
                 flexValue = element['cFlexFeildValue'];
-              else if (element['dataType'] == 'B')
+              else if (element['dataType'] == 'B' && element["valueList"] == 0)
                 flexValue = element['bFlexFeildValue'];
-              else if (element['dataType'] == 'D')
+              else if (element['dataType'] == 'D' && element["valueList"] == 0)
                 flexValue = element['dFlexFeildValue'];
+              else if(element["valueList"] == 1)
+                flexValue = element['iFlexFeildValue'];
 
               var obj = {
                 dataType: element['dataType'],
@@ -301,6 +313,7 @@ export class MasterArticleComponent implements OnInit {
                 flexFieldName: element['flexFieldName'],
                 flexFieldCode : element['flexFieldCode'],
                 flexFieldValue: flexValue,
+                flexValName: element["flexValName"],
                 valueList: element['valueList'],
               };
               flexLine.push(obj);
@@ -337,7 +350,7 @@ export class MasterArticleComponent implements OnInit {
 
   //// ADD NEW FLEX FIELD ITEM
   addFlexField() {
-    var flexValue = 0, fieldCode = "";
+    var flexValue = 0, flexValName = "";
     var flexFieldId = this.articleForm.get('flexFieldName').value[0];
 
     var selectedRowData = this.flexFieldGrid.data.filter((record) => {
@@ -348,10 +361,11 @@ export class MasterArticleComponent implements OnInit {
       this.toastr.warning("Field already added!!!");
     } else {
       var selectedRow = this.flexFieldList.filter(x => x.autoId == flexFieldId);
-
-      if (selectedRow[0]['valueList'] == true) 
+      console.log(selectedRow);
+      if (selectedRow[0]['valueList'] == true) {
+        flexValName = this.flexFieldVal.value;
         flexValue = this.articleForm.get('flexFieldVal').value[0];
-      else
+      } else
         flexValue = this.articleForm.get('flexFieldVal').value; 
         
         var obj = {
@@ -360,6 +374,7 @@ export class MasterArticleComponent implements OnInit {
           flexFieldCode: selectedRow[0]['flexFieldCode'],
           flexFieldName: this.cmbflexFeild.value,
           flexFieldValue: flexValue,
+          flexValName: flexValName,
           valueList: selectedRow[0]['valueList'],
         };
       
@@ -644,7 +659,7 @@ export class MasterArticleComponent implements OnInit {
 
       // console.log(this.articleForm.get('pODate').value);
       var prodGroupId = this.articleForm.get('proGroupId').value[0];
-      // console.log(artiObj);
+      console.log(artiObj);
       this.masterService.saveArticle(artiObj).subscribe(
         (result) => {
           //console.log(result);

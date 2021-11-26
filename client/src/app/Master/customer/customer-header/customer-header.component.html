@@ -42,15 +42,21 @@
             </igx-column>
             <igx-column [field]="'shortCode'" [header]="'Short Code'" [resizable]="true" [dataType]="'string'" [sortable]="true">
             </igx-column>
-            <igx-column [field]="'customerID'" [header]="'CustomerID'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+            <igx-column [field]="'customerID'" [header]="'CustomerID'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'150px'">
             </igx-column>
-            <igx-column [field]="'name'" [header]="'Name'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+            <igx-column [field]="'attention'" [header]="'Attention'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'200px'" >
             </igx-column>
-            <igx-column [field]="'address'" [header]="'Address'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+            <igx-column [field]="'name'" [header]="'Name'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'200px'">
+            </igx-column>
+            <igx-column [field]="'address'" [header]="'Address'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'300px'">
             </igx-column>
             <igx-column [field]="'email'" [header]="'Email'" [resizable]="true" [dataType]="'string'" [sortable]="true">
             </igx-column>
             <igx-column [field]="'tel'" [header]="'Tel'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+            </igx-column>
+            <igx-column [field]="'currencyCode'" [header]="'Currency'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+            </igx-column>
+            <igx-column [field]="'countryCode'" [header]="'Country'" [resizable]="true" [dataType]="'string'" [sortable]="true">
             </igx-column>
             <igx-column [field]="'city'" [header]="'City'" [resizable]="true" [dataType]="'string'" [sortable]="true">
             </igx-column>
@@ -84,7 +90,7 @@
                 <form [formGroup]="customerHdForm" (ngSubmit)="customerHdForm.valid" autocomplete="off">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-8">
                                 <div class="form-group">
                                     <igx-input-group>
                                         <input igxInput type="text" formControlName="name" />
@@ -99,12 +105,23 @@
                                         <label igxLabel for="shortCode"> ShortCode </label>
                                     </igx-input-group>
                                 </div>
-                            </div>
-                            <div class="col-sm-4">
+                            </div>                            
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <igx-input-group>
                                         <input igxInput type="text" formControlName="customerId" />
                                         <label igxLabel for="customerId"> CustomerID</label>
+                                    </igx-input-group>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <igx-input-group>
+                                        <input igxInput type="text" formControlName="attention" />
+                                        <label igxLabel for="attention"> Attention</label>
                                     </igx-input-group>
                                 </div>
                             </div>

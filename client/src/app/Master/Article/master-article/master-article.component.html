@@ -112,6 +112,9 @@
                     <igx-column [field]="'flexFieldValue'" [header]="'FieldValue'" [resizable]="true" [dataType]="'string'" 
                             [sortable]="true" [width]="'120px'" >
                     </igx-column>
+                    <igx-column [field]="'flexValName'" [header]="'Flex Name'" [resizable]="true" [dataType]="'string'" 
+                            [sortable]="true" [width]="'120px'" >
+                    </igx-column>
                 </igx-row-island>
             </igx-hierarchical-grid>
         </div>
@@ -296,7 +299,7 @@
                                 <label> Field Name </label>  
                                 <igx-combo #cmbflexFeild class="combo" displayKey="flexFieldName" valueKey="autoId" [itemsMaxHeight]="250"
                                             [data]="flexFieldList" placeholder="Field Name" (onSelectionChange)="singleSelection($event)"
-                                            formControlName="flexFieldName" searchPlaceholder="Search...">
+                                            formControlName="flexFieldName" searchPlaceholder="Search..." (onSelectionChange)="onSelectFlexField($event)">
                                 </igx-combo>
                                 <!-- (onSelectionChange)="onSelectFlexField($event)" -->
                             </div>
@@ -306,7 +309,7 @@
                             <div class="form-group">
                                 <div *ngIf="comboField">
                                     <label> Value </label>
-                                    <igx-combo #flexFieldVal id="flexFieldVal" class="combo" displayKey="flexFieldName" valueKey="autoId"
+                                    <igx-combo #flexFieldVal id="flexFieldVal" class="combo" displayKey="flexFeildVlaue" valueKey="autoId"
                                         [itemsMaxHeight]="250" [data]="flexValueList" placeholder="Flex Feilds"
                                         (onSelectionChange)="singleSelection($event)" formControlName="flexFieldVal"
                                         searchPlaceholder="Search...">
@@ -315,7 +318,7 @@
                         
                                 <div *ngIf="numberField">
                                     <igx-input-group>
-                                        <input igxInput type="number" formControlName="FlexFieldVal" />
+                                        <input igxInput type="number" formControlName="flexFieldVal" />
                                         <label igxLabel for="flexFieldVal"> Value</label>
                                     </igx-input-group>
                                 </div>
@@ -369,6 +372,9 @@
                                 [sortable]="true">
                             </igx-column>
                             <igx-column [field]="'flexFieldValue'" [header]="'Value'" [resizable]="true" [dataType]="'string'"
+                                [sortable]="true">
+                            </igx-column>
+                            <igx-column [field]="'flexValName'" [header]="'Flex Name'" [resizable]="true" [dataType]="'string'"
                                 [sortable]="true">
                             </igx-column>
                         </igx-grid>

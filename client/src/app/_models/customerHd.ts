@@ -12,6 +12,9 @@ export interface CustomerHd {
     vATNo: string;
     taxNo: string;
     tinNo: string;
+    attention: string;
+    countryCode?: string;
+    currencyCode?: string;
     zipPostalCode: string;
     creditDays: number;
     bActive: boolean;

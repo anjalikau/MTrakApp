@@ -469,7 +469,7 @@ export class MasterService {
 
   getCustomerHdAll(LocId: number) {
     return this.http.get<CustomerHd[]>(
-      this.baseUrl + 'Master/CustomerHd/All/' + LocId,
+      this.baseUrl + 'Master/CusAll/' + LocId,
       httpOptions
     );
   }

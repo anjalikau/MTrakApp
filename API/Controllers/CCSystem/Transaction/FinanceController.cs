@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using API.DTOs;
 using API.Entities;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -28,8 +29,8 @@ namespace API.Controllers.CCSystem.Transaction
         public async Task<IActionResult> GetExchangeRate() 
         {
             var result = await _context.TransExchangeRate
-                .Join(_context.MstrUnits , e => e.CurrencyFId , f => f.AutoId , (e,f) => new  {e,f} )
-                .Join(_context.MstrUnits , a => a.e.CurrencyTId , t => t.AutoId , (a,t) =>
+                .Join(_context.MstrCurrency , e => e.CurrencyFId , f => f.AutoId , (e,f) => new  {e,f} )
+                .Join(_context.MstrCurrency , a => a.e.CurrencyTId , t => t.AutoId , (a,t) =>
                  new {
                     autoId = a.e.AutoId,
                     currencyFId = a.e.CurrencyFId,
@@ -58,6 +59,61 @@ namespace API.Controllers.CCSystem.Transaction
         public async Task<IActionResult> SaveTax(MstrTax tax) 
         {
             var result = await _financeRepository.SaveTaxAsync(tax);
+            return Ok(result);
+        }
+
+        [HttpGet("Bank")]
+        public async Task<IActionResult> GetBank() 
+        {
+            var result = await _context.MstrBank
+                    .Join(_context.MstrCurrency , b => b.CurrencyId , c => c.AutoId ,
+                    (b, c) => new {
+                        autoId = b.AutoId,
+                        name = b.Name,
+                        accountNo = b.AccountNo,
+                        branch = b.Branch,
+                        nextChequeNo = b.NextChequeNo,
+                        currencyId = b.CurrencyId,
+                        // Symbol = c.Symbol,
+                        currency = c.Code
+                    })               
+                    .ToListAsync();
+
+            return Ok(result);
+        }
+
+        [HttpPost("SaveBank")]
+        public async Task<IActionResult> SaveBank(MstrBank bank) 
+        {
+            var result = await _financeRepository.SaveBankAsync(bank);
+            return Ok(result);
+        }
+
+        [HttpGet("PInvoice/{customerId}")]
+        public async Task<IActionResult> GetInvoicePendDt(int customerId) 
+        {
+            var result = await _financeRepository.GetInvoicePendDtAsync(customerId);
+            return Ok(result);
+        }
+
+        [HttpPost("SaveInvoice")]
+        public async Task<IActionResult> SaveInvoice(SavedInvoiceDto invoiceDto) 
+        {
+            var result = await _financeRepository.SaveInvoiceAsync(invoiceDto);
+            return Ok(result);
+        }
+
+        [HttpGet("GetInvDt/{invoiceNo}")]
+        public async Task<IActionResult> GetInvoiceDetails(string invoiceNo) 
+        {
+            var result = await _financeRepository.GetInvoiceDetailsAsync(invoiceNo);
+            return Ok(result);
+        }
+
+        [HttpPost("AppInvoice")]
+        public async Task<IActionResult> ApproveInvoice(TransInvoiceHeader invoiceHd) 
+        {
+            var result = await _financeRepository.ApproveInvoiceAsync(invoiceHd);
             return Ok(result);
         }
 

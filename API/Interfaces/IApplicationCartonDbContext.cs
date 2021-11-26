@@ -79,6 +79,7 @@ namespace API.Interfaces
         DbSet<TransSalesOrderItemDt> TransSalesOrderItemDt { get; set;}
         DbSet<TransExchangeRate> TransExchangeRate { get; set;}
         DbSet<MstrTax> MstrTax { get; set;}
+        DbSet<MstrBank> MstrBank { get; set;}
 
     }
 }

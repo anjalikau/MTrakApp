@@ -38,6 +38,7 @@ export class MainsidebarComponent implements OnInit {
   rejReason: boolean = false;
   product: boolean = false;
   brand: boolean = false;
+  bank: boolean = false;
   materialType: boolean = false;
   category: boolean= false;
   addressType: boolean = false;
@@ -57,6 +58,7 @@ export class MainsidebarComponent implements OnInit {
   finance: boolean = false;
   exchRate: boolean = false;
   tax: boolean = false;
+  invoice: boolean = false;
   isCollapsed = false;
   userLoc: UserLocation[];
   user: User;
@@ -246,6 +248,10 @@ export class MainsidebarComponent implements OnInit {
         this.exchRate = true;
       if (formMenus.filter((x) => x.autoIdx == 169).length > 0 )
         this.tax = true;
+      if (formMenus.filter((x) => x.autoIdx == 172).length > 0 )
+        this.bank = true;
+      if (formMenus.filter((x) => x.autoIdx == 174).length > 0 )
+        this.invoice = true;
     }
     //console.log(this.adminGroup);
   }

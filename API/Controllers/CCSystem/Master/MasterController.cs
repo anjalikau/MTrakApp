@@ -210,7 +210,16 @@ namespace API.Controllers.CCSystem.Master
         [HttpGet("Company/{id}")]
         public async Task<IActionResult> GetCompany(int id)
         {
-            var result = await _context.MstrCompany.ToListAsync();
+            var result = await _context.MstrCompany
+                .Join(_context.MstrCurrency , c => c.DefCurrencyId , a => a.AutoId 
+                    , (c,a) => new {
+                      autoId = c.AutoId,
+                      address = c.Address,
+                      companyName = c.CompanyName,
+                      defaultCurrency = a.Code,
+                      defCurrencyId = c.DefCurrencyId  
+                    })
+                .ToListAsync();
             return Ok(result);
         }
 
@@ -500,7 +509,7 @@ namespace API.Controllers.CCSystem.Master
             return Ok(customerList);
         }
 
-        [HttpGet("CustomerHd/All/{LocId}")]
+        [HttpGet("CusAll/{LocId}")]
         public async Task<IActionResult> GetCustomerHeaderAll(int LocId)
         {
             var result = await _masterRepository.GetCustomerHdAllAsync(LocId);

@@ -36,7 +36,5 @@ namespace API.Interfaces
          Task<IEnumerable<CostHeaderDto>> GetCostHeaderAsync(int ArticleColorSizeId);
          Task<int> AttachCostSheetSOAsync(TransSalesOrderItemDt soItemDt);
          Task<int> RemoveCostSheetSOAsync(TransSalesOrderItemDt soItemDt);
-
-        //  Task<IEnumerable<MenuJoinList>> GetMenuListAsync();
     }
 }
