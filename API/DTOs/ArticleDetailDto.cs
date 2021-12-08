@@ -18,11 +18,10 @@ namespace API.DTOs
         public int MeasurementId {get;set;}
         // public int GSM {get;set;}
         // // public double BoardWidth {get;set;}
-        // public double RollWidth {get;set;}
+        public double IsActive {get;set;}
         public int ColorCardId {get;set;}
         public int SizeCardId {get;set;}
-        public decimal SalesPrice {get;set;}
-	    
+        public decimal SalesPrice {get;set;}	    
 	    public decimal AvgCostPrice {get;set;}
 	    public decimal LastCostPrice {get;set;}
 	    public decimal MaxCostPrice {get;set;}       

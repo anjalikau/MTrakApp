@@ -698,6 +698,35 @@ namespace API.Repository
             return result;
         }
 
+        public async Task<int> DeactiveArticleAsync(MstrArticle article)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("ArticleId" , article.AutoId);
+            para.Add("bActive" , article.IsActive);
+            para.Add("UserId", article.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrArticleDeactive", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<int> DeleteArticleAsync(MstrArticle article)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("ArticleId" , article.AutoId);
+            para.Add("UserId", article.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrArticleDelete", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
         #endregion Article
 
        
@@ -998,21 +1027,20 @@ namespace API.Repository
             return para.Get<int>("Result");
         }
         
-        // public async Task<int> DeactiveCusLocAsync(MstrCustomerLocation customerLocation)
-        // {
-        //     DynamicParameters para = new DynamicParameters();
+        public async Task<int> DeactiveCusLocAsync(MstrCustomerLocation cusLocation)
+        {
+            DynamicParameters para = new DynamicParameters();
 
-        //     para.Add("AutoId" , customerLocation.AutoId);
-        //     para.Add("bActive", customerLocation.bActive);
-        //     para.Add("UserId", customerLocation.CreateUserId);
-        //     para.Add("Name", customerLocation.Name.Trim());
-        //     para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+            para.Add("AutoId" , cusLocation.AutoId);
+            para.Add("bActive", cusLocation.bActive);
+            para.Add("UserId", cusLocation.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
 
-        //     var result = await DbConnection.ExecuteAsync("spMstrCustomerLocationDeactive", para
-        //         , commandType: CommandType.StoredProcedure);            
+            var result = await DbConnection.ExecuteAsync("spMstrCustomerLocationDeactive", para
+                , commandType: CommandType.StoredProcedure);            
 
-        //     return para.Get<int>("Result");
-        // }
+            return para.Get<int>("Result");
+        }
 
         public async Task<IEnumerable<ReturnCustomerHdDto>> GetCustomerHdAllAsync(int LocId)
         {
@@ -1106,6 +1134,22 @@ namespace API.Repository
             return para.Get<int>("Result");
         }
 
+        public async Task<int> DeactiveCustomerUserAsync(MstrCustomerUsers cusUser)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("CusUserId" , cusUser.AutoId);
+            para.Add("IsActive", cusUser.IsActive);
+            para.Add("UserId", cusUser.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrCustomerUserDeactive", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+
         #endregion Customer User
 
         #region Customer Address   
@@ -1151,16 +1195,16 @@ namespace API.Repository
             return para.Get<int>("Result");
         }
 
-        public async Task<int> DeactiveCustomerUserAsync(MstrCustomerUsers cusUser)
+        public async Task<int> DeactiveCustomerAddAsync(MstrCustomerAddressList cusAdd)
         {
             DynamicParameters para = new DynamicParameters();
 
-            para.Add("CusUserId" , cusUser.AutoId);
-            para.Add("IsActive", cusUser.IsActive);
-            para.Add("UserId", cusUser.CreateUserId);
+            para.Add("CusAddressId" , cusAdd.AutoId);
+            para.Add("IsActive", cusAdd.bActive);
+            para.Add("UserId", cusAdd.CreateUserId);
             para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
 
-            var result = await DbConnection.ExecuteAsync("spMstrCustomerUserDeactive", para
+            var result = await DbConnection.ExecuteAsync("spMstrCustomerAddressDeactive", para
                 , commandType: CommandType.StoredProcedure);            
 
             return para.Get<int>("Result");
@@ -1226,6 +1270,7 @@ namespace API.Repository
             DynamicParameters para = new DynamicParameters();
 
             para.Add("AutoId" , customerBrand.AutoId);
+            para.Add("CustomerId", customerBrand.CustomerId);
             para.Add("BrandId", customerBrand.BrandId);
             para.Add("UserId", customerBrand.CreateUserId);
             para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 

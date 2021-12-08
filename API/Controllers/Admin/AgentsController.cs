@@ -52,7 +52,7 @@ namespace API.Controllers.Admin
                         categoryLevel = a.iCategoryLevel,
                         levelPrority = l.LevelPrority
                     })
-                    .Where(s => s.bActive == true && s.levelPrority >= level.LevelPrority)
+                    .Where(s => s.levelPrority >= level.LevelPrority)
                     .ToListAsync();
 
             return Ok(usersToReturn);
@@ -89,24 +89,42 @@ namespace API.Controllers.Admin
             return _mapper.Map<RegisterDto>(user);
         }
 
-        [HttpPut("{username}")]
-        public async Task<ActionResult<bool>> ChangePassword(string username, UserUpdateDto updateDto)
+        // [HttpPut("{username}")]
+        // public async Task<ActionResult<bool>> ChangePassword(string username, UserUpdateDto updateDto)
+        // {
+        //     if (username != User.FindFirst(ClaimTypes.NameIdentifier).Value)
+        //         return Unauthorized();
+
+        //     var userFormRepo = await _userRepository.GetUserByUsernameAsync(username);
+
+        //     using var hmac = new HMACSHA512();
+        //     updateDto.passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(updateDto.cPassword));
+        //     updateDto.passwordSalt = hmac.Key;
+
+        //     _mapper.Map(updateDto, userFormRepo);
+
+        //     if (await _userRepository.SaveAllAsync())
+        //         return NoContent();
+
+        //     throw new Exception($"Updating user {username} failed on server");
+        // }
+
+        [HttpPost("ChPwdUser")]
+        public async Task<ActionResult> ChangeUserPwd(UserUpdateDto agents)
         {
-            if (username != User.FindFirst(ClaimTypes.NameIdentifier).Value)
-                return Unauthorized();
-
-            var userFormRepo = await _userRepository.GetUserByUsernameAsync(username);
-
             using var hmac = new HMACSHA512();
-            updateDto.passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(updateDto.cPassword));
-            updateDto.passwordSalt = hmac.Key;
+            agents.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(agents.cPassword));
+            agents.PasswordSalt = hmac.Key;
 
-            _mapper.Map(updateDto, userFormRepo);
+            var result = await _userRepository.ChangeUserPwdAsync(agents);
+            return Ok(result);
+        }
 
-            if (await _userRepository.SaveAllAsync())
-                return NoContent();
-
-            throw new Exception($"Updating user {username} failed on server");
+        [HttpPost("DeActUser")]
+        public async Task<ActionResult> DisableUser(StateUserDto agents)
+        {
+            var result = await _userRepository.DisableUserAsync(agents);
+            return Ok(result);
         }
 
         [AllowAnonymous]

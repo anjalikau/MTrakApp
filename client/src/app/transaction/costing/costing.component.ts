@@ -242,8 +242,12 @@ export class CostingComponent implements OnInit {
         fieldName: 'refNo',
         ignoreCase: false,
         strategy: DefaultSortingStrategy.instance(),
-      },
+      }
     ];
+
+    this.costListGrid.sortingExpressions = [
+      { fieldName: 'versionControl', dir: SortingDirection.Asc }
+  ];
   }
 
   initilizeForm() {
@@ -525,7 +529,7 @@ export class CostingComponent implements OnInit {
       { name: 'Yes' },
       { name: 'No' },
       { name: 'Out Site' },
-      { name: 'In Site' },
+      { name: 'In Site' }
     ];
   }
 
@@ -580,6 +584,11 @@ export class CostingComponent implements OnInit {
   openArticleDialog(select) {
     // console.log(select);
     this.articleGrid.deselectAllRows();
+    this.articleGrid.clearFilter();
+    this.articleSelForm.get("category").setValue("");
+    this.articleSelForm.get("prodType").setValue("");
+    this.articleSelForm.get("prodGroup").setValue("");
+    this.articleList = [];
     this.isArtiHdSel = select;
     this.articleForm.open();
   }
@@ -964,13 +973,15 @@ export class CostingComponent implements OnInit {
         this.costDtGrid.updateCell(grossCons, autoId, 'grossCons');
         this.costDtGrid.updateCell(costPcs, autoId, 'costPcs');
         this.costDtGrid.updateCell(total, autoId, 'total');
-      }
-      this.calculateSubTotal();
+      }   
+      // this.calculateSubTotal();   
     }
+    
   }
 
   calculateCostHeader() {
     this.clearBoarderDetails();
+    var unitConv3 = 1 , unitConv1 = 1 , unitConv2 = 1;
     // console.log(event.target.value);
     var tollerance = this.costingHdForm.get('tollerence').value;
     var article = this.costingHdForm.get('articleName').value;
@@ -981,30 +992,42 @@ export class CostingComponent implements OnInit {
       // var width = this.costingHdForm.get("width").value;
       // var height = this.costingHdForm.get("height").value;
       // var measurement = this.costingHdForm.get("measurement").value;
-      /// any mesurement to meters conversion
-      var convValue1 = this.unitConvList.filter(
-        (x) => x.fromUnit == this.measurement && x.toUnit == 'M'
-      );
-      // console.log(convValue1);
+
+      if (this.measurement != "M") {       
+        /// any mesurement to meters conversion
+        var convValue1 = this.unitConvList.filter(
+          (x) => x.fromUnit == this.measurement && x.toUnit == 'M'
+        );
+        unitConv1 = convValue1[0]['value'];
+      }
+      
+      console.log(convValue1);
 
       if (convValue1.length > 0) {
         this.boardLength = this.roundTo(
-          (this.width * 2 + length * 2 + tollerance) * convValue1[0]['value'],
+          (this.width * 2 + length * 2 + tollerance) * unitConv1,
           2
         );
 
+        console.log(this.measurement);
         /// any mesurement to inch conversion
-        var convValue3 = this.unitConvList.filter(
-          (x) => x.fromUnit == this.measurement && x.toUnit == 'INC'
-        );
+        if (this.measurement != 'INC') {          
+          var convValue3 = this.unitConvList.filter(
+            (x) => x.fromUnit == this.measurement && x.toUnit == 'INC'
+          );
+          unitConv3 = convValue3[0]['value'];
+        }
+
         this.actualReal = this.roundTo(
-          (this.width + this.height) * convValue3[0]['value'],
+          (this.width + this.height) * unitConv3,
           2
         );
 
         this.ups = this.actualReal < 30.1 ? 2 : 1;
         this.reelSize = this.round_up_to_odd(this.actualReal * this.ups);
 
+        console.log(convValue2);
+       
         var convValue2 = this.unitConvList.filter(
           (x) => x.fromUnit == 'INC' && x.toUnit == 'M'
         );
@@ -1307,7 +1330,7 @@ export class CostingComponent implements OnInit {
     if (costGroup == '01.Base Material') {
       this.updateTotalSummary(costGroupId);
     }
-
+    this.calculateSubTotal();
     this.clearCostDetControls();
   }
 
@@ -1516,9 +1539,10 @@ export class CostingComponent implements OnInit {
       });
 
       costList.push({ costingSpecial: specialList });
-      // console.log(costList);
+      console.log(costList);
 
       this.salesOrderServices.saveCosting(costList).subscribe((result) => {
+        console.log(result);
         if (result['result'] == 1) {
           this.toastr.success('Costing save Successfully !!!');
           this.costingHdForm.get('autoId').setValue(result['refNumId']);
@@ -1616,7 +1640,7 @@ export class CostingComponent implements OnInit {
     this.salesOrderServices.getCostSheetDetails(costHeaderId).subscribe(
       (result) => {
         console.log(result);
-        // console.log(result.costHeader);
+        console.log(result.costHeader);
         var costMatList = [],
           specialList = [];
         this.isArtiHdSel = true;   

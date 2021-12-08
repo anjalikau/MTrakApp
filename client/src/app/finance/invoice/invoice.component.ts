@@ -315,7 +315,7 @@ export class InvoiceComponent implements OnInit {
 
     var taxRate = taxLine[0]['rate'];
     var value = this.invoiceDtForm.get('value').value;
-    var lineTax = this.roundTo(taxRate * value , 2);
+    var lineTax = this.roundTo((taxRate * value)/100 , 2);
     var grossAmount = lineTax + lineTax;
 
     this.invoiceDtForm.get('taxRate').setValue(taxRate);

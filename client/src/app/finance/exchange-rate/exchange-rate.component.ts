@@ -101,9 +101,8 @@ export class ExchangeRateComponent implements OnInit {
       let vf = group.controls[validFrom];
       let vt = group.controls[validTo];
 
-      console.log(vf.value);
-      console.log(vt.value);
-
+      // console.log(vf.value);
+      // console.log(vt.value);
       if (cf.value[0] != undefined && ct.value[0] != undefined) {
         if (cf.value[0] == ct.value[0]) {
           return {
@@ -145,10 +144,14 @@ export class ExchangeRateComponent implements OnInit {
         this.toastr.success('Exchange Rate save Successfully !!!');
         this.loadExchangeRate();
         this.clearControls();
+      } else if (result == 2) {
+        this.toastr.success('Exchange Rate update Successfully !!!');
+        this.loadExchangeRate();
+        this.clearControls();
       } else if (result == -1) {
         this.toastr.warning('Exchange Rate already exists !!!');
       } else {
-        this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+        this.toastr.error('Contact Admin. Error No:- ' + result.toString());
       }
     },
     (error) => {
@@ -162,7 +165,34 @@ export class ExchangeRateComponent implements OnInit {
   loadExchangeRate() {
     this.financeService.getExchangeRate().subscribe(result => {
       this.exchangeRateList = result
-    })
+      console.log(this.exchangeRateList);
+    });    
+  }
+
+  onEditExchangeRate(event,cellId) {
+    this.clearControls();
+    //console.log(cellId.rowID);
+    const ids = cellId.rowID;
+    const selectedRowData = this.exchageRateGrid.data.filter((record) => {
+      return record.autoId == ids;
+    });
+
+    var validFrom: Date = new Date(
+      this.datePipe.transform(selectedRowData[0]['validFrom'], 'yyyy-MM-dd')
+    );
+    var validTo: Date = new Date(
+      this.datePipe.transform(selectedRowData[0]['validTo'], 'yyyy-MM-dd')
+    );
+
+    //console.log(selectedRowData);
+    this.currFrom.setSelectedItem(selectedRowData[0]['currencyFId'],true);
+    this.currTo.setSelectedItem(selectedRowData[0]['currencyTId'] , true);    
+    this.exchangeRateForm.get('validFrom').setValue(validFrom);
+    this.exchangeRateForm.get('validTo').setValue(validTo);
+    this.exchangeRateForm.get('autoId').setValue(selectedRowData[0]['autoId']);
+    this.exchangeRateForm.get('rate').setValue(selectedRowData[0]['rate']);
+    this.exchangeRateForm.get('currencyFrom').disable();
+    this.exchangeRateForm.get('currencyTo').disable();
   }
 
   clearControls() {
@@ -172,6 +202,8 @@ export class ExchangeRateComponent implements OnInit {
     this.exchangeRateForm.get("rate").setValue(0);
     this.exchangeRateForm.get("validFrom").setValue("");
     this.exchangeRateForm.get("validTo").setValue("");
+    this.exchangeRateForm.get('currencyFrom').enable();
+    this.exchangeRateForm.get('currencyTo').enable();
   }
 
 }

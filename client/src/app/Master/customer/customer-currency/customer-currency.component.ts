@@ -144,7 +144,7 @@ export class CustomerCurrencyComponent implements OnInit {
         }  else if (result == -1) {
           this.toastr.warning('Currency already exists !!!');
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {
@@ -182,7 +182,7 @@ export class CustomerCurrencyComponent implements OnInit {
         }  else if (result == -1) {
           this.toastr.warning('Delete Fail !! Currency already assign !!!');
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {

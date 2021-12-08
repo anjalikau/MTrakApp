@@ -90,7 +90,7 @@ export class ArticleUmoConversionComponent implements OnInit {
   }
 
   loadArticles() {
-    this.masterService.getSCardArticles().subscribe((result) => {
+    this.masterService.getArticlesAll().subscribe((result) => {
       this.articleList = result;
     });
     // console.log(this.colorCard);

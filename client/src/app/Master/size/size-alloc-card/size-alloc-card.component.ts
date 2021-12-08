@@ -138,7 +138,7 @@ export class SizeAllocCardComponent implements OnInit {
           this.clearGridRows();
           this.loadSizeList(sizeCardId);
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       });
     } else {
@@ -180,7 +180,7 @@ export class SizeAllocCardComponent implements OnInit {
           this.clearGridRows();
           this.loadSizeList(sizeCardId);
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       });
     } else {

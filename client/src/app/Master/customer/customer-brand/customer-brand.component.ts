@@ -208,6 +208,7 @@ export class CustomerBrandComponent implements OnInit {
     var obj = {
       createUserId: this.user.userId,
       brandId: selectedRowData[0]['brandId'],
+      customerId: customerId,
       autoId: selectedRowData[0]['autoId']
     };
 
@@ -221,7 +222,7 @@ export class CustomerBrandComponent implements OnInit {
         }  else if (result == -1) {
           this.toastr.warning('Delete Fail !! Brand already assign !!!');
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {

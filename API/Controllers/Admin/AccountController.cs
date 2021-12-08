@@ -48,8 +48,8 @@ namespace API.Controllers.Admin
             user.iCategoryLevel = registerDto.iCategoryLevel;
             user.bActive = true;
             user.cPassword = registerDto.cPassword;
-            user.passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.cPassword));
-            user.passwordSalt = hmac.Key;
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.cPassword));
+            user.PasswordSalt = hmac.Key;
 
             _context.MstrAgents.Add(user);
             await _context.SaveChangesAsync(default);
@@ -95,12 +95,17 @@ namespace API.Controllers.Admin
 
             if (user == null) return Unauthorized("Invalid Username");
 
-            using var hmac = new HMACSHA512(user.passwordSalt);
+            var isActiveUser = await _context.MstrAgents
+                .SingleOrDefaultAsync(x => x.cAgentName == loginDto.cAgentName && x.bActive == true);
+
+            if (isActiveUser == null) return Unauthorized("User is inactive");
+
+            using var hmac = new HMACSHA512(user.PasswordSalt);
             var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.cPassword));
 
             for (int i = 0; i < computedHash.Length; i++)
             {
-                if (computedHash[i] != user.passwordHash[i]) return Unauthorized("Invalid Password");
+                if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid Password");
             }
 
             int userId = int.Parse(user.idAgents.ToString());

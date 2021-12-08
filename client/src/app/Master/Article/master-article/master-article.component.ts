@@ -45,8 +45,11 @@ export class MasterArticleComponent implements OnInit {
   radioField: boolean = false;
   dateField: boolean = false;
   aSaveButton: boolean = false;
+  aDeactiveButton: boolean = false;
+  aDeleteButton: boolean = false;
   nameValuePairs: any[];
   rowId: number = 0;
+  btnStatus: string = "";
   
   // Date options
   public dateOptions = {
@@ -119,6 +122,10 @@ export class MasterArticleComponent implements OnInit {
     if (authMenus != null) {
       if (authMenus.filter((x) => x.autoIdx == 133).length > 0) {
         this.aSaveButton = true;
+      } if (authMenus.filter((x) => x.autoIdx == 178).length > 0) {
+        this.aDeactiveButton = true;
+      } if (authMenus.filter((x) => x.autoIdx == 177).length > 0) {
+        this.aDeleteButton = true;
       } 
     }
 
@@ -198,52 +205,56 @@ export class MasterArticleComponent implements OnInit {
   onSelectFlexField(event) {
     this.flexValueList = [];
     for (const item of event.added) {
-      var selectField = this.flexFieldList.filter((x) => x.autoId == item);
+      this.controlFlexFields(item);     
+    }
+  }
 
-      if (selectField[0]['valueList'] == true) {
-        this.comboField = true;
-        this.textField = false;
-        this.numberField = false;
-        this.dateField = false;
-        this.radioField = false;
-        this.loadflexFieldValueList(item);
-      } else if (selectField[0]['dataType'] == 'T') {
-        this.comboField = false;
-        this.textField = true;
-        this.numberField = false;
-        this.dateField = false;
-        this.radioField = false;
-      } else if ( selectField[0]['dataType'] == 'N' || selectField[0]['dataType'] == 'F') {
-        this.textField = false;
-        this.numberField = true;
-        this.comboField = false;
-        this.dateField = false;
-        this.radioField = false;
-      } else if (selectField[0]['dataType'] == 'D') {
-        this.textField = false;
-        this.numberField = false;
-        this.comboField = false;
-        this.dateField = true;
-        this.radioField = false;
-      } else if (selectField[0]['dataType'] == 'B') {
-        this.textField = false;
-        this.numberField = false;
-        this.comboField = false;
-        this.dateField = false;
-        this.radioField = true;
-      }
+  controlFlexFields(flexFieldId) {
+    var selectField = this.flexFieldList.filter((x) => x.autoId == flexFieldId);
+    if (selectField[0]['valueList'] == true) {
+      this.comboField = true;
+      this.textField = false;
+      this.numberField = false;
+      this.dateField = false;
+      this.radioField = false;
+      this.loadflexFieldValueList(flexFieldId);
+    } else if (selectField[0]['dataType'] == 'T') {
+      this.comboField = false;
+      this.textField = true;
+      this.numberField = false;
+      this.dateField = false;
+      this.radioField = false;
+    } else if ( selectField[0]['dataType'] == 'N' || selectField[0]['dataType'] == 'F') {
+      this.textField = false;
+      this.numberField = true;
+      this.comboField = false;
+      this.dateField = false;
+      this.radioField = false;
+    } else if (selectField[0]['dataType'] == 'D') {
+      this.textField = false;
+      this.numberField = false;
+      this.comboField = false;
+      this.dateField = true;
+      this.radioField = false;
+    } else if (selectField[0]['dataType'] == 'B') {
+      this.textField = false;
+      this.numberField = false;
+      this.comboField = false;
+      this.dateField = false;
+      this.radioField = true;
     }
   }
 
   loadflexFieldValueList(item) {
     this.masterService.getFlexFieldValList(item).subscribe(result => {
       this.flexValueList = result
-      console.log(this.flexValueList);
+      // console.log(this.flexValueList);
     })
   }
 
   loadArticleDetails(prodGroupId) {
     var articles: any[];
+    this.articleList = [];
     var obj = {
       categoryId: this.articleForm.get('categoryId').value[0],
       proTypeId: this.articleForm.get('proTypeId').value[0],
@@ -285,7 +296,7 @@ export class MasterArticleComponent implements OnInit {
 
             // console.log(uniqeArticle);
             //// GET FLEX FIELD LIST FOR SAME ARTICLE
-            var flexFieldList = articles.filter((x) => x.autoId == autoId);
+            var flexFieldList = articles.filter((x) => x.autoId == autoId && x.flexFieldId > 0);
             flexLine = [];            
 
             //// CREATE CHILD OBJECT AS FLEX FIELD
@@ -334,8 +345,15 @@ export class MasterArticleComponent implements OnInit {
     });
   }
 
-  openConfirmDialog(event, cellId) {
-    this.rowId = cellId.rowID;  
+  openFlexFieldConfirm(event, cellId) {
+    this.rowId = cellId.rowID;
+    this.btnStatus = "F";  
+    this.dialog.open();
+  }
+
+  openArticleConfirm(event, cellId) {
+    this.rowId = cellId.rowID;
+    this.btnStatus = "A";  
     this.dialog.open();
   }
 
@@ -343,9 +361,91 @@ export class MasterArticleComponent implements OnInit {
   public onDialogOKSelected(event) {   
     event.dialog.close();
     //console.log(this.rowId);
-    if (this.rowId > 0) {
+    if (this.rowId > 0 && this.btnStatus == "F") {
       this.flexFieldGrid.deleteRow(this.rowId);
+    } else if (this.rowId > 0 && this.btnStatus == "A") {
+      this.deleteArticle(this.rowId);
     }
+  }
+
+  deleteArticle(articleId) {
+    if(this.aDeleteButton == true) {
+
+      var obj = {
+        createUserId: this.user.userId,
+        autoId: articleId,
+        isActive: false,
+      };
+
+      var proGroupId = this.articleForm.get('proGroupId').value[0];
+      this.masterService.deleteArticle(obj).subscribe((result) => {
+        if (result == 1) {
+          this.toastr.success('Article Delete Successfully !!!');
+          this.loadArticleDetails(proGroupId);
+        } else if (result == -1) {
+          this.toastr.warning("Can't Delete, Article Size exists !!!");          
+        } else if (result == -2) {
+          this.toastr.warning("Can't Delete, Article Color exists !!!");
+        } else if (result == -3) {
+          this.toastr.warning("Can't Delete, Sales Order exists !!!");
+        } else if (result == -4) {
+          this.toastr.warning("Can't Delete, Cost Sheet exists !!!");
+        } else {
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
+        }
+      },
+      (error) => {
+        this.validationErrors = error;
+      });
+    } else {
+      this.toastr.error('Delete Permission denied !!!');
+    }   
+  }
+
+
+  deactive(cellValue, cellId) {
+    const id = cellId.rowID;
+
+    var obj = {
+      createUserId: this.user.userId,
+      autoId: id,
+      isActive: false,
+    };
+    this.deactiveArticle(obj, 'Deactive');
+  }
+
+  active(cellValue, cellId) {
+    const id = cellId.rowID;
+    var obj = {
+      createUserId: this.user.userId,
+      autoId: id,
+      isActive: true,
+    };
+    this.deactiveArticle(obj, 'Active');
+  }
+
+  deactiveArticle(obj, status) {
+    if(this.aDeactiveButton == true) {
+      var proGroupId = this.articleForm.get('proGroupId').value[0];
+      this.masterService.deactiveArticle(obj).subscribe((result) => {
+        if (result == 1) {
+          this.toastr.success('Article ' + status + ' Successfully !!!');
+          this.loadArticleDetails(proGroupId);
+        } else if (result == 2) {
+          this.toastr.success('Article ' + status + ' Successfully !!!');
+          this.loadArticleDetails(proGroupId);
+        } else if (result == -1) {
+          this.toastr.warning("Can't Deactive, Article details exists !!!");
+        } else {
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
+        }
+      },
+      (error) => {
+        this.validationErrors = error;
+      });
+    } else {
+      this.toastr.error('Disable Permission denied !!!');
+    }   
   }
 
   //// ADD NEW FLEX FIELD ITEM
@@ -395,6 +495,8 @@ export class MasterArticleComponent implements OnInit {
 
   onEditArticle(event, cellId) {
     this.clearArticleControls();
+    this.clearFlexFields();
+    this.flexFieldDataList = [];
     this.isEditMode = true;
     //console.log(this.customerHdGrid.data);
 
@@ -437,8 +539,10 @@ export class MasterArticleComponent implements OnInit {
     this.colorCard.setSelectedItem(selectedRowData[0]['colorCardId'], true);
     this.sizeCard.setSelectedItem(selectedRowData[0]['sizeCardId'], true);
 
+    console.log(selectedRowData[0]['FlexFields']);
     ///// FILL FLEX FIELD GRID
-    this.flexFieldDataList = selectedRowData[0]['FlexFields'];
+    if(selectedRowData[0]['FlexFields'].length > 0)
+      this.flexFieldDataList = selectedRowData[0]['FlexFields'];
     /// disabled fileds
     this.disableArticleControls();
   }
@@ -457,7 +561,7 @@ export class MasterArticleComponent implements OnInit {
   loadProductType(catId: number) {
     this.masterService.getProductTypeDetils(catId).subscribe((result) => {
       this.prodTypeList = result;
-      //  console.log(this.prodTypeList);
+       console.log(this.prodTypeList);
     });
   }
 
@@ -511,11 +615,11 @@ export class MasterArticleComponent implements OnInit {
 
   validationControls() {
     var prodTypeId = this.articleForm.get('proTypeId').value;
-    var prodGroupId = this.articleForm.get('proGroupId').value;
+    // var prodGroupId = this.articleForm.get('proGroupId').value;
     ///// check article Name is automatic or not
     var selProdType = this.prodTypeList.filter(
       (x) => x.bAutoArticle == true && x.autoId == prodTypeId
-    );
+    );    
 
     ///// IF PROD TYPE CODE IS ATOMATIC
     if (selProdType.length > 0) {
@@ -539,8 +643,11 @@ export class MasterArticleComponent implements OnInit {
       } 
     }
     else {
-      this.toastr.warning('Please enter Article Name !!!');
-      return false;
+      console.log(this.articleForm.get("articleName").value == "");
+      if (this.articleForm.get("articleName").value == "") {
+        this.toastr.warning('Please enter Article Name !!!');
+        return false;
+      }      
     }
     return true;
   }
@@ -662,7 +769,7 @@ export class MasterArticleComponent implements OnInit {
       console.log(artiObj);
       this.masterService.saveArticle(artiObj).subscribe(
         (result) => {
-          //console.log(result);
+          console.log(result);
           if (result['result'] == 1) {
             this.toastr.success('Article save successfully !!!');
             this.articleForm.get('autoId').setValue(result['autoId']);
@@ -750,4 +857,20 @@ export class MasterArticleComponent implements OnInit {
       this.articleForm.get('articleName').enable();
     }
   }
+
+  // onEditFlexField(event,cellId) {
+  //   this.clearFlexFields();
+
+  //   const ids = cellId.rowID;
+  //   const selectedRowData = this.articleGrid.data.filter((record) => {
+  //     return record.flexFieldId == ids;
+  //   });
+
+  //   if(selectedRowData.length > 0) {
+  //     console.log(selectedRowData);
+  //     var flexFieldId = selectedRowData[0]["flexFieldId"];
+  //     this.cmbflexFeild.setSelectedItem(flexFieldId , true);
+  //     this.controlFlexFields(flexFieldId);
+  //   }
+  // }
 }

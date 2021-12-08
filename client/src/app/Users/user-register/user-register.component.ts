@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
+import { Member } from 'src/app/_models/member';
 import { SysModule } from 'src/app/_models/sysModule';
 import { User } from 'src/app/_models/user';
 import { UserLevel } from 'src/app/_models/userLevel';
@@ -19,14 +20,18 @@ export class UserRegisterComponent implements OnInit {
   sysModules: SysModule[];
   userLevel: UserLevel[];
   registerForm: FormGroup;
+  pwChangeForm: FormGroup;
   userSaveButton: boolean = false;
   userReg: boolean = false;
+  userDisable: boolean = false;
   moduleReg: boolean = false;
   changePswd: boolean = false;
+  pwdSaveButton: boolean = false;
   showPassword = false;
   regUserList: any;
   user: User;
   validationErrors: string[] = [];
+  member: Member;
 
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -82,6 +87,26 @@ export class UserRegisterComponent implements OnInit {
     this.registerForm.controls.cPassword.valueChanges.subscribe(() => {
       this.registerForm.controls.confirmPassword.updateValueAndValidity();
     });
+
+    this.pwChangeForm = this.fb.group({
+      cAgentName: ['', Validators.required],
+      OldPassword: [],
+      cPassword: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(10),
+        ],
+      ],
+      confirmPassword: [
+        '',
+        [Validators.required, this.matchValues('cPassword')],
+      ],
+    });
+    this.pwChangeForm.controls.cPassword.valueChanges.subscribe(() => {
+      this.pwChangeForm.controls.confirmPassword.updateValueAndValidity();
+    });
   }
 
   /// CHECK THE PASSWORD MATCH BY THE CONFIRM PASSWORD
@@ -110,7 +135,7 @@ export class UserRegisterComponent implements OnInit {
     var userId = this.user.userId;
     this.registerService.getRegisteredUsres(userId).subscribe(result => {
       this.regUserList = result
-      console.log(this.regUserList);
+      // console.log(this.regUserList);
     })
   }
 
@@ -120,15 +145,16 @@ export class UserRegisterComponent implements OnInit {
     if (authMenus != null) {
       if (authMenus.filter((x) => x.autoIdx == 29).length > 0) {
         this.userReg = true;
-      }
-      if (authMenus.filter((x) => x.autoIdx == 30).length > 0) {
+      } if (authMenus.filter((x) => x.autoIdx == 180).length > 0) {
+        this.userDisable = true;
+      } if (authMenus.filter((x) => x.autoIdx == 30).length > 0) {
         this.changePswd = true;
-      }
-      if (authMenus.filter((x) => x.autoIdx == 46).length > 0) {
+      } if (authMenus.filter((x) => x.autoIdx == 46).length > 0) {
         this.moduleReg = true;
-      }
-      if (authMenus.filter((x) => x.autoIdx == 89).length > 0) {
+      } if (authMenus.filter((x) => x.autoIdx == 89).length > 0) {
         this.userSaveButton = true;
+      } if (authMenus.filter((x) => x.autoIdx == 91).length > 0) {
+        this.pwdSaveButton = true;
       }
     }
   }
@@ -145,8 +171,7 @@ export class UserRegisterComponent implements OnInit {
         () => {
           this.toastr.success('User Registered Successfully !!!');
           this.registerForm.reset();
-          //console.log(response);
-          //this.cancel();
+          this.loadRegisterdUsers();
         },
         (error) => {
           this.validationErrors = error;
@@ -178,5 +203,108 @@ export class UserRegisterComponent implements OnInit {
     this.registerForm.reset();
   }
 
-  //// LOADS PERMITED USER LIST
+  deactive(cellValue, cellId) {
+    const id = cellId.rowID;
+
+    var obj = {      
+      createUserId: this.user.userId,
+      idAgents: id,
+      bActive: false,
+    };
+    this.deactiveUser(obj, 'Deactive');
+  }
+
+  active(cellValue, cellId) {
+    const id = cellId.rowID;
+
+    var obj = {
+      createUserId: this.user.userId,
+      idAgents: id,
+      bActive: true,
+    };
+    this.deactiveUser(obj, 'Active');
+  }
+
+  deactiveUser(obj, status) {
+    if(this.userDisable == true) {
+    this.registerService.disableUser(obj).subscribe(
+      (result) => {
+        if (result == 1) {
+          this.toastr.success('User ' + status + ' Successfully !!!');
+          this.loadRegisterdUsers();
+        } else if (result == 2) {
+          this.toastr.success('User ' + status + ' Successfully !!!');
+          this.loadRegisterdUsers();
+        } else if (result == -1) {
+          this.toastr.warning("Can't Deactive, User details exists !!!");
+        } else {
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
+        }
+      },
+      (error) => {
+        this.validationErrors = error;
+      }
+    );
+    } else {
+      this.toastr.error('Disable Permission denied !!!');
+    }
+  }
+
+  changeUserPassword() {
+    if(this.pwdSaveButton == true) {
+    var obj = {
+      cAgentName: this.pwChangeForm.get("cAgentName").value,
+      cPassword: this.pwChangeForm.get("cPassword").value,
+      createUserId: this.user.userId
+    }  
+
+    this.registerService.changeUserPassword(obj).subscribe(
+      () => {
+        this.toastr.success('Password changed Successfully !!!');
+        this.pwChangeForm.reset();
+      },
+      (error) => {
+        this.validationErrors = error;
+      });
+    } else {
+      this.toastr.error('Save permission denied !!!');
+    }
+  }
+
+  searchUserPassword() {
+    // this.pwChangeForm.get('cAgentName').
+    var userName = this.pwChangeForm.get('cAgentName').value;
+    this.clearChangPwControls();
+
+    // console.log(userName);
+    if (this.pwChangeForm.get('cAgentName').value != "" ) {
+      this.registerService.getUserByName(userName).subscribe(
+        (member) => {
+          // console.log(member["cPassword"]);
+          this.pwChangeForm.get('OldPassword').setValue(member['cPassword']);
+        },
+        (error) => {
+          //console.log(error);
+          this.validationErrors = error;
+        });
+    } else {
+      this.toastr.warning("User Name is required !!!");      
+    }
+  }
+
+  clearChangPwControls() {
+    this.pwChangeForm.get("OldPassword").setValue("");
+    this.pwChangeForm.get("cPassword").setValue("");
+    this.pwChangeForm.get("confirmPassword").setValue("");
+  }
+
+  resetForm() {
+    this.pwChangeForm.reset();
+    this.pwChangeForm.get('cAgentName').setValue("");
+  }
+
+  clearPassword(event: any) {
+    this.pwChangeForm.get('OldPassword').setValue('');
+  }
+
 }

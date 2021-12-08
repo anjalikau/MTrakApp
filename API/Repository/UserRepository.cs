@@ -1,16 +1,21 @@
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Data;
+using API.DTOs;
 using API.Entities.Admin;
 using API.Interfaces;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Repository
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : DbConnAdminRepositoryBase, IUserRepository
     {
         private readonly IApplicationAdminDbContext _context;
-        public UserRepository(IApplicationAdminDbContext context)
+
+        public UserRepository(IDbConnectionFactory dbConnectionFactory , IApplicationAdminDbContext context) : base(dbConnectionFactory)
         {
             _context = context;
         }
@@ -41,7 +46,7 @@ namespace API.Repository
                     .SingleOrDefaultAsync();
 
             return await _context.MstrAgents
-                    .Where(x => x.iCategoryLevel >= agentLevel.iCategoryLevel)
+                    .Where(x => x.iCategoryLevel >= agentLevel.iCategoryLevel && x.bActive == true)
                     .ToListAsync();
         }
 
@@ -66,6 +71,40 @@ namespace API.Repository
         {
             return await _context.SaveChangesAsync(default) > 0;
         }
+
+       
+        public async Task<int> DisableUserAsync(StateUserDto agents)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("bActive" , agents.bActive);
+            para.Add("AgentId", agents.idAgents);
+            para.Add("UserId", agents.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrAgentDeactive", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }  
+
+        public async Task<int> ChangeUserPwdAsync(UserUpdateDto agents)
+        {
+            DynamicParameters para = new DynamicParameters();
+         
+            para.Add("AgentName", agents.cAgentName);
+            para.Add("Password", agents.cPassword);
+            para.Add("PasswordHash", agents.PasswordHash);
+            para.Add("PasswordSalt", agents.PasswordSalt);
+            para.Add("UserId", agents.CreateUserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spMstrAgentChangePasword", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }  
+
 
         // public void Update(MstrAgents user)
         // {

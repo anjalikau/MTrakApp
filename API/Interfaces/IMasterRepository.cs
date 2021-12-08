@@ -42,10 +42,11 @@ namespace API.Interfaces
         Task<int> DeleteCusCurrencyAsync(MstrCustomerCurrency customerCurrency);
         Task<int> SaveCustomerCurrencyAsync(MstrCustomerCurrency customercurrency);
         Task<int> SaveCusAddressAsync(MstrCustomerAddressList cusAddressList);
+        Task<int> DeactiveCustomerAddAsync(MstrCustomerAddressList cusAdd);
         Task<int> DeleteCusBrandAsync(MstrCustomerBrand customerBrand);
         Task<IEnumerable<ReturnCustomerAddDto>> GetCustomerAddressAsync(int customerId);
         Task<int> SaveCustomerDivisionAsync(MstrCustomerDivision cusDivision);
-        // Task<int> DeactiveCusLocAsync(MstrCustomerLocation mstrCustomerDetails);
+        Task<int> DeactiveCusLocAsync(MstrCustomerLocation mstrCustomerDetails);
         Task<ReturnDto> SaveProdDefinitionAsync(ProdDefinitionDto prodDefinitionDto);
         Task<int> DeleteProdDefinitionAsync(ProdDefinitionDto prodDefDto);
         Task<IEnumerable<ProdDefinitionDto>> GetProdDefinitionAsync(byte ProdHeaderId);
@@ -98,6 +99,8 @@ namespace API.Interfaces
         Task<int> SaveArticleUOMConvAsync(MstrArticleUOMConversion articleUOM);
         Task<int> ActiveArticleUOMConvAsync(MstrArticleUOMConversion articleUOM);
         Task<int> DisableCusDivisionAsync(MstrCustomerDivision cusDivision);
+        Task<int> DeactiveArticleAsync(MstrArticle article);
+        Task<int> DeleteArticleAsync(MstrArticle article);
 
     }
 }

@@ -67,8 +67,12 @@ export class RegisterService {
     return this.http.get<UserLevel[]>(this.baseUrl + 'Agents/AgentLevel/' + userId , httpOptions);
   }
 
-  changeUserPassword(userName: string , user: Member) {
-    return this.http.put(this.baseUrl + 'Agents/' + userName , user , httpOptions);
+  // changeUserPassword(userName: string , user: Member) {
+  //   return this.http.put(this.baseUrl + 'Agents/' + userName , user , httpOptions);
+  // } 
+
+  changeUserPassword(user: Member) {
+    return this.http.post(this.baseUrl + 'Agents/ChPwdUser'  , user , httpOptions);
   } 
   
   getSysModules() {
@@ -81,6 +85,10 @@ export class RegisterService {
 
   saveUserModule(userModule: UserModule[]) {
     return this.http.post(this.baseUrl + 'Agents/UserModSave' , userModule, httpOptions)
+  }
+
+  disableUser(user: Member) {
+    return this.http.post(this.baseUrl + 'Agents/DeActUser' , user, httpOptions)
   }
 
   deleteUserModule(userModule: DelUserModule) {

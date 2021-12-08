@@ -29,13 +29,13 @@ namespace API.Entities.Admin
         public bool bActive { get; set; }
 
         [Required] 
-        public byte[] passwordHash { get; set; }
+        public byte[] PasswordHash { get; set; }
 
         [Required] 
-        public byte[] passwordSalt { get; set; }
-
+        public byte[] PasswordSalt { get; set; }
+        public int ? CreateUserId { get; set; }
+        public int ? UpdateUserId { get; set; }
         public DateTime ? CreatedDateTime { get; set; } = DateTime.Now;
-
         public DateTime ? UpdateDateTime { get; set; } = DateTime.Now;        
 
         [ForeignKey("Category_Link")] 

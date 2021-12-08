@@ -77,10 +77,14 @@ export class TaxComponent implements OnInit {
           this.toastr.success('Tax save Successfully !!!');
           this.loadTax();
           this.clearControls();
+        } else if (result == 2) {
+          this.toastr.success('Tax update Successfully !!!');
+          this.loadTax();
+          this.clearControls();
         } else if (result == -1) {
           this.toastr.warning('Tax already exists !!!');
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {
@@ -91,10 +95,26 @@ export class TaxComponent implements OnInit {
     }
   }
 
+  onEditTax(event,cellId) {
+    this.clearControls();
+    //console.log(cellId.rowID);
+    const ids = cellId.rowID;
+    const selectedRowData = this.taxGrid.data.filter((record) => {
+      return record.autoId == ids;
+    });
+
+    //console.log(selectedRowData);
+    this.taxForm.get('description').setValue(selectedRowData[0]['description']);
+    this.taxForm.get('autoId').setValue(selectedRowData[0]['autoId']);
+    this.taxForm.get('rate').setValue(selectedRowData[0]['rate']);
+    this.taxForm.get('description').disable();
+  }
+
   clearControls() {
     this.taxForm.get("autoId").setValue(0);
     this.taxForm.get("description").setValue("");
     this.taxForm.get("rate").setValue(0);
+    this.taxForm.get('description').enable();
   }
 
   loadTax() {

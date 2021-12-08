@@ -40,12 +40,12 @@ namespace API
         {
             services.AddApplicationServices(_config);
             services.AddControllers();
-            // services.AddControllers
-            // (options =>
-            // {
-            //     options.RespectBrowserAcceptHeader = true; // false by default
-            // })
-            // .AddXmlSerializerFormatters();
+            services.AddControllers
+            (options =>
+            {
+                options.RespectBrowserAcceptHeader = true; // false by default
+            })
+            .AddXmlSerializerFormatters();
             services.AddCors();
             services.AddIdentityServices(_config);            
             // services.AddCors(o => o.AddPolicy("AllowAllOrigins", builder =>

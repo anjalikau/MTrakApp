@@ -35,14 +35,24 @@
                         (onColumnResized)="onResize($event)" [perPage]="10" height="400px" displayDensity="compact"
                         [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
                         [rowSelection]="'Single'">
-                        <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                        <igx-column [width]="'100px'" field="bActive" [header]="' '" [selectable]="false" [sortable]="false"
+                            [resizable]="false">
                             <ng-template igxCell let-cell="cell">
-                                <button igxButton="icon" class="fab-compact"
-                                    (click)="onEditCustomerLoc($event,cell.cellID)" data-toggle="modal"
+                                <button igxButton="icon" class="fab-compact" [disabled]="!cell.value" (click)="onEditCustomerLoc($event,cell.cellID)" data-toggle="modal"
                                     data-target="#modalLocationNew">
-                                    <!-- (click)="onEdit($event,cell.cellID)" -->
                                     <igx-icon family="material">edit</igx-icon>
                                 </button>
+                                <div *ngIf="!cell.value; then thenBlock else elseBlock"></div>
+                                <ng-template #thenBlock>
+                                    <button igxButton="icon" class="fab-compact" (click)="active($event ,cell.cellID)">
+                                        <igx-icon class="icon-red" family="material">toggle_off</igx-icon>
+                                    </button>
+                                </ng-template>
+                                <ng-template #elseBlock>
+                                    <button igxButton="icon" class="fab-compact" (click)="deactive($event ,cell.cellID)">
+                                        <igx-icon class="icon-green" family="material">toggle_on</igx-icon>
+                                    </button>
+                                </ng-template>
                             </ng-template>
                         </igx-column>
                         <igx-column [field]="'shortCode'" [header]="'ShortCode'" [resizable]="true"

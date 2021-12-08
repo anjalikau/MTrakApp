@@ -69,16 +69,13 @@
                         [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="500px"
                         displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
                         [allowAdvancedFiltering]="true" [rowSelection]="'single'">
-                        <!-- <igx-column [width]="'50px'" [field]="'isActive'" [header]="' '" [selectable]="false" [sortable]="false" [resizable]="false">
-                            <ng-template igxCell let-cell="cell">                                
-                                <div *ngIf="!cell.value; then thenBlock else elseBlock"></div>
-                                <ng-template #thenBlock>
-                                    <button igxButton="icon" class="fab-compact" (click)="activeArticleUOM($event ,cell.cellID)">
-                                        <igx-icon class="icon-red" family="material">toggle_off</igx-icon>
-                                    </button>
-                                </ng-template>
+                        <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                            <ng-template igxCell let-cell="cell">
+                                <button igxButton="icon" class="fab-compact" (click)="onEditExchangeRate($event,cell.cellID)">
+                                    <igx-icon family="material">edit</igx-icon>
+                                </button>
                             </ng-template>
-                        </igx-column> -->
+                        </igx-column>
                         <igx-column [field]="'currencyFrom'" [header]="'Currency From'" [width]="'150px'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                         </igx-column>
                         <igx-column [field]="'currencyTo'" [header]="'Currency To'" [width]="'150px'" [resizable]="true" [dataType]="'string'" [sortable]="true">

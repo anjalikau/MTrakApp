@@ -289,7 +289,7 @@ export class CustomerAddressComponent implements OnInit {
         } else if (result == -1) {
           this.toastr.warning('Address already exists !!!');
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {
@@ -301,6 +301,54 @@ export class CustomerAddressComponent implements OnInit {
     }
   }
 
+  deactive(cellValue, cellId) {
+    const id = cellId.rowID;
+    var obj = {
+      createUserId: this.user.userId,
+      autoId: id,
+      bActive: false,
+    };
+    this.deactiveAddress(obj, 'Deactive');
+  }
+
+  active(cellValue, cellId) {
+    const id = cellId.rowID;
+    var obj = {
+      createUserId: this.user.userId,
+      autoId: id,
+      bActive: true,
+    };
+    this.deactiveAddress(obj, 'Active');
+  }
+
+   //// active and deactive customer ADDRESS
+  /// deactive only if user not exists in the sales order header
+  deactiveAddress(obj, status) {
+    if(this.caDisableButton == true) {
+    var customerId = this.custAddressForm.get('customerAId').value[0];
+
+    this.masterService.deactiveCustomerAddress(obj).subscribe(
+      (result) => {
+        if (result == 1) {
+          this.toastr.success('Address ' + status + ' Successfully !!!');
+          this.loadCustomerAddressDt(customerId);
+        } else if (result == 2) {
+          this.toastr.success('Adress ' + status + ' Successfully !!!');
+          this.loadCustomerAddressDt(customerId);
+        } else if (result == -1) {
+          this.toastr.warning("Can't Deactive! User already assign !");
+        } else {
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
+        }
+      },
+      (error) => {
+        this.validationErrors = error;
+      }
+    );
+    } else {
+      this.toastr.error('Disable Permission denied !!!');
+    }
+  }
   
 
 }

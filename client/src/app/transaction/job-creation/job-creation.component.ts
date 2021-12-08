@@ -222,7 +222,7 @@ export class JobCreationComponent implements OnInit {
         sizeId: item,
       };
 
-      //console.log(obj);
+      console.log(obj);
       this.salesOrderServices.getCostComination(obj).subscribe((result) => {
         this.combinationList = result;
       });

@@ -245,6 +245,7 @@ namespace API.Controllers.CCSystem.Master
                     new 
                     {
                         autoId = am.aps.ap.au.a.AutoId,
+                        isActive = am.aps.ap.au.a.IsActive,
                         unitCode = am.aps.ap.u.Code,
                         catCode = am.aps.ap.au.c.Code,
                         prodTypeCode = am.aps.p.ProdTypeCode,
@@ -277,7 +278,7 @@ namespace API.Controllers.CCSystem.Master
         public async Task<IActionResult> GetCCardArticle() 
         {
             var result = await _context.MstrArticle
-                .Where(x => x.ColorCardId > 0)
+                .Where(x => x.ColorCardId > 0 && x.IsActive == true)
                 .Join( _context.MstrColorCard , x => x.ColorCardId , c => c.AutoId 
                 , (x , c) => new {
                     autoId = x.AutoId , 
@@ -293,7 +294,7 @@ namespace API.Controllers.CCSystem.Master
         public async Task<IActionResult> GetSCardArticle() 
         {
             var result = await _context.MstrArticle
-                .Where(x => x.SizeCardId > 0)
+                .Where(x => x.SizeCardId > 0 && x.IsActive == true)
                 .Join( _context.MstrSizeCard , x => x.SizeCardId , s => s.AutoId 
                 , (x , s) => new {
                     autoId = x.AutoId , 
@@ -331,6 +332,20 @@ namespace API.Controllers.CCSystem.Master
         public async Task<IActionResult> SaveArticle(SaveArticleDto article)
         {
             var result = await _masterRepository.SaveArticleAsync(article);
+            return Ok(result);
+        }
+
+        [HttpPost("DAArticle")]
+        public async Task<IActionResult> DeactiveArticle(MstrArticle article)
+        {
+            var result = await _masterRepository.DeactiveArticleAsync(article);
+            return Ok(result);
+        }
+
+        [HttpPost("DelArticle")]
+        public async Task<IActionResult> DeleteArticle(MstrArticle article)
+        {
+            var result = await _masterRepository.DeleteArticleAsync(article);
             return Ok(result);
         }
 
@@ -546,12 +561,12 @@ namespace API.Controllers.CCSystem.Master
             return Ok(customerList);
         }       
 
-        // [HttpPost("CustomerLoc/Deactive")]
-        // public async Task<ActionResult> DeactiveCustomerLocation(MstrCustomerLocation customerLoc)
-        // {           
-        //     var result = await _masterRepository.DeactiveCusLocAsync(customerLoc); 
-        //     return Ok(result);
-        // }        
+        [HttpPost("DeactCusLoc")]
+        public async Task<ActionResult> DeactiveCustomerLocation(MstrCustomerLocation customerLoc)
+        {           
+            var result = await _masterRepository.DeactiveCusLocAsync(customerLoc); 
+            return Ok(result);
+        }        
          
         [HttpPost("SaveCustomerLoc")]
         public async Task<ActionResult> SaveCustomerLoc(MstrCustomerLocation customerLoc)
@@ -719,6 +734,13 @@ namespace API.Controllers.CCSystem.Master
         public async Task<IActionResult> GetCustomerAddressList(int customerId)
         {
             var result = await _masterRepository.GetCustomerAddressAsync(customerId);
+            return Ok(result);
+        }
+
+        [HttpPost("DeactCusAdd")]
+        public async Task<IActionResult> DeactiveCustomerAddList(MstrCustomerAddressList cusAddressList)
+        {
+            var result = await _masterRepository.DeactiveCustomerAddAsync(cusAddressList);
             return Ok(result);
         }
 

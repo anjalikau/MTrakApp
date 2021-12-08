@@ -140,7 +140,7 @@ export class CustomerDivisionComponent implements OnInit {
         } else if (result == -1) {
           this.toastr.warning('Division already exists !!!');
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {
@@ -196,7 +196,7 @@ export class CustomerDivisionComponent implements OnInit {
     if(this.cdDisableButton == true) {
     var customerId = this.custDivisionForm.get('customerDId').value[0];
 
-    this.masterService.deactiveCustomerUser(obj).subscribe(
+    this.masterService.disableCustomerDivision(obj).subscribe(
       (result) => {
         if (result == 1) {
           this.toastr.success('Division ' + status + ' Successfully !!!');
@@ -207,7 +207,7 @@ export class CustomerDivisionComponent implements OnInit {
         } else if (result == -1) {
           this.toastr.warning("Can't Deactive! User already assign !");
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {

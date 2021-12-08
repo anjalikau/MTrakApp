@@ -138,7 +138,7 @@ export class MasterProdTypeComponent implements OnInit {
         } else if (result == -1) {
           this.toastr.warning('Deactive failed, already allocated !!!');
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {
@@ -176,7 +176,7 @@ export class MasterProdTypeComponent implements OnInit {
         } else if (result == -1) {
           this.toastr.warning('Product Type already exists !!!');
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {

@@ -84,7 +84,7 @@ export class AssignColorComponent implements OnInit {
 
   loadArticles() {
     this.masterService.getCCardArticles().subscribe((result) => {
-      this.articleList = result;
+      this.articleList = result
     });
     // console.log(this.colorCard);
   }

@@ -132,7 +132,7 @@ export class UserPermissionComponent implements OnInit {
           this.clearGridRows();
           this.loadUserMenuList(selUserId);
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       });
     } else {
@@ -165,7 +165,7 @@ export class UserPermissionComponent implements OnInit {
           this.toastr.warning('User Menu delete failed !!!');
           this.loadUserMenuList(selUserId);
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       });
     } else {

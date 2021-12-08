@@ -76,17 +76,17 @@ export class UserPwchangeComponent implements OnInit {
     if(this.pwdSaveButton == true) {
     var userName = this.pwChangeForm.get('cAgentName').value;
     this.member = Object.assign({}, this.pwChangeForm.value);
-    this.registerService.changeUserPassword(userName, this.member).subscribe(
-      () => {
-        this.toastr.success('Password changed Successfully !!!');
-        this.pwChangeForm.reset();
-      },
-      (error) => {
-        this.validationErrors = error;
-      });
-    } else {
-      this.toastr.error('Save permission denied !!!');
-    }
+    // this.registerService.changeUserPassword(userName, this.member).subscribe(
+    //   () => {
+    //     this.toastr.success('Password changed Successfully !!!');
+    //     this.pwChangeForm.reset();
+    //   },
+    //   (error) => {
+    //     this.validationErrors = error;
+    //   });
+    // } else {
+    //   this.toastr.error('Save permission denied !!!');
+     }
   }
 
   searchUserPassword() {

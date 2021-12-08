@@ -199,7 +199,7 @@ export class CustomerHeaderComponent implements OnInit {
         } else if (result == -1) {
           this.toastr.warning('Customer already exists !!!');
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {
@@ -252,7 +252,7 @@ export class CustomerHeaderComponent implements OnInit {
         } else if (result == -1) {
           this.toastr.warning("Can't Deactive, Customer details exists !!!");
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {
@@ -275,6 +275,7 @@ export class CustomerHeaderComponent implements OnInit {
     this.customerHdForm.get('shortCode').enable();
     this.customerHdForm.get('currencyId').enable();
     this.customerHdForm.get('customerId').enable();
+    this.customerHdForm.get('creditDays').enable();
     this.formTitle = "New Customer";
   }
 
@@ -320,5 +321,6 @@ export class CustomerHeaderComponent implements OnInit {
     this.customerHdForm.get('shortCode').disable();
     this.customerHdForm.get('currencyId').disable();
     this.customerHdForm.get('customerId').disable();
+    this.customerHdForm.get('creditDays').disable();
   }
 }

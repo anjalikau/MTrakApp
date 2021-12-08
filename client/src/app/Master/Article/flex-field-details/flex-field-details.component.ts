@@ -145,7 +145,8 @@ export class FlexFieldDetailsComponent implements OnInit {
   ///// LOADS ALL FLEX FIELDS DETAILS
   loadFlexFields(categoryId) {
     
-    var flexFieldList : any[];
+    var flexFieldList = [];
+    this.flexFieldDt = [];
     this.masterService.getFlexFieldDetails(categoryId).subscribe((flexList) => {
       flexFieldList = flexList;
     }, (error) => {
@@ -198,7 +199,7 @@ export class FlexFieldDetailsComponent implements OnInit {
         } else if (result == -1) {
           this.toastr.warning('Flex Field already exists !!!');
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {
@@ -247,7 +248,7 @@ export class FlexFieldDetailsComponent implements OnInit {
         } else if (result == -1) {
           this.toastr.warning("Can't deactive, Field already assigned !");
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {

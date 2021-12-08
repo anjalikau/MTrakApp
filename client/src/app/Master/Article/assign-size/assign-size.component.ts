@@ -82,7 +82,7 @@ export class AssignSizeComponent implements OnInit {
 
   loadArticles() {
     this.masterService.getSCardArticles().subscribe((result) => {
-      this.articleList = result;
+      this.articleList = result
     });
     // console.log(this.colorCard);
   }

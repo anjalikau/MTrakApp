@@ -41,14 +41,13 @@
                         [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
                         height="500px" displayDensity="compact" [allowFiltering]="true"
                         [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
-
-                        <!-- <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                        <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
                             <ng-template igxCell let-cell="cell">
-                                <button igxButton="icon" class="fab-compact" (click)="onEditAddressType($event,cell.cellID)">
+                                <button igxButton="icon" class="fab-compact" (click)="onEditTax($event,cell.cellID)">
                                     <igx-icon family="material">edit</igx-icon>
                                 </button>
                             </ng-template>
-                        </igx-column> -->
+                        </igx-column>
                         <igx-column [field]="'description'" [header]="'Description'" [resizable]="true" [dataType]="'string'"
                             [sortable]="true">
                         </igx-column>                           

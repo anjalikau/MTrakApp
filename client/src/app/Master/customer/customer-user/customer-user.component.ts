@@ -173,7 +173,7 @@ export class CustomerUserComponent implements OnInit {
         } else if (result == -1 || result == -2) {
           this.toastr.warning('User already exists !!!');
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {
@@ -250,7 +250,7 @@ export class CustomerUserComponent implements OnInit {
         } else if (result == -1) {
           this.toastr.warning("Can't Deactive! User already assign !");
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {
@@ -259,8 +259,7 @@ export class CustomerUserComponent implements OnInit {
     );
     } else {
       this.toastr.error('Disable Permission denied !!!');
-
     }
-
   }
+  
 }

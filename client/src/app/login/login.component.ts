@@ -48,11 +48,11 @@ export class LoginComponent implements OnInit {
     else {
         //console.log(this.model["ModuleId"]);
       var obj = {
-        "ModuleId" : parseInt(this.loginForm.get('ModuleId').value[0]),
-        "cAgentName" : this.loginForm.get('cAgentName').value,
-        "cPassword" : this.loginForm.get('cPassword').value
-      }
-      
+        moduleId: parseInt(this.loginForm.get('ModuleId').value[0]),
+        cAgentName: this.loginForm.get('cAgentName').value,
+        cPassword: this.loginForm.get('cPassword').value,
+      };
+      console.log(obj);
       this.accountServices.login(obj).subscribe(response =>
       {
         //console.log(response);

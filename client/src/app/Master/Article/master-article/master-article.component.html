@@ -67,21 +67,35 @@
 
         <div class="row">
             <igx-hierarchical-grid #articleGrid [data]="articleList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
-                [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
+                [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="500"
                 height="500px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
-                [allowAdvancedFiltering]="true" [rowSelection]="'Single'"> 
-                
-                <igx-column [width]="'50px'" [header]="' '"  [selectable]="false" [sortable]="false" [resizable]="false">
+                [allowAdvancedFiltering]="true" [rowSelection]="'Single'">                 
+                <igx-column [width]="'120px'" field="isActive" [header]="' '" [selectable]="false" [sortable]="false"
+                    [resizable]="false">
                     <ng-template igxCell let-cell="cell">
-                        <button igxButton="icon" class="fab-compact" (click)="onEditArticle($event,cell.cellID)" data-toggle="modal" 
+                        <button igxButton="icon" class="fab-compact" [disabled]="!cell.value" (click)="onEditArticle($event,cell.cellID)" data-toggle="modal"
                             data-target="#modalArticle">
                             <igx-icon family="material">edit</igx-icon>
                         </button>
+                        <button igxButton="icon" class="fab-compact" [disabled]="!cell.value" (click)="openArticleConfirm($event,cell.cellID)">
+                            <igx-icon family="material">delete</igx-icon>
+                        </button>
+                        <div *ngIf="!cell.value; then thenBlock else elseBlock"></div>
+                        <ng-template #thenBlock>
+                            <button igxButton="icon" class="fab-compact" (click)="active($event ,cell.cellID)">
+                                <igx-icon class="icon-red" family="material">toggle_off</igx-icon>
+                            </button>
+                        </ng-template>
+                        <ng-template #elseBlock>
+                            <button igxButton="icon" class="fab-compact" (click)="deactive($event ,cell.cellID)">
+                                <igx-icon class="icon-green" family="material">toggle_on</igx-icon>
+                            </button>
+                        </ng-template>
                     </ng-template>
                 </igx-column>
-                <igx-column [field]="'stockCode'" [header]="'Stock Code'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                <igx-column [field]="'stockCode'" [header]="'Stock Code'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'150px'">
                 </igx-column>
-                <igx-column [field]="'articleName'" [header]="'Article Name'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                <igx-column [field]="'articleName'" [header]="'Article Name'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'200px'">
                 </igx-column>
                 <igx-column [field]="'description1'" [header]="'Description1'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                 </igx-column>
@@ -121,7 +135,6 @@
        
     </div>
 </div>
-
 
 <div class="modal fade" id="modalArticle">
     <div class="modal-dialog modal-xl">
@@ -361,9 +374,12 @@
                             [primaryKey]="'flexFieldId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10" height="300px"
                             displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
                             [allowAdvancedFiltering]="true" [rowSelection]="'Single'">                    
-                            <igx-column [width]="'50px'" [header]="' '" [selectable]="false" [sortable]="false" [resizable]="false">
+                            <igx-column [width]="'100px'" [header]="' '" [selectable]="false" [sortable]="false" [resizable]="false">
                                 <ng-template igxCell let-cell="cell">
-                                    <button igxButton="icon" class="fab-compact" [disabled]="isEditMode" (click)="openConfirmDialog($event,cell.cellID)">
+                                    <!-- <button igxButton="icon" class="fab-compact" (click)="onEditFlexField($event,cell.cellID)">
+                                        <igx-icon family="material">edit</igx-icon>
+                                    </button> -->
+                                    <button igxButton="icon" class="fab-compact" [disabled]="isEditMode" (click)="openFlexFieldConfirm($event,cell.cellID)">
                                         <igx-icon family="material">delete</igx-icon>
                                     </button>                    
                                 </ng-template>

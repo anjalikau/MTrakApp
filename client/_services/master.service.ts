@@ -267,6 +267,14 @@ export class MasterService {
     return this.http.get<any>(this.baseUrl + 'Master/SCArticle' , httpOptions)
   }
 
+  deactiveArticle(article: any) {
+    return this.http.post(this.baseUrl + 'Master/DAArticle' , article , httpOptions)
+  }
+
+  deleteArticle(article: any) {
+    return this.http.post(this.baseUrl + 'Master/DelArticle' , article , httpOptions)
+  }
+
   //#endregion "Article"
 
   //#region "CodeDefinition"
@@ -501,6 +509,13 @@ export class MasterService {
     );
   }
 
+  deactiveCustomerLoc(customerLoc : number) {
+    return this.http.post(
+      this.baseUrl + 'Master/DeactCusLoc' , customerLoc,
+      httpOptions
+    );
+  }
+
   saveCustomerLocation(model: any) {
     return this.http.post(
       this.baseUrl + 'Master/SaveCustomerLoc',
@@ -553,6 +568,11 @@ export class MasterService {
       this.baseUrl + 'Master/CusAddress/' + customerId,
       httpOptions
     );
+  }
+
+  deactiveCustomerAddress(cusAddress: CustomerAddressList) {
+    return this.http.post(
+      this.baseUrl + 'Master/DeactCusAdd', cusAddress, httpOptions);
   }
 
   //#endregion "Customer Address"
@@ -637,7 +657,7 @@ export class MasterService {
 
   deleteCustomerCurrency(cusCurrency: any) {
     return this.http.post(
-      this.baseUrl + 'Master/DeleteCusC/',
+      this.baseUrl + 'Master/DeleteCusC',
       cusCurrency,
       httpOptions
     );

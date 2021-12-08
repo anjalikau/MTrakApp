@@ -93,7 +93,7 @@ export class MasterColorCardComponent implements OnInit {
         } else if (result == -1) {
           this.toastr.warning('Color Card already exists !!!');
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
         //this.triggerEvent();
       },
@@ -140,7 +140,7 @@ export class MasterColorCardComponent implements OnInit {
         } else if (result == -1) {
           this.toastr.warning('Color Card already in use !!!');
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
         //this.triggerEvent();
       },

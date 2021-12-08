@@ -99,7 +99,7 @@ namespace API.Controllers.CCSystem.Transaction
                     {
                         CombinId = c.AutoId,
                         Combination = c.Combination
-                    }).ToListAsync();
+                    }).Distinct().ToListAsync();
           
             return Ok(combin);
         }

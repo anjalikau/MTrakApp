@@ -25,7 +25,7 @@ namespace API.Entities
         public int ColorCardId {get;set;}
         public int SizeCardId {get;set;}
         public decimal SalesPrice {get;set;}
-	    // public int QtyInStock {get;set;}
+	    public bool IsActive {get;set;}
 	    public decimal AvgCostPrice {get;set;}
 	    public decimal LastCostPrice {get;set;}
 	    public decimal MaxCostPrice {get;set;}

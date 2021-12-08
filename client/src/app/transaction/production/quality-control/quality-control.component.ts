@@ -221,7 +221,7 @@ export class QualityControlComponent implements OnInit {
           this.toastr.success('Balance Qty not enough, Check again !!!');
           this.refreshControls();
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
         this.loadProductionTotal();
       });

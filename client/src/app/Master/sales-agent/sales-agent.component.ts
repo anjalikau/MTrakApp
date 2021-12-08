@@ -101,7 +101,7 @@ export class SalesAgentComponent implements OnInit {
         } else if (result == -2) {
           this.toastr.warning('Sales Agent fail, already in use  !!!');
         } else {
-          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+          this.toastr.error('Contact Admin. Error No:- ' + result.toString());
         }
       },
       (error) => {
