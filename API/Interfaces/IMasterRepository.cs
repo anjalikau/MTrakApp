@@ -101,6 +101,7 @@ namespace API.Interfaces
         Task<int> DisableCusDivisionAsync(MstrCustomerDivision cusDivision);
         Task<int> DeactiveArticleAsync(MstrArticle article);
         Task<int> DeleteArticleAsync(MstrArticle article);
+        Task<IEnumerable<ArticleDetailDto>> GetArtileDetailsAllAsync(int companyId);
 
     }
 }

@@ -247,6 +247,11 @@ export class MasterService {
     );
   }
 
+  getCompArticleAll(companyId: number) {
+    return this.http.get<Article[]>(this.baseUrl + 'Master/CompArti/' + companyId ,httpOptions);
+  }
+
+
   getArticlePrices(articleId: number) {
     return this.http.get<any>(this.baseUrl + 'Master/ArtPrice/' + articleId , httpOptions );
   }

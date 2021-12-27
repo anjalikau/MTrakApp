@@ -54,14 +54,14 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="text" formControlName="customerRef" />
-                            <label igxLabel for="customerRef"> Customer Ref</label>
+                            <label igxLabel for="customerRef"> Customer PO# </label>
                         </igx-input-group>
                     </div>
                 </div>
 
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label>Customer </label>
+                        <label> Customer Name </label>
                         <igx-combo #customer id="customer" class="combo" displayKey="name" valueKey="autoId"
                             [itemsMaxHeight]="250" [data]="customerList" placeholder="Customer"
                             (onSelectionChange)="singleSelection($event)" 
@@ -73,7 +73,7 @@
 
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label>Location </label>
+                        <label> Delivery Location </label>
                         <igx-combo #location id="location" class="combo" displayKey="shortCode" valueKey="autoId"
                             [itemsMaxHeight]="250" [data]="customerDtList" placeholder="Location"
                             (onSelectionChange)="singleSelection($event)" formControlName="customerLocId"
@@ -95,7 +95,7 @@
 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label>Currency </label>
+                        <label> Currency </label>
                         <igx-combo #currency id="cusCurrencyId" class="combo" displayKey="code" valueKey="currencyId"
                             [itemsMaxHeight]="250" [data]="customerCurrList" placeholder="Currency"
                              formControlName="cusCurrencyId" (onSelectionChange)="singleSelection($event)"
@@ -117,7 +117,7 @@
 
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label>Users </label>
+                        <label> Contact Person </label>
                         <igx-combo #users id="users" class="combo" displayKey="name" valueKey="autoId"
                             [itemsMaxHeight]="250" [data]="customerUserList" placeholder="Users"
                             (onSelectionChange)="singleSelection($event)" formControlName="customerUserId"
@@ -139,20 +139,6 @@
 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label>Country of Origins </label>
-                        <igx-combo #countries id="countries" class="combo" displayKey="code" valueKey="autoId"
-                            [itemsMaxHeight]="250" [data]="countryList" placeholder="Countries"
-                            (onSelectionChange)="singleSelection($event)" formControlName="countryId"
-                            searchPlaceholder="Search...">
-                        </igx-combo>
-                    </div>
-                </div>              
-
-            </div>
-
-            <div class="row">
-                <div class="col-md-2">
-                    <div class="form-group">
                         <label>Division</label>
                         <igx-combo #division id="division" class="combo" displayKey="details" valueKey="autoId"
                             [itemsMaxHeight]="250" [data]="divisionList" placeholder="Division"
@@ -161,6 +147,21 @@
                         </igx-combo>
                     </div>
                 </div>
+
+                <!-- <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Country of Origins </label>
+                        <igx-combo #countries id="countries" class="combo" displayKey="code" valueKey="autoId"
+                            [itemsMaxHeight]="250" [data]="countryList" placeholder="Countries"
+                            (onSelectionChange)="singleSelection($event)" formControlName="countryId"
+                            searchPlaceholder="Search...">
+                        </igx-combo>
+                    </div>
+                </div>               -->
+
+            </div>
+
+            <div class="row">               
 
                 <div class="col-md-2">
                     <div class="form-group">
@@ -227,7 +228,18 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label> Article Name </label>
-                        <igx-input-group type="search">
+                        <igx-prefix (click)="articleDialog.open()">
+                            <igx-icon> search</igx-icon>
+                        </igx-prefix>
+                
+                        <igx-combo #article class="combo" displayKey="articleName" valueKey="autoId" [itemsMaxHeight]="250"
+                            [data]="allArticleList" placeholder="Article Name" (onSelectionChange)="singleSelection($event)"
+                            formControlName="articleName" searchPlaceholder="Search..." (onSelectionChange)="onArticleSelect($event)">
+                        </igx-combo>                
+                    </div>
+                </div>
+
+                   <!-- <igx-input-group type="search">
                             <input #txtArticle igxInput placeholder="Article Name" formControlName="articleName" />
                             <igx-suffix *ngIf="txtArticle.value.length > 0" (click)="onClearArticle()">
                                 <igx-icon>clear</igx-icon>
@@ -235,9 +247,7 @@
                             <igx-prefix (click)="articleDialog.open()" >
                                 <igx-icon>search</igx-icon>
                             </igx-prefix>
-                        </igx-input-group>
-                    </div>
-                </div>
+                        </igx-input-group> -->
 
                 <div class="col-md-2">
                     <div class="form-group">
@@ -266,7 +276,7 @@
 
                 <div class="col-md-2">
                     <div class="form-group" *ngIf="showSize">
-                        <label>Size </label>
+                        <label> Size </label>
                         <igx-combo #cmbsize class="combo" displayKey="name" valueKey="autoId" [itemsMaxHeight]="250"
                             [data]="sizeList" placeholder="Size" (onSelectionChange)="singleSelection($event)"
                             formControlName="sizeId" searchPlaceholder="Search...">
@@ -360,9 +370,9 @@
                     <igx-column [field]="'costingRef'" [header]="'Cost. Ref'" [resizable]="true" [dataType]="'string'"
                         [sortable]="true" [editable]="false">
                     </igx-column>
-                    <igx-column [width]="'50px'" [field]="'costingRef'" [header]="' '" [selectable]="false" [sortable]="false" [resizable]="false">
+                    <igx-column [width]="'50px'" [field]="'costingId'" [header]="' '" [selectable]="false" [sortable]="false" [resizable]="false">
                         <ng-template igxCell let-cell="cell">
-                            <div *ngIf="cell.value; then thenBlock else elseBlock"></div>                           
+                            <div *ngIf="cell.value > 0; then thenBlock else elseBlock"></div>                           
                             <ng-template #thenBlock>
                                 <button igxButton="icon" class="fab-compact" data-toggle="modal" data-target="#modalCost" 
                                         (click)="onRemoveCostSheet($event,cell.cellID)">

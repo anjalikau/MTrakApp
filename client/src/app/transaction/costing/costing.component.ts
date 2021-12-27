@@ -102,7 +102,10 @@ export class CostingComponent implements OnInit {
   btnStatus: string = '';
   isActive: boolean = true;
   saveButton: boolean = false;
+  printButton: boolean = false;
   validationErrors: string[] = [];
+  allArticleList: any[];
+  isDisplayMode: boolean = false;
   // totCostBox: number = 0;
   // totCostMOQ: number = 0;
   // profitMarkup: number = 0;
@@ -117,6 +120,7 @@ export class CostingComponent implements OnInit {
   public expr: ISortingExpression[];
   public exprCost: ISortingExpression[];
   public sumSummary = SumSummary;
+  public date: Date = new Date(Date.now());
 
   @ViewChild('articleGrid', { static: true })
   public articleGrid: IgxGridComponent;
@@ -134,8 +138,10 @@ export class CostingComponent implements OnInit {
   @ViewChild('txtArticle', { read: IgxInputGroupComponent })
   public txtArticle: IgxInputGroupComponent;
 
-  @ViewChild('cmbarticle', { read: IgxComboComponent })
-  public cmbarticle: IgxComboComponent;
+  @ViewChild('article', { read: IgxComboComponent })
+  public article: IgxComboComponent;
+  @ViewChild('item', { read: IgxComboComponent })
+  public item: IgxComboComponent;
   @ViewChild('cmbcolor', { read: IgxComboComponent })
   public cmbcolor: IgxComboComponent;
   @ViewChild('cmbsize', { read: IgxComboComponent })
@@ -197,7 +203,7 @@ export class CostingComponent implements OnInit {
   // Date options
   public dateOptions = {
     format: 'yyyy-MM-dd',
-    timezone: 'UTC+0'
+    // timezone: 'UTC+0',
   };
 
   public formatDateOptions = this.dateOptions;
@@ -224,6 +230,7 @@ export class CostingComponent implements OnInit {
     this.loadCostingGroup();
     this.loadUnits();
     this.loadBaseList();
+    this.loadArticle();
 
     /// INITILIZE GRID GROUP EXPRESSION
     this.expr = [
@@ -242,12 +249,12 @@ export class CostingComponent implements OnInit {
         fieldName: 'refNo',
         ignoreCase: false,
         strategy: DefaultSortingStrategy.instance(),
-      }
+      },
     ];
 
     this.costListGrid.sortingExpressions = [
-      { fieldName: 'versionControl', dir: SortingDirection.Asc }
-  ];
+      { fieldName: 'versionControl', dir: SortingDirection.Asc },
+    ];
   }
 
   initilizeForm() {
@@ -261,6 +268,8 @@ export class CostingComponent implements OnInit {
     if (authMenus != null) {
       if (authMenus.filter((x) => x.autoIdx == 166).length > 0) {
         this.saveButton = true;
+      }  if (authMenus.filter((x) => x.autoIdx == 1176).length > 0) {
+        this.printButton = true;
       }
     }
 
@@ -272,8 +281,8 @@ export class CostingComponent implements OnInit {
         [Validators.required, Validators.maxLength(20)],
       ],
       customerId: ['', Validators.required],
-      articleId: ['', Validators.required],
-      articleName: [{ value: '', disabled: true }],
+      // articleId: ['', Validators.required],
+      articleName: [{ value: '' }], //, disabled: true
       articleCode: [{ value: '', disabled: true }],
       tollerence: [0, Validators.required],
       brandCodeId: [0, Validators.required],
@@ -324,11 +333,11 @@ export class CostingComponent implements OnInit {
     this.baseMatForm = this.fb.group({
       autoId: [0],
       costGroup: ['', Validators.required],
-      article: [{ value: '', disabled: true }, Validators.required],
+      article: [{ value: '' }, Validators.required], //, disabled: true
       gsm: [0],
       color: [''],
       size: [''],
-      articleId: [0],
+      // articleId: [0],
       fluteType: [''],
       factor: [0],
       base: [''],
@@ -339,8 +348,34 @@ export class CostingComponent implements OnInit {
     });
 
     this.costListForm = this.fb.group({
-      customerId: [0],
+      customergId: [0],
     });
+  }
+
+  loadArticle() {
+    this.allArticleList = [];
+    var articles = [];
+    // console.log(this.user);
+
+    var location = this.user.locations;
+    var company = location.filter((x) => x.isDefault == true);
+    var companyId = company[0]['companyId'];
+    // console.log(companyId);
+
+    this.masterServices.getCompArticleAll(companyId).subscribe(
+      (result) => {
+        // this.allArticleList = result;
+        articles = result;
+      },
+      (error) => {
+        this.validationErrors = error;
+      },
+      () => {
+        if (articles.length > 0) {
+          this.processArticleData(articles, 'A');
+        }
+      }
+    );
   }
 
   //// ALOW SINGLE SILECTION ONLY COMBO EVENT
@@ -373,8 +408,9 @@ export class CostingComponent implements OnInit {
   }
 
   loadCostHeaderList(customerId) {
-    this.salesOrderServices.getCostHeaderList(customerId).subscribe((result) => {      
+    this.salesOrderServices.getCostHeaderList(customerId).subscribe((result) => {
         this.costNumberList = result;
+        // console.log(this.costNumberList);
       });
   }
 
@@ -467,61 +503,65 @@ export class CostingComponent implements OnInit {
         },
         () => {
           if (articles.length > 0) {
-            var autoId = 0,
-              flexLine = [];
-            // console.log(articles);
-
-            ///// Get Unique Article List
-            var uniqeArticle = articles.filter(
-              (arr, index, self) =>
-                index === self.findIndex((t) => t.autoId === arr.autoId)
-            );
-
-            ///// PUSH FLEX FIELD ARTICLE LIST
-            for (let b = 0; b < uniqeArticle.length; b++) {
-              autoId = uniqeArticle[b]['autoId'];
-              var fieldLine: any = uniqeArticle[b];
-
-              // console.log(uniqeArticle);
-              //// GET FLEX FIELD LIST FOR SAME ARTICLE
-              var flexFieldList = articles.filter((x) => x.autoId == autoId);
-              flexLine = [];
-
-              //// CREATE CHILD OBJECT AS FLEX FIELD
-              for (let a = 0; a < flexFieldList.length; a++) {
-                const element = flexFieldList[a];
-                var flexValue = 0;
-
-                if (element['dataType'] == 'F')
-                  flexValue = element['fFlexFeildValue'];
-                else if (element['dataType'] == 'N')
-                  flexValue = element['iFlexFeildValue'];
-                else if (element['dataType'] == 'T')
-                  flexValue = element['cFlexFeildValue'];
-                else if (element['dataType'] == 'B')
-                  flexValue = element['bFlexFeildValue'];
-                else if (element['dataType'] == 'D')
-                  flexValue = element['dFlexFeildValue'];
-
-                var obj = {
-                  dataType: element['dataType'],
-                  flexFieldId: element['flexFieldId'],
-                  flexFieldName: element['flexFieldName'],
-                  flexFieldCode: element['flexFieldCode'],
-                  flexFieldValue: flexValue,
-                  valueList: element['valueList'],
-                };
-                flexLine.push(obj);
-              }
-
-              fieldLine.FlexFields = flexLine;
-            }
-            this.articleList = uniqeArticle;
-            // console.log(this.articleList);
+            this.processArticleData(articles, 'S');
           }
         }
       );
     }
+  }
+
+  processArticleData(articleDet, status) {
+    var autoId = 0,
+      flexLine = [];
+    // console.log(articles);
+
+    ///// Get Unique Article List
+    var uniqeArticle = articleDet.filter(
+      (arr, index, self) =>
+        index === self.findIndex((t) => t.autoId === arr.autoId)
+    );
+
+    ///// PUSH FLEX FIELD ARTICLE LIST
+    for (let b = 0; b < uniqeArticle.length; b++) {
+      autoId = uniqeArticle[b]['autoId'];
+      var fieldLine: any = uniqeArticle[b];
+
+      // console.log(uniqeArticle);
+      //// GET FLEX FIELD LIST FOR SAME ARTICLE
+      var flexFieldList = articleDet.filter((x) => x.autoId == autoId);
+      flexLine = [];
+
+      //// CREATE CHILD OBJECT AS FLEX FIELD
+      for (let a = 0; a < flexFieldList.length; a++) {
+        const element = flexFieldList[a];
+        var flexValue = 0;
+
+        if (element['dataType'] == 'F') flexValue = element['fFlexFeildValue'];
+        else if (element['dataType'] == 'N')
+          flexValue = element['iFlexFeildValue'];
+        else if (element['dataType'] == 'T')
+          flexValue = element['cFlexFeildValue'];
+        else if (element['dataType'] == 'B')
+          flexValue = element['bFlexFeildValue'];
+        else if (element['dataType'] == 'D')
+          flexValue = element['dFlexFeildValue'];
+
+        var obj = {
+          dataType: element['dataType'],
+          flexFieldId: element['flexFieldId'],
+          flexFieldName: element['flexFieldName'],
+          flexFieldCode: element['flexFieldCode'],
+          flexFieldValue: flexValue,
+          valueList: element['valueList'],
+        };
+        flexLine.push(obj);
+      }
+
+      fieldLine.FlexFields = flexLine;
+    }
+    if (status == 'S') this.articleList = uniqeArticle;
+    else if (status == 'A') this.allArticleList = uniqeArticle;
+    // console.log(this.articleList); && x.sizeCardId > 0 && x.colorCardId > 0
   }
 
   loadSpeInsValues() {
@@ -529,7 +569,7 @@ export class CostingComponent implements OnInit {
       { name: 'Yes' },
       { name: 'No' },
       { name: 'Out Site' },
-      { name: 'In Site' }
+      { name: 'In Site' },
     ];
   }
 
@@ -585,9 +625,9 @@ export class CostingComponent implements OnInit {
     // console.log(select);
     this.articleGrid.deselectAllRows();
     this.articleGrid.clearFilter();
-    this.articleSelForm.get("category").setValue("");
-    this.articleSelForm.get("prodType").setValue("");
-    this.articleSelForm.get("prodGroup").setValue("");
+    this.articleSelForm.get('category').setValue('');
+    this.articleSelForm.get('prodType').setValue('');
+    this.articleSelForm.get('prodGroup').setValue('');
     this.articleList = [];
     this.isArtiHdSel = select;
     this.articleForm.open();
@@ -622,9 +662,95 @@ export class CostingComponent implements OnInit {
     for (const item of event.added) {
       // console.log(item);
       var selectRow = this.fluteTypeList.filter((x) => x.autoId == item);
-      console.log(selectRow);
+      // console.log(selectRow);
       this.baseMatForm.get('factor').setValue(selectRow[0]['factor']);
     }
+  }
+
+  onSelectDtArticle(event) {
+    this.isArtiHdSel = false;
+    this.mcolorList = [];
+    this.msizeList = [];
+    this.baseMatForm.get('gsm').setValue(0);
+    this.baseMatForm.get('color').setValue('');
+    this.baseMatForm.get('size').setValue('');
+    this.baseMatForm.get('cost').setValue(0);
+
+    for (const item of event.added) {
+      var selectedRowData = this.allArticleList.filter((x) => x.autoId == item);
+      // console.log(selectedRowData);
+      this.onChangeDetailArticle(selectedRowData);
+    }
+  }
+
+  onSelectHdArticle(event) {
+    this.isArtiHdSel = true;
+    this.clearHeaderArticle();
+    this.clearBoarderDetails();
+    this.clearSubTotalControls();
+    //// RESET FIELDS IN COST DETAILS
+    this.resetCostDetails();
+
+    for (const item of event.added) {
+      var selectedRowData = this.allArticleList.filter((x) => x.autoId == item );
+      // console.log(selectedRowData);
+      this.onChangeHeadArticle(selectedRowData);
+    }
+  }
+
+  onChangeHeadArticle(selectedRowData) {
+    // console.log(selectedRowData);
+    var articleId = selectedRowData[0]['autoId'];
+    this.costingHdForm
+      .get('articleCode')
+      .setValue(selectedRowData[0]['stockCode']);
+    this.measurement = selectedRowData[0]['measurement'];
+
+    ///// GET FLEX FIELDS DETAILS
+    var flexFieldsDt = selectedRowData[0]['FlexFields'];
+    for (let a = 0; a < flexFieldsDt.length; a++) {
+      const element = flexFieldsDt[a];
+
+      if (element['flexFieldName'] == 'Length')
+        this.length = element['flexFieldValue'];
+      else if (element['flexFieldName'] == 'Width')
+        this.width = element['flexFieldValue'];
+      else if (element['flexFieldName'] == 'Height')
+        this.height = element['flexFieldValue'];
+    }
+
+    this.loadColor(articleId);
+    this.loadSize(articleId);
+    this.calculateCostHeader();
+    this.articleGrid.deselectAllRows();
+    this.articleForm.close();
+  }
+
+  onChangeDetailArticle(selectedRowData) {
+    var articleId = selectedRowData[0]['autoId'];
+
+    // this.baseMatForm.get('articleId').setValue(selectedRowData[0]['autoId']);
+    // this.baseMatForm.get('article').setValue(selectedRowData[0]['articleName']);
+    // this.baseMatForm.get('gsm').setValue(selectedRowData[0]['gsm']);
+
+    ///// GET FLEX FIELDS DETAILS
+    var flexFieldsDt = selectedRowData[0]['FlexFields'];
+    for (let a = 0; a < flexFieldsDt.length; a++) {
+      const element = flexFieldsDt[a];
+
+      if (element['flexFieldName'] == 'GSM') {
+        this.baseMatForm.get('gsm').setValue(element['flexFieldValue']);
+      }
+    }
+
+    this.baseMatForm.get('cost').setValue(selectedRowData[0]['salesPrice']);
+    // this.loadCostPrice(selectedRowData[0]['autoId']);
+    this.loadArticleUOMConversion(selectedRowData[0]['autoId']);
+
+    this.loadColor(articleId);
+    this.loadSize(articleId);
+    this.articleGrid.deselectAllRows();
+    this.articleForm.close();
   }
 
   //// SELECT ARTICLE FROM ARTICLE LIST
@@ -634,74 +760,40 @@ export class CostingComponent implements OnInit {
     const selectedRowData = this.articleGrid.data.filter((record) => {
       return record.autoId == ids;
     });
-    var articleId = selectedRowData[0]['autoId'];
-
-    // console.log(selectedRowData[0]);
-
+    // var articleId = selectedRowData[0]['autoId'];
     if (this.isArtiHdSel == true) {
+      // console.log(selectedRowData);
+
       this.clearHeaderArticle();
       this.clearBoarderDetails();
       this.clearSubTotalControls();
-      //console.log(selectedRowData);
-      this.costingHdForm.get('articleId')
-        .setValue(selectedRowData[0]['autoId']);
-      this.costingHdForm.get('articleName')
-        .setValue(selectedRowData[0]['articleName']);
-      this.costingHdForm.get('articleCode')
-        .setValue(selectedRowData[0]['stockCode']);
-      this.measurement = selectedRowData[0]['measurement'];
-      
-      ///// GET FLEX FIELDS DETAILS
-      var flexFieldsDt = selectedRowData[0]['FlexFields'];
-      for (let a = 0; a < flexFieldsDt.length; a++) {
-        const element = flexFieldsDt[a];
 
-        if (element["flexFieldName"] == "Length")
-          this.length = element['flexFieldValue'];
-        else if (element["flexFieldName"] == "Width")        
-          this.width = element['flexFieldValue'];
-        else if (element["flexFieldName"] == "Height") 
-          this.height = element['flexFieldValue'];
-      }
-      // this.costingHdForm.get('length').setValue(selectedRowData[0]['length']);
-      // this.costingHdForm.get('width').setValue(selectedRowData[0]['width']);
-      // this.costingHdForm.get('height').setValue(selectedRowData[0]['height']);
-      // 
+      this.article.setSelectedItem(selectedRowData[0]['autoId'], true);
+      this.onChangeHeadArticle(selectedRowData);
+
     } else {
-      // console.log(selectedRowData[0]['autoId']);
-      this.baseMatForm.get('articleId').setValue(selectedRowData[0]['autoId']);
-      this.baseMatForm.get('article').setValue(selectedRowData[0]['articleName']);
-      // this.baseMatForm.get('gsm').setValue(selectedRowData[0]['gsm']);
+      this.mcolorList = [];
+      this.msizeList = [];
+      this.baseMatForm.get('gsm').setValue(0);
+      this.baseMatForm.get('color').setValue('');
+      this.baseMatForm.get('size').setValue('');
+      this.baseMatForm.get('cost').setValue(0);
 
-      ///// GET FLEX FIELDS DETAILS
-      var flexFieldsDt = selectedRowData[0]['FlexFields'];
-      for (let a = 0; a < flexFieldsDt.length; a++) {
-        const element = flexFieldsDt[a];
-
-        if (element["flexFieldName"] == "GSM") {
-          this.baseMatForm.get('gsm').setValue(element['flexFieldValue']);
-        }        
-      }
-
-      this.loadCostPrice(selectedRowData[0]['autoId']);
-      this.loadArticleUOMConversion(selectedRowData[0]['autoId']);
+      this.baseMatForm.get('article').setValue('');
+      this.item.setSelectedItem(selectedRowData[0]['autoId'], true);
+      this.onChangeDetailArticle(selectedRowData);
     }
-
-    this.loadColor(articleId);
-    this.loadSize(articleId);
-    this.articleGrid.deselectAllRows();
-    this.articleForm.close();
   }
 
   clearHeaderArticle() {
-    this.costingHdForm.get('articleId').setValue(0);
+    // // this.costingHdForm.get('articleId').setValue(0);
     this.costingHdForm.get('articleName').reset();
     this.costingHdForm.get('articleCode').reset();
     this.costingHdForm.get('tollerence').setValue(0);
     this.costingHdForm.get('colorId').setValue(0);
     this.costingHdForm.get('sizeId').setValue(0);
 
-    this.costDetailsList = [];
+    // this.costDetailsList = [];
     this.colorList = [];
     this.sizeList = [];
 
@@ -715,30 +807,30 @@ export class CostingComponent implements OnInit {
   }
 
   //// fill article price list
-  loadCostPrice(articleId) {
-    var rowdata: any;
-    this.masterServices.getArticlePrices(articleId).subscribe((result) => {
-      //console.log(result);
-      rowdata = result;
-      //console.log(articleId);
-      var uniqeNames = [
-        'avgCostPrice',
-        'lastCostPrice',
-        'maxCostPrice',
-        'salesPrice',
-      ];
-      var uniqeValues = [];
-      this.costPriceList = [];
+  // loadCostPrice(articleId) {
+  //   var rowdata: any;
+  //   this.masterServices.getArticlePrices(articleId).subscribe((result) => {
+  //     //console.log(result);
+  //     rowdata = result;
+  //     //console.log(articleId);
+  //     var uniqeNames = [
+  //       'avgCostPrice',
+  //       'lastCostPrice',
+  //       'maxCostPrice',
+  //       'salesPrice',
+  //     ];
+  //     var uniqeValues = [];
+  //     this.costPriceList = [];
 
-      /// GET UNIQUE VALUE LIST
-      for (var i = 0; i < uniqeNames.length; i++) {
-        if (uniqeValues.indexOf(rowdata[uniqeNames[i]]) === -1) {
-          uniqeValues.push(rowdata[uniqeNames[i]]);
-          this.costPriceList.push({ price: rowdata[uniqeNames[i]] });
-        }
-      }
-    });
-  }
+  //     /// GET UNIQUE VALUE LIST
+  //     for (var i = 0; i < uniqeNames.length; i++) {
+  //       if (uniqeValues.indexOf(rowdata[uniqeNames[i]]) === -1) {
+  //         uniqeValues.push(rowdata[uniqeNames[i]]);
+  //         this.costPriceList.push({ price: rowdata[uniqeNames[i]] });
+  //       }
+  //     }
+  //   });
+  // }
 
   //// LOADS UOM CONVERSION BASED ON ARTICLE
   loadArticleUOMConversion(articleId) {
@@ -750,8 +842,10 @@ export class CostingComponent implements OnInit {
   }
 
   loadColor(articleId) {
+    // console.log("dfsdg");
     this.masterServices.getArticleColor(articleId).subscribe((color) => {
       //// check the selection
+      // console.log(color);
       if (this.isArtiHdSel == true) {
         this.colorList = [];
         this.colorList = color;
@@ -759,6 +853,7 @@ export class CostingComponent implements OnInit {
         this.mcolorList = [];
         this.mcolorList = color;
       }
+      
     });
   }
 
@@ -917,8 +1012,7 @@ export class CostingComponent implements OnInit {
 
   ///////-------- UPDATE OTHER LINE IF BASE MATERIAL ADDED OR EDITED
   updateLineSummary() {
-    var base = 'Gross Weight',
-      baseQty = 0;
+    var base = '', baseQty = 0;
     var orderQty = this.expectedQty;
 
     /////////----========== GET BASE NOT EQUAL TO SQM ==================-----------
@@ -934,6 +1028,7 @@ export class CostingComponent implements OnInit {
           grossCons = 0,
           autoId = 0;
         const element = selectedRowData[a];
+        base = element['base'];
 
         if (base == 'Gross Weight') {
           baseQty = this.grossWeight; //this.costingHdForm.get("grossWeight").value;
@@ -973,19 +1068,20 @@ export class CostingComponent implements OnInit {
         this.costDtGrid.updateCell(grossCons, autoId, 'grossCons');
         this.costDtGrid.updateCell(costPcs, autoId, 'costPcs');
         this.costDtGrid.updateCell(total, autoId, 'total');
-      }   
-      // this.calculateSubTotal();   
+      }
+      // this.calculateSubTotal();
     }
-    
   }
 
   calculateCostHeader() {
     this.clearBoarderDetails();
-    var unitConv3 = 1 , unitConv1 = 1 , unitConv2 = 1;
+    var unitConv3 = 1,
+      unitConv1 = 1,
+      unitConv2 = 1;
     // console.log(event.target.value);
     var tollerance = this.costingHdForm.get('tollerence').value;
-    var article = this.costingHdForm.get('articleName').value;
-
+    var article = this.costingHdForm.get('articleCode').value; //this.costingHdForm.get('articleName').value;
+    console.log(article);
     //// check article is selected
     if (article != '') {
       // var length = this.costingHdForm.get("length").value;
@@ -993,25 +1089,25 @@ export class CostingComponent implements OnInit {
       // var height = this.costingHdForm.get("height").value;
       // var measurement = this.costingHdForm.get("measurement").value;
 
-      if (this.measurement != "M") {       
+      if (this.measurement != 'M') {
         /// any mesurement to meters conversion
         var convValue1 = this.unitConvList.filter(
           (x) => x.fromUnit == this.measurement && x.toUnit == 'M'
         );
         unitConv1 = convValue1[0]['value'];
       }
-      
+
       console.log(convValue1);
 
-      if (convValue1.length > 0) {
+      if (convValue1 != undefined) {
         this.boardLength = this.roundTo(
           (this.width * 2 + length * 2 + tollerance) * unitConv1,
           2
         );
 
-        console.log(this.measurement);
+        // console.log(this.measurement);
         /// any mesurement to inch conversion
-        if (this.measurement != 'INC') {          
+        if (this.measurement != 'INC') {
           var convValue3 = this.unitConvList.filter(
             (x) => x.fromUnit == this.measurement && x.toUnit == 'INC'
           );
@@ -1026,8 +1122,8 @@ export class CostingComponent implements OnInit {
         this.ups = this.actualReal < 30.1 ? 2 : 1;
         this.reelSize = this.round_up_to_odd(this.actualReal * this.ups);
 
-        console.log(convValue2);
-       
+        // console.log(convValue2);
+
         var convValue2 = this.unitConvList.filter(
           (x) => x.fromUnit == 'INC' && x.toUnit == 'M'
         );
@@ -1040,6 +1136,14 @@ export class CostingComponent implements OnInit {
           this.reelSize - this.actualReal * this.ups,
           2
         );
+        
+        console.log(this.sqm);
+        /// UPDATE SQM ON GRID
+        this.updateSqmQty();
+        //// UPDATE TOTAL WEIGHT IN HEADER AND OTHER GRID DATA (PASS BASE MATERIAL ID AS PARA)
+        this.updateTotalSummary(4);
+        /// CALCULATE SUB TOTAL
+        this.calculateSubTotal();
 
         // console.log(boardLength);
         // console.log(boardWidth);
@@ -1171,9 +1275,9 @@ export class CostingComponent implements OnInit {
         ? 0
         : this.baseMatForm.get('westage').value;
     var cost =
-      this.baseMatForm.get('cost').value == 0
+      this.baseMatForm.get('cost').value == null
         ? 0
-        : this.baseMatForm.get('cost').value[0];
+        : this.baseMatForm.get('cost').value;
     var orderQty = this.expectedQty;
     var gsm =
       this.baseMatForm.get('gsm').value == null
@@ -1188,11 +1292,8 @@ export class CostingComponent implements OnInit {
       this.baseMatForm.get('uom').value == ''
         ? 0
         : this.baseMatForm.get('uom').value[0];
-    var article =
-      this.baseMatForm.get('article').value == null
-        ? 0
-        : this.baseMatForm.get('article').value;
-    var articleId = this.baseMatForm.get('articleId').value;
+    var article = this.item.value == null ? 0 : this.item.value;
+    var articleId = this.baseMatForm.get('article').value[0];
     var gsm =
       this.baseMatForm.get('gsm').value == null
         ? 0
@@ -1215,10 +1316,10 @@ export class CostingComponent implements OnInit {
       this.baseMatForm.get('uom').value == ''
         ? 0
         : this.baseMatForm.get('uom').value[0];
-    var cost =
-      this.baseMatForm.get('cost').value == 0
-        ? 0
-        : this.baseMatForm.get('cost').value[0];
+    // var cost =
+    //   this.baseMatForm.get('cost').value == 0
+    //     ? 0
+    //     : this.baseMatForm.get('cost').value;
     var fluteType = this.fluteType.value;
     var uom = this.uom.value;
 
@@ -1334,10 +1435,123 @@ export class CostingComponent implements OnInit {
     this.clearCostDetControls();
   }
 
+  //// IF HEADER ARTICLE CHANGE SQM WILL BE RECALCULATE 
+  //// MUST CHANGE IN THE GRID ALSO 
+  updateSqmQty() {
+    var baseQty = 0;
+    var orderQty = this.expectedQty;
+
+    /////////----========== GET BASE ROWS WITH SQM ==================-----------
+    const selectedRowData = this.costDtGrid.data.filter((record) => {
+      return record.base == 'SQM';
+    });
+
+    if (selectedRowData.length > 0) {
+      for (let a = 0; a < selectedRowData.length; a++) {
+        var baseValue = 0, costPcs = 0, netCons = 0, grossCons = 0, autoId = 0;
+        const element = selectedRowData[a];
+        baseQty = this.sqm;          
+
+        autoId = element['autoId'];
+        var factor = element['factor'];
+        var cost = element['cost'];
+        var baseCons = element['consBase'];
+        var westage = element['westage'];
+
+        if (factor > 0) baseValue = factor * baseQty;
+        else baseValue = baseQty;
+
+        if (cost == 0) {
+          netCons = 0;
+          grossCons = 0;
+          costPcs = this.roundTo(baseCons * baseValue, 4);
+        } else {
+          netCons = this.roundTo(baseValue * baseCons, 4);
+          grossCons = this.roundTo(netCons + (netCons * westage) / 100, 4);
+          costPcs = this.roundTo(grossCons * cost, 4);
+        }
+
+        var total = this.roundTo(orderQty * costPcs, 4);
+
+        ///// UPDATE QTY IN GRID
+        this.costDtGrid.updateCell(factor, autoId, 'factor');
+        this.costDtGrid.updateCell('SQM', autoId, 'base');
+        this.costDtGrid.updateCell(baseCons, autoId, 'consBase');
+        this.costDtGrid.updateCell(westage, autoId, 'westage');
+        this.costDtGrid.updateCell(cost, autoId, 'cost');
+        this.costDtGrid.updateCell(baseValue, autoId, 'baseValue');
+        this.costDtGrid.updateCell(netCons, autoId, 'netCons');
+        this.costDtGrid.updateCell(grossCons, autoId, 'grossCons');
+        this.costDtGrid.updateCell(costPcs, autoId, 'costPcs');
+        this.costDtGrid.updateCell(total, autoId, 'total');
+      }
+      // this.calculateSubTotal();
+    }
+
+  }
+
+  resetCostDetails() {
+    var baseQty = 0 , base ='' ;
+    var orderQty = this.expectedQty;
+
+    /////////----========== GET BASE ROWS WITH SQM ==================-----------
+    const selectedRowData = this.costDtGrid.data;
+
+    console.log(selectedRowData);
+
+    if (selectedRowData.length > 0) {
+      for (let a = 0; a < selectedRowData.length; a++) {
+        var baseValue = 0, costPcs = 0, netCons = 0, grossCons = 0, autoId = 0;
+        const element = selectedRowData[a];
+        base = element['base'];
+
+        if (base == 'Gross Weight') {
+          baseQty = this.grossWeight; //this.costingHdForm.get("grossWeight").value;
+        } else if (base == 'Net Weight') {
+          baseQty = this.netWeight;
+        } else if (base == 'SQM') {
+          baseQty = this.sqm;
+        }
+
+        autoId = element['autoId'];
+        var factor = element['factor'];
+        var cost = element['cost'];
+        var baseCons = element['consBase'];
+        var westage = element['westage'];
+
+        if (factor > 0) baseValue = factor * baseQty;
+        else baseValue = baseQty;
+
+        if (cost == 0) {
+          netCons = 0;
+          grossCons = 0;
+          costPcs = this.roundTo(baseCons * baseValue, 4);
+        } else {
+          netCons = this.roundTo(baseValue * baseCons, 4);
+          grossCons = this.roundTo(netCons + (netCons * westage) / 100, 4);
+          costPcs = this.roundTo(grossCons * cost, 4);
+        }
+
+        var total = this.roundTo(orderQty * costPcs, 4);
+
+        ///// UPDATE QTY IN GRID
+        this.costDtGrid.updateCell(baseCons, autoId, 'consBase');
+        this.costDtGrid.updateCell(westage, autoId, 'westage');
+        this.costDtGrid.updateCell(cost, autoId, 'cost');
+        this.costDtGrid.updateCell(baseValue, autoId, 'baseValue');
+        this.costDtGrid.updateCell(netCons, autoId, 'netCons');
+        this.costDtGrid.updateCell(grossCons, autoId, 'grossCons');
+        this.costDtGrid.updateCell(costPcs, autoId, 'costPcs');
+        this.costDtGrid.updateCell(total, autoId, 'total');
+      }
+      // this.calculateSubTotal();
+    }
+  }
+
   /// GET MAXIMUMUM auto ID
   findMaxDelId(arr) {
     var maxValue: number = 0;
-    console.log(arr);
+    // console.log(arr);
     for (var i = 0; i < arr.length; i++) {
       if (arr[i].autoId > maxValue) {
         maxValue = arr[i].autoId;
@@ -1361,7 +1575,7 @@ export class CostingComponent implements OnInit {
     this.baseMatForm.get('article').setValue('');
     this.baseMatForm.get('color').setValue('');
     this.baseMatForm.get('size').setValue('');
-    this.baseMatForm.get('articleId').setValue(0);
+    // this.baseMatForm.get('articleId').setValue(0);
     this.baseMatForm.get('fluteType').setValue('');
     this.baseMatForm.get('base').setValue('');
     this.baseMatForm.get('uom').setValue('');
@@ -1391,17 +1605,19 @@ export class CostingComponent implements OnInit {
 
     this.loadColor(articleId);
     this.loadSize(articleId);
-    this.loadCostPrice(articleId);
+    // this.loadCostPrice(articleId);
     this.loadArticleUOMConversion(articleId);
 
     this.baseMatForm.get('autoId').setValue(selectedRowData[0]['autoId']);
-    this.baseMatForm.get('article').setValue(selectedRowData[0]['article']);
+    this.item.setSelectedItem(articleId, true);
+    // this.baseMatForm.get('article').setValue(selectedRowData[0]['article']);
     this.baseMatForm.get('gsm').setValue(selectedRowData[0]['gsm']);
+    this.baseMatForm.get('cost').setValue(selectedRowData[0]['cost']);
     this.baseMatForm.get('factor').setValue(selectedRowData[0]['factor']);
     this.baseMatForm.get('westage').setValue(selectedRowData[0]['westage']);
     this.mSelColor = selectedRowData[0]['colorId'];
     this.mSelSize = selectedRowData[0]['sizeId'];
-    this.costPrice = selectedRowData[0]['cost'];
+    // this.costPrice = selectedRowData[0]['cost'];
     this.setComboValues();
   }
 
@@ -1411,7 +1627,7 @@ export class CostingComponent implements OnInit {
       //console.log("pending");
       this.mColor.setSelectedItem(this.mSelColor, true);
       this.mSize.setSelectedItem(this.mSelSize, true);
-      this.cost.setSelectedItem(this.costPrice, true);
+      // this.cost.setSelectedItem(this.costPrice, true);
     }, 1000);
   }
 
@@ -1453,112 +1669,113 @@ export class CostingComponent implements OnInit {
 
   /// SAVE COSTING DEATILS
   saveCosting() {
-    if(this.saveButton == true) {
-    if (this.validateCosting()) {
-      var costList = [],
-        itemList = [],
-        specialList = [],
-        customerId = 0;
-      var versionNo = this.costingHdForm.get('versionControl').value + 1;
+    if (this.saveButton == true) {
+      if (this.validateCosting()) {
+        var costList = [],
+          itemList = [],
+          specialList = [],
+          customerId = 0;
+        var versionNo = this.costingHdForm.get('versionControl').value + 1;
 
-      customerId = this.costingHdForm.get('customerId').value[0];
-      //console.log(this.chkIsCharge.checked);
-      ////--------=========== SALES ORDER HEADER =======================---------
-      var headerData = {
-        autoId: this.costingHdForm.get('autoId').value,
-        refNo: this.costingHdForm.get('refNo').value,
-        customerId: customerId,
-        articleId: this.costingHdForm.get('articleId').value,
-        versionControl: versionNo,
-        colorId: this.costingHdForm.get('colorId').value[0],
-        sizeId: this.costingHdForm.get('sizeId').value[0],
-        combination: this.costingHdForm.get('combination').value,
-        noOfUps: this.ups,
-        brandCodeId: this.costingHdForm.get('brandCodeId').value,
-        pDHeaderId: this.specInsForm.get('prodDefinition').value[0],
-        boardLength: this.boardLength,
-        createUserId: this.user.userId,
-        boardWidth: this.boardWidth,
-        sqm: this.sqm,
-        reelSize: this.reelSize,
-        actualReal: this.actualReal,
-        trimWaste: this.trimWaste,
-        totNetWeight: this.netWeight,
-        totGrossWeight: this.grossWeight,
-        tollerence: this.costingHdForm.get('tollerence').value,
-        totalBoxCost: this.subTotalForm.get('totCostBox').value,
-        moqCost: this.subTotalForm.get('moqCost').value,
-        markup: this.subTotalForm.get('markup').value,
-        sellingPrice: this.subTotalForm.get('sellPrice').value,
-        commission: this.subTotalForm.get('commission').value,
-        totMOQCost: this.subTotalForm.get('totCostMoq').value,
-        profitMarkup: this.subTotalForm.get('profitMarkup').value,
-        commSelPrice: this.subTotalForm.get('sellPriceCom').value,
-      };
-
-      var objHead = {
-        costingHeader: headerData,
-      };
-
-      costList.push(objHead);
-
-      ////--------=========== COST DETAILS LIST =======================---------
-      var itemRows = this.costDtGrid.data;
-      // console.log(itemRows);
-      itemRows.forEach((items) => {
-        var itemdata = {
-          costGroupId: items.costGroupId,
-          articleId: items.articleId,
-          sizeId: items.sizeId,
-          colorId: items.colorId,
-          unitId: items.unitId,
-          gsm: items.gsm,
-          fluteId: items.fluteTypeId,
-          cost: items.cost,
-          base: items.base,
-          baseValue: items.baseValue,
-          wastage: items.westage,
-          artiUOMConvId: items.uomId,
-          netCon: items.netCons,
-          grossCon: items.grossCons,
-          costPcs: items.costPcs,
+        customerId = this.costingHdForm.get('customerId').value[0];
+        //console.log(this.chkIsCharge.checked);
+        ////--------=========== SALES ORDER HEADER =======================---------
+        var headerData = {
+          autoId: this.costingHdForm.get('autoId').value,
+          refNo: this.costingHdForm.get('refNo').value.trim(),
+          customerId: customerId,
+          articleId: this.costingHdForm.get('articleName').value[0],
+          versionControl: versionNo,
+          colorId: this.costingHdForm.get('colorId').value[0],
+          sizeId: this.costingHdForm.get('sizeId').value[0],
+          combination: this.costingHdForm.get('combination').value.toString().trim(),
+          noOfUps: this.ups,
+          brandCodeId: this.costingHdForm.get('brandCodeId').value,
+          pDHeaderId: this.specInsForm.get('prodDefinition').value[0],
+          boardLength: this.boardLength,
+          createUserId: this.user.userId,
+          boardWidth: this.boardWidth,
+          sqm: this.sqm,
+          reelSize: this.reelSize,
+          actualReal: this.actualReal,
+          trimWaste: this.trimWaste,
+          totNetWeight: this.netWeight,
+          totGrossWeight: this.grossWeight,
+          tollerence: this.costingHdForm.get('tollerence').value,
+          totalBoxCost: this.subTotalForm.get('totCostBox').value,
+          moqCost: this.subTotalForm.get('moqCost').value,
+          markup: this.subTotalForm.get('markup').value,
+          sellingPrice: this.subTotalForm.get('sellPrice').value,
+          commission: this.subTotalForm.get('commission').value,
+          totMOQCost: this.subTotalForm.get('totCostMoq').value,
+          profitMarkup: this.subTotalForm.get('profitMarkup').value,
+          commSelPrice: this.subTotalForm.get('sellPriceCom').value,
         };
-        itemList.push(itemdata);
-      });
-      costList.push({ costingDetails: itemList });
 
-      ////--------=========== COSTING SPECIAL INSTRUCTION =======================---------
-      var instructRows = this.specInstGrid.data;
-
-      instructRows.forEach((result) => {
-        var specialdata = {
-          speInstId: result.autoId,
-          value: result.value,
+        var objHead = {
+          costingHeader: headerData,
         };
-        specialList.push(specialdata);
-      });
 
-      costList.push({ costingSpecial: specialList });
-      console.log(costList);
+        costList.push(objHead);
 
-      this.salesOrderServices.saveCosting(costList).subscribe((result) => {
-        console.log(result);
-        if (result['result'] == 1) {
-          this.toastr.success('Costing save Successfully !!!');
-          this.costingHdForm.get('autoId').setValue(result['refNumId']);
-          this.costingHdForm.get('refNo').setValue(result['refNum']);
-          this.costingHdForm.get('versionControl').setValue(versionNo);
-          this.loadCostHeaderList(customerId);
-        } else {
-          this.toastr.warning(
-            'Contact Admin. Error No:- ' + result['result'].toString()
-          );
-        }
-      });
+        ////--------=========== COST DETAILS LIST =======================---------
+        var itemRows = this.costDtGrid.data;
+        // console.log(itemRows);
+        itemRows.forEach((items) => {
+          var itemdata = {
+            costGroupId: items.costGroupId,
+            articleId: items.articleId,
+            sizeId: items.sizeId,
+            colorId: items.colorId,
+            unitId: items.unitId,
+            gsm: items.gsm,
+            fluteId: items.fluteTypeId,
+            cost: items.cost,
+            base: items.base,
+            baseValue: items.baseValue,
+            wastage: items.westage,
+            artiUOMConvId: items.uomId,
+            netCon: items.netCons,
+            grossCon: items.grossCons,
+            costPcs: items.costPcs,
+          };
+          itemList.push(itemdata);
+        });
+        costList.push({ costingDetails: itemList });
+
+        ////--------=========== COSTING SPECIAL INSTRUCTION =======================---------
+        var instructRows = this.specInstGrid.data;
+
+        instructRows.forEach((result) => {
+          var specialdata = {
+            speInstId: result.autoId,
+            value: result.value,
+          };
+          specialList.push(specialdata);
+        });
+
+        costList.push({ costingSpecial: specialList });
+        // console.log(costList);
+
+        this.salesOrderServices.saveCosting(costList).subscribe((result) => {
+          // console.log(result);
+          if (result['result'] == 1) {
+            this.toastr.success('Costing save Successfully !!!');
+            this.costingHdForm.get('autoId').setValue(result['refNumId']);
+            this.costingHdForm.get('refNo').setValue(result['refNum']);
+            this.costingHdForm.get('versionControl').setValue(versionNo);
+            this.isDisplayMode = true;
+            this.loadCostHeaderList(customerId);
+          } else {
+            this.toastr.warning(
+              'Contact Admin. Error No:- ' + result['result'].toString()
+            );
+          }
+        });
+      }
+    } else {
+      this.toastr.error('Save Permission denied !!!');
     }
-  } else {
-    this.toastr.error('Save Permission denied !!!');
-  }
   }
 
   ///// VALIDATION BEFORE SAVE SALES ORDER
@@ -1578,6 +1795,7 @@ export class CostingComponent implements OnInit {
 
   //////// CLEAR ALL COSTING DETAILS
   refreshCosting() {
+    this.isDisplayMode = false;
     this.isActive = true;
     var date: Date = new Date(Date.now());
 
@@ -1614,6 +1832,7 @@ export class CostingComponent implements OnInit {
     this.clearSpecInstruction();
     // this.baseMatForm.get('consBase').setValue(0);
     this.prodDefiDetails = [];
+    this.costDetailsList = [];
     this.instructList = [];
     this.specInsForm.get('prodDefinition').reset();
   }
@@ -1633,163 +1852,174 @@ export class CostingComponent implements OnInit {
   //// CLICK EVENT OF COST LIST GRID ROW
   onViewCostingDetails(event, cellId) {
     this.refreshCosting();
+    this.isDisplayMode = true;
     var costHeaderId = cellId.rowID;
     // const selectedRowData = this.costListGrid.data.filter((record) => {
     //   return record.autoId == ids;
     // });
+    this.getCostSheetDetails(costHeaderId , "V");
+  }
+
+  ///// COPY EXISTING COST SHEET TO NEW ONE
+  onCopyCostingDetails(event, cellId) {
+    this.refreshCosting();
+    var costHeaderId = cellId.rowID;
+    this.getCostSheetDetails(costHeaderId , "C");
+    console.log("C");
+  }
+
+  ///// LOADS EXISTING COST SHEET 
+  getCostSheetDetails(costHeaderId, option) {
     this.salesOrderServices.getCostSheetDetails(costHeaderId).subscribe(
       (result) => {
-        console.log(result);
-        console.log(result.costHeader);
+        // console.log(result);
+        // console.log(result.costHeader);
         var costMatList = [],
           specialList = [];
-        this.isArtiHdSel = true;   
+        this.isArtiHdSel = true;
 
-        if( result.costHeader != null) {
+        if (result.costHeader != null) {
           var costHeaderRow = result.costHeader;
-        ///---------============= LOADS COST HEADER ================-------------
-        var articleId = costHeaderRow[0]['articleId'];
+          ///---------============= LOADS COST HEADER ================-------------
+          var articleId = costHeaderRow[0]['articleId'];
 
-        var trnsDate: Date = new Date(
-          this.datePipe.transform(costHeaderRow[0]['transDate'], 'yyyy-MM-dd')
-        );
+          //console.log(costHeaderRow[0]['transDate']);
+          if (option == "V") {
+            var trnsDate: Date = new Date(
+              this.datePipe.transform(costHeaderRow[0]['transDate'], 'yyyy-MM-dd')
+            );
+            this.costingHdForm.get('trnsDate').setValue(trnsDate); 
+            this.costingHdForm.get('versionControl').setValue(costHeaderRow[0]['versionControl']); 
+            this.costingHdForm.get('refNo').setValue(costHeaderRow[0]['refNo']);
+            this.costingHdForm.get('autoId').setValue(costHeaderId);
 
-        this.isActive = costHeaderRow[0]['isActive'];
+            this.isActive = costHeaderRow[0]['isActive'];
 
-        if (this.isActive == true)
-          this.costingHdForm.get('isActive').setValue('Active');
-        else this.costingHdForm.get('isActive').setValue('Deactive');
+            if (this.isActive == true)
+              this.costingHdForm.get('isActive').setValue('Active');
+            else this.costingHdForm.get('isActive').setValue('Deactive'); 
+          }
 
-        this.costingHdForm.get('autoId').setValue(costHeaderId);
-        this.costingHdForm.get('refNo').setValue(costHeaderRow[0]['refNo']);
-        this.costingHdForm
-          .get('brandCodeId')
-          .setValue(costHeaderRow[0]['brandCodeId']);
-        this.costingHdForm
-          .get('brandCode')
-          .setValue(costHeaderRow[0]['brandCode']);
-        this.costingHdForm
-          .get('combination')
-          .setValue(costHeaderRow[0]['combination']);
-        this.costingHdForm
-          .get('versionControl')
-          .setValue(costHeaderRow[0]['versionControl']);
-        this.costingHdForm.get('trnsDate').setValue(trnsDate);
+          this.costingHdForm
+            .get('brandCodeId')
+            .setValue(costHeaderRow[0]['brandCodeId']);
+          this.costingHdForm
+            .get('brandCode')
+            .setValue(costHeaderRow[0]['brandCode']);
+          this.costingHdForm
+            .get('combination')
+            .setValue(costHeaderRow[0]['combination']);
+          this.customer.setSelectedItem(costHeaderRow[0]['customerId'], true);
+          this.prodDefintion.setSelectedItem(costHeaderRow[0]['pdHeaderId'], true );
 
-        this.customer.setSelectedItem(costHeaderRow[0]['customerId'], true);
-        this.prodDefintion.setSelectedItem(
-          costHeaderRow[0]['pdHeaderId'],
-          true
-        );
+          this.article.setSelectedItem(articleId, true);
+          // this.costingHdForm.get('articleId').setValue(articleId);
+          // this.costingHdForm
+          //   .get('articleName')
+          //   .setValue(costHeaderRow[0]['articleName']);
+          this.costingHdForm
+            .get('articleCode')
+            .setValue(costHeaderRow[0]['stockCode']);
+          this.costingHdForm
+            .get('tollerence')
+            .setValue(costHeaderRow[0]['tollerence']);
 
-        this.costingHdForm.get('articleId').setValue(articleId);
-        this.costingHdForm
-          .get('articleName')
-          .setValue(costHeaderRow[0]['articleName']);
-        this.costingHdForm
-          .get('articleCode')
-          .setValue(costHeaderRow[0]['stockCode']);
-        this.costingHdForm
-          .get('tollerence')
-          .setValue(costHeaderRow[0]['tollerence']);
+          this.loadColor(articleId);
+          this.loadSize(articleId);
+          this.loadArticleUOMConversion(articleId);
 
-        this.loadColor(articleId);
-        this.loadSize(articleId);
-        this.loadArticleUOMConversion(articleId);
+          this.measurement = costHeaderRow[0]['measurement'];
+          this.length = costHeaderRow[0]['length'];
+          this.width = costHeaderRow[0]['width'];
+          this.height = costHeaderRow[0]['height'];
+          this.boardLength = costHeaderRow[0]['boardLength'];
+          this.boardWidth = costHeaderRow[0]['boardWidth'];
+          this.ups = costHeaderRow[0]['noOfUps'];
+          this.actualReal = costHeaderRow[0]['actualReal'];
+          this.reelSize = costHeaderRow[0]['reelSize'];
+          this.trimWaste = costHeaderRow[0]['trimWaste'];
+          this.sqm = costHeaderRow[0]['sqm'];
+          this.netWeight = costHeaderRow[0]['totNetWeight'];
+          this.grossWeight = costHeaderRow[0]['totGrossWeight'];
+          this.headerColor = costHeaderRow[0]['colorId'];
+          this.headerSize = costHeaderRow[0]['sizeId'];
 
-        this.measurement = costHeaderRow[0]['measurement'];
-        this.length = costHeaderRow[0]['length'];
-        this.width = costHeaderRow[0]['width'];
-        this.height = costHeaderRow[0]['height'];
+          // console.log(costHeaderRow);
 
-        this.boardLength = costHeaderRow[0]['boardLength'];
-        this.boardWidth = costHeaderRow[0]['boardWidth'];
-        this.ups = costHeaderRow[0]['noOfUps'];
-        this.actualReal = costHeaderRow[0]['actualReal'];
-        this.reelSize = costHeaderRow[0]['reelSize'];
-        this.trimWaste = costHeaderRow[0]['trimWaste'];
-        this.sqm = costHeaderRow[0]['sqm'];
-        this.netWeight = costHeaderRow[0]['totNetWeight'];
-        this.grossWeight = costHeaderRow[0]['totGrossWeight'];
-
-        this.headerColor = costHeaderRow[0]['colorId'];
-        this.headerSize = costHeaderRow[0]['sizeId'];
-
-        // console.log(costHeaderRow);
-
-        ////------------============= LOADS SUB TOTAL ==============----------------
-        this.subTotalForm
-          .get('totCostBox')
-          .setValue(costHeaderRow[0]['totalBoxCost']);
-        this.subTotalForm.get('moqCost').setValue(costHeaderRow[0]['moqCost']);
-        this.subTotalForm
-          .get('totCostMoq')
-          .setValue(costHeaderRow[0]['totMOQCost']);
-        this.subTotalForm.get('markup').setValue(costHeaderRow[0]['markup']);
-        this.subTotalForm
-          .get('profitMarkup')
-          .setValue(costHeaderRow[0]['profitMarkup']);
-        this.subTotalForm
-          .get('sellPrice')
-          .setValue(costHeaderRow[0]['sellingPrice']);
-        this.subTotalForm
-          .get('commission')
-          .setValue(costHeaderRow[0]['commission']);
-        this.subTotalForm
-          .get('sellPriceCom')
-          .setValue(costHeaderRow[0]['commSelPrice']);
+          ////------------============= LOADS SUB TOTAL ==============----------------
+          this.subTotalForm
+            .get('totCostBox')
+            .setValue(costHeaderRow[0]['totalBoxCost']);
+          this.subTotalForm
+            .get('moqCost')
+            .setValue(costHeaderRow[0]['moqCost']);
+          this.subTotalForm
+            .get('totCostMoq')
+            .setValue(costHeaderRow[0]['totMOQCost']);
+          this.subTotalForm.get('markup').setValue(costHeaderRow[0]['markup']);
+          this.subTotalForm
+            .get('profitMarkup')
+            .setValue(costHeaderRow[0]['profitMarkup']);
+          this.subTotalForm
+            .get('sellPrice')
+            .setValue(costHeaderRow[0]['sellingPrice']);
+          this.subTotalForm
+            .get('commission')
+            .setValue(costHeaderRow[0]['commission']);
+          this.subTotalForm
+            .get('sellPriceCom')
+            .setValue(costHeaderRow[0]['commSelPrice']);
         }
 
-        if( result.costDetails != null) {   
-        var costDetailList = result.costDetails;
+        if (result.costDetails != null) {
+          var costDetailList = result.costDetails;
 
-        ////----------============= LOADS COST DETAIL ====================------------------
-        for (let index = 0; index < costDetailList.length; index++) {
-          var obj = {
-            autoId: costDetailList[index]['costDetailId'],
-            costGroupId: costDetailList[index]['costGroupId'],
-            costGroup: costDetailList[index]['costGroup'],
-            groupOrder: costDetailList[index]['groupOrder'],
-            article: costDetailList[index]['articleName'],
-            articleId: costDetailList[index]['articleId'],
-            gsm: costDetailList[index]['gsm'],
-            colorId: costDetailList[index]['colorId'],
-            color: costDetailList[index]['color'],
-            sizeId: costDetailList[index]['sizeId'],
-            size: costDetailList[index]['size'],
-            fluteTypeId: costDetailList[index]['fluteId'],
-            fluteType: costDetailList[index]['fluteType'],
-            factor: costDetailList[index]['factor'],
-            base: costDetailList[index]['base'],
-            consBase: costDetailList[index]['consBase'],
-            unitId: costDetailList[index]['unitId'],
-            uom: costDetailList[index]['uom'],
-            uomId: costDetailList[index]['uomId'],
-            westage: costDetailList[index]['wastage'],
-            cost: costDetailList[index]['cost'],
-            baseValue: costDetailList[index]['baseValue'],
-            netCons: costDetailList[index]['netCon'],
-            grossCons: costDetailList[index]['grossCon'],
-            costPcs: costDetailList[index]['costPcs'],
-            total: 0,
-          };
-          costMatList.push(obj);
+          ////----------============= LOADS COST DETAIL ====================------------------
+          for (let index = 0; index < costDetailList.length; index++) {
+            var obj = {
+              autoId: costDetailList[index]['costDetailId'],
+              costGroupId: costDetailList[index]['costGroupId'],
+              costGroup: costDetailList[index]['costGroup'],
+              groupOrder: costDetailList[index]['groupOrder'],
+              article: costDetailList[index]['articleName'],
+              articleId: costDetailList[index]['articleId'],
+              gsm: costDetailList[index]['gsm'],
+              colorId: costDetailList[index]['colorId'],
+              color: costDetailList[index]['color'],
+              sizeId: costDetailList[index]['sizeId'],
+              size: costDetailList[index]['size'],
+              fluteTypeId: costDetailList[index]['fluteId'],
+              fluteType: costDetailList[index]['fluteType'],
+              factor: costDetailList[index]['factor'],
+              base: costDetailList[index]['base'],
+              consBase: costDetailList[index]['consBase'],
+              unitId: costDetailList[index]['unitId'],
+              uom: costDetailList[index]['uom'],
+              uomId: costDetailList[index]['uomId'],
+              westage: costDetailList[index]['wastage'],
+              cost: costDetailList[index]['cost'],
+              baseValue: costDetailList[index]['baseValue'],
+              netCons: costDetailList[index]['netCon'],
+              grossCons: costDetailList[index]['grossCon'],
+              costPcs: costDetailList[index]['costPcs'],
+              total: 0,
+            };
+            costMatList.push(obj);
+          }
         }
-      }
 
-      if( result.costSpecials != null) {
+        if (result.costSpecials != null) {
           var costSpecInsList = result.costSpecials;
-        ////----------============ LOADS SPECIAL INSTRUCTION ==================----------------
-        for (let index = 0; index < costSpecInsList.length; index++) {
-          var specialdata = {
-            autoId: costSpecInsList[index]['speInstId'],
-            value: costSpecInsList[index]['value'],
-            description: costSpecInsList[index]['instruction'],
-          };
-          specialList.push(specialdata);
+          ////----------============ LOADS SPECIAL INSTRUCTION ==================----------------
+          for (let index = 0; index < costSpecInsList.length; index++) {
+            var specialdata = {
+              autoId: costSpecInsList[index]['speInstId'],
+              value: costSpecInsList[index]['value'],
+              description: costSpecInsList[index]['instruction'],
+            };
+            specialList.push(specialdata);
+          }
         }
-      }
-
         this.costDetailsList = costMatList;
         this.instructList = specialList;
       },
@@ -1801,11 +2031,27 @@ export class CostingComponent implements OnInit {
   }
 
   setCostComboValues() {
-    console.log(this.colorList);
-    console.log(this.headerColor);
+    // console.log(this.colorList);
+    // console.log(this.headerColor);
     setTimeout(() => {
       this.cmbcolor.setSelectedItem(this.headerColor, true);
       this.cmbsize.setSelectedItem(this.headerSize, true);
     }, 1000);
   }
+
+  printCostSheet() {
+    if(this.printButton == true) {
+      // this.router.navigate(['/boldreport']);
+      var obj = {
+        costingHdId: this.costingHdForm.get('autoId').value,
+        reportName: "CostSheetFormat"
+      }
+      /// STORE OBJECT IN LOCAL STORAGE
+      localStorage.setItem('params', JSON.stringify(obj));
+      window.open('/boldreport', '_blank');
+    } else {
+      this.toastr.error('Print Permission denied !!!');
+    }
+  }
+  
 }

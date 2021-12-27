@@ -702,7 +702,7 @@ namespace API.Repository
             return costSheet;
         }
 
-        public async Task<IEnumerable<CostHeaderDto>> GetCostHeaderAsync(int ArticleColorSizeId)
+        public async Task<IEnumerable<CostHeaderDto>> GetCostHeaderAsync(long ArticleColorSizeId)
         {   
             IEnumerable<CostHeaderDto> costHeaderList;
             DynamicParameters para = new DynamicParameters();
@@ -714,6 +714,20 @@ namespace API.Repository
             
             return costHeaderList;
         }
+
+        public async Task<IEnumerable<CostHeaderDto>> GetCostHeaderListAsync(long CustomerId)
+        {   
+            IEnumerable<CostHeaderDto> costHeaderList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("CustomerId" , CustomerId);
+
+            costHeaderList = await DbConnection.QueryAsync<CostHeaderDto>("spTransCostingGetHdList" , para
+                    , commandType: CommandType.StoredProcedure);
+            
+            return costHeaderList;
+        }
+
 
         public async Task<int> AttachCostSheetSOAsync(TransSalesOrderItemDt soItemDt)
         {

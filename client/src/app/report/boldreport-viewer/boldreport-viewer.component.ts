@@ -74,6 +74,26 @@ export class BoldreportViewerComponent implements OnInit {
       values: [this.paraObj["jobCardNo"]],
       nullable: false     
       }]; 
+    } else if (reportName == "CostSheetFormat") {
+      console.log(this.paraObj["costingHdId"]);
+
+      /// set parameters
+      this.parameters = [{
+      name: 'CostHeaderId',
+      labels: ['Cost Header Id'],
+      values: [this.paraObj["costingHdId"]],
+      nullable: false     
+      }]; 
+    } else if (reportName == "InvoiceFormat") {
+      console.log(this.paraObj["invoiceHdId"]);
+
+      /// set parameters
+      this.parameters = [{
+      name: 'InvoiceHdId',
+      labels: ['Invoice Hd Id'],
+      values: [this.paraObj["invoiceHdId"]],
+      nullable: false     
+      }]; 
     }
   }
 

@@ -9,11 +9,12 @@ import { Observable, throwError } from 'rxjs';
 import { NavigationError, NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { catchError } from 'rxjs/operators';
+import { AccountService } from '_services/account.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
-  constructor(private router: Router,private toastr: ToastrService) {}
+  constructor(private router: Router,private toastr: ToastrService , private accountServices: AccountService) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
@@ -40,7 +41,13 @@ export class ErrorInterceptor implements HttpInterceptor {
               }
               break;
             case 401:  
-              this.toastr.error(error.error);              
+              this.toastr.error(error.error);
+              if(!this.accountServices.loggedIn()) {
+                this.accountServices.logout();
+                this.accountServices.decodedToken = null;
+                this.router.navigateByUrl('/');
+              }
+             
               //this.toastr.error(error.statusText,error.status);
               break;
             case 404:

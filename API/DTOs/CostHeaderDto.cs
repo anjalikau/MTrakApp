@@ -28,6 +28,10 @@ namespace API.DTOs
         public decimal ProfitMarkup {get;set;}        
         public decimal CommSelPrice {get;set;}
         public DateTime TransDate {get;set;}
+        public string Color { get; set; }
+        public string ArticleName { get; set; }
+        public string Size { get; set; }
+        public bool isActive { get; set; }
 
     }
 }

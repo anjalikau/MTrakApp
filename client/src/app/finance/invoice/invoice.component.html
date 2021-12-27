@@ -15,12 +15,15 @@
                 </div>
                 <div class="col-md-1">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-success mr-1" [disabled]="!invoiceHdForm.valid" (click)="saveInvoice()">
+                        <button type="button" class="btn btn-success mr-1" [disabled]="!invoiceHdForm.valid || isApproved" (click)="saveInvoice()">
                             <i class="fas fa-save"></i>
                         </button>      
-                        <button type="button" class="btn btn-info mr-1" [disabled]="!isDisplayMode" (click)="approveInvoice()">
+                        <button type="button" class="btn btn-info mr-1" [disabled]="!isDisplayMode || isApproved" (click)="openInvConfirmDialog()">
                             <i class="fas fa-thumbs-up"></i>
-                        </button>                    
+                        </button>
+                        <button type="button" class="btn btn-primary mr-1" [disabled]="!isDisplayMode" target="_blank" (click)="printInvoice()">
+                            <i class="fas fa-print"></i>
+                        </button>                      
                         <button type="button" class="btn btn-default" (click)="refreshControls()">
                             <i class="fas fa-redo"></i>
                         </button>
@@ -37,7 +40,7 @@
                             <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''" (click)="refreshControls()">
                                 <igx-icon>clear</igx-icon>
                             </igx-suffix>
-                            <igx-prefix>
+                            <igx-prefix (click)="loadInvoice()">
                                 <igx-icon>search</igx-icon>
                             </igx-prefix>
                         </igx-input-group>
@@ -492,6 +495,11 @@
 <igx-dialog #dialog title="Confirmation" leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()"
     rightButtonLabel="OK" (onRightButtonSelect)="onDialogOKSelected($event)"
     message="Are you sure you want to delete the record ?">
+</igx-dialog>
+
+<igx-dialog #confDialog title="Confirmation" leftButtonLabel="Cancel" (onLeftButtonSelect)="confDialog.close()"
+    rightButtonLabel="OK" (onRightButtonSelect)="onDialogConfirmSelected($event)"
+    message="Do you want to approve this Invoice ?">
 </igx-dialog>
 
 <!-- <p> Form Value : {{jobCardForm.value | json }} </p>

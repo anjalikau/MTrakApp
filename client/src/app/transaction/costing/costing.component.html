@@ -9,7 +9,7 @@
         <!-- COST HEADER -->
         <form [formGroup]="costingHdForm" autocomplete="off">
             <div class="row">
-                <div class="col-11">
+                <div class="col-10">
                     <h6 class="bg-secondary">
                         <!-- <i class="fas fa-file-alt"></i>  -->
                         Costing Header
@@ -17,12 +17,15 @@
                 </div>
                 <div class="col-1">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-success mr-3" [disabled]="!(costingHdForm.valid && isActive)" (click)="saveCosting()">
+                        <button type="button" class="btn btn-success mr-1" [disabled]="!(costingHdForm.valid && isActive)" (click)="saveCosting()">
                             <i class="fas fa-save"></i>
-                        </button>
+                        </button>  
+                        <button type="button" class="btn btn-primary mr-1" [disabled]="!isDisplayMode" target="_blank" (click)="printCostSheet()">
+                            <i class="fas fa-print"></i>
+                        </button>                     
                         <button type="button" class="btn btn-default" (click)="refreshCosting()">
                             <i class="fas fa-redo"></i>
-                        </button>
+                        </button>                       
                     </div>
                 </div>
                 <!-- /.col -->
@@ -103,8 +106,19 @@
             <div class="row">
                 <div class="col-md-3 bg-light">
                     <div class="form-group">
-                        <label> Article Name </label>
-                        <igx-input-group type="search">
+                        <label> Article Name </label> &nbsp;&nbsp;&nbsp;
+                        <!-- <igx-prefix (click)="openArticleDialog(true)" >
+                            <igx-icon>search</igx-icon>
+                        </igx-prefix> -->
+                        <button igxButton="icon" class="fab-compact" (click)="openArticleDialog(true)">
+                            <igx-icon family="material">search</igx-icon>
+                        </button>
+                        <igx-combo #article id="articleName" class="combo" displayKey="articleName" valueKey="autoId" [itemsMaxHeight]="250"
+                            [data]="allArticleList" placeholder="Article Name" (onSelectionChange)="singleSelection($event)" 
+                            formControlName="articleName"
+                            searchPlaceholder="Search..." (onSelectionChange)="onSelectHdArticle($event)" >
+                        </igx-combo>
+                        <!-- <igx-input-group type="search">
                             <input #txtArticle igxInput placeholder="Article Name" formControlName="articleName" />
                             <igx-suffix *ngIf="txtArticle.value.length > 0" (click)="onClearCostArticle()">
                                 <igx-icon>clear</igx-icon>
@@ -112,7 +126,7 @@
                             <igx-prefix (click)="openArticleDialog(true)" >
                                 <igx-icon>search</igx-icon>
                             </igx-prefix>
-                        </igx-input-group>
+                        </igx-input-group> -->
                     </div>
                 </div>
 
@@ -210,8 +224,7 @@
                 </div>
                 <div class="col-12 col-md-12 col-lg-3 order-2 order-md-1 bg-warning">
                     <h6>.</h6>
-                    <div class="row">
-            
+                    <div class="row">            
                         <div class="col-12 col-md-3">
                             <p class="font-weight-bold"> Actual Real </p>
                             <p> {{actualReal}} </p>
@@ -258,8 +271,12 @@
             <div class="row">
                 <div class="col-md-12">
                     <h6 class="bg-secondary">
-                        Material and Other Overhead
-                    </h6>
+                        Material and Other Overhead &nbsp;&nbsp;&nbsp;
+                        <!-- <igx-prefix (click)="openArticleDialog(false)" >
+                            <igx-icon>search</igx-icon>
+                        </igx-prefix> -->
+                    </h6>                   
+                    
                 </div>                
             </div>
 
@@ -276,23 +293,32 @@
                 </div>
 
                 <div class="col-md-3">
-                    <div class="form-group">
+                    <div class="form-group">                    
                         <label> Item </label>
-                        <igx-input-group type="search">
-                            <input #inputItem igxInput placeholder="Item" formControlName="article" />
-                            <igx-suffix *ngIf="inputItem.value.length > 0" (click)="inputItem.value = ''">
-                                <igx-icon>clear</igx-icon>
-                            </igx-suffix>
-                            <igx-prefix (click)="openArticleDialog(false)" >
-                                <igx-icon>search</igx-icon>
-                            </igx-prefix>
-                        </igx-input-group>
+                        <igx-combo #item id="article" class="combo" displayKey="articleName" valueKey="autoId" [itemsMaxHeight]="250"
+                            [data]="allArticleList" placeholder="Item" (onSelectionChange)="singleSelection($event)"
+                            formControlName="article" searchPlaceholder="Search..." (onSelectionChange)="onSelectDtArticle($event)">                        
+                        </igx-combo> 
+                        <!-- <igx-input-group type="search">
+                                                <input #inputItem igxInput placeholder="Item" formControlName="article" />
+                                                <igx-suffix *ngIf="inputItem.value.length > 0" (click)="inputItem.value = ''">
+                                                    <igx-icon>clear</igx-icon>
+                                                </igx-suffix>
+                                                <igx-prefix (click)="openArticleDialog(false)" >
+                                                    <igx-icon>search</igx-icon>
+                                                </igx-prefix>
+                                            </igx-input-group> -->
                     </div>
                 </div>
 
                 <div class="col-md-1">
                     <div class="form-group">
                         <igx-input-group>
+                            <igx-prefix>
+                                <button igxButton="icon" class="fab-compact" (click)="openArticleDialog(false)">
+                                    <igx-icon family="material">search</igx-icon>
+                                </button>
+                            </igx-prefix>
                             <input igxInput type="number" formControlName="gsm" />
                             <label igxLabel for="gsm"> GSM </label>
                         </igx-input-group>
@@ -355,14 +381,18 @@
                     </div>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <div class="form-group">
-                        <label> Cost </label>
+                        <igx-input-group>
+                            <input igxInput type="number" formControlName="cost" />
+                            <label igxLabel for="cost"> Cost </label>
+                        </igx-input-group>
+                        <!-- <label> Cost </label>
                         <igx-combo #cost id="cost" class="combo" displayKey="price" valueKey="price"
                             [itemsMaxHeight]="250" [data]="costPriceList" placeholder="Cost"
                             (onSelectionChange)="singleSelection($event)" formControlName="cost"
                             searchPlaceholder="Search...">
-                        </igx-combo>                      
+                        </igx-combo>                       -->
                     </div>
                 </div> 
 
@@ -414,7 +444,7 @@
                 <igx-grid #costDtGrid class="hierarchicalGrid" [data]="costDetailsList" (columnResized)="onResize($event)"
                     [autoGenerate]="false" [paging]="true" [rowEditable]="false" cellSelection="none" height="400px" displayDensity="compact"
                      [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [primaryKey]="'autoId'" [allowAdvancedFiltering]="true"
-                     [rowSelection]="'Single'" [groupingExpressions]='expr' [summaryCalculationMode]="'childLevelsOnly'"
+                     [rowSelection]="'Single'" [groupingExpressions]='expr' [summaryCalculationMode]="'childLevelsOnly'" [perPage]="100"
                     [showSummaryOnCollapse]="true">
                     <igx-column [width]="'100px'" [selectable]="false" [sortable]="false" [resizable]="false">
                         <ng-template igxCell let-cell="cell">
@@ -806,10 +836,10 @@
                         <div class="col-md-4">            
                             <div class="form-group">
                                 <label>Customer </label>
-                                <igx-combo id="customerId" class="combo" displayKey="name" valueKey="autoId" [itemsMaxHeight]="250"
+                                <igx-combo id="customergId" class="combo" displayKey="name" valueKey="autoId" [itemsMaxHeight]="250"
                                     [data]="customerList" placeholder="Customer" (onSelectionChange)="singleSelection($event)"
                                     (onSelectionChange)="onViewCustomerSelect($event)"
-                                    formControlName="customerId" searchPlaceholder="Search...">
+                                    formControlName="customergId" searchPlaceholder="Search...">
                                 </igx-combo>
                             </div>            
                         </div>  
@@ -817,27 +847,44 @@
                     
                     <div class="row">
                         <igx-grid #costListGrid class="hierarchicalGrid" [data]="costNumberList" (columnResized)="onResize($event)"
-                        [autoGenerate]="false" [paging]="true" [rowEditable]="false" cellSelection="none" height="500px" displayDensity="compact"
-                         [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [primaryKey]="'autoId'" [allowAdvancedFiltering]="true"
-                         [rowSelection]="'Single'" [groupingExpressions]='exprCost' [perPage]="500" > 
-                        <igx-column [width]="'80px'" [selectable]="false" [sortable]="false" [resizable]="false">
-                            <ng-template igxCell let-cell="cell">                            
-                                <button igxButton="icon" class="fab-compact" (click)="onViewCostingDetails($event,cell.cellID)" data-dismiss="modal">
-                                    <igx-icon family="material">visibility</igx-icon>
-                                </button>
-                            </ng-template>
-                        </igx-column>                   
-                        <igx-column [field]="'refNo'" [header]="'Ref No'" [resizable]="true" [dataType]="'string'" [sortable]="true"
-                           [width]="'200px'" [editable]="false" [groupable]="true">
-                        </igx-column>                    
-                        <igx-column [field]="'versionControl'" [header]="'Version'" [resizable]="true" [dataType]="'number'" [sortable]="true"
-                            [width]="'100px'" [editable]="false" >
-                         </igx-column>
-                        <igx-column [field]="'transDate'" [header]="'Trans Date'" [resizable]="true" [dataType]="'date'" [sortable]="true"
-                            [pipeArgs]="formatDateOptions" [width]="'200px'" [editable]="false">
-                        </igx-column>                                      
-                        
-                    </igx-grid>
+                            [autoGenerate]="false" [paging]="true" [rowEditable]="false" cellSelection="none" height="500px"
+                            displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [primaryKey]="'autoId'"
+                            [allowAdvancedFiltering]="true" [rowSelection]="'Single'" [groupingExpressions]='exprCost' [perPage]="100">
+                            <igx-column [width]="'100px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                                <ng-template igxCell let-cell="cell">
+                                    <button igxButton="icon" class="fab-compact" (click)="onViewCostingDetails($event,cell.cellID)"
+                                        data-dismiss="modal">
+                                        <igx-icon family="material">visibility</igx-icon>
+                                    </button>
+                                    <button igxButton="icon" class="fab-compact" (click)="onCopyCostingDetails($event,cell.cellID)"
+                                        data-dismiss="modal">
+                                        <igx-icon class="icon-blue" family="material">file_copy</igx-icon>
+                                    </button>
+                                </ng-template>
+                            </igx-column>
+                            <igx-column [field]="'refNo'" [header]="'Ref No'" [resizable]="true" [dataType]="'string'" [sortable]="true"
+                                [width]="'150px'" [editable]="false" [groupable]="true">
+                            </igx-column>
+                            <igx-column [field]="'versionControl'" [header]="'Version'" [resizable]="true" [dataType]="'number'"
+                                [sortable]="true" [width]="'100px'" [editable]="false">
+                            </igx-column>
+                            <igx-column [field]="'transDate'" [header]="'Trans Date'" [resizable]="true" [dataType]="'date'"
+                                [sortable]="true" [pipeArgs]="formatDateOptions" [width]="'120px'" [editable]="false">
+                            </igx-column>
+                            <igx-column [field]="'articleName'" [header]="'Article'" [resizable]="true" [dataType]="'string'"
+                                [sortable]="true" [width]="'200px'" [editable]="false" [groupable]="true">
+                            </igx-column>
+                            <igx-column [field]="'color'" [header]="'Color'" [resizable]="true" [dataType]="'string'" [sortable]="true"
+                                [width]="'100px'" [editable]="false" [groupable]="true">
+                            </igx-column>
+                            <igx-column [field]="'size'" [header]="'Size'" [resizable]="true" [dataType]="'string'" [sortable]="true"
+                                [width]="'100px'" [editable]="false" [groupable]="true">
+                            </igx-column>
+                            <igx-column [field]="'brandCode'" [header]="'Brand Code'" [resizable]="true" [dataType]="'string'"
+                                [sortable]="true" [width]="'120px'" [editable]="false" [groupable]="true">
+                            </igx-column>
+                    
+                        </igx-grid>
                     </div>
                 </form>
             </div>

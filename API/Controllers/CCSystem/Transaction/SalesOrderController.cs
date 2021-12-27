@@ -36,7 +36,7 @@ namespace API.Controllers.CCSystem.Transaction
             return Ok(saleOredrList);
         }        
 
-        [HttpPost("SOSave")]
+        [HttpPost("SaSO")]
         public async Task<IActionResult> SaveSalesOrder(List<SalesOrderDeliveryDto> salesOrder)
         {
             var result = await _salesRepository.SaveSalesOrderAsync(salesOrder);
@@ -246,19 +246,9 @@ namespace API.Controllers.CCSystem.Transaction
         }
 
         [HttpGet("CostList/{id}")]
-        public async Task<IActionResult> GetCostHeaderList(int id) 
+        public async Task<IActionResult> GetCostHeaderList(long id) 
         {
-            var result = await _context.TransCostingHeader
-                .Where(x => x.CustomerId == id)
-                .Select( x => new
-                    {
-                        autoId = x.AutoId,
-                        isActive = x.IsActive,
-                        transDate = x.TransDate,
-                        refNo = x.RefNo , 
-                        versionControl = x.VersionControl
-                    }).ToListAsync();
-
+            var result = await _salesRepository.GetCostHeaderListAsync(id);
             return Ok(result);
         }
 

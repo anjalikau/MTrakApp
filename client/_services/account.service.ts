@@ -53,5 +53,23 @@ export class AccountService {
     this.currentUserSource.next(null);
   }
 
+  loggedIn() {
+    var token = localStorage.getItem('token');
+    // decodedToken = this.jwtHelper.decodeToken(myRawToken);
+    // expirationDate = this.jwtHelper.getTokenExpirationDate(myRawToken);
+    console.log(this.jwtHelper.isTokenExpired(token));
+    return !this.jwtHelper.isTokenExpired(token);
+  }
+
+  // refreshToken(model: any) {
+  //   return this.http.post<any>(this.baseUrl + 'account/refresh', model)
+  //       .pipe(map((user) => {
+  //         this.localService.storagesetJsonValue('user', user);
+  //         localStorage.setItem('token', user.token);
+  //         this.currentUserSource.next(user);
+  //         this.decodedToken = this.jwtHelper.decodeToken(user.token);
+  //       }));
+  //     }
+
   
 }

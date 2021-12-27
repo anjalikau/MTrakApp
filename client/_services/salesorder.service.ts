@@ -46,7 +46,7 @@ export class SalesorderService {
   }
 
   saveSalesOrder(model: any) {
-    return this.http.post(this.baseUrl + 'SalesOrder/SOSave' , model , httpOptions);
+    return this.http.post(this.baseUrl + 'SalesOrder/SaSO' , model , httpOptions);
   }
 
   getPendOrderItems(id: number) {

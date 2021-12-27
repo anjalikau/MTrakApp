@@ -698,6 +698,18 @@ namespace API.Repository
             return result;
         }
 
+        public async Task<IEnumerable<ArticleDetailDto>> GetArtileDetailsAllAsync(int companyId) 
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("CompanyId", companyId);
+
+            var result = await DbConnection.QueryAsync<ArticleDetailDto>("spMstrArticleGetAllDetails", para
+                , commandType: CommandType.StoredProcedure);           
+
+            return result;
+        }
+
         public async Task<int> DeactiveArticleAsync(MstrArticle article)
         {
             DynamicParameters para = new DynamicParameters();

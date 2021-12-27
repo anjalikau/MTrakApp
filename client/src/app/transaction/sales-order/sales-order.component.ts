@@ -53,6 +53,7 @@ export class SalesOrderComponent implements OnInit {
   countryList: any[];
   divisionList: any[];
   salesAgentList: any[];
+  allArticleList: any[];
   validationErrors: string[] = [];
   public date: Date = new Date(Date.now());
   saveButton: boolean = false;
@@ -84,6 +85,8 @@ export class SalesOrderComponent implements OnInit {
   @ViewChild('articleGrid', { static: true })
   public articleGrid: IgxGridComponent;
 
+  @ViewChild('article', { read: IgxComboComponent })
+  public article: IgxComboComponent;
   @ViewChild('cmbarticle', { read: IgxComboComponent })
   public cmbarticle: IgxComboComponent;
   @ViewChild('cmbcolor', { read: IgxComboComponent })
@@ -150,11 +153,11 @@ export class SalesOrderComponent implements OnInit {
     this.getSalesOrderRefNo();
     this.loadCustomer();
     this.loadSalesCategory();
-    this.loadCountries();
+    // this.loadCountries();
     this.loadPaymentTerms();
     this.loadSalesAgent();
     this.loadCategory();
-    //this.LoadArticle();
+    this.loadArticle();
     //this.LoadDelRef();
   }
 
@@ -186,7 +189,7 @@ export class SalesOrderComponent implements OnInit {
       salesCategoryId: [''],
       salesAgentId: [''],
       cusCurrencyId: [''],
-      countryId: [''],
+      // countryId: [''],
       paymentTermId: [''],
       customerDivId: [''],
       isChargeable: [''],
@@ -203,8 +206,8 @@ export class SalesOrderComponent implements OnInit {
 
     this.soItemForm = this.fb.group({
       itemId: [0],
-      articleId: [0],
-      articleName: [{ value: '', disabled: true }],
+      // articleId: [0],
+      articleName: [{ value: '' }], ///, disabled: true
       articleCode: [{ value: '', disabled: true }],
       colorId: ['', Validators.required],
       sizeId: ['', Validators.required],
@@ -237,6 +240,28 @@ export class SalesOrderComponent implements OnInit {
     this.col = event.column;
     this.pWidth = event.prevWidth;
     this.nWidth = event.newWidth;
+  }
+
+  loadArticle() {
+    this.allArticleList = [];
+
+    this.masterServices.getArticlesAll().subscribe(result => {
+      this.allArticleList = result
+    })
+  }
+
+  onArticleSelect(event) {
+    this.colorList = [];
+    this.sizeList = [];
+    this.soItemForm.get("articleCode").setValue("");
+
+    for (const item of event.added) {
+      var articleRow = this.allArticleList.filter(x => x.autoId == item);
+
+      this.soItemForm.get("articleCode").setValue(articleRow[0]["stockCode"]);
+      this.loadColor(item);
+      this.loadSize(item);
+    }
   }
 
   // deliveryFormEnable() {
@@ -275,7 +300,7 @@ export class SalesOrderComponent implements OnInit {
       this.soHeaderForm.get('salesCategoryId').setValue('');
       this.soHeaderForm.get('salesAgentId').setValue('');
       this.soHeaderForm.get('cusCurrencyId').setValue('');
-      this.soHeaderForm.get('countryId').setValue('');
+      // this.soHeaderForm.get('countryId').setValue('');
       this.soHeaderForm.get('paymentTermId').setValue('');
       this.soHeaderForm.get('customerDivId').setValue('');
       this.soHeaderForm.get('isChargeable').setValue('');
@@ -289,6 +314,10 @@ export class SalesOrderComponent implements OnInit {
 
       this.clearItemControls();
       this.clearDeliveryControls();
+
+      this.soItemForm.get('articleName').setValue('');
+      // this.soItemForm.get('articleName').setValue('');
+      this.soItemForm.get('articleCode').setValue('');
 
       this.soItemList = [];
       this.soDelivList = [];
@@ -431,12 +460,12 @@ export class SalesOrderComponent implements OnInit {
     });
   }
 
-  loadCountries() {
-    this.masterServices.getCountries().subscribe((countries) => {
-      this.countryList = countries;
-    });
-    //console.log(this.countryList);
-  }
+  // loadCountries() {
+  //   this.masterServices.getCountries().subscribe((countries) => {
+  //     this.countryList = countries;
+  //   });
+  //   //console.log(this.countryList);
+  // }
 
   loadSalesAgent() {
     this.salesAgentList = [];
@@ -518,12 +547,11 @@ export class SalesOrderComponent implements OnInit {
 
     var articleId = selectedRowData[0]['autoId'];
     //console.log(selectedRowData);
-    this.soItemForm.get('articleId').setValue(selectedRowData[0]['autoId']);
-    this.soItemForm
-      .get('articleName')
-      .setValue(selectedRowData[0]['articleName']);
-    this.soItemForm
-      .get('articleCode')
+    // this.soItemForm.get('articleId').setValue(selectedRowData[0]['autoId']);
+    this.article.setSelectedItem(selectedRowData[0]['autoId'], true);
+    // this.soItemForm.get('articleName')
+    //   .setValue(selectedRowData[0]['articleName']);
+    this.soItemForm.get('articleCode')
       .setValue(selectedRowData[0]['stockCode']);
 
     this.articleDialog.close();
@@ -550,7 +578,7 @@ export class SalesOrderComponent implements OnInit {
   }
 
   onClearArticle() {
-    this.soItemForm.get('articleId').setValue(0);
+    // this.soItemForm.get('articleId').setValue(0);
     this.soItemForm.get('articleName').setValue('');
     this.soItemForm.get('articleCode').setValue('');
   }
@@ -565,7 +593,7 @@ export class SalesOrderComponent implements OnInit {
       var price = this.soItemForm.get('price').value;
       var soHeaderId = this.soHeaderForm.get('headerId').value;
 
-      //console.log(itemId);
+      // console.log(itemId);
       //// EXISTING ITEM IN ITEM GRID
       if (itemId != 0) {
         /// CHECK IF IT IS A INITIAL SALES ORDER
@@ -588,7 +616,7 @@ export class SalesOrderComponent implements OnInit {
         itemId = this.findMaxItemId(this.itemGrid.data) + 1;
         //console.log(itemId);
         //itemId = this.itemGrid.dataLength + 1;
-        var articleId = this.soItemForm.get('articleId').value;
+        var articleId = this.soItemForm.get('articleName').value[0];
         var colorId = this.soItemForm.get('colorId').value[0];
         var sizeId = this.soItemForm.get('sizeId').value[0];
 
@@ -612,7 +640,7 @@ export class SalesOrderComponent implements OnInit {
             colorId: colorId,
             color: this.cmbcolor.value,
             articleId: articleId,
-            articleName: this.soItemForm.get('articleName').value,
+            articleName: this.article.value,
             articleCode: this.soItemForm.get('articleCode').value,
             costingId: 0,
             costingRef: ' ',
@@ -862,15 +890,16 @@ export class SalesOrderComponent implements OnInit {
       if (isIntendCreated == false) {
         // console.log(selectedRowData);
         this.soItemForm.get('itemId').setValue(selectedRowData[0]['itemId']);
-        this.soItemForm
-          .get('articleId')
-          .setValue(selectedRowData[0]['articleId']);
+        // this.soItemForm
+        //   .get('articleId')
+        //   .setValue(selectedRowData[0]['articleId']);
         this.soItemForm
           .get('articleCode')
           .setValue(selectedRowData[0]['articleCode']);
-        this.soItemForm
-          .get('articleName')
-          .setValue(selectedRowData[0]['articleName']);
+        this.article.setSelectedItem(selectedRowData[0]['articleId'], true);
+        // this.soItemForm
+        //   .get('articleName')
+        //   .setValue(selectedRowData[0]['articleName']);
         this.soItemForm.get('colorId').setValue(selectedRowData[0]['color']);
         this.soItemForm.get('sizeId').setValue(selectedRowData[0]['size']);
         this.soItemForm.get('qty').setValue(selectedRowData[0]['qty']);
@@ -1054,7 +1083,7 @@ export class SalesOrderComponent implements OnInit {
           customerUserId: this.soHeaderForm.get('customerUserId').value[0],
           salesCategoryId: this.soHeaderForm.get('salesCategoryId').value[0],
           cusCurrencyId: this.soHeaderForm.get('cusCurrencyId').value[0],
-          countryId: this.soHeaderForm.get('countryId').value[0],
+          countryId: 0 , //this.soHeaderForm.get('countryId').value[0],
           paymentTermId: this.soHeaderForm.get('paymentTermId').value[0],
           salesAgentId: this.soHeaderForm.get('salesAgentId').value[0],
           isChargeable: this.chkIsCharge.checked,
@@ -1115,7 +1144,7 @@ export class SalesOrderComponent implements OnInit {
           salesOrderList.push(deliverydata);
         });
 
-        // console.log(salesOrderList);
+        console.log(salesOrderList);
         // // //console.log(JSON.stringify(menuList));
 
         this.salesOrderServices
@@ -1206,10 +1235,10 @@ export class SalesOrderComponent implements OnInit {
                   orderDt[index]['salesCategoryId'],
                   true
                 );
-                this.countries.setSelectedItem(
-                  orderDt[index]['countryId'],
-                  true
-                );
+                // this.countries.setSelectedItem(
+                //   orderDt[index]['countryId'],
+                //   true
+                // );
                 this.payTerms.setSelectedItem(
                   orderDt[index]['paymentTermId'],
                   true
@@ -1398,7 +1427,7 @@ export class SalesOrderComponent implements OnInit {
     this.soHeaderForm.get('salesCategoryId').setValue('');
     this.soHeaderForm.get('salesAgentId').setValue('');
     this.soHeaderForm.get('cusCurrencyId').setValue('');
-    this.soHeaderForm.get('countryId').setValue('');
+    // this.soHeaderForm.get('countryId').setValue('');
     this.soHeaderForm.get('paymentTermId').setValue('');
     this.soHeaderForm.get('customerDivId').setValue('');
     this.soHeaderForm.get('isChargeable').setValue('');
@@ -1414,8 +1443,8 @@ export class SalesOrderComponent implements OnInit {
     this.clearItemControls();
     this.clearDeliveryControls();
 
-    this.soItemForm.get('articleId').setValue(0);
     this.soItemForm.get('articleName').setValue('');
+    // this.soItemForm.get('articleName').setValue('');
     this.soItemForm.get('articleCode').setValue('');
 
     this.soItemList = [];

@@ -144,6 +144,13 @@ namespace API.Controllers.Admin
             };
         }
 
+        // [HttpPost("refresh")]
+        // public async Task<ActionResult<UserDto>> Refresh(LoginDto loginDto)
+        // {
+        //     var user = await _context.MstrAgents
+        //         .SingleOrDefaultAsync(x => x.cAgentName == loginDto.cAgentName);
+        // }
+
         // private async Task<string> GetFactoryName(int id)
         // {
         //     var factory = await _context.MstrFactory

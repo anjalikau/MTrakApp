@@ -707,7 +707,7 @@ export class JobCreationComponent implements OnInit {
       if (this.JobGrid.dataLength > 0) {
         return true;
       } else {
-        this.toastr.info('Fill the Job Card !!!');
+        this.toastr.info('Job Card details are required !!!');
         return false;
       }
     } else {

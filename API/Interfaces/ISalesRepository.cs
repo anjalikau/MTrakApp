@@ -33,8 +33,9 @@ namespace API.Interfaces
          Task<ReturnDto> SaveCostingAsync(List<SavedCostingDto> costDt);
          Task<CostingSheetDto> GetCostingDetailsAsync(long costHearderId);
          Task<IEnumerable<SalesItemDto>> GetPendSalesOrderItemAsync(int SOHeaderId);
-         Task<IEnumerable<CostHeaderDto>> GetCostHeaderAsync(int ArticleColorSizeId);
+         Task<IEnumerable<CostHeaderDto>> GetCostHeaderAsync(long ArticleColorSizeId);
          Task<int> AttachCostSheetSOAsync(TransSalesOrderItemDt soItemDt);
          Task<int> RemoveCostSheetSOAsync(TransSalesOrderItemDt soItemDt);
+         Task<IEnumerable<CostHeaderDto>> GetCostHeaderListAsync(long CustomerId);
     }
 }

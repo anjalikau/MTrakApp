@@ -47,6 +47,7 @@ export class InvoiceComponent implements OnInit {
   billAddressId: number = 0;
   isApproved: boolean = false;
   isDisplayMode: boolean = false;
+  printButton: boolean = false;
 
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -61,6 +62,8 @@ export class InvoiceComponent implements OnInit {
 
   @ViewChild('dialog', { read: IgxDialogComponent })
   public dialog: IgxDialogComponent;
+  @ViewChild('confDialog', { read: IgxDialogComponent })
+  public confDialog: IgxDialogComponent;
 
   @ViewChild('customer', { read: IgxComboComponent })
   public customer: IgxComboComponent;
@@ -115,6 +118,8 @@ export class InvoiceComponent implements OnInit {
         this.saveButton = true;
       } if (authMenus.filter((x) => x.autoIdx == 176).length > 0) {
         this.approveButton = true;
+      } if (authMenus.filter((x) => x.autoIdx == 1177).length > 0) {
+        this.printButton = true;
       }
     }
     // console.log(this.approveButton);
@@ -128,7 +133,7 @@ export class InvoiceComponent implements OnInit {
       customerAddId: ['', Validators.required],
       invCurrencyId: [0],
       baseCurrencyId: [0],
-      invCurrency: [{ value: '', disabled: true }],      
+      invCurrency: [{ value: '', disabled: true }],
       exchangeRate: [''],
       attention: [''],
       transDate: [{ value: date, disabled: true }],
@@ -206,22 +211,22 @@ export class InvoiceComponent implements OnInit {
       var date: Date = new Date(Date.now());
       this.clearCustomerDetails();
       this.invoiceHdForm.get('autoId').setValue(0);
-      this.invoiceHdForm.get('customerId').setValue("");
+      this.invoiceHdForm.get('customerId').setValue('');
       this.invoiceHdForm.get('customerId').enable();
-      this.invoiceHdForm.get('exchangeRate').setValue("");
+      this.invoiceHdForm.get('exchangeRate').setValue('');
       this.invoiceHdForm.get('transDate').setValue(date);
-  
+
       this.invoiceDtList = [];
       this.totalAmount = 0;
       this.taxAmount = 0;
-      this.discount = 0 ;
+      this.discount = 0;
       this.grossAmount = 0;
       this.nbt = 0;
       this.nbtPr = 0;
       this.netAmount = 0;
       this.totNetValue = 0;
       this.totTaxValue = 0;
-      this.invoiceStatus = "";
+      this.invoiceStatus = '';
       this.isDisplayMode = false;
 
       this.invoiceDtForm.get('dispatchDtId').setValue(0);
@@ -245,7 +250,6 @@ export class InvoiceComponent implements OnInit {
       this.invoiceDtForm.get('grossAmount').setValue(0);
       this.invoiceDtForm.get('discount').setValue(0);
       this.invoiceDtForm.get('disAmount').setValue(0);
-      
     } else {
       this.loadInvoice();
     }
@@ -265,8 +269,12 @@ export class InvoiceComponent implements OnInit {
       this.invoiceHdForm.get('vatNo').setValue(filterCus[0]['vatNo']);
       this.invoiceHdForm.get('taxNo').setValue(filterCus[0]['taxNo']);
       this.invoiceHdForm.get('attention').setValue(filterCus[0]['attention']);
-      this.invoiceHdForm.get('invCurrencyId').setValue(filterCus[0]['currencyId']);
-      this.invoiceHdForm.get('invCurrency').setValue(filterCus[0]['currencyCode']);
+      this.invoiceHdForm
+        .get('invCurrencyId')
+        .setValue(filterCus[0]['currencyId']);
+      this.invoiceHdForm
+        .get('invCurrency')
+        .setValue(filterCus[0]['currencyCode']);
       date.setDate(date.getDate() + filterCus[0]['creditDays']);
       this.paymentDue = this.datePipe.transform(date, 'yyyy-MM-dd');
       //console.log(this.paymentDue);
@@ -293,13 +301,13 @@ export class InvoiceComponent implements OnInit {
   clearCustomerDetails() {
     this.pendInvoiceList = [];
     this.addressList = [];
-    this.invoiceHdForm.get('vatNo').setValue("");
-    this.invoiceHdForm.get('taxNo').setValue("");
-    this.invoiceHdForm.get('attention').setValue("");
+    this.invoiceHdForm.get('vatNo').setValue('');
+    this.invoiceHdForm.get('taxNo').setValue('');
+    this.invoiceHdForm.get('attention').setValue('');
     this.invoiceHdForm.get('invCurrencyId').setValue(0);
-    this.invoiceHdForm.get('invCurrency').setValue("");
-    this.invoiceHdForm.get('customerAddId').setValue("");
-    this.paymentDue = "";
+    this.invoiceHdForm.get('invCurrency').setValue('');
+    this.invoiceHdForm.get('customerAddId').setValue('');
+    this.paymentDue = '';
     this.exchRate = 0;
   }
 
@@ -315,7 +323,7 @@ export class InvoiceComponent implements OnInit {
 
     var taxRate = taxLine[0]['rate'];
     var value = this.invoiceDtForm.get('value').value;
-    var lineTax = this.roundTo((taxRate * value)/100 , 2);
+    var lineTax = this.roundTo((taxRate * value) / 100, 2);
     var grossAmount = lineTax + lineTax;
 
     this.invoiceDtForm.get('taxRate').setValue(taxRate);
@@ -403,6 +411,12 @@ export class InvoiceComponent implements OnInit {
     }
   }
 
+  ///// IF USER SECLECT CONFIRM TO DELETE 
+  onDialogConfirmSelected(event) {
+    event.dialog.close();    
+    this.approveInvoice();   
+  }
+
   /// DELETE CONFIRMATION OF INVOICE DETAILS
   openConfirmDialog(event, cellId) {
     this.rowId = cellId.rowID;
@@ -410,6 +424,11 @@ export class InvoiceComponent implements OnInit {
     this.dialog.open();
   }
 
+  //// OPEN INVOICE CONFIRMATION DIALOG
+  openInvConfirmDialog() {
+    this.confDialog.open();
+  }
+ 
   /// QTY LOST FOCUS
   onFocusOutEvent(event) {
     this.calculateInvLineValue();
@@ -438,73 +457,73 @@ export class InvoiceComponent implements OnInit {
 
   addInvoiceDetails() {
     if (this.validateQty()) {
-    var dispatchDtId = this.invoiceDtForm.get('dispatchDtId').value;
+      var dispatchDtId = this.invoiceDtForm.get('dispatchDtId').value;
 
-    var selectRowData = this.invoiceDtGrid.data.filter((record) => {
-      return record.dispatchDtId == dispatchDtId;
-    });
+      var selectRowData = this.invoiceDtGrid.data.filter((record) => {
+        return record.dispatchDtId == dispatchDtId;
+      });
 
-    var qty = this.invoiceDtForm.get('qty').value;
-    var value = this.invoiceDtForm.get('value').value;
-    var taxCodeId = this.invoiceDtForm.get('taxCode').value[0];
-    var taxCode = this.taxCode.value;
-    var taxRate = this.invoiceDtForm.get('taxRate').value;
-    var lineTax = this.invoiceDtForm.get('lineTax').value;
-    var grossAmount = this.invoiceDtForm.get('grossAmount').value;
-    var discount = this.invoiceDtForm.get('discount').value;
-    var disAmount = this.invoiceDtForm.get('disAmount').value;
+      var qty = this.invoiceDtForm.get('qty').value;
+      var value = this.invoiceDtForm.get('value').value;
+      var taxCodeId = this.invoiceDtForm.get('taxCode').value[0];
+      var taxCode = this.taxCode.value;
+      var taxRate = this.invoiceDtForm.get('taxRate').value;
+      var lineTax = this.invoiceDtForm.get('lineTax').value;
+      var grossAmount = this.invoiceDtForm.get('grossAmount').value;
+      var discount = this.invoiceDtForm.get('discount').value;
+      var disAmount = this.invoiceDtForm.get('disAmount').value;
 
-    if (discount > 0) {
-      disAmount = (discount / 100) * grossAmount;
+      if (discount > 0) {
+        disAmount = (discount / 100) * grossAmount;
+      }
+      var netTotal = grossAmount - disAmount;
+
+      //// CHECK INVOICE LINE ADDED OR NOT
+      if (selectRowData.length > 0) {
+        this.invoiceDtGrid.updateCell(qty, dispatchDtId, 'qty');
+        this.invoiceDtGrid.updateCell(value, dispatchDtId, 'value');
+        this.invoiceDtGrid.updateCell(taxCodeId, dispatchDtId, 'taxCodeId');
+        this.invoiceDtGrid.updateCell(taxCode, dispatchDtId, 'taxCode');
+        this.invoiceDtGrid.updateCell(taxRate, dispatchDtId, 'taxRate');
+        this.invoiceDtGrid.updateCell(lineTax, dispatchDtId, 'lineTax');
+        this.invoiceDtGrid.updateCell(grossAmount, dispatchDtId, 'grossAmount');
+        this.invoiceDtGrid.updateCell(discount, dispatchDtId, 'discount');
+        this.invoiceDtGrid.updateCell(disAmount, dispatchDtId, 'disAmount');
+        this.invoiceDtGrid.updateCell(netTotal, dispatchDtId, 'netTotal');
+      } else {
+        this.pendInvoiceGrid.updateCell(true, dispatchDtId, 'status');
+        var obj = {
+          dispatchDtId: dispatchDtId,
+          dispatchNo: this.invoiceDtForm.get('dispatchNo').value,
+          orderRef: this.invoiceDtForm.get('salesOrderNo').value,
+          soItemId: this.invoiceDtForm.get('soItemId').value,
+          articleId: this.invoiceDtForm.get('articleId').value,
+          articleName: this.invoiceDtForm.get('article').value,
+          colorId: this.invoiceDtForm.get('colorId').value,
+          color: this.invoiceDtForm.get('color').value,
+          sizeId: this.invoiceDtForm.get('sizeId').value,
+          size: this.invoiceDtForm.get('size').value,
+          qty: qty,
+          balQty: this.invoiceDtForm.get('balQty').value,
+          uomId: this.invoiceDtForm.get('uomId').value,
+          uom: this.invoiceDtForm.get('uom').value,
+          price: this.invoiceDtForm.get('price').value,
+          value: value,
+          taxCodeId: taxCodeId,
+          taxCode: taxCode,
+          taxRate: taxRate,
+          lineTax: lineTax,
+          grossAmount: grossAmount,
+          discount: discount,
+          disAmount: disAmount,
+          netTotal: netTotal,
+        };
+        // console.log(obj);
+        this.invoiceDtGrid.addRow(obj);
+      }
+      this.clearInvoiceDetails();
+      this.calculateSummarry();
     }
-    var netTotal = grossAmount - disAmount;
-
-    //// CHECK INVOICE LINE ADDED OR NOT
-    if (selectRowData.length > 0) {
-      this.invoiceDtGrid.updateCell(qty, dispatchDtId, 'qty');
-      this.invoiceDtGrid.updateCell(value, dispatchDtId, 'value');
-      this.invoiceDtGrid.updateCell(taxCodeId, dispatchDtId, 'taxCodeId');
-      this.invoiceDtGrid.updateCell(taxCode, dispatchDtId, 'taxCode');
-      this.invoiceDtGrid.updateCell(taxRate, dispatchDtId, 'taxRate');
-      this.invoiceDtGrid.updateCell(lineTax, dispatchDtId, 'lineTax');
-      this.invoiceDtGrid.updateCell(grossAmount, dispatchDtId, 'grossAmount');
-      this.invoiceDtGrid.updateCell(discount, dispatchDtId, 'discount');
-      this.invoiceDtGrid.updateCell(disAmount, dispatchDtId, 'disAmount');
-      this.invoiceDtGrid.updateCell(netTotal, dispatchDtId, 'netTotal');
-    } else {
-      this.pendInvoiceGrid.updateCell(true, dispatchDtId, 'status');
-      var obj = {
-        dispatchDtId: dispatchDtId,
-        dispatchNo: this.invoiceDtForm.get('dispatchNo').value,
-        orderRef: this.invoiceDtForm.get('salesOrderNo').value,
-        soItemId: this.invoiceDtForm.get('soItemId').value,
-        articleId: this.invoiceDtForm.get('articleId').value,
-        articleName: this.invoiceDtForm.get('article').value,
-        colorId: this.invoiceDtForm.get('colorId').value,
-        color: this.invoiceDtForm.get('color').value,
-        sizeId: this.invoiceDtForm.get('sizeId').value,
-        size: this.invoiceDtForm.get('size').value,
-        qty: qty,
-        balQty: this.invoiceDtForm.get('balQty').value,
-        uomId: this.invoiceDtForm.get('uomId').value,
-        uom: this.invoiceDtForm.get('uom').value,
-        price: this.invoiceDtForm.get('price').value,
-        value: value,
-        taxCodeId: taxCodeId,
-        taxCode: taxCode,
-        taxRate: taxRate,
-        lineTax: lineTax,
-        grossAmount: grossAmount,
-        discount: discount,
-        disAmount: disAmount,
-        netTotal: netTotal,
-      };
-      // console.log(obj);
-      this.invoiceDtGrid.addRow(obj);
-    }
-    this.clearInvoiceDetails();
-    this.calculateSummarry();
-  }
   }
 
   validateQty() {
@@ -513,11 +532,10 @@ export class InvoiceComponent implements OnInit {
     // console.log(balQty);
     // console.log(qty);
 
-    if(balQty < qty) {
-      this.toastr.warning("Qty can not be more tahn Bal Qty");
+    if (balQty < qty) {
+      this.toastr.warning('Qty can not be more tahn Bal Qty');
       return false;
-    } else
-      return true;
+    } else return true;
   }
 
   calculateSummarry() {
@@ -548,9 +566,9 @@ export class InvoiceComponent implements OnInit {
     this.discount = _disAmount;
     this.nbtPr = _nbtPr;
     this.nbt = (_totAmount * _nbtPr) / 100;
-    this.netAmount = _grossAmount - (_disAmount + this.nbt);
+    this.netAmount = this.roundTo((_grossAmount - (_disAmount + this.nbt)) , 2);
     this.totNetValue = this.netAmount * this.exchRate;
-    this.totTaxValue = _lineTax * this.exchRate;
+    this.totTaxValue = this.roundTo((_lineTax * this.exchRate) ,2);
   }
 
   clearInvoiceDetails() {
@@ -624,126 +642,135 @@ export class InvoiceComponent implements OnInit {
       .setValue(selectedRowData[0]['disAmount']);
   }
 
-  //// SAVE INVOICE 
+  //// SAVE INVOICE
   saveInvoice() {
-    if(this.saveButton == true) {    
+    if (this.saveButton == true) {
+      if(this.validateInvoice()) {
       var customerId = this.invoiceHdForm.get('customerId').value[0];
-    var invoiceHd = {
-      autoId: this.invoiceHdForm.get('autoId').value,
-      invoiceNo: this.invoiceHdForm.get('invoiceNo').value.trim(),
-      customerId: this.invoiceHdForm.get('customerId').value[0],
-      vatNo: this.invoiceHdForm.get('vatNo').value,
-      taxNo: this.invoiceHdForm.get('taxNo').value,
-      customerAddId: this.invoiceHdForm.get('customerAddId').value[0],
-      invCurrencyId: this.invoiceHdForm.get('invCurrencyId').value,
-      baseCurrencyId: this.invoiceHdForm.get('baseCurrencyId').value,
-      exchangeRate: this.exchRate,
-      attention: this.invoiceHdForm.get('attention').value,
-      totalAmount: this.totalAmount,
-      taxAmount: this.taxAmount,
-      grossAmount: this.grossAmount,
-      discountAmount: this.discount,
-      nBTRate: this.nbtPr,
-      nBTAmount: this.nbt,
-      netAmount: this.netAmount,
-      netValue: this.totNetValue,
-      taxValue: this.totTaxValue,
-      paymentDueDate: this.paymentDue,
-      locationId: this.user.locationId,
-      createUserId: this.user.userId,
-    };
-
-    ////--------=========== INVOICE DETAILS =======================---------
-    var itemRows = this.invoiceDtGrid.data;
-    var invoiceDt = [];
-    // console.log(this.invoiceDtGrid.data);
-
-    itemRows.forEach((items) => {
-      var itemdata = {
-        dispatchDtId: items.dispatchDtId,
-        soItemDtId: items.soItemId,
-        qty: items.qty,
-        uom: items.uomId,
-        unitPrice: items.price,
-        value: items.value,
-        taxId: items.taxCodeId,
-        taxRate: items.taxRate,
-        taxAmount: items.lineTax,
-        grossAmount: items.grossAmount,
-        discountP: items.discount,
-        discountA: items.disAmount,
-        netAmount: items.netTotal
+      var invoiceHd = {
+        autoId: this.invoiceHdForm.get('autoId').value,
+        invoiceNo: this.invoiceHdForm.get('invoiceNo').value.trim(),
+        customerId: this.invoiceHdForm.get('customerId').value[0],
+        vatNo: this.invoiceHdForm.get('vatNo').value,
+        taxNo: this.invoiceHdForm.get('taxNo').value,
+        customerAddId: this.invoiceHdForm.get('customerAddId').value[0],
+        invCurrencyId: this.invoiceHdForm.get('invCurrencyId').value,
+        baseCurrencyId: this.invoiceHdForm.get('baseCurrencyId').value,
+        exchangeRate: this.exchRate,
+        attention: this.invoiceHdForm.get('attention').value,
+        totalAmount: this.totalAmount,
+        taxAmount: this.taxAmount,
+        grossAmount: this.grossAmount,
+        discountAmount: this.discount,
+        nBTRate: this.nbtPr,
+        nBTAmount: this.nbt,
+        netAmount: this.netAmount,
+        netValue: this.totNetValue,
+        taxValue: this.totTaxValue,
+        paymentDueDate: this.paymentDue,
+        locationId: this.user.locationId,
+        createUserId: this.user.userId,
       };
-      invoiceDt.push(itemdata);
-    });
 
-    var invoiceList = {
-      invoiceHeader: invoiceHd,
-      invoiceDetails: invoiceDt
-    }
+      ////--------=========== INVOICE DETAILS =======================---------
+      var itemRows = this.invoiceDtGrid.data;
+      var invoiceDt = [];
+      // console.log(this.invoiceDtGrid.data);
 
-    // console.log(invoiceList);
-    this.financeService.saveInvoice(invoiceList).subscribe((result) => {
-      if (result['result'] == 1) {
-        this.toastr.success('Invoice save Successfully !!!');
-        this.invoiceHdForm.get('autoId').setValue(result['refNumId']);
-        this.invoiceHdForm.get('invoiceNo').setValue(result['refNum']);
-        this.loadInvoice();
-        this.loadsInvoicePendDetails(customerId);
-      } else if (result['result'] == 2) {
-        this.toastr.success('Invoice update Successfully !!!');
-        this.invoiceHdForm.get('autoId').setValue(result['refNumId']);
-        this.invoiceHdForm.get('invoiceNo').setValue(result['refNum']);
-        this.loadInvoice();
-        this.loadsInvoicePendDetails(customerId);
-      } else {
-        this.toastr.warning(
-          'Contact Admin. Error No:- ' + result['result'].toString()
-        );
-      }
-    });
+      itemRows.forEach((items) => {
+        var itemdata = {
+          dispatchDtId: items.dispatchDtId,
+          soItemDtId: items.soItemId,
+          qty: items.qty,
+          uom: items.uomId,
+          unitPrice: items.price,
+          value: items.value,
+          taxId: items.taxCodeId,
+          taxRate: items.taxRate,
+          taxAmount: items.lineTax,
+          grossAmount: items.grossAmount,
+          discountP: items.discount,
+          discountA: items.disAmount,
+          netAmount: items.netTotal,
+        };
+        invoiceDt.push(itemdata);
+      });
+
+      var invoiceList = {
+        invoiceHeader: invoiceHd,
+        invoiceDetails: invoiceDt,
+      };
+
+      // console.log(invoiceList);
+      this.financeService.saveInvoice(invoiceList).subscribe((result) => {
+        if (result['result'] == 1) {
+          this.toastr.success('Invoice save Successfully !!!');
+          this.invoiceHdForm.get('autoId').setValue(result['refNumId']);
+          this.invoiceHdForm.get('invoiceNo').setValue(result['refNum']);
+          this.loadInvoice();
+          this.loadsInvoicePendDetails(customerId);
+        } else if (result['result'] == 2) {
+          this.toastr.success('Invoice update Successfully !!!');
+          this.invoiceHdForm.get('autoId').setValue(result['refNumId']);
+          this.invoiceHdForm.get('invoiceNo').setValue(result['refNum']);
+          this.loadInvoice();
+          this.loadsInvoicePendDetails(customerId);
+        } else {
+          this.toastr.warning(
+            'Contact Admin. Error No:- ' + result['result'].toString()
+          );
+        }
+      });
+    } 
   } else {
-    this.toastr.warning("Save permission denied !!!");
+    this.toastr.warning('Save permission denied !!!');
   }
+}
+
+  validateInvoice() {
+    if (this.invoiceDtGrid.dataLength > 0) {
+      return true;
+    } else {
+      this.toastr.info('Invoice Details are required !!!');
+      return false;
+    }
   }
 
   //// APPROVE INVOICE
   approveInvoice() {
     if (this.approveButton == true) {
-    var obj = {
-      autoId: this.invoiceHdForm.get('autoId').value,
-      createUserId: this.user.userId
-    };
+      var obj = {
+        autoId: this.invoiceHdForm.get('autoId').value,
+        createUserId: this.user.userId,
+      };
 
-    this.financeService.approveInvoice(obj).subscribe(result => {
-      // console.log(result);
-      if (result == 1) {
-        this.toastr.success('Invoice approve Successfully !!!');
-        this.loadInvoice();
-      } else {
-        this.toastr.warning(
-          'Contact Admin. Error No:- ' + result.toString()
-        );
-      }
-    });
-  } else {
-    this.toastr.warning("Approve permission denied !!!");
-  }
+      this.financeService.approveInvoice(obj).subscribe((result) => {
+        // console.log(result);
+        if (result == 1) {
+          this.toastr.success('Invoice approve Successfully !!!');
+          this.loadInvoice();
+        } else {
+          this.toastr.warning('Contact Admin. Error No:- ' + result.toString());
+        }
+      });
+    } else {
+      this.toastr.warning('Approve permission denied !!!');
+    }
   }
 
-  
   /// LOADS EXISTING INVOICE DETAILS
   loadInvoice() {
     this.clearCustomerDetails();
-    this.clearInvoiceDetails();   
+    this.clearInvoiceDetails();
     this.invoiceHdForm.get('customerId').enable();
 
     var invoiceDt = [];
     this.isDisplayMode = true;
     var invoiceNo = this.invoiceHdForm.get('invoiceNo').value.trim();
 
-    this.financeService.getInvoiceDetails(invoiceNo).subscribe((result) => {
-      // console.log(result);
+    this.financeService.getInvoiceDetails(invoiceNo).subscribe(
+      (result) => {
+        // console.log(result);
         //////---------====== LOADS INVOICE HEADER ================---------
         if (result.invoiceHeader != null) {
           var invoiceHdRow = result.invoiceHeader;
@@ -752,22 +779,33 @@ export class InvoiceComponent implements OnInit {
             this.datePipe.transform(invoiceHdRow[0]['transDate'], 'yyyy-MM-dd')
           );
           var payDueDate: Date = new Date(
-            this.datePipe.transform(invoiceHdRow[0]['paymentDueDate'],'yyyy-MM-dd')
-          );          
-          
+            this.datePipe.transform(
+              invoiceHdRow[0]['paymentDueDate'],
+              'yyyy-MM-dd'
+            )
+          );
+
           this.invoiceHdForm.get('transDate').setValue(trnsDate);
           this.customer.setSelectedItem(invoiceHdRow[0]['customerId'], true);
           this.loadsBillingAddress(invoiceHdRow[0]['customerId']);
           this.invoiceHdForm.get('autoId').setValue(invoiceHdRow[0]['autoId']);
           this.invoiceHdForm.get('taxNo').setValue(invoiceHdRow[0]['taxNo']);
           this.invoiceHdForm.get('vatNo').setValue(invoiceHdRow[0]['vatNo']);
-          this.invoiceHdForm.get('attention').setValue(invoiceHdRow[0]['attention']);
-          this.invoiceHdForm.get('invCurrencyId').setValue(invoiceHdRow[0]['invCurrencyId']);
-          this.invoiceHdForm.get('invCurrency').setValue(invoiceHdRow[0]['invCurrency']);
-          this.invoiceHdForm.get('baseCurrencyId').setValue(invoiceHdRow[0]['baseCurrencyId']);
+          this.invoiceHdForm
+            .get('attention')
+            .setValue(invoiceHdRow[0]['attention']);
+          this.invoiceHdForm
+            .get('invCurrencyId')
+            .setValue(invoiceHdRow[0]['invCurrencyId']);
+          this.invoiceHdForm
+            .get('invCurrency')
+            .setValue(invoiceHdRow[0]['invCurrency']);
+          this.invoiceHdForm
+            .get('baseCurrencyId')
+            .setValue(invoiceHdRow[0]['baseCurrencyId']);
           this.defCurrency = invoiceHdRow[0]['baseCurrency'];
           this.billAddressId = invoiceHdRow[0]['customerAddId'];
-          
+
           this.isApproved = invoiceHdRow[0]['isApproved'];
           this.totalAmount = invoiceHdRow[0]['totalAmount'];
           this.taxAmount = invoiceHdRow[0]['taxAmount'];
@@ -781,58 +819,58 @@ export class InvoiceComponent implements OnInit {
           this.totNetValue = invoiceHdRow[0]['netValue'];
           this.totTaxValue = invoiceHdRow[0]['taxValue'];
 
-          if(this.isApproved == false)
-            this.invoiceStatus = "Active Invoice";
+          if (this.isApproved == false) this.invoiceStatus = 'Active Invoice';
           else if (this.isApproved == true)
-           this.invoiceStatus = "Approved Invoice";
+            this.invoiceStatus = 'Approved Invoice';
 
           this.loadsInvoicePendDetails(invoiceHdRow[0]['customerId']);
-        } 
+        }
         ///// ----------=============== LOADS INVOICE DETAILS ==============-------
         if (result.invoiceDetails != null) {
           var invoiceDetails = result.invoiceDetails;
 
           for (let a = 0; a < invoiceDetails.length; a++) {
-
-            var taxLine = this.taxList.filter(x => x.autoId == invoiceDetails[a]["taxId"]);
+            var taxLine = this.taxList.filter(
+              (x) => x.autoId == invoiceDetails[a]['taxId']
+            );
 
             var obj = {
-              dispatchDtId: invoiceDetails[a]["dispatchDtId"],
-              dispatchNo: invoiceDetails[a]["dispatchNo"],
-              orderRef: invoiceDetails[a]["orderRef"],
-              soItemId: invoiceDetails[a]["soItemId"],
-              articleId: invoiceDetails[a]["articleId"],
-              articleName: invoiceDetails[a]["articleName"],
-              colorId: invoiceDetails[a]["colorId"],
-              color: invoiceDetails[a]["color"],
-              sizeId: invoiceDetails[a]["sizeId"],
-              size: invoiceDetails[a]["size"],
-              balQty: invoiceDetails[a]["balQty"],
-              qty: invoiceDetails[a]["qty"],
-              uomId: invoiceDetails[a]["measurementId"],
-              uom: invoiceDetails[a]["uom"],
-              price: invoiceDetails[a]["unitPrice"],
-              value: invoiceDetails[a]["value"],
-              taxCodeId: invoiceDetails[a]["taxId"],
-              taxCode: taxLine[0]["description"],
-              taxRate: invoiceDetails[a]["taxRate"],
-              lineTax: invoiceDetails[a]["taxAmount"],
-              grossAmount: invoiceDetails[a]["grossAmount"],
-              discount: invoiceDetails[a]["discountP"],
-              disAmount: invoiceDetails[a]["discountA"],
-              netTotal: invoiceDetails[a]["netAmount"],
+              dispatchDtId: invoiceDetails[a]['dispatchDtId'],
+              dispatchNo: invoiceDetails[a]['dispatchNo'],
+              orderRef: invoiceDetails[a]['orderRef'],
+              soItemId: invoiceDetails[a]['soItemId'],
+              articleId: invoiceDetails[a]['articleId'],
+              articleName: invoiceDetails[a]['articleName'],
+              colorId: invoiceDetails[a]['colorId'],
+              color: invoiceDetails[a]['color'],
+              sizeId: invoiceDetails[a]['sizeId'],
+              size: invoiceDetails[a]['size'],
+              balQty: invoiceDetails[a]['balQty'],
+              qty: invoiceDetails[a]['qty'],
+              uomId: invoiceDetails[a]['measurementId'],
+              uom: invoiceDetails[a]['uom'],
+              price: invoiceDetails[a]['unitPrice'],
+              value: invoiceDetails[a]['value'],
+              taxCodeId: invoiceDetails[a]['taxId'],
+              taxCode: taxLine[0]['description'],
+              taxRate: invoiceDetails[a]['taxRate'],
+              lineTax: invoiceDetails[a]['taxAmount'],
+              grossAmount: invoiceDetails[a]['grossAmount'],
+              discount: invoiceDetails[a]['discountP'],
+              disAmount: invoiceDetails[a]['discountA'],
+              netTotal: invoiceDetails[a]['netAmount'],
             };
 
             invoiceDt.push(obj);
           }
           this.invoiceDtList = invoiceDt;
-          
-      }      
-    },
-    (err) => console.error(err),
-    () => {
-      this.setComboValues();
-    });
+        }
+      },
+      (err) => console.error(err),
+      () => {
+        this.setComboValues();
+      }
+    );
   }
 
   setComboValues() {
@@ -842,8 +880,8 @@ export class InvoiceComponent implements OnInit {
     }, 1000);
   }
 
-   //// round the any value
-   roundTo(num: number, places: number) {
+  //// round the any value
+  roundTo(num: number, places: number) {
     const factor = 10 ** places;
     // console.log(factor);
     return Math.round(num * factor) / factor;
@@ -853,25 +891,40 @@ export class InvoiceComponent implements OnInit {
     var date: Date = new Date(Date.now());
     this.clearCustomerDetails();
     this.invoiceHdForm.get('autoId').setValue(0);
-    this.invoiceHdForm.get('customerId').setValue("");
+    this.invoiceHdForm.get('customerId').setValue('');
     this.invoiceHdForm.get('customerId').enable();
-    this.invoiceHdForm.get('exchangeRate').setValue("");
+    this.invoiceHdForm.get('exchangeRate').setValue('');
     this.invoiceHdForm.get('transDate').setValue(date);
 
     this.invoiceDtList = [];
     this.totalAmount = 0;
     this.taxAmount = 0;
-    this.discount = 0 ;
+    this.discount = 0;
     this.grossAmount = 0;
     this.nbt = 0;
     this.nbtPr = 0;
     this.netAmount = 0;
     this.totNetValue = 0;
     this.totTaxValue = 0;
-    this.invoiceStatus = "";
+    this.invoiceStatus = '';
     this.isDisplayMode = false;
     this.clearInvoiceDetails();
     this.getInvoiceNo();
+  }
+
+  printInvoice() {
+    if(this.printButton == true) {
+      // this.router.navigate(['/boldreport']);
+      var obj = {
+        invoiceHdId: this.invoiceHdForm.get('autoId').value,
+        reportName: "InvoiceFormat"
+      }
+      /// STORE OBJECT IN LOCAL STORAGE
+      localStorage.setItem('params', JSON.stringify(obj));
+      window.open('/boldreport', '_blank');
+    } else {
+      this.toastr.error('Print Permission denied !!!');
+    }
   }
 
   /// set tax rate
