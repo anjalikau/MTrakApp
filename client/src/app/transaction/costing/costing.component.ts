@@ -184,6 +184,8 @@ export class CostingComponent implements OnInit {
   public specInst: IgxComboComponent;
   @ViewChild('value', { read: IgxComboComponent })
   public value: IgxComboComponent;
+  @ViewChild('approver', { read: IgxComboComponent })
+  public approver: IgxComboComponent;
 
   @ViewChild('articleForm', { read: IgxDialogComponent })
   public articleForm: IgxDialogComponent;
@@ -2192,6 +2194,11 @@ export class CostingComponent implements OnInit {
     if (this.approveButton == true) {
       this.approveForm.get('approver').setValue("");
       this.approveForm.get('remark').setValue("");
+
+      // console.log(this.approveRoteList);
+      var defaultUser = this.approveRoteList.filter(x => x.isDefault == true);
+      if (defaultUser.length > 0)
+        this.approver.setSelectedItem( defaultUser[0]["idAgents"] ,true);     
 
       // console.log(this.approveRoteList);
       var buyPassList = this.approveRoteList.filter((x) => x.buyPass == false);

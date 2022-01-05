@@ -76,7 +76,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label>Approver *</label>
-                    <igx-combo id="approver" class="combo" displayKey="cAgentName" valueKey="idAgents"
+                    <igx-combo #approver id="approver" class="combo" displayKey="cAgentName" valueKey="idAgents"
                         [itemsMaxHeight]="250" [data]="approveRoteList" placeholder="Approver"
                         (onSelectionChange)="singleSelection($event)" 
                         formControlName="approver" searchPlaceholder="Search...">

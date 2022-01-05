@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxDialogComponent, IgxGridComponent } from 'igniteui-angular';
+import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxComboComponent, IgxDialogComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
 import { ApproveCenter } from 'src/app/_models/ApproveCenter';
 import { User } from 'src/app/_models/user';
@@ -31,6 +31,9 @@ export class ApproveCenterComponent implements OnInit {
 
   @ViewChild('approveGrid', { static: true })
   public approveGrid: IgxGridComponent;
+
+  @ViewChild('approver', { read: IgxComboComponent })
+  public approver: IgxComboComponent;
 
   @ViewChild('approveModal', { read: IgxDialogComponent })
   public approveModal: IgxDialogComponent;
@@ -71,6 +74,44 @@ export class ApproveCenterComponent implements OnInit {
     }
   }
 
+   ///// GET APPROVE ROUTING DETAILS BASED ON USER ID AND MODULE
+   getApproveRouteDetails() {
+    var obj = {
+      userId: this.user.userId,
+      module: this.selectedRowData[0]['moduleName']
+    };
+
+    this.salesOrderServices.getApproveRouteDetails(obj).subscribe((result) => {      
+        this.approveRoteList = result; 
+
+        // console.log(this.approveRoteList);          
+        /// check IF FINAL APPROVE
+        if (this.selectedRowData[0]['isFinal'] == 1) {
+          this.approveForm.get('approver').disable();
+          this.appButton = true;
+          this.okButton = false;
+        } else {
+          this.approveForm.get('approver').enable();
+          this.appButton = false;
+          this.okButton = true;
+        }
+        this.approveModal.open();        
+    },
+    (err) => console.error(err),
+    () => {
+        this.setDefaultUser();
+    });
+  }
+
+  setDefaultUser() {
+    setTimeout(() => {
+      //// SELECT DEFAULT USER 
+      var defaultUser = this.approveRoteList.filter(x => x.isDefault == true);
+      if (defaultUser.length > 0)
+        this.approver.setSelectedItem( defaultUser[0]["idAgents"] ,true);
+    }, 500);
+  }
+
   loadApproveList() {
     var userId = this.user.userId;
 
@@ -82,7 +123,6 @@ export class ApproveCenterComponent implements OnInit {
   onApproveRoute(event, cellId) {
     var ids = cellId.rowID;
     this.selectedRowData = [];
-
     this.approveForm.get('approver').setValue('');
     this.approveForm.get('remark').setValue('');
 
@@ -90,18 +130,7 @@ export class ApproveCenterComponent implements OnInit {
       return record.autoId == ids;
     });
 
-    /// check IF FINAL APPROVE
-    if (this.selectedRowData[0]['isFinal'] == 1) {
-      this.approveForm.get('approver').disable();
-      this.appButton = true;
-      this.okButton = false;
-    } else {
-      this.approveForm.get('approver').enable();
-      this.appButton = false;
-      this.okButton = true;
-    }
-
-    this.approveModal.open();
+    this.getApproveRouteDetails();
     // this.approveRouteCostSheet(selectedRowData);
   }
 
