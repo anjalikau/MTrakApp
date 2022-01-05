@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ApproveCenter } from 'src/app/_models/ApproveCenter';
 import { DispatchNoteDt } from 'src/app/_models/DispatchNoteDt';
 import { DispatchProdDt } from 'src/app/_models/dispatchProdDt';
 import { FPPOProdDetails } from 'src/app/_models/FPPOProdDetails';
@@ -159,6 +160,18 @@ export class SalesorderService {
 
   removeCostSheet(soItem: any) {
     return this.http.post(this.baseUrl + 'SalesOrder/RemoveCS' , soItem , httpOptions );
+  }
+
+  getApproveRouteDetails(appRouteDt: any) {
+    return this.http.post<any[]>(this.baseUrl + 'SalesOrder/AppRouteDt' , appRouteDt , httpOptions );
+  }
+
+  saveApproveCenterDt(approveCenter: ApproveCenter) {
+    return this.http.post(this.baseUrl + 'SalesOrder/SaveApprove' , approveCenter , httpOptions );
+  }
+
+  getApproveCenterDt(userId: any) {
+    return this.http.get<ApproveCenter[]>(this.baseUrl + 'SalesOrder/ACDt/' + userId , httpOptions );
   }
 
 }

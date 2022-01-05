@@ -51,6 +51,8 @@ import { ExchangeRateComponent } from './finance/exchange-rate/exchange-rate.com
 import { TaxComponent } from './finance/tax/tax.component';
 import { BankComponent } from './finance/bank/bank.component';
 import { InvoiceComponent } from './finance/invoice/invoice.component';
+import { UserPermittabComponent } from './users/user-permittab/user-permittab.component';
+import { ApproveCenterComponent } from './users/approve-center/approve-center.component';
 
 const routes: Routes = [
   {path:'', component: LoginComponent},
@@ -63,7 +65,7 @@ const routes: Routes = [
       {path:'Home', component: HomeComponent},
       {path:'UserRegister', component: UserRegisterComponent },
       {path:'MenuList', component: MenuListComponent},
-      {path:'UserPermission', component: UserPermissionComponent},
+      {path:'UserPermission', component: UserPermittabComponent},
       {path:'ColorTab', component: ColorTabComponent},
       {path:'SizeTab', component: SizeTabComponent},
       {path:'MasterStoresite', component: MasterStoresiteComponent},
@@ -103,7 +105,8 @@ const routes: Routes = [
       {path:'ExchangeRate', component: ExchangeRateComponent},
       {path:'Tax', component: TaxComponent},
       {path:'Bank', component: BankComponent},
-      {path:'Invoice', component: InvoiceComponent}
+      {path:'Invoice', component: InvoiceComponent},
+      {path:'ApproveCenter', component: ApproveCenterComponent}
     ]
   },  
   {path:'not-found', component: NotFoundComponent},

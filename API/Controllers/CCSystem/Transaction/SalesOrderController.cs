@@ -278,7 +278,28 @@ namespace API.Controllers.CCSystem.Transaction
         {
             var result = await _salesRepository.RemoveCostSheetSOAsync(soItem);
             return Ok(result);
-        }     
+        }  
+
+        [HttpPost("AppRouteDt")]
+        public async Task<IActionResult> GetApproveRouteDeatils(ApprovalUsersDto appUser)
+        {
+            var result = await _salesRepository.GetApprovalRouteDetailsAsync(appUser);
+            return Ok(result);
+        }    
+
+        [HttpPost("SaveApprove")]
+        public async Task<IActionResult> SaveApproveCenterDt(TransApprovalCenter appCenter)
+        {
+            var result = await _salesRepository.SaveApproveCenterAsync(appCenter);
+            return Ok(result);
+        }   
+
+        [HttpGet("ACDt/{userId}")]
+        public async Task<IActionResult> GetApproveCenterDt(int userId)
+        {
+            var result = await _salesRepository.GetApproveCenterDetailsAsync(userId);                       
+            return Ok(result);
+        }
 
     }
 }

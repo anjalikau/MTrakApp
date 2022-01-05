@@ -1,9 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ApproveRouteModule } from 'src/app/_models/approveRouteModule';
+import { ApproveUsers } from 'src/app/_models/approveUsers';
 import { MenuList } from 'src/app/_models/menuList';
 import { MenuUser } from 'src/app/_models/menuUser';
 import { PermitUser } from 'src/app/_models/permitUser';
 import { User } from 'src/app/_models/user';
+import { UserAppModules } from 'src/app/_models/userAppModules';
 import { environment } from 'src/environments/environment';
 import { LocalService } from './local.service';
 
@@ -59,5 +62,33 @@ export class AdminService {
 
   SetDefaultLocation(userLoc: any) {
     return this.http.post(this.baseUrl + 'Master/Loc/SetDefault', userLoc , httpOptions);
+  }
+
+  getUserAppModuleList(userId: any) {
+    return this.http.get<UserAppModules[]>(this.baseUrl + 'Menu/UserAM/'  + userId , httpOptions);
+  }
+
+  getModuleList() {
+    return this.http.get<MenuList[]>(this.baseUrl + 'Menu/Modules' , httpOptions);
+  }
+
+  saveApproveRouteModule(appModule: ApproveRouteModule) {
+    return this.http.post(this.baseUrl + 'Menu/ARMSave' , appModule , httpOptions);
+  }
+
+  getApproveUsers(armId: number) {
+    return this.http.get<ApproveUsers[]>(this.baseUrl + 'Menu/AppUsers/' + armId  , httpOptions);
+  }
+
+  saveApproveUsers(approveUser: any) {
+    return this.http.post(this.baseUrl + 'Menu/AppUserSave' , approveUser  , httpOptions);
+  }
+
+  deleteApproveModule(approveModule: any) {
+    return this.http.post(this.baseUrl + 'Menu/AppModDelete' , approveModule  , httpOptions);
+  }
+
+  deleteApproveUsers(approveUser: any) {
+    return this.http.post(this.baseUrl + 'Menu/AppUserDelete' , approveUser  , httpOptions);
   }
 }

@@ -16,20 +16,23 @@
                 <div class="col-md-1">
                     <div class="btn-group">
                         <button type="button" class="btn btn-success mr-1" [disabled]="!dispatchForm.valid"
-                            (click)="saveDispatchNote()">
+                            (click)="saveDispatchNote()" data-toggle="tooltip" data-placement="bottom" title="Save">
                             <i class="fas fa-save"></i>
                         </button>
                         <button type="button" class="btn btn-info mr-1" (click)="getPendDispatchDetails()" 
-                                [disabled]="!(isCustomer && isFromSite)">                            
+                                [disabled]="!(isCustomer && isFromSite)" data-toggle="tooltip" data-placement="bottom" title="Download">                            
                             <i class="fas fa-arrow-circle-down"></i>
                         </button>
-                        <button type="button" class="btn btn-danger mr-1" [disabled]="!isActive" (click)="cancelDispatchNote()">
+                        <button type="button" class="btn btn-danger mr-1" [disabled]="!isActive" (click)="cancelDispatchNote()"
+                            data-toggle="tooltip" data-placement="bottom" title="Cancel">
                             <i class="fas fa-trash-alt"></i>
                         </button>
-                        <button type="button" class="btn btn-primary mr-1" [disabled]="!isDisplayMode" target="_blank" (click)="printDispatchNote()">
+                        <button type="button" class="btn btn-primary mr-1" [disabled]="!isDisplayMode" target="_blank" (click)="printDispatchNote()"
+                            data-toggle="tooltip" data-placement="bottom" title="Print">
                             <i class="fas fa-print"></i>
                         </button>
-                        <button type="button" class="btn btn-default" (click)="refreshControls()">
+                        <button type="button" class="btn btn-default" (click)="refreshControls()" data-toggle="tooltip" 
+                            data-placement="bottom" title="Clear">
                             <i class="fas fa-redo"></i>
                         </button>
                     </div>
@@ -39,7 +42,7 @@
             <div class="row">
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label> Dispatch No </label>
+                        <label> Dispatch No *</label>
                         <igx-input-group type="search">
                             <input #input1 igxInput placeholder="Dispatch No" formControlName="dispatchNo" (keyup)="onKey($event)" />
                             <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''" (click)="refreshControls()">
@@ -54,7 +57,7 @@
 
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label> Customer </label>
+                        <label> Customer *</label>
                         <igx-combo #customer id="customer" class="combo" displayKey="name" valueKey="autoId"
                             [itemsMaxHeight]="250" [data]="custometList" placeholder="Customer"
                             (onSelectionChange)="onCustomerSelect($event)" (onSelectionChange)="singleSelection($event)"
@@ -65,7 +68,7 @@
 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label> Delivery Location </label>
+                        <label> Delivery Location *</label>
                         <igx-combo #cusLoc id="cusLocation" class="combo" displayKey="name" valueKey="autoId"
                             [itemsMaxHeight]="250" [data]="delLocationList" placeholder="Delivery Location"
                             (onSelectionChange)="singleSelection($event)"
@@ -76,7 +79,7 @@
 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label> From Site </label>
+                        <label> From Site *</label>
                         <igx-combo #fromSites id="fromSite" class="combo" displayKey="siteName" valueKey="autoId" [itemsMaxHeight]="250" [data]="dispSiteList" placeholder="Delivery Location"
                             (onSelectionChange)="singleSelection($event)" (onSelectionChange)="onFromSiteSelect($event)"
                             formControlName="fromSite" searchPlaceholder="Search...">
@@ -87,7 +90,7 @@
                 <div class="col-md-2">
                     <div class="group">
                         <igx-date-picker id="transDate" formControlName="transDate">
-                            <label igxLabel>Trans Date</label>
+                            <label igxLabel>Trans Date *</label>
                         </igx-date-picker>
                     </div>
                 </div>               
@@ -173,7 +176,7 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="text" formControlName="orderRef" />
-                            <label igxLabel for="orderRef"> Sale Order </label>
+                            <label igxLabel for="orderRef"> Sale Order *</label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -182,7 +185,7 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="text" formControlName="deliveryRef" />
-                            <label igxLabel for="deliveryRef"> Delivery Ref </label>
+                            <label igxLabel for="deliveryRef"> Delivery Ref *</label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -191,7 +194,7 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="text" formControlName="article" />
-                            <label igxLabel for="article"> Article </label>
+                            <label igxLabel for="article"> Article *</label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -199,7 +202,7 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="text" formControlName="color" />
-                            <label igxLabel for="color"> Color </label>
+                            <label igxLabel for="color"> Color *</label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -208,7 +211,7 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="text" formControlName="size" />
-                            <label igxLabel for="size"> Size </label>
+                            <label igxLabel for="size"> Size *</label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -217,7 +220,7 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="number" formControlName="prodQty" />
-                            <label igxLabel for="prodQty"> Production Qty </label>
+                            <label igxLabel for="prodQty"> Production Qty *</label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -226,7 +229,7 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="number" formControlName="lastDispQty" />
-                            <label igxLabel for="lastDispQty"> Last Disp.Qty </label>
+                            <label igxLabel for="lastDispQty"> Last Disp.Qty *</label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -244,18 +247,19 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="number" formControlName="balQty" />
-                            <label igxLabel for="balQty"> BalQty </label>
+                            <label igxLabel for="balQty"> BalQty *</label>
                         </igx-input-group>
                     </div>
                 </div>
 
                 <div class="col-sm-1">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-success mr-3" [disabled]="!qtyEditForm.valid"
-                            (click)="addDispatchQtyGrid()">
+                        <button type="button" class="btn btn-success mr-1" [disabled]="!qtyEditForm.valid"
+                            (click)="addDispatchQtyGrid()" data-toggle="tooltip" data-placement="bottom" title="Add">
                             <i class="fas fa-plus"></i>
                         </button>
-                        <button type="button" class="btn btn-default" (click)="clearDipatchQtyForm()">
+                        <button type="button" class="btn btn-default" (click)="clearDipatchQtyForm()"
+                            data-toggle="tooltip" data-placement="bottom" title="Clear">
                             <i class="fas fa-broom"></i>
                         </button>
                     </div>

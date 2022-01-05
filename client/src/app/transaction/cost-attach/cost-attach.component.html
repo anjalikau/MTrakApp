@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label> Customer</label>
+                        <label> Customer *</label>
                         <igx-combo #customer id="customer" class="combo" displayKey="name" valueKey="autoId" [itemsMaxHeight]="250"
                             [data]="customerList" placeholder="Customer" (onSelectionChange)="singleSelection($event)" 
                             (onSelectionChange)="onSelectCustomer($event)" formControlName="customer" searchPlaceholder="Search...">
@@ -16,7 +16,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label> Sales Order </label>
+                        <label> Sales Order *</label>
                         <igx-combo #salesOrder id="salesOrder" class="combo" displayKey="orderRef" valueKey="autoId" [itemsMaxHeight]="250"
                             [data]="pendSOList" placeholder="Sales Order" (onSelectionChange)="singleSelection($event)" 
                             formControlName="salesOrder" (onSelectionChange)="onSelectSalesOrder($event)" searchPlaceholder="Search...">

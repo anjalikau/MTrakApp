@@ -19,13 +19,15 @@
                 <div class="col-md-1">
                     <div class="btn-group">
                         <button type="button" class="btn btn-success mr-1" [disabled]="!fpoHeaderForm.valid"
-                            (click)="saveFPO()">
+                            (click)="saveFPO()" data-toggle="tooltip" data-placement="bottom" title="Save">
                             <i class="fas fa-save"></i>
                         </button>
-                        <button type="button" class="btn btn-danger mr-1" (click)="openConfirmDialog($event)">
+                        <button type="button" class="btn btn-danger mr-1" (click)="openConfirmDialog($event)"
+                            data-toggle="tooltip" data-placement="bottom" title="Delete">
                             <i class="fas fa-trash-alt"></i>
                         </button>
-                        <button type="button" class="btn btn-default" (click)="refreshControls()">
+                        <button type="button" class="btn btn-default" (click)="refreshControls()"
+                            data-toggle="tooltip" data-placement="bottom" title="Clear">
                             <i class="fas fa-redo"></i>
                         </button>
                     </div>
@@ -35,7 +37,7 @@
             <div class="row">
                 <div class="col-md-2">
                     <div class="form-group" *ngIf="!isDisplayMode">
-                        <label>Job No </label>
+                        <label>Job No *</label>
                         <igx-combo #jobNo id="jobHeaderId" class="combo" displayKey="jobNo" valueKey="autoId"
                             [itemsMaxHeight]="250" [data]="pendJobList" placeholder="Job No"
                             (onSelectionChange)="onJobNoSelect($event)" (onSelectionChange)="singleSelection($event)"
@@ -46,14 +48,14 @@
                     <div class="form-group" *ngIf="isDisplayMode">
                         <igx-input-group>
                             <input igxInput type="text" formControlName="jobHeaderId" />
-                            <label igxLabel for="jobHeaderId"> Job No </label>
+                            <label igxLabel for="jobHeaderId"> Job No *</label>
                         </igx-input-group>
                     </div>
                 </div>
 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label>FPO No </label>
+                        <label>FPO No *</label>
                         <igx-input-group type="search">
                             <input #input1 igxInput placeholder="FPO No" formControlName="fPONo"
                                 (keyup)="onKey($event)" />
@@ -257,11 +259,12 @@
 
                 <div class="col-sm-1">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-success mr-3" [disabled]="!fpoDetailForm.valid"
-                            (click)="updateFPORow()">
+                        <button type="button" class="btn btn-success mr-1" [disabled]="!fpoDetailForm.valid"
+                            (click)="updateFPORow()" data-toggle="tooltip" data-placement="bottom" title="Add">
                             <i class="fas fa-plus"></i>
                         </button>
-                        <button type="button" class="btn btn-default" (click)="clearFPODetailControls()">
+                        <button type="button" class="btn btn-default" (click)="clearFPODetailControls()"
+                            data-toggle="tooltip" data-placement="bottom" title="Clear">
                             <i class="fas fa-broom"></i>
                         </button>
                     </div>

@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DefaultSortingStrategy, IComboSelectionChangeEventArgs, IgxColumnComponent, IgxComboComponent, IgxDialogComponent, IgxGridComponent, IgxHierarchicalGridComponent, IgxInputGroupComponent, IgxNumberSummaryOperand, IgxRowIslandComponent, IgxSummaryResult, ISortingExpression, SortingDirection } from 'igniteui-angular';
+import { DefaultSortingStrategy, IComboSelectionChangeEventArgs, IgxColumnComponent, IgxComboComponent, IgxDialogComponent, IgxGridComponent, IgxHierarchicalGridComponent, IgxInputGroupComponent, IgxNumberSummaryOperand, IgxRowIslandComponent, IgxSummaryResult, ISortingExpression, SortingDirection, valueInRange } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
 import { Article } from 'src/app/_models/article';
 import { BrandCode } from 'src/app/_models/brandCode';
@@ -49,6 +49,7 @@ export class CostingComponent implements OnInit {
   baseMatForm: FormGroup;
   costListForm: FormGroup;
   subTotalForm: FormGroup;
+  approveForm: FormGroup;
   articleList: Article[];
   prodTypeList: ProductType[];
   prodGroupList: ProductGroup[];
@@ -101,11 +102,16 @@ export class CostingComponent implements OnInit {
   headerSize: number = 0;
   btnStatus: string = '';
   isActive: boolean = true;
+  isApprove: boolean = false;
   saveButton: boolean = false;
   printButton: boolean = false;
+  approveButton: boolean = false;
   validationErrors: string[] = [];
   allArticleList: any[];
   isDisplayMode: boolean = false;
+  approveRoteList: any[];
+  appButton: boolean = false;  
+  okButton: boolean = false;
   // totCostBox: number = 0;
   // totCostMOQ: number = 0;
   // profitMarkup: number = 0;
@@ -185,6 +191,10 @@ export class CostingComponent implements OnInit {
   public brandCodeForm: IgxDialogComponent;
   @ViewChild('dialog', { read: IgxDialogComponent })
   public dialog: IgxDialogComponent;
+  @ViewChild('dialogApprove', { read: IgxDialogComponent })
+  public dialogApprove: IgxDialogComponent;
+  @ViewChild('approveModal', { read: IgxDialogComponent })
+  public approveModal: IgxDialogComponent;
 
   //// FORMAT PRICE
   public options = {
@@ -219,6 +229,7 @@ export class CostingComponent implements OnInit {
 
   ngOnInit(): void {
     this.initilizeForm();
+    this.getApproveRouteDetails();
     this.getCostRefNo();
     this.loadCustomer();
     this.loadCategory();
@@ -268,9 +279,15 @@ export class CostingComponent implements OnInit {
     if (authMenus != null) {
       if (authMenus.filter((x) => x.autoIdx == 166).length > 0) {
         this.saveButton = true;
-      }  if (authMenus.filter((x) => x.autoIdx == 1176).length > 0) {
+      }
+      if (authMenus.filter((x) => x.autoIdx == 1176).length > 0) {
         this.printButton = true;
       }
+      // if (authMenus.filter((x) => x.autoIdx == 1183).length > 0) {
+      //   this.approveButton = true;
+      //   //// IF USER HAS APPROVE PERMISSION GET APPROVE ROUTING DETAILS
+      //   this.getApproveRouteDetails();
+      // }
     }
 
     this.costingHdForm = this.fb.group({
@@ -350,6 +367,28 @@ export class CostingComponent implements OnInit {
     this.costListForm = this.fb.group({
       customergId: [0],
     });
+
+    this.approveForm = this.fb.group({
+      approver: ['', Validators.required],
+      remark:['' , [Validators.maxLength(250)]]
+    });
+  }
+
+  ///// GET APPROVE ROUTING DETAILS BASED ON USER ID AND MODULE
+  getApproveRouteDetails() {
+    var obj = {
+      userId: this.user.userId,
+      module: 'Costing',
+    };
+
+    this.salesOrderServices.getApproveRouteDetails(obj).subscribe((result) => {
+      if (result.length > 0) {
+        this.approveButton = true;
+        this.approveRoteList = result;
+      } else {
+        this.approveButton = false
+      }     
+    });
   }
 
   loadArticle() {
@@ -408,7 +447,9 @@ export class CostingComponent implements OnInit {
   }
 
   loadCostHeaderList(customerId) {
-    this.salesOrderServices.getCostHeaderList(customerId).subscribe((result) => {
+    this.salesOrderServices
+      .getCostHeaderList(customerId)
+      .subscribe((result) => {
         this.costNumberList = result;
         // console.log(this.costNumberList);
       });
@@ -692,7 +733,7 @@ export class CostingComponent implements OnInit {
     this.resetCostDetails();
 
     for (const item of event.added) {
-      var selectedRowData = this.allArticleList.filter((x) => x.autoId == item );
+      var selectedRowData = this.allArticleList.filter((x) => x.autoId == item);
       // console.log(selectedRowData);
       this.onChangeHeadArticle(selectedRowData);
     }
@@ -770,7 +811,6 @@ export class CostingComponent implements OnInit {
 
       this.article.setSelectedItem(selectedRowData[0]['autoId'], true);
       this.onChangeHeadArticle(selectedRowData);
-
     } else {
       this.mcolorList = [];
       this.msizeList = [];
@@ -853,7 +893,6 @@ export class CostingComponent implements OnInit {
         this.mcolorList = [];
         this.mcolorList = color;
       }
-      
     });
   }
 
@@ -1012,7 +1051,8 @@ export class CostingComponent implements OnInit {
 
   ///////-------- UPDATE OTHER LINE IF BASE MATERIAL ADDED OR EDITED
   updateLineSummary() {
-    var base = '', baseQty = 0;
+    var base = '',
+      baseQty = 0;
     var orderQty = this.expectedQty;
 
     /////////----========== GET BASE NOT EQUAL TO SQM ==================-----------
@@ -1077,11 +1117,13 @@ export class CostingComponent implements OnInit {
     this.clearBoarderDetails();
     var unitConv3 = 1,
       unitConv1 = 1,
-      unitConv2 = 1;
+      unitConv2 = 1,
+      boardLength = 0,
+      boardWidth = 0;
     // console.log(event.target.value);
     var tollerance = this.costingHdForm.get('tollerence').value;
     var article = this.costingHdForm.get('articleCode').value; //this.costingHdForm.get('articleName').value;
-    console.log(article);
+    // console.log(article);
     //// check article is selected
     if (article != '') {
       // var length = this.costingHdForm.get("length").value;
@@ -1097,13 +1139,12 @@ export class CostingComponent implements OnInit {
         unitConv1 = convValue1[0]['value'];
       }
 
-      console.log(convValue1);
+      // console.log(convValue1);
 
       if (convValue1 != undefined) {
-        this.boardLength = this.roundTo(
-          (this.width * 2 + length * 2 + tollerance) * unitConv1,
-          2
-        );
+        boardLength =
+          (this.width * 2 + this.length * 2 + tollerance) * unitConv1;
+        this.boardLength = this.roundTo(boardLength, 2);
 
         // console.log(this.measurement);
         /// any mesurement to inch conversion
@@ -1127,17 +1168,17 @@ export class CostingComponent implements OnInit {
         var convValue2 = this.unitConvList.filter(
           (x) => x.fromUnit == 'INC' && x.toUnit == 'M'
         );
-        this.boardWidth = this.roundTo(
-          (this.reelSize / this.ups) * convValue2[0]['value'],
-          2
-        );
-        this.sqm = this.roundTo(this.boardLength * this.boardWidth, 3);
+
+        boardWidth = (this.reelSize / this.ups) * convValue2[0]['value'];
+        this.boardWidth = this.roundTo(boardWidth, 2);
+
+        this.sqm = this.roundTo(boardLength * boardWidth, 3);
         this.trimWaste = this.roundTo(
           this.reelSize - this.actualReal * this.ups,
           2
         );
-        
-        console.log(this.sqm);
+
+        // console.log(this.sqm);
         /// UPDATE SQM ON GRID
         this.updateSqmQty();
         //// UPDATE TOTAL WEIGHT IN HEADER AND OTHER GRID DATA (PASS BASE MATERIAL ID AS PARA)
@@ -1435,8 +1476,8 @@ export class CostingComponent implements OnInit {
     this.clearCostDetControls();
   }
 
-  //// IF HEADER ARTICLE CHANGE SQM WILL BE RECALCULATE 
-  //// MUST CHANGE IN THE GRID ALSO 
+  //// IF HEADER ARTICLE CHANGE SQM WILL BE RECALCULATE
+  //// MUST CHANGE IN THE GRID ALSO
   updateSqmQty() {
     var baseQty = 0;
     var orderQty = this.expectedQty;
@@ -1448,9 +1489,13 @@ export class CostingComponent implements OnInit {
 
     if (selectedRowData.length > 0) {
       for (let a = 0; a < selectedRowData.length; a++) {
-        var baseValue = 0, costPcs = 0, netCons = 0, grossCons = 0, autoId = 0;
+        var baseValue = 0,
+          costPcs = 0,
+          netCons = 0,
+          grossCons = 0,
+          autoId = 0;
         const element = selectedRowData[a];
-        baseQty = this.sqm;          
+        baseQty = this.sqm;
 
         autoId = element['autoId'];
         var factor = element['factor'];
@@ -1487,21 +1532,25 @@ export class CostingComponent implements OnInit {
       }
       // this.calculateSubTotal();
     }
-
   }
 
   resetCostDetails() {
-    var baseQty = 0 , base ='' ;
+    var baseQty = 0,
+      base = '';
     var orderQty = this.expectedQty;
 
     /////////----========== GET BASE ROWS WITH SQM ==================-----------
     const selectedRowData = this.costDtGrid.data;
 
-    console.log(selectedRowData);
+    // console.log(selectedRowData);
 
     if (selectedRowData.length > 0) {
       for (let a = 0; a < selectedRowData.length; a++) {
-        var baseValue = 0, costPcs = 0, netCons = 0, grossCons = 0, autoId = 0;
+        var baseValue = 0,
+          costPcs = 0,
+          netCons = 0,
+          grossCons = 0,
+          autoId = 0;
         const element = selectedRowData[a];
         base = element['base'];
 
@@ -1634,7 +1683,7 @@ export class CostingComponent implements OnInit {
   //// FILTER ALL BASE MATERIAL DETAILS AND
   //// UPDATE COMBINATION , TOTAL NET WEIGHT AND TOTAL GROSS WEIGHT
   updateTotalSummary(costGroupId) {
-    this.costingHdForm.get('combination').setValue('');
+    //
     var combinationVal = '',
       totalNetWeight = 0,
       totgrossWeight = 0;
@@ -1659,6 +1708,9 @@ export class CostingComponent implements OnInit {
         if (a == 0) combinationVal = selectedRowData[a]['gsm'];
         else combinationVal = combinationVal + '/' + selectedRowData[a]['gsm'];
       }
+
+      // console.log(combinationVal);
+      this.costingHdForm.get('combination').setValue('');
       this.costingHdForm.get('combination').setValue(combinationVal);
       this.grossWeight = this.roundTo(totgrossWeight, 4);
       this.netWeight = this.roundTo(totalNetWeight, 4);
@@ -1671,11 +1723,12 @@ export class CostingComponent implements OnInit {
   saveCosting() {
     if (this.saveButton == true) {
       if (this.validateCosting()) {
-        var costList = [],
-          itemList = [],
-          specialList = [],
-          customerId = 0;
-        var versionNo = this.costingHdForm.get('versionControl').value + 1;
+        var costList = [], itemList = [], specialList = [], customerId = 0 , versionNo = 0;
+
+        if (status == "Approve" || status == "Reject")
+          versionNo = this.costingHdForm.get('versionControl').value + 1;
+        else 
+          versionNo = this.costingHdForm.get('versionControl').value;
 
         customerId = this.costingHdForm.get('customerId').value[0];
         //console.log(this.chkIsCharge.checked);
@@ -1763,8 +1816,10 @@ export class CostingComponent implements OnInit {
             this.toastr.success('Costing save Successfully !!!');
             this.costingHdForm.get('autoId').setValue(result['refNumId']);
             this.costingHdForm.get('refNo').setValue(result['refNum']);
-            this.costingHdForm.get('versionControl').setValue(versionNo);
+            this.costingHdForm.get('versionControl').setValue(result['version']);
             this.isDisplayMode = true;
+            this.isApprove = true;
+            this.costingHdForm.get('isActive').setValue(result['status']);
             this.loadCostHeaderList(customerId);
           } else {
             this.toastr.warning(
@@ -1797,6 +1852,7 @@ export class CostingComponent implements OnInit {
   refreshCosting() {
     this.isDisplayMode = false;
     this.isActive = true;
+    this.isApprove = false;
     var date: Date = new Date(Date.now());
 
     this.costingHdForm.get('autoId').setValue(0);
@@ -1810,6 +1866,8 @@ export class CostingComponent implements OnInit {
     this.costingHdForm.get('versionControl').setValue(0);
     this.costingHdForm.get('trnsDate').setValue(date);
     this.costingHdForm.get('isActive').setValue('Active');
+
+    this.customer.disabled = false;
 
     this.articleSelForm.get('category').reset();
     this.articleSelForm.get('prodType').reset();
@@ -1857,18 +1915,18 @@ export class CostingComponent implements OnInit {
     // const selectedRowData = this.costListGrid.data.filter((record) => {
     //   return record.autoId == ids;
     // });
-    this.getCostSheetDetails(costHeaderId , "V");
+    this.getCostSheetDetails(costHeaderId, 'V');
   }
 
   ///// COPY EXISTING COST SHEET TO NEW ONE
   onCopyCostingDetails(event, cellId) {
     this.refreshCosting();
     var costHeaderId = cellId.rowID;
-    this.getCostSheetDetails(costHeaderId , "C");
-    console.log("C");
+    this.getCostSheetDetails(costHeaderId, 'C');
+    // console.log("C");
   }
 
-  ///// LOADS EXISTING COST SHEET 
+  ///// LOADS EXISTING COST SHEET
   getCostSheetDetails(costHeaderId, option) {
     this.salesOrderServices.getCostSheetDetails(costHeaderId).subscribe(
       (result) => {
@@ -1884,20 +1942,35 @@ export class CostingComponent implements OnInit {
           var articleId = costHeaderRow[0]['articleId'];
 
           //console.log(costHeaderRow[0]['transDate']);
-          if (option == "V") {
+          if (option == 'V') {
             var trnsDate: Date = new Date(
-              this.datePipe.transform(costHeaderRow[0]['transDate'], 'yyyy-MM-dd')
+              this.datePipe.transform(
+                costHeaderRow[0]['transDate'],
+                'yyyy-MM-dd'
+              )
             );
-            this.costingHdForm.get('trnsDate').setValue(trnsDate); 
-            this.costingHdForm.get('versionControl').setValue(costHeaderRow[0]['versionControl']); 
+            this.costingHdForm.get('trnsDate').setValue(trnsDate);
+            this.costingHdForm
+              .get('versionControl')
+              .setValue(costHeaderRow[0]['versionControl']);
             this.costingHdForm.get('refNo').setValue(costHeaderRow[0]['refNo']);
             this.costingHdForm.get('autoId').setValue(costHeaderId);
+            this.costingHdForm.get('isActive').setValue(costHeaderRow[0]['status']);
 
-            this.isActive = costHeaderRow[0]['isActive'];
+            // console.log(costHeaderRow);            
+            if (costHeaderRow[0]['status'] == "Waiting" || costHeaderRow[0]['status'] == "DeActive") {
+              this.isActive = false;
+              this.isApprove = false;
+            } else if ( costHeaderRow[0]['status'] == "Approve" ) {
+              this.isActive = true;
+              this.isApprove = false;
+            } else {
+              this.isActive = costHeaderRow[0]['isActive'];
+              this.isApprove = true;
+            }
 
-            if (this.isActive == true)
-              this.costingHdForm.get('isActive').setValue('Active');
-            else this.costingHdForm.get('isActive').setValue('Deactive'); 
+            // if (this.isActive == true)              
+            // else this.costingHdForm.get('isActive').setValue('Deactive');
           }
 
           this.costingHdForm
@@ -1910,7 +1983,11 @@ export class CostingComponent implements OnInit {
             .get('combination')
             .setValue(costHeaderRow[0]['combination']);
           this.customer.setSelectedItem(costHeaderRow[0]['customerId'], true);
-          this.prodDefintion.setSelectedItem(costHeaderRow[0]['pdHeaderId'], true );
+          this.customer.disabled = true;
+          this.prodDefintion.setSelectedItem(
+            costHeaderRow[0]['pdHeaderId'],
+            true
+          );
 
           this.article.setSelectedItem(articleId, true);
           // this.costingHdForm.get('articleId').setValue(articleId);
@@ -2040,12 +2117,12 @@ export class CostingComponent implements OnInit {
   }
 
   printCostSheet() {
-    if(this.printButton == true) {
+    if (this.printButton == true) {
       // this.router.navigate(['/boldreport']);
       var obj = {
         costingHdId: this.costingHdForm.get('autoId').value,
-        reportName: "CostSheetFormat"
-      }
+        reportName: 'CostSheetFormat',
+      };
       /// STORE OBJECT IN LOCAL STORAGE
       localStorage.setItem('params', JSON.stringify(obj));
       window.open('/boldreport', '_blank');
@@ -2053,5 +2130,86 @@ export class CostingComponent implements OnInit {
       this.toastr.error('Print Permission denied !!!');
     }
   }
-  
+
+  //// AUTOMATIC APPROVE DIALOG BOX APIERIED
+  // onDialogApproveOKSelected(event) {
+  //   event.dialogApprove.close();
+  //   var ids = this.rowId;
+  //   /// direct approve 
+  //   this.approveRouteCostSheet("Approve");
+  // }
+
+  //// APPROVE ROUTING PROCESS
+  approveRouteCostSheet(status) { 
+    var approver = this.approveForm.get("approver").value[0];
+    var approveDtList = this.approveRoteList.filter(x => x.idAgents == approver);
+
+    var obj = {
+      autoId: 0,
+      moduleName: "Costing",
+      assigneUser: approver,
+      requestedBy: this.user.userId,
+      refId: this.costingHdForm.get("autoId").value,
+      refNo: this.costingHdForm.get("refNo").value,
+      remarks: this.approveForm.get("remark").value,
+      details: 'Cost Value : ' + this.subTotalForm.get('sellPriceCom').value.toString(),
+      isFinal: approveDtList[0]["isFinalApprove"],
+      status: status 
+    }
+    // console.log(obj);
+
+    this.salesOrderServices.saveApproveCenterDt(obj).subscribe(result => {
+      if (result == 1) {
+        if (status == "Waiting") {
+          this.toastr.success('Approve sent is successfully !!!');
+          this.costingHdForm.get('isActive').setValue("Waiting");
+          this.isApprove = false;
+          this.isActive = false;
+        } else if (status == "Approve") {
+          this.toastr.success('Approve successfully !!!');
+          this.costingHdForm.get('isActive').setValue("Approve");
+          this.isApprove = false;
+          this.isActive = true;
+        } else if (status == "Reject") {
+          this.toastr.success('Reject successfully !!!');
+          this.costingHdForm.get('isActive').setValue("Reject");
+          this.isApprove = true;
+          this.isActive = true;
+        }        
+        this.approveModal.close();
+      } else if (result == -1) {
+        this.toastr.success('Approve details already exists !!!');
+      } else {
+        this.toastr.warning(
+          'Contact Admin. Error No:- ' + result.toString()
+        );
+      }
+    })
+  }
+
+  /// APPROVE COST SHEET 
+  approveButtonClicked() {
+    if (this.approveButton == true) {
+      this.approveForm.get('approver').setValue("");
+      this.approveForm.get('remark').setValue("");
+
+      // console.log(this.approveRoteList);
+      var buyPassList = this.approveRoteList.filter((x) => x.buyPass == false);
+      this.approveModal.open();
+      //// if buy pass is zero no routing approver is nedded
+      if (buyPassList.length > 0) {
+        this.approveForm.get('approver').disable();
+        this.appButton = true;        
+        this.okButton = false;
+      } else {   
+        this.approveForm.get('approver').enable(); 
+        this.appButton = false;
+        this.okButton = true;
+      }
+    } else {
+      this.toastr.error('Approve permission denied !!!');
+    }
+  }
+
+
 }

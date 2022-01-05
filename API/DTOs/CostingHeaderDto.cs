@@ -41,6 +41,7 @@ namespace API.DTOs
         public decimal TotGrossWeight {get;set;}
         public DateTime TransDate {get;set;}
         public bool IsActive {get;set;}
+        public string Status { get; set; }
 
     }
 }

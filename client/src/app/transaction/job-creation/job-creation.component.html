@@ -15,13 +15,16 @@
                 </div>
                 <div class="col-md-1">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-success mr-1" [disabled]="!jobHeaderForm.valid" (click)="saveJobCard()">
+                        <button type="button" class="btn btn-success mr-1" [disabled]="!jobHeaderForm.valid" (click)="saveJobCard()"
+                            data-toggle="tooltip" data-placement="bottom" title="Save">
                             <i class="fas fa-save"></i>
                         </button>
-                        <button type="button" class="btn btn-primary mr-1" [disabled]="!isDisplayMode" target="_blank" (click)="printJobCard()">
+                        <button type="button" class="btn btn-primary mr-1" [disabled]="!isDisplayMode" target="_blank" (click)="printJobCard()"
+                            data-toggle="tooltip" data-placement="bottom" title="Print">
                             <i class="fas fa-print"></i>
                         </button>
-                        <button type="button" class="btn btn-default" (click)="clearJobCardControls()">
+                        <button type="button" class="btn btn-default" (click)="clearJobCardControls()"
+                            data-toggle="tooltip" data-placement="bottom" title="Clear">
                             <i class="fas fa-redo"></i>
                         </button>
                     </div>
@@ -31,7 +34,7 @@
             <div class="row">
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label>Job No </label>
+                        <label>Job No *</label>
                         <igx-input-group type="search">
                             <input #input1 igxInput placeholder="Job No" formControlName="jobNo" (keyup)="onKey($event)" />
                             <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''" (click)="clearJobCardControls()">
@@ -44,9 +47,9 @@
                     </div>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <div class="form-group" *ngIf="showCustomer">
-                        <label>Customer </label>
+                        <label>Customer *</label>
                         <igx-combo #cmbcustomer id="cmbcustomer" class="combo" displayKey="name" valueKey="autoId"
                             [itemsMaxHeight]="250" [data]="customerList" placeholder="Customer"
                             (onSelectionChange)="singleSelection($event)" (onSelectionChange)="loadPendArticle($event)"
@@ -58,15 +61,15 @@
                     <div class="form-group" *ngIf="!showCustomer" >
                         <igx-input-group>
                             <input igxInput type="text" formControlName="customer" />
-                            <label igxLabel for="customer"> Customer </label>
+                            <label igxLabel for="customer"> Customer *</label>
                         </igx-input-group>
                     </div>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <div class="form-group" *ngIf="showArticle">
                         <!--   -->
-                        <label>Article </label>
+                        <label>Article *</label>
                         <igx-combo #cmbarticle id="cmbarticle" class="combo" displayKey="articleName" valueKey="articleId"
                             [itemsMaxHeight]="250" [data]="articleList" placeholder="Article" formControlName="articleId"
                             (onSelectionChange)="singleSelection($event)" (onSelectionChange)="loadPendColor($event)"
@@ -78,7 +81,7 @@
                     <div class="form-group" *ngIf="!showArticle" >
                         <igx-input-group>
                             <input igxInput type="text" formControlName="article" />
-                            <label igxLabel for="article"> Article </label>
+                            <label igxLabel for="article"> Article *</label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -87,14 +90,33 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="text" formControlName="description" />
-                            <label igxLabel for="description"> Description </label>
+                            <label igxLabel for="description"> Description *</label>
                         </igx-input-group>
                     </div>
                 </div>
 
+                <div class="col-md-1">
+                    <div class="group">
+                        <igx-date-picker id="delDate" formControlName="jobDate">
+                            <label igxLabel>Job Date *</label>
+                        </igx-date-picker>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="group">
+                        <igx-date-picker id="planDate" formControlName="planDate">
+                            <label igxLabel>Plan Date </label>
+                        </igx-date-picker>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                
                 <div class="col-md-2">
                     <div class="form-group" *ngIf="showColor">
-                        <label>Color </label>
+                        <label>Color *</label>
                         <igx-combo #cmbcolor id="color" class="combo" displayKey="color" valueKey="colorId" [itemsMaxHeight]="250"
                             [data]="colorList" placeholder="Color" (onSelectionChange)="singleSelection($event)"
                             formControlName="colorId" searchPlaceholder="Search...">
@@ -104,14 +126,14 @@
                     <div class="form-group" *ngIf="!showColor" >
                         <igx-input-group>
                             <input igxInput type="text" formControlName="color" />
-                            <label igxLabel for="color"> Color </label>
+                            <label igxLabel for="color"> Color *</label>
                         </igx-input-group>
                     </div>
                 </div>
 
                 <div class="col-md-2">
                     <div class="form-group" *ngIf="showSize">
-                        <label>Size </label>
+                        <label>Size *</label>
                         <igx-combo #cmbsize id="size" class="combo" displayKey="size" valueKey="sizeId" [itemsMaxHeight]="250"
                             [data]="sizeList" placeholder="Size" (onSelectionChange)="singleSelection($event)"
                             (onSelectionChange)="getCostCombination($event)" formControlName="sizeId"
@@ -122,15 +144,14 @@
                     <div class="form-group" *ngIf="!showSize" >
                         <igx-input-group>
                             <input igxInput type="text" formControlName="size" />
-                            <label igxLabel for="size"> Size </label>
+                            <label igxLabel for="size"> Size *</label>
                         </igx-input-group>
                     </div>
                 </div>
-            </div>
-            <div class="row">
+
                 <div class="col-md-2">
                     <div class="form-group" *ngIf="showCombin">
-                        <label>Combination </label>
+                        <label>Combination *</label>
                         <igx-combo #cmbcombination id="combination" class="combo" displayKey="combination" valueKey="combinId"
                             [itemsMaxHeight]="250" [data]="combinationList" placeholder="Combination"
                             (onSelectionChange)="singleSelection($event)" (onSelectionChange)="clearGridView($event)" formControlName="combinId"
@@ -141,30 +162,14 @@
                     <div class="form-group" *ngIf="!showCombin" >
                         <igx-input-group>
                             <input igxInput type="text" formControlName="combination" />
-                            <label igxLabel for="combination"> Combination </label>
+                            <label igxLabel for="combination"> Combination *</label>
                         </igx-input-group>
                     </div>
                 </div>
 
                 <div class="col-md-2">
-                    <div class="group">
-                        <igx-date-picker id="delDate" formControlName="jobDate">
-                            <label igxLabel>Job Date</label>
-                        </igx-date-picker>
-                    </div>
-                </div>
-
-                <div class="col-md-2">
-                    <div class="group">
-                        <igx-date-picker id="planDate" formControlName="planDate">
-                            <label igxLabel>Plan Date</label>
-                        </igx-date-picker>
-                    </div>
-                </div>
-
-                <div class="col-md-2">
                     <div class="form-group" *ngIf="showDeliLoc">
-                        <label>Customer Del.Location </label>
+                        <label>Customer Del.Location *</label>
                         <igx-combo #cmbcusDelLoc class="combo" displayKey="name" valueKey="autoId" [itemsMaxHeight]="250"
                             [data]="customerDtList" placeholder="Customer Delivery Location" 
                             (onSelectionChange)="singleSelection($event)" formControlName="customerDtId"
@@ -175,7 +180,7 @@
                     <div class="form-group" *ngIf="!showDeliLoc" >
                         <igx-input-group>
                             <input igxInput type="text" formControlName="customerLoc" />
-                            <label igxLabel for="customerLoc"> Customer Del.Location </label>
+                            <label igxLabel for="customerLoc"> Customer Del.Location *</label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -210,7 +215,7 @@
                 <div class="col-md-1">
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" [disabled]="!this.jobHeaderForm.get('combinId').valid" 
-                            (click)="loadPendDelivOrders()">
+                            (click)="loadPendDelivOrders()" data-toggle="tooltip" data-placement="bottom" title="Download">
                             <i class="fas fa-file-download"></i>
                         </button>
                     </div>
@@ -287,7 +292,7 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="text" formControlName="orderRef" />
-                            <label igxLabel for="orderRef"> Order Ref</label>
+                            <label igxLabel for="orderRef"> Order Ref *</label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -296,7 +301,7 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="text" formControlName="customerRef" />
-                            <label igxLabel for="customerRef"> Customer Ref</label>
+                            <label igxLabel for="customerRef"> Customer Ref *</label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -305,7 +310,7 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="text" formControlName="deliveryRef" />
-                            <label igxLabel for="deliveryRef"> Delivery Ref</label>
+                            <label igxLabel for="deliveryRef"> Delivery Ref *</label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -313,7 +318,7 @@
                 <div class="col-md-1">
                     <div class="group">
                         <igx-date-picker id="deliveryDate" formControlName="deliveryDate">
-                            <label igxLabel>Deliv. Date</label>
+                            <label igxLabel>Deliv. Date *</label>
                         </igx-date-picker>
                     </div>
                 </div> 
@@ -322,7 +327,7 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="number" formControlName="orderQty" />
-                            <label igxLabel for="orderQty"> Order Qty </label>
+                            <label igxLabel for="orderQty"> Order Qty *</label>
                         </igx-input-group>
                     </div>
                 </div> 
@@ -331,7 +336,7 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="number" formControlName="planQty" />
-                            <label igxLabel for="planQty"> Plan Qty </label>
+                            <label igxLabel for="planQty"> Plan Qty *</label>
                         </igx-input-group>
                     </div>
                 </div> 
@@ -340,7 +345,7 @@
                     <div class="form-group">
                         <igx-input-group>
                             <input igxInput type="number" formControlName="pjobQty" />
-                            <label igxLabel for="pjobQty"> Old.job Qty </label>
+                            <label igxLabel for="pjobQty"> Old.job Qty *</label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -356,10 +361,12 @@
 
                 <div class="col-sm-1">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-success mr-3" [disabled]="!jobCardForm.valid" (click)="addJobCardRow()">
+                        <button type="button" class="btn btn-success mr-1" [disabled]="!jobCardForm.valid" (click)="addJobCardRow()"
+                            data-toggle="tooltip" data-placement="bottom" title="Add">
                             <i class="fas fa-plus"></i>
                         </button>
-                        <button type="button" class="btn btn-default" (click)="clearJobEditControls()">
+                        <button type="button" class="btn btn-default" (click)="clearJobEditControls()"
+                            data-toggle="tooltip" data-placement="bottom" title="Clear">
                             <i class="fas fa-broom"></i>
                         </button>
                     </div>

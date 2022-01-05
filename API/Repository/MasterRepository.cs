@@ -1858,7 +1858,103 @@ namespace API.Repository
             return para.Get<int>("Result");
         }
             
-        #endregion Flex Field ValueList      
+        #endregion Flex Field ValueList  
+
+
+        #region User Approve Module
+
+        public async Task<IEnumerable<UserAppModuleDto>> GetUserAppModuleDtAsync(int userId)
+        {
+            IEnumerable<UserAppModuleDto> approveModule;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("UserId" , userId);
+
+            approveModule = await DbConnection.QueryAsync<UserAppModuleDto>("spTransApprovalRouteModulesGetMenus" , para
+                    , commandType: CommandType.StoredProcedure);
+            
+            return approveModule;
+        }
+
+        public async Task<int> SaveApproveRouteModuleAsync(TransApprovalRoutingModules appModule)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , appModule.AutoId);
+            para.Add("CreateUser", appModule.CreateUserId);
+            para.Add("ModuleId", appModule.MenuId);   
+            para.Add("BuyPass", appModule.BuyPass);          
+            para.Add("UserId", appModule.UserId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spTransApprovalRouteModulesSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<IEnumerable<ApprovalUsersDto>> GetApproveUsersAsync(int ARMId)
+        {
+            IEnumerable<ApprovalUsersDto> appUserList;
+            DynamicParameters para = new DynamicParameters();
+
+            // para.Add("UserId" , appUsers.UserId);
+            para.Add("ARMId" , ARMId);
+
+            appUserList = await DbConnection.QueryAsync<ApprovalUsersDto>("spTransApproversByModuleGetUsers" , para
+                    , commandType: CommandType.StoredProcedure);
+            
+            return appUserList;
+        }
+
+        public async Task<int> SaveApproveUserAsync(TransApproversByModule appUsers)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , appUsers.AutoId);
+            para.Add("CreateUser", appUsers.CreateUserId);
+            para.Add("IsDefault ", appUsers.isDefault); 
+            para.Add("IsFinalApprove", appUsers.isFinalApprove);         
+            para.Add("UserId", appUsers.UserId);
+            para.Add("ARMId", appUsers.ARMId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spTransApproversByModuleSave", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<int> DeleteApproveModuleAsync(TransApprovalRoutingModules appModule)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("UserId" , appModule.CreateUserId);
+            para.Add("ARMId", appModule.AutoId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spTransApprovalRouteModulesDelete", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+        public async Task<int> DeleteApproveUsersAsync(TransApproversByModule appUsers)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("UserId" , appUsers.CreateUserId);
+            para.Add("AutoId", appUsers.AutoId);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
+
+            var result = await DbConnection.ExecuteAsync("spTransApproversByModuleDelete", para
+                , commandType: CommandType.StoredProcedure);            
+
+            return para.Get<int>("Result");
+        }
+
+
+        #endregion User Approve Module    
       
         
     }

@@ -8,7 +8,7 @@
             <div class="row">                
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label> Currency From </label>
+                        <label> Currency From *</label>
                         <igx-combo #currFrom id="currencyFrom" class="combo" displayKey="code" valueKey="autoId"
                             [itemsMaxHeight]="250" [data]="currencyList" placeholder="Currency From" formControlName="currencyFrom"
                             (onSelectionChange)="singleSelection($event)" searchPlaceholder="Search...">
@@ -18,7 +18,7 @@
                 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label> Currency To </label>
+                        <label> Currency To *</label>
                         <igx-combo #currTo id="currencyTo" class="combo" displayKey="code" valueKey="autoId" [itemsMaxHeight]="250" 
                             placeholder="Currency To" [data]="currencyList" (onSelectionChange)="singleSelection($event)" 
                             formControlName="currencyTo" searchPlaceholder="Search...">
@@ -55,9 +55,11 @@
 
                 <div class="col-md-1">
                     <div class="btn-group">                    
-                        <button type="button" class="btn btn-default mr-1" (click)="clearControls()">
+                        <button type="button" class="btn btn-default mr-1" (click)="clearControls()"
+                            data-toggle="tooltip" data-placement="bottom" title="Clear">
                             <i class="fas fa-broom"></i> </button>
-                        <button type="button" class="btn btn-success" [disabled]="!exchangeRateForm.valid" (click)="saveExchangeRate()">
+                        <button type="button" class="btn btn-success" [disabled]="!exchangeRateForm.valid" (click)="saveExchangeRate()"
+                            data-toggle="tooltip" data-placement="bottom" title="Save">
                             <i class="fas fa-save"></i> </button>
                     </div>
                 </div>       

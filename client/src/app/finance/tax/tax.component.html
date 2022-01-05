@@ -27,9 +27,11 @@
                 
                 <div class="col-md-1">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default mr-3" (click)="clearControls()">
+                        <button type="button" class="btn btn-default mr-1" (click)="clearControls()"
+                                data-toggle="tooltip" data-placement="bottom" title="Clear">
                             <i class="fas fa-broom"></i> </button>
-                        <button type="button" class="btn btn-success" [disabled]="!taxForm.valid" (click)="saveTax()">
+                        <button type="button" class="btn btn-success" [disabled]="!taxForm.valid" (click)="saveTax()"
+                                data-toggle="tooltip" data-placement="bottom" title="Save">
                             <i class="fas fa-save"></i> </button>
                     </div>
                 </div>                    

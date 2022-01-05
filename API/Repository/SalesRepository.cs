@@ -687,7 +687,6 @@ namespace API.Repository
             // IEnumerable<CostingDetailsDto> costDetails;
             // IEnumerable<CostingSpecialDto> costingSpecials;
             CostingSheetDto costSheet = new CostingSheetDto();
-
             DynamicParameters para = new DynamicParameters();
 
             para.Add("CostHeaderId", costHearderId);
@@ -728,7 +727,6 @@ namespace API.Repository
             return costHeaderList;
         }
 
-
         public async Task<int> AttachCostSheetSOAsync(TransSalesOrderItemDt soItemDt)
         {
             DynamicParameters para = new DynamicParameters();
@@ -758,6 +756,55 @@ namespace API.Repository
             return para.Get<int>("Result");
         } 
 
+        public async Task<IEnumerable<ApprovalUsersDto>> GetApprovalRouteDetailsAsync(ApprovalUsersDto appUser)
+        {   
+            IEnumerable<ApprovalUsersDto> approveList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("UserId" , appUser.UserId);
+            para.Add("Module" , appUser.Module);
+
+            approveList = await DbConnection.QueryAsync<ApprovalUsersDto>("spTransApprovalRoutingDetails" , para
+                    , commandType: CommandType.StoredProcedure);
+            
+            return approveList;
+        }
+
+        public async Task<int> SaveApproveCenterAsync(TransApprovalCenter appCenter)
+        {
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("AutoId" , appCenter.AutoId);
+            para.Add("Module" , appCenter.ModuleName);
+            para.Add("AssignUser" , appCenter.AssigneUser);
+            para.Add("RequestedBy" , appCenter.RequestedBy);
+            para.Add("RefId" , appCenter.RefId);
+            para.Add("RefNo" , appCenter.RefNo);
+            para.Add("Remarks" , appCenter.Remarks);
+            para.Add("Status" , appCenter.Status);
+            para.Add("Details" , appCenter.Details);
+            para.Add("IsFinal" ,  appCenter.IsFinal);
+            para.Add("UserId" , appCenter.RequestedBy);
+            para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+            var result = await DbConnection.ExecuteAsync("spTransApproveCenterSave" , para
+                    , commandType: CommandType.StoredProcedure);
+                    
+            return para.Get<int>("Result");
+        } 
+
+        public async Task<IEnumerable<ApproveCenterDto>> GetApproveCenterDetailsAsync(int userId)
+        {   
+            IEnumerable<ApproveCenterDto> approveList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("UserId" , userId);
+
+            approveList = await DbConnection.QueryAsync<ApproveCenterDto>("spTransApproveCenterGetDetails" , para
+                    , commandType: CommandType.StoredProcedure);
+            
+            return approveList;
+        }
        
 
     }

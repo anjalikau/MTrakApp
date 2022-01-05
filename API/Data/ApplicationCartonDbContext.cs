@@ -80,6 +80,7 @@ namespace API.Data
         public DbSet<TransExchangeRate> TransExchangeRate { get; set;}
         public DbSet<MstrTax> MstrTax { get; set;}
         public DbSet<MstrBank> MstrBank { get; set;}
+        public DbSet<TransApprovalCenter> TransApprovalCenter { get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

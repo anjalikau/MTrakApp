@@ -160,8 +160,8 @@ export class InvoiceComponent implements OnInit {
       taxRate: [{ value: 0, disabled: true }, Validators.required],
       lineTax: [{ value: 0, disabled: true }],
       grossAmount: [{ value: 0, disabled: true }],
-      discount: [0, Validators.required],
-      disAmount: [0, Validators.required],
+      discount: [0],
+      disAmount: [0],
       // netTotal: [{ value: 0, disabled: true }],
     });
   }

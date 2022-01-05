@@ -99,6 +99,9 @@ import { ExchangeRateComponent } from './finance/exchange-rate/exchange-rate.com
 import { TaxComponent } from './finance/tax/tax.component';
 import { BankComponent } from './finance/bank/bank.component';
 import { InvoiceComponent } from './finance/invoice/invoice.component';
+import { UserApproveComponent } from './users/user-approve/user-approve.component';
+import { UserPermittabComponent } from './users/user-permittab/user-permittab.component';
+import { ApproveCenterComponent } from './users/approve-center/approve-center.component';
 
 // Report viewer
 // import '@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min';
@@ -192,7 +195,10 @@ import { InvoiceComponent } from './finance/invoice/invoice.component';
     ExchangeRateComponent,
     TaxComponent,
     BankComponent,
-    InvoiceComponent
+    InvoiceComponent,
+    UserApproveComponent,
+    UserPermittabComponent,
+    ApproveCenterComponent
   ],
   imports: [
     BrowserModule,

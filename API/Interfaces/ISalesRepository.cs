@@ -37,5 +37,8 @@ namespace API.Interfaces
          Task<int> AttachCostSheetSOAsync(TransSalesOrderItemDt soItemDt);
          Task<int> RemoveCostSheetSOAsync(TransSalesOrderItemDt soItemDt);
          Task<IEnumerable<CostHeaderDto>> GetCostHeaderListAsync(long CustomerId);
+         Task<IEnumerable<ApprovalUsersDto>> GetApprovalRouteDetailsAsync(ApprovalUsersDto appUser);
+         Task<int> SaveApproveCenterAsync(TransApprovalCenter appCenter);
+         Task<IEnumerable<ApproveCenterDto>> GetApproveCenterDetailsAsync(int userId);
     }
 }

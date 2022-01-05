@@ -26,6 +26,7 @@ export class UserPermissionComponent implements OnInit {
   public col: IgxColumnComponent;
   public pWidth: string;
   public nWidth: string;
+  
   @ViewChild('Menugrid', { static: true })
   public Menugrid: IgxGridComponent;
   @ViewChild('PermitMgrid', { static: true })

@@ -5,5 +5,7 @@ namespace API.DTOs
         public int Result { get; set; }
         public string RefNum { get; set; }
         public int RefNumId { get; set; }
+        public int Version { get; set; }
+        public string Status { get; set; }
     }
 }

@@ -491,7 +491,7 @@ export class SalesOrderComponent implements OnInit {
     //console.log(user);
     var locationId = this.user.locationId;
     this.masterServices.getCustomer(locationId).subscribe((customer) => {
-      this.customerList = customer;
+      this.customerList = customer.filter(x => x.bActive == true);
     });
   }
 
@@ -500,7 +500,7 @@ export class SalesOrderComponent implements OnInit {
       /// loads CUSTOMER LOACTION
       this.masterServices.getCustomerLocation(item).subscribe(
         (customerDt) => {
-          this.customerDtList = customerDt;
+          this.customerDtList = customerDt.filter(x => x.bActive == true);
         },
         // The 2nd callback handles errors.
         (err) => console.error(err),

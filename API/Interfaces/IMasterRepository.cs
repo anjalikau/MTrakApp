@@ -102,6 +102,12 @@ namespace API.Interfaces
         Task<int> DeactiveArticleAsync(MstrArticle article);
         Task<int> DeleteArticleAsync(MstrArticle article);
         Task<IEnumerable<ArticleDetailDto>> GetArtileDetailsAllAsync(int companyId);
+        Task<IEnumerable<UserAppModuleDto>> GetUserAppModuleDtAsync(int userId);
+        Task<int> SaveApproveRouteModuleAsync(TransApprovalRoutingModules appModule);
+        Task<IEnumerable<ApprovalUsersDto>> GetApproveUsersAsync(int ARMId);
+        Task<int> SaveApproveUserAsync(TransApproversByModule appUsers);
+        Task<int> DeleteApproveModuleAsync(TransApprovalRoutingModules appModule);
+        Task<int> DeleteApproveUsersAsync(TransApproversByModule appUsers);
 
     }
 }

@@ -99,7 +99,7 @@
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="dashboard">
           <!--menu-open-->
           <a href="#" class="nav-link">
             <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -108,11 +108,11 @@
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" *ngIf="approveCenter">
             <li class="nav-item">
-              <a class="nav-link" routerLink="/Dashboard" routerLinkActive="active">
+              <a class="nav-link" routerLink="/ApproveCenter" routerLinkActive="active">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Dashboard v1</p>
+                <p>Approve Center</p>
               </a>
             </li>
 
@@ -429,7 +429,7 @@
             <li class="nav-item">
               <a class="nav-link" routerLink="/FPPOIn" routerLinkActive="active" (click)="menuClose()">
                 <i class="far fa-circle nav-icon"></i>
-                <p>FPPO In</p>
+                <p>Production In</p>
               </a>
             </li>
           </ul>
@@ -438,7 +438,7 @@
             <li class="nav-item">
               <a class="nav-link" routerLink="/FPPOOut" routerLinkActive="active" (click)="menuClose()">
                 <i class="far fa-circle nav-icon"></i>
-                <p>FPPO Out</p>
+                <p>Production Out</p>
               </a>
             </li>
           </ul>

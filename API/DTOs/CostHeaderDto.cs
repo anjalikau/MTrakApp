@@ -32,6 +32,7 @@ namespace API.DTOs
         public string ArticleName { get; set; }
         public string Size { get; set; }
         public bool isActive { get; set; }
+        public string Status { get; set; }
 
     }
 }

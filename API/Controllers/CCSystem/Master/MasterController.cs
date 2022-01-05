@@ -564,7 +564,7 @@ namespace API.Controllers.CCSystem.Master
         {
             var customerList = await _context.MstrCustomerHeader
                 .Where(x => x.LocationId == locId)
-                .Select(x => new { x.ShortCode, x.Name, x.AutoId })
+                .Select(x => new { x.ShortCode, x.Name, x.AutoId , x.bActive })
                 .ToListAsync();
             return Ok(customerList);
         }

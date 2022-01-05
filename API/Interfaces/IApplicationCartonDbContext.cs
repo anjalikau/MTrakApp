@@ -80,6 +80,7 @@ namespace API.Interfaces
         DbSet<TransExchangeRate> TransExchangeRate { get; set;}
         DbSet<MstrTax> MstrTax { get; set;}
         DbSet<MstrBank> MstrBank { get; set;}
+        DbSet<TransApprovalCenter> TransApprovalCenter { get; set;}
 
     }
 }

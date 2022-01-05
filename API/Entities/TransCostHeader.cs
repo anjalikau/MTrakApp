@@ -40,6 +40,7 @@ namespace API.Entities
         public decimal CommSelPrice {get;set;}
         public DateTime TransDate {get;set;}
         public bool IsActive {get;set;}
+        public string Status {get;set;}
         public int ? CreateUserId {get;set;}
         public DateTime ? CreateDateTime {get;set;}
         public int ? UpdateUserId {get;set;}

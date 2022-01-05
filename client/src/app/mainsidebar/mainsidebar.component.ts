@@ -59,6 +59,8 @@ export class MainsidebarComponent implements OnInit {
   exchRate: boolean = false;
   tax: boolean = false;
   invoice: boolean = false;
+  approveCenter: boolean = false;
+  dashboard: boolean = false;
   isCollapsed = false;
   userLoc: UserLocation[];
   user: User;
@@ -144,9 +146,14 @@ export class MainsidebarComponent implements OnInit {
     var menus = this.user.permitMenus;
     // console.log(menus);
 
-    var formMenus = menus.filter((x) => x.mType == 'F');   
+    var formMenus = menus.filter((x) => x.mType == 'F');  
 
-    /// USEER PERMITET ADMIN GROUP
+    if (formMenus.filter((x) => x.groupName == 'Dashboard').length > 0) {
+      this.dashboard = true;
+
+      if (formMenus.filter( (x) => x.autoIdx == 1184).length > 0)
+        this.approveCenter = true;
+    }/// USER PERMITET ADMIN GROUP
     if (formMenus.filter((x) => x.groupName == 'Admin').length > 0) {
       this.adminGroup = true;
 
@@ -160,7 +167,7 @@ export class MainsidebarComponent implements OnInit {
       if (formMenus.filter( (x) => x.autoIdx == 44).length > 0)
         this.codeDefi = true;
       if (formMenus.filter( (x) => x.autoIdx == 45).length > 0)
-        this.serialNoDt = true;
+        this.serialNoDt = true;     
     }
     if (formMenus.filter((x) => x.groupName == 'Master').length > 0) {
       this.masterGroup = true;

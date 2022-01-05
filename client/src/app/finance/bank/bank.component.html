@@ -36,7 +36,7 @@
                 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label> Currency </label>
+                        <label> Currency *</label>
                         <igx-combo #currency id="currency" class="combo" displayKey="code" valueKey="autoId"
                             [itemsMaxHeight]="250" [data]="currencyList" placeholder="Currency" formControlName="currency"
                             (onSelectionChange)="singleSelection($event)" searchPlaceholder="Search...">
@@ -55,9 +55,11 @@
                 
                 <div class="col-md-1">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default mr-3" (click)="clearControls()">
+                        <button type="button" class="btn btn-default mr-1" (click)="clearControls()"
+                        data-toggle="tooltip" data-placement="bottom" title="Clear">
                             <i class="fas fa-broom"></i> </button>
-                        <button type="button" class="btn btn-success" [disabled]="!bankForm.valid" (click)="saveBank()">
+                        <button type="button" class="btn btn-success" [disabled]="!bankForm.valid" (click)="saveBank()"
+                        data-toggle="tooltip" data-placement="bottom" title="Save">
                             <i class="fas fa-save"></i> </button>
                     </div>
                 </div>                    
