@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-md-1">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-success mr-1" [disabled]="!invoiceHdForm.valid || isApproved" (click)="saveInvoice()"
+                        <button type="button" class="btn btn-success mr-1" [disabled]="!invoiceHdForm.valid || isApproved" (click)="this.savedialog.open()"
                             data-toggle="tooltip" data-placement="bottom" title="Save">
                             <i class="fas fa-save"></i>
                         </button>      
@@ -36,7 +36,7 @@
                 <!-- /.col -->
             </div>
             <div class="row">
-                <div class="col-md-2">
+                <!-- <div class="col-md-2">
                     <div class="form-group">
                         <label> Invoice No *</label>
                         <igx-input-group type="search">
@@ -49,6 +49,16 @@
                             </igx-prefix>
                         </igx-input-group>
                     </div>
+                </div> -->
+                <div class="col-md-2">
+                    <label> Invoice No *</label>
+                    <div class="input-group mb-3">                        
+                        <input type="text" placeholder="Invoice No" formControlName="invoiceNo" class="form-control rounded-0">
+                        <span class="input-group-append">
+                          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalInvoice" data-placement="bottom" title="View"> 
+                              <i class="fas fa-eye"></i> </button>
+                        </span>
+                      </div>
                 </div>
 
                 <div class="col-md-3">
@@ -508,5 +518,79 @@
     message="Do you want to approve this Invoice ?">
 </igx-dialog>
 
+<igx-dialog #savedialog title="Confirmation" leftButtonLabel="Cancel" (onLeftButtonSelect)="savedialog.close()"
+    rightButtonLabel="OK" (onRightButtonSelect)="onSaveSelected($event)"
+    message="Do you want to save the record ?">
+</igx-dialog>
+
 <!-- <p> Form Value : {{jobCardForm.value | json }} </p>
 <p> Form Status : {{jobCardForm.status | json }} </p> -->
+
+<!-- INVOICE NO LIST  -->
+<div class="modal fade" id="modalInvoice">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"> List of Invoice </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="invoiceListForm" autocomplete="off">
+                    <div class="row">
+                        <div class="col-md-4">            
+                            <div class="form-group">
+                                <igx-input-group>
+                                    <input class="gridSample__filter" igxInput type="text" placeholder="Filter by Customer PO #" 
+                                    (input)="filterByCusRef($event.target.value)" formControlName="customerPO">
+                                    <label igxLabel for="customerPO"> Customer PO </label>
+                                </igx-input-group><br>
+                                <!-- <igx-input-group>
+                                    <input igxInput type="text" formControlName="customerPO" />
+                                    <label igxLabel for="customerPO"> Filter by Customer PO # </label>
+                                </igx-input-group> -->
+                            </div>            
+                        </div>  
+                    </div>
+                    
+                    <div class="row">
+                        <igx-grid #invoiceListGrid [data]="invoiceList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+                            [primaryKey]="'invoiceHdId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="50"
+                            height="400px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
+                            [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
+                            <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                                <ng-template igxCell let-cell="cell">
+                                    <button igxButton="icon" class="fab-compact" (click)="onViewInvoiceDetails($event,cell.cellID)"
+                                        data-dismiss="modal">
+                                        <igx-icon family="material">visibility</igx-icon>
+                                    </button>
+                                </ng-template>
+                            </igx-column>
+                            <igx-column [field]="'invoiceNo'" [header]="'Invoice No'" [resizable]="true" [dataType]="'string'"
+                                [sortable]="true" [width]="'150px'" [editable]="false">
+                            </igx-column>
+                            <igx-column [field]="'attention'" [header]="'Attention'" [resizable]="true" [dataType]="'string'"
+                                [sortable]="true" [width]="'200px'" [editable]="false">
+                            </igx-column>
+                            <igx-column [field]="'invCurrency'" [header]="'Inv Currency'" [resizable]="true" [dataType]="'string'"
+                                [sortable]="true" [pipeArgs]="formatDateOptions" [width]="'130px'" [editable]="false">
+                            </igx-column>
+                            <igx-column [field]="'vatNo'" [header]="'Vat No'" [resizable]="true" [dataType]="'string'" [sortable]="true"
+                                [pipeArgs]="formatDateOptions" [width]="'150px'" [editable]="false">
+                            </igx-column>
+                            <igx-column [field]="'taxNo'" [header]="'Tax No'" [resizable]="true" [dataType]="'string'" [sortable]="true"
+                                [pipeArgs]="formatDateOptions" [width]="'150px'" [editable]="false">
+                            </igx-column>
+                            <igx-column [field]="'transDate'" [header]="'Trans Date'" [resizable]="true" [dataType]="'date'"
+                                [sortable]="true" [pipeArgs]="formatDateOptions" [width]="'120px'" [editable]="false">
+                            </igx-column>
+                        </igx-grid>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+            </div>
+        </div>
+    </div>
+</div>

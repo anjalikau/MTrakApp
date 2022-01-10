@@ -182,5 +182,17 @@ namespace API.Repository
             return para.Get<int>("Result");
         }
 
+        public async Task<IEnumerable<InvoiceNoListDto>> GetInvoiceListAsync(string customerRef)
+        {
+            IEnumerable<InvoiceNoListDto> invoiceList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("CustomerRef" , customerRef);
+
+            invoiceList = await DbConnection.QueryAsync<InvoiceNoListDto>("spTransInvoiceGetList" , para
+                    , commandType: CommandType.StoredProcedure);
+            return invoiceList;
+        }
+
     }
 }

@@ -32,6 +32,7 @@ export class SalesOrderComponent implements OnInit {
   soHeaderForm: FormGroup;
   soItemForm: FormGroup;
   soDeliveyForm: FormGroup;
+  salesListForm: FormGroup;
   articleForm: FormGroup;
   soDelivList: any[];
   delRef = [];
@@ -41,6 +42,7 @@ export class SalesOrderComponent implements OnInit {
   sizeList: Size[];
   soItemList: any[];
   user: User;
+  salesOrderList: any;
   customerList: CustomerHd[];
   customerDtList: CustomerLoc[];
   prodTypeList: ProductType[];
@@ -84,6 +86,8 @@ export class SalesOrderComponent implements OnInit {
   public deliveryGrid: IgxGridComponent;
   @ViewChild('articleGrid', { static: true })
   public articleGrid: IgxGridComponent;
+  @ViewChild('salesListGrid', { static: true })
+  public salesListGrid: IgxGridComponent;
 
   @ViewChild('article', { read: IgxComboComponent })
   public article: IgxComboComponent;
@@ -129,6 +133,8 @@ export class SalesOrderComponent implements OnInit {
   public articleDialog: IgxDialogComponent;
   @ViewChild('dialog', { read: IgxDialogComponent })
   public dialog: IgxDialogComponent;
+  @ViewChild('savedialog', { read: IgxDialogComponent })
+  public savedialog: IgxDialogComponent;
   // @ViewChild('form', { read: IgxDialogComponent })
   // public form: IgxDialogComponent;
 
@@ -138,6 +144,14 @@ export class SalesOrderComponent implements OnInit {
     currencyCode: '',
   };
   public formatPrice = this.options;
+
+    // Date options
+    public dateOptions = {
+      format: 'yyyy-MM-dd',
+      // timezone: 'UTC+0',
+    };
+  
+    public formatDateOptions = this.dateOptions;
 
   constructor(
     private accountService: AccountService,
@@ -181,7 +195,7 @@ export class SalesOrderComponent implements OnInit {
     this.soHeaderForm = this.fb.group({
       headerId: [0],
       createUserId: this.user.userId,
-      orderRef: ['', [Validators.maxLength(15)]],
+      orderRef: [{ value: '', disabled: true }, [Validators.maxLength(15)]],
       customerRef: ['', [Validators.required, Validators.maxLength(20)]],
       customerId: ['', Validators.required],
       customerLocId: [''],
@@ -227,6 +241,10 @@ export class SalesOrderComponent implements OnInit {
       deliveryRef: ['', Validators.required],
       deliveryDate: ['', Validators.required],
     });
+
+    this.salesListForm = this.fb.group({
+      customerPO: ['', [Validators.maxLength(15)]],
+    })
   }
 
   //// ALOW SINGLE SILECTION ONLY COMBO EVENT
@@ -244,7 +262,6 @@ export class SalesOrderComponent implements OnInit {
 
   loadArticle() {
     this.allArticleList = [];
-
     this.masterServices.getArticlesAll().subscribe(result => {
       this.allArticleList = result
     })
@@ -565,7 +582,7 @@ export class SalesOrderComponent implements OnInit {
     //console.log(item);
     this.masterServices.getArticleColor(articleId).subscribe((color) => {
       this.colorList = color;
-      console.log(this.colorList);
+      // console.log(this.colorList);
     });
   }
 
@@ -836,7 +853,7 @@ export class SalesOrderComponent implements OnInit {
         });
 
         if (itemRowData.length == 0) {
-          console.log(selectedRowData[0]);
+          // console.log(selectedRowData[0]);
           var trasDate: Date = new Date(selectedRowData[0]['deliveryDate']);
 
           this.soDeliveyForm
@@ -1066,6 +1083,12 @@ export class SalesOrderComponent implements OnInit {
     this.soDeliveyForm.get('deliCustLocId').setValue(0);
   }
 
+  //// save dialog confirmation to save
+  onSaveSelected(event) {
+    this.savedialog.close();
+    this.saveSalesOrder();
+  }
+
   /// SAVE SALES ORDER
   saveSalesOrder() {
     if (this.saveButton == true) {
@@ -1144,7 +1167,7 @@ export class SalesOrderComponent implements OnInit {
           salesOrderList.push(deliverydata);
         });
 
-        console.log(salesOrderList);
+        // console.log(salesOrderList);
         // // //console.log(JSON.stringify(menuList));
 
         this.salesOrderServices
@@ -1171,6 +1194,51 @@ export class SalesOrderComponent implements OnInit {
     }
   }
 
+    //// CLICK EVENT OF SALES ORDER LIST GRID ROW
+    onViewSalesDetails(event, cellId) {
+      this.customer.disabled = false;
+      this.soHeaderForm.get('customerRef').enable();
+      this.articleForm.reset();
+      this.isJobCreated = false;
+      var date: Date = new Date(Date.now());
+
+      this.soHeaderForm.get('headerId').setValue(0);
+      this.soHeaderForm.get('customerRef').setValue('');
+      this.soHeaderForm.get('customerId').setValue('');
+      this.soHeaderForm.get('customerLocId').setValue('');
+      this.soHeaderForm.get('trnsDate').setValue(date);
+      this.soHeaderForm.get('delDate').setValue('');
+      this.soHeaderForm.get('customerUserId').setValue('');
+      this.soHeaderForm.get('salesCategoryId').setValue('');
+      this.soHeaderForm.get('salesAgentId').setValue('');
+      this.soHeaderForm.get('cusCurrencyId').setValue('');
+      // this.soHeaderForm.get('countryId').setValue('');
+      this.soHeaderForm.get('paymentTermId').setValue('');
+      this.soHeaderForm.get('customerDivId').setValue('');
+      this.soHeaderForm.get('isChargeable').setValue('');
+
+      this.customerDtList = [];
+      this.sizeList = [];
+      this.colorList = [];
+      this.customerUserList = [];
+      this.customerCurrList = [];
+      this.divisionList = [];    
+
+      this.soItemForm.get('articleName').setValue('');
+      // this.soItemForm.get('articleName').setValue('');
+      this.soItemForm.get('articleCode').setValue('');    
+      
+      var headerId = cellId.rowID;
+      const ItemRowData = this.salesListGrid.data.filter((record) => {
+        return record.autoId == headerId;
+      });
+
+      this.soHeaderForm.get('headerId').setValue(headerId);
+      this.soHeaderForm.get('orderRef').setValue(ItemRowData[0]["orderRef"]);
+
+      this.loadSalesOrderDt();
+    }
+
   /// LOADS EXISTING SALES ORDER DETAILS
   loadSalesOrderDt() {
     this.clearDeliveryControls();
@@ -1187,7 +1255,7 @@ export class SalesOrderComponent implements OnInit {
 
       this.salesOrderServices.getSalesOrderDT(salesOrderRef).subscribe(
         (orderDt) => {
-          console.log(orderDt);
+          // console.log(orderDt);
           var salesOrderId = 0,
             soSavedItemList = [],
             soSavedDelList = [];
@@ -1340,8 +1408,8 @@ export class SalesOrderComponent implements OnInit {
             this.soItemList = soSavedItemList;
             this.soDelivList = soSavedDelList;
 
-            console.log(soSavedItemList);
-            console.log(soSavedDelList);
+            // console.log(soSavedItemList);
+            // console.log(soSavedDelList);
           }
         },
         (err) => console.error(err),
@@ -1458,7 +1526,7 @@ export class SalesOrderComponent implements OnInit {
       this.dialog.open();
     }
   }
-
+  
   openDelivDialog(event, cellId) {
     if (this.checkIsEditable()) {
       this.rowId = cellId;
@@ -1525,6 +1593,33 @@ export class SalesOrderComponent implements OnInit {
     } else {
       this.toastr.error('Delete Permission denied !!!');
     }
+  }
+
+  /// FILER AND GET SALES ORDER DETAILS BY CUSTOMER REF
+  public filterByCusRef(term) {
+    // console.log(term);
+    // this.grid1.filter('ProductName', term, IgxStringFilteringOperand.instance().condition('contains'));
+    if (term != '') {
+      this.salesOrderServices.getSalesOrderList(term).subscribe(result => {
+        this.salesOrderList = result
+      })
+    }
+  }
+
+  //// preview cost sheet report
+  previewCostSheet(event, cellId) {
+    var ids = cellId.rowID;
+    const selectedRowData = this.itemGrid.data.filter((record) => {
+      return record.itemId == ids;
+    });
+
+    var obj = {
+      costingHdId: selectedRowData[0]["costingId"],
+      reportName: 'CostSheetFormat',
+    };
+    /// STORE OBJECT IN LOCAL STORAGE
+    localStorage.setItem('params', JSON.stringify(obj));
+    window.open('/boldreport', '_blank');
   }
 
 }

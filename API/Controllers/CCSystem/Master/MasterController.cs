@@ -1340,7 +1340,8 @@ namespace API.Controllers.CCSystem.Master
         {
             var result = await _context.MstrCostingGroup
                 .Where(x => x.LocationId == locId)
-                .Select(x => new { x.AutoId, x.IsMaterialAllocated, x.Name }).ToListAsync();
+                .Select(x => new { x.AutoId, x.IsMaterialAllocated, x.Name })
+                .OrderBy(x => x.Name).ToListAsync();
             return Ok(result);
         }
 

@@ -35,7 +35,7 @@
                     </igx-column> -->
                     <igx-column [width]="'120px'"  [field]="'refNo'" [header]="'RefNo'" [selectable]="false" [sortable]="false" [resizable]="false">
                         <ng-template igxCell let-cell="cell">                            
-                            <a class="truncate" href="" target="_blank" (click)="previewCostSheet($event,cell.cellID)">{{cell.value}}</a>                            
+                            <a class="truncate" href="" target="_blank" (click)="previewCostSheet($event,cell.cellID);event.preventDefault();">{{cell.value}}</a>                            
                         </ng-template>
                     </igx-column>
 

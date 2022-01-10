@@ -32,13 +32,13 @@
                         [perPage]="10" height="500px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
                         [rowSelection]="'Single'">                       
                         <igx-column [field]="'articleName'" [header]="'Article Name'" [resizable]="true" [dataType]="'string'"
-                            [sortable]="true" [width]="'200px'">
+                            [sortable]="true" [width]="'300px'">
                         </igx-column>
-                        <igx-column [field]="'color'" [header]="'Color'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                        <igx-column [field]="'color'" [header]="'Color'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'120px'">
                         </igx-column>
-                        <igx-column [field]="'size'" [header]="'Size'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                        <igx-column [field]="'size'" [header]="'Size'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'120px'">
                         </igx-column>
-                        <igx-column [field]="'refNo'" [header]="'Cost Ref'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                        <igx-column [field]="'refNo'" [header]="'Cost Ref'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'150px'">
                         </igx-column>
                         <igx-column [width]="'50px'" [field]="'refNo'" [header]="' '" [selectable]="false" [sortable]="false" [resizable]="false">
                             <ng-template igxCell let-cell="cell">
@@ -55,9 +55,9 @@
                                 </ng-template> 
                             </ng-template>
                         </igx-column>
-                        <igx-column [field]="'qty'" [header]="'Qty'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        <igx-column [field]="'qty'" [header]="'Qty'" [resizable]="true" [dataType]="'number'" [sortable]="true" [width]="'100px'">
                         </igx-column>
-                        <igx-column [field]="'price'" [header]="'Price'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        <igx-column [field]="'price'" [header]="'Price'" [resizable]="true" [dataType]="'number'" [sortable]="true" [width]="'100px'">
                         </igx-column>
                     </igx-grid>
                 </div>
@@ -85,7 +85,7 @@
                         <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
                             <ng-template igxCell let-cell="cell">
                                 <button igxButton="icon" class="fab-compact" (click)="onAttachCostSheet($event,cell.cellID)">
-                                    <igx-icon family="material">visibility</igx-icon>
+                                    <igx-icon family="material">attachment</igx-icon>
                                 </button>
                             </ng-template>
                         </igx-column>                     
@@ -116,7 +116,9 @@
                         <igx-column [field]="'moqCost'" [header]="'MoqCost'" [resizable]="true" [dataType]="'number'" [sortable]="true">
                         </igx-column>
                         <igx-column [field]="'totGrossWeight'" [header]="'Tot GrossWeight'" [resizable]="true" [dataType]="'number'" [sortable]="true">
-                        </igx-column>                       
+                        </igx-column>  
+                        <igx-column [field]="'totalBoxCost'" [header]="'TotalBoxCost'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        </igx-column>                     
                         <!-- <igx-column [field]="'profitMarkup'" [header]="'Profit Markup'" [resizable]="true" [dataType]="'number'" [sortable]="true">
                         </igx-column>                       
                         <igx-column [field]="'sellingPrice'" [header]="'SellingPrice'" [resizable]="true" [dataType]="'number'" [sortable]="true">
@@ -125,8 +127,7 @@
                         </igx-column>                       
                         <igx-column [field]="'totMOQCost'" [header]="'TotMOQCost'" [resizable]="true" [dataType]="'number'" [sortable]="true">
                         </igx-column>                        
-                        <igx-column [field]="'totalBoxCost'" [header]="'TotalBoxCost'" [resizable]="true" [dataType]="'number'" [sortable]="true">
-                        </igx-column> -->
+                        -->
                         
                     </igx-grid>
                     </div>

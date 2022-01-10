@@ -40,5 +40,8 @@ namespace API.Interfaces
          Task<IEnumerable<ApprovalUsersDto>> GetApprovalRouteDetailsAsync(ApprovalUsersDto appUser);
          Task<int> SaveApproveCenterAsync(TransApprovalCenter appCenter);
          Task<IEnumerable<ApproveCenterDto>> GetApproveCenterDetailsAsync(int userId);
+         Task<IEnumerable<PendingOrderItemsDto>> GetJobCardListAsync(string CustomerRef);
+         Task<IEnumerable<FPONoListDto>> GetFPONoListAsync(string customerRef);
+         Task<IEnumerable<DispatchNoListDto>> GetDispatchListAsync(string customerRef);
     }
 }

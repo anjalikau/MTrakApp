@@ -20,12 +20,14 @@ import { SalesorderService } from '_services/salesorder.service';
 export class ProdDispatchComponent implements OnInit {
   dispatchForm: FormGroup;
   qtyEditForm: FormGroup;
+  dispatchListForm: FormGroup;
   user: User;
   custometList: CustomerHd[];
   delLocationList: CustomerLoc[];
   pendDispatchList: DispatchProdDt[];
   dispatchList: any[];
   dispSiteList: any[];
+  dispatchNoList: any;
   rowId: number = 0;
   // isGridDisabled: boolean = false;
   isDisplayMode: boolean = false;
@@ -48,8 +50,13 @@ export class ProdDispatchComponent implements OnInit {
   public pendDispatchGrid: IgxGridComponent;
   @ViewChild('dispatchGrid', { read: IgxGridComponent, static: true })
   public dispatchGrid: IgxGridComponent;
+  @ViewChild('dispListGrid', { static: true })
+  public dispListGrid: IgxGridComponent;
+
   @ViewChild('dialog', { read: IgxDialogComponent })
   public dialog: IgxDialogComponent;
+  @ViewChild('savedialog', { read: IgxDialogComponent })
+  public savedialog: IgxDialogComponent;
 
   @ViewChild('customer', { read: IgxComboComponent })
   public customer: IgxComboComponent;
@@ -57,6 +64,13 @@ export class ProdDispatchComponent implements OnInit {
   public cusLoc: IgxComboComponent;
   @ViewChild('fromSites', { read: IgxComboComponent })
   public fromSites: IgxComboComponent;
+
+    // Date options
+    public dateOptions = {
+      format: 'yyyy-MM-dd',
+      //timezone: 'UTC+0',
+    };
+    public formatDateOptions = this.dateOptions;
 
   constructor(
     private accountService: AccountService,
@@ -96,7 +110,7 @@ export class ProdDispatchComponent implements OnInit {
     this.dispatchForm = this.fb.group({
       autoId: [0],
       userId: this.user.userId,
-      dispatchNo: ['', [Validators.required, Validators.maxLength(30)]],
+      dispatchNo: [{value: '', disabled: true}, [Validators.required, Validators.maxLength(30)]],
       customer: ['', [Validators.required]],
       cusLocation: ['', Validators.required],
       fromSite: ['', Validators.required],
@@ -118,6 +132,10 @@ export class ProdDispatchComponent implements OnInit {
       lastDispQty: [{ value: 0, disabled: true }],
       dispatchQty: [0, Validators.required],
     });
+
+    this.dispatchListForm = this.fb.group({
+      customerPO: ['', [Validators.maxLength(15)]],
+    })
   }
 
   ///// GET DISPATCH NO
@@ -142,7 +160,7 @@ export class ProdDispatchComponent implements OnInit {
   loadDispatchSite() {
     this.salesOrderServices.getDispatchSite().subscribe((result) => {
       this.dispSiteList = result;
-      console.log(this.dispSiteList);
+      // console.log(this.dispSiteList);
     });
   }
 
@@ -332,6 +350,12 @@ export class ProdDispatchComponent implements OnInit {
     this.qtyEditForm.reset();
   }
 
+  //// save dialog confirmation to save
+ onSaveSelected(event) {
+  this.savedialog.close();
+  this.saveDispatchNote();
+ }
+
   /////// SAVE DISPATCH NOTE
   saveDispatchNote() {
     if(this.saveButton == true) {
@@ -449,7 +473,7 @@ export class ProdDispatchComponent implements OnInit {
     var dispatchDt = [];
     var dispatchNo = this.dispatchForm.get('dispatchNo').value.trim();
 
-    console.log(this.isDisplayMode);
+    // console.log(this.isDisplayMode);
     this.salesOrderServices.getDispatchDetails(dispatchNo).subscribe(
       (result) => {
         if (result.length > 0) {
@@ -544,7 +568,7 @@ export class ProdDispatchComponent implements OnInit {
   //// DELETE DISPATCH LINE
   public onDialogOKSelected(event) {
     event.dialog.close();
-    console.log(this.rowId);
+    // console.log(this.rowId);
 
     if (this.rowId > 0) {
       /// ADJUST THE PENDING DISPATCH STATUS
@@ -569,5 +593,48 @@ export class ProdDispatchComponent implements OnInit {
     this.toastr.error('Print Permission denied !!!');
   }
   }
+
+/// FILER AND GET JOB CARD DETAILS BY CUSTOMER REF
+public filterByCusRef(term) {
+  if (term != '') {
+    this.salesOrderServices.getDispatchNoList(term).subscribe(result => {
+      this.dispatchNoList = result
+      // console.log(this.dispatchNoList);
+    })
+  }
+}
+
+ //// CLICK EVENT OF FPO LIST GRID ROW
+ onViewDispatchDetails(event, cellId) {
+  var date: Date = new Date(Date.now());
+
+  this.dispatchForm.get('autoId').reset();
+  this.dispatchForm.get('customer').reset();
+  this.dispatchForm.get('cusLocation').reset();
+  this.dispatchForm.get('fromSite').reset();
+  this.dispatchForm.get('reason').reset();
+  this.dispatchForm.get('transDate').setValue(date);
+
+  this.qtyEditForm.reset();
+  this.pendDispatchList = [];
+  this.dispatchList = [];
+  this.isDisplayMode = false;
+  this.isCustomer = false;
+  this.isFromSite = false;
+  this.isActive = false;
+  this.dispatchStatus = '';
+  this.enableControls();
+
+  var headerId = cellId.rowID;
+  const ItemRowData = this.dispListGrid.data.filter((record) => {
+    return record.dispatchHdId == headerId;
+  });
+
+  // console.log(ItemRowData);
+  this.dispatchForm.get('autoId').setValue(headerId);
+  this.dispatchForm.get('dispatchNo').setValue(ItemRowData[0]["dispatchNo"]);
+
+  this.loadDipatchDetails();
+}
 
 }

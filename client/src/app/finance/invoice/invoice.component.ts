@@ -20,6 +20,7 @@ import { SalesorderService } from '_services/salesorder.service';
 export class InvoiceComponent implements OnInit {
   invoiceHdForm: FormGroup;
   invoiceDtForm: FormGroup;
+  invoiceListForm: FormGroup;
   user: User;
   custometList: CustomerHd[];
   taxList: Tax[];
@@ -27,6 +28,7 @@ export class InvoiceComponent implements OnInit {
   pendInvoiceList: any;
   invoiceDtList: any;
   invoiceSumList: any;
+  invoiceList: any;
   rowId: number = 0;
   saveButton: boolean = false;
   approveButton: boolean = false;
@@ -53,17 +55,28 @@ export class InvoiceComponent implements OnInit {
   public pWidth: string;
   public nWidth: string;
 
+  // Date options
+  public dateOptions = {
+    format: 'yyyy-MM-dd',
+    //timezone: 'UTC+0',
+  };
+  public formatDateOptions = this.dateOptions;
+
   @ViewChild('pendInvoiceGrid', { read: IgxGridComponent, static: true })
   public pendInvoiceGrid: IgxGridComponent;
   @ViewChild('invoiceDtGrid', { read: IgxGridComponent, static: true })
   public invoiceDtGrid: IgxGridComponent;
   @ViewChild('invoiceSumGrid', { read: IgxGridComponent, static: true })
   public invoiceSumGrid: IgxGridComponent;
+  @ViewChild('invoiceListGrid', { read: IgxGridComponent, static: true })
+  public invoiceListGrid: IgxGridComponent;
 
   @ViewChild('dialog', { read: IgxDialogComponent })
   public dialog: IgxDialogComponent;
   @ViewChild('confDialog', { read: IgxDialogComponent })
   public confDialog: IgxDialogComponent;
+  @ViewChild('savedialog', { read: IgxDialogComponent })
+  public savedialog: IgxDialogComponent;
 
   @ViewChild('customer', { read: IgxComboComponent })
   public customer: IgxComboComponent;
@@ -126,7 +139,7 @@ export class InvoiceComponent implements OnInit {
 
     this.invoiceHdForm = this.fb.group({
       autoId: [0],
-      invoiceNo: ['', [Validators.required, Validators.maxLength(30)]],
+      invoiceNo: [{value: '' , disabled: true}, [Validators.required, Validators.maxLength(30)]],
       customerId: ['', [Validators.required]],
       taxNo: [{ value: '', disabled: true }],
       vatNo: [{ value: '', disabled: true }],
@@ -164,6 +177,10 @@ export class InvoiceComponent implements OnInit {
       disAmount: [0],
       // netTotal: [{ value: 0, disabled: true }],
     });
+
+    this.invoiceListForm = this.fb.group({
+      customerPO: ['', [Validators.maxLength(15)]],
+    })
   }
 
   ///// LOAD COMPANY DEFAULT CURRENCY
@@ -642,6 +659,12 @@ export class InvoiceComponent implements OnInit {
       .setValue(selectedRowData[0]['disAmount']);
   }
 
+    //// save dialog confirmation to save
+ onSaveSelected(event) {
+  this.savedialog.close();
+  this.saveInvoice();
+ }
+
   //// SAVE INVOICE
   saveInvoice() {
     if (this.saveButton == true) {
@@ -925,6 +948,73 @@ export class InvoiceComponent implements OnInit {
     } else {
       this.toastr.error('Print Permission denied !!!');
     }
+  }
+
+  // FILER AND GET JOB CARD DETAILS BY CUSTOMER REF
+  public filterByCusRef(term) {
+    if (term != '') {
+      this.financeService.getInvoiceNoList(term).subscribe(result => {
+        this.invoiceList = result
+        // console.log(this.dispatchNoList);
+      })
+    }
+  }
+
+  //// CLICK EVENT OF INVOICE LIST GRID ROW
+  onViewInvoiceDetails(event, cellId) {
+    var date: Date = new Date(Date.now());
+    this.clearCustomerDetails();
+    this.invoiceHdForm.get('autoId').setValue(0);
+    this.invoiceHdForm.get('customerId').setValue('');
+    this.invoiceHdForm.get('customerId').enable();
+    this.invoiceHdForm.get('exchangeRate').setValue('');
+    this.invoiceHdForm.get('transDate').setValue(date);
+
+    this.invoiceDtList = [];
+    this.totalAmount = 0;
+    this.taxAmount = 0;
+    this.discount = 0;
+    this.grossAmount = 0;
+    this.nbt = 0;
+    this.nbtPr = 0;
+    this.netAmount = 0;
+    this.totNetValue = 0;
+    this.totTaxValue = 0;
+    this.invoiceStatus = '';
+    this.isDisplayMode = false;
+
+    this.invoiceDtForm.get('dispatchDtId').setValue(0);
+    this.invoiceDtForm.get('salesOrderNo').setValue('');
+    this.invoiceDtForm.get('soItemId').setValue(0);
+    this.invoiceDtForm.get('articleId').setValue(0);
+    this.invoiceDtForm.get('article').setValue('');
+    this.invoiceDtForm.get('color').setValue('');
+    this.invoiceDtForm.get('size').setValue('');
+    this.invoiceDtForm.get('soItemId').setValue(0);
+    this.invoiceDtForm.get('colorId').setValue(0);
+    this.invoiceDtForm.get('sizeId').setValue(0);
+    this.invoiceDtForm.get('qty').setValue(0);
+    this.invoiceDtForm.get('uomId').setValue(0);
+    this.invoiceDtForm.get('uom').setValue('');
+    this.invoiceDtForm.get('price').setValue(0);
+    this.invoiceDtForm.get('value').setValue(0);
+    this.invoiceDtForm.get('taxCode').setValue('');
+    this.invoiceDtForm.get('taxRate').setValue(0);
+    this.invoiceDtForm.get('lineTax').setValue(0);
+    this.invoiceDtForm.get('grossAmount').setValue(0);
+    this.invoiceDtForm.get('discount').setValue(0);
+    this.invoiceDtForm.get('disAmount').setValue(0);
+    
+    var headerId = cellId.rowID;
+    const ItemRowData = this.invoiceListGrid.data.filter((record) => {
+      return record.invoiceHdId == headerId;
+    });
+
+    // console.log(ItemRowData);
+    this.invoiceHdForm.get('autoId').setValue(headerId);
+    this.invoiceHdForm.get('invoiceNo').setValue(ItemRowData[0]["invoiceNo"]);
+
+    this.loadInvoice();
   }
 
   /// set tax rate

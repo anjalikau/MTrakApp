@@ -11,21 +11,22 @@ import { SalesorderService } from '_services/salesorder.service';
 @Component({
   selector: 'app-cost-attach',
   templateUrl: './cost-attach.component.html',
-  styleUrls: ['./cost-attach.component.css']
+  styleUrls: ['./cost-attach.component.css'],
 })
 export class CostAttachComponent implements OnInit {
   costAttachForm: FormGroup;
   user: User;
+  salesPrice = 0;
   customerList: CustomerHd[];
   pendSOList: any[];
   soHeaderList: any[];
   costHeaderList: any[];
   saveButton: boolean = false;
-  validationErrors: string[] = [];  
-  
+  validationErrors: string[] = [];
+
   public col: IgxColumnComponent;
   public pWidth: string;
-  public nWidth: string;  
+  public nWidth: string;
 
   @ViewChild('salesDtGrid', { static: true })
   public salesDtGrid: IgxGridComponent;
@@ -66,7 +67,7 @@ export class CostAttachComponent implements OnInit {
     this.costAttachForm = this.fb.group({
       customer: ['', Validators.required],
       salesOrder: ['', Validators.required],
-      soItemId: [0]
+      soItemId: [0],
     });
   }
 
@@ -99,14 +100,16 @@ export class CostAttachComponent implements OnInit {
 
   //// LOADS PENDING SALES ORDERS, WHICH ARE NOT ATTACED COST SHEET
   loadPendingSalesOrders(customerId) {
-    this.salesOrderServices.getPendCostSalesOrders(customerId).subscribe( result => {
-      this.pendSOList = result
-    })
+    this.salesOrderServices
+      .getPendCostSalesOrders(customerId)
+      .subscribe((result) => {
+        this.pendSOList = result;
+      });
   }
 
   //// CLECK EVENT SALES ORDER NUMBER
   onSelectSalesOrder(event) {
-    this.soHeaderList= [];
+    this.soHeaderList = [];
     for (const item of event.added) {
       this.loadSalesOrderHeader(item);
     }
@@ -114,57 +117,79 @@ export class CostAttachComponent implements OnInit {
 
   ////// LOADS SALES ITEMS DETAILS
   loadSalesOrderHeader(SOHeaderId) {
-    this.salesOrderServices.getPendSalesHeader(SOHeaderId).subscribe( result => {
-      this.soHeaderList = result
-      // console.log(this.soHeaderList);
-    })
+    this.salesOrderServices
+      .getPendSalesHeader(SOHeaderId)
+      .subscribe((result) => {
+        this.soHeaderList = result;
+        // console.log(this.soHeaderList);
+      });
   }
 
-  onLoadCostSheet(event, cellId) {    
+  onLoadCostSheet(event, cellId) {
     const ids = cellId.rowID;
-    this.costAttachForm.get("soItemId").setValue(ids);
+    this.salesPrice = 0;
+    this.costAttachForm.get('soItemId').setValue(ids);
 
     const selectedRowData = this.salesDtGrid.data.filter((record) => {
       return record.autoId == ids;
     });
 
     // console.log(selectedRowData);
-    var artColorSizeId = selectedRowData[0]["articleColorSizeId"];
-    this.salesOrderServices.getCostSheetHeader(artColorSizeId).subscribe(result => {
-      this.costHeaderList = result;
-      // console.log(this.costHeaderList);
-    })
+    var artColorSizeId = selectedRowData[0]['articleColorSizeId'];
+    this.salesPrice = selectedRowData[0]['price'];
+
+    this.salesOrderServices
+      .getCostSheetHeader(artColorSizeId)
+      .subscribe((result) => {
+        this.costHeaderList = result;
+        // console.log(this.costHeaderList);
+      });
   }
 
   onAttachCostSheet(event, cellId) {
-    if(this.saveButton == true) {
-    const ids = cellId.rowID;
-    var soHeaderId = this.costAttachForm.get("salesOrder").value;
+    if (this.saveButton == true) {
+      const ids = cellId.rowID;
 
-    var obj = {
-      autoId: this.costAttachForm.get("soItemId").value,
-      costingId: ids,
-      createUserId: this.user.userId
-    };
+      //// GET COST PRICE OF SELECTED COST SHEET
+      const selectedRowData = this.costDtGrid.data.filter((record) => {
+        return record.autoId == ids;
+      });
 
-    // console.log(obj);
+      // console.log(selectedRowData);
+      // console.log(this.salesPrice);
+      var costPrice = selectedRowData[0]['totalBoxCost'];
+      /// PRICE MUST BE SAME TO ATTACH COSTING
+      if (costPrice == this.salesPrice) {
+        var soHeaderId = this.costAttachForm.get('salesOrder').value;
 
-    this.salesOrderServices.attachCostSheet(obj).subscribe(result => {
-      if (result == 1) {
-        this.toastr.success("Cost Sheet attach Successfully !!!");
-        this.loadSalesOrderHeader(soHeaderId);  
-      } else if (result == -2) {
-        this.toastr.warning("Cost sheet already attached !!!");
+        var obj = {
+          autoId: this.costAttachForm.get('soItemId').value,
+          costingId: ids,
+          createUserId: this.user.userId,
+        };
+
+        this.salesOrderServices.attachCostSheet(obj).subscribe(
+          (result) => {
+            if (result == 1) {
+              this.toastr.success('Cost Sheet attach Successfully !!!');
+              this.loadSalesOrderHeader(soHeaderId);
+            } else if (result == -2) {
+              this.toastr.warning('Cost sheet already attached !!!');
+            } else {
+              this.toastr.warning(
+                'Contact Admin. Error No:- ' + result.toString()
+              );
+            }
+          }, (error) => {
+            this.validationErrors = error;
+          });
       } else {
-        this.toastr.warning("Contact Admin. Error No:- " + result.toString());
-      }      
-    }, error => {
-      this.validationErrors = error;
-    }) 
-  } else {
-    this.toastr.error('Save Permission denied !!!');
+        this.toastr.error('attach fail, price must be same !!!');
+      }
+    } else {
+      this.toastr.error('Save Permission denied !!!');
+    }
   }
-  }
- 
+
 
 }

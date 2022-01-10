@@ -110,10 +110,10 @@ namespace API.Controllers.CCSystem.Transaction
             return Ok(result);
         }
 
-        [HttpPost("AppInvoice")]
-        public async Task<IActionResult> ApproveInvoice(TransInvoiceHeader invoiceHd) 
+        [HttpGet("InvList/{cusRef}")]
+        public async Task<IActionResult> GetInvoiceList(string cusRef) 
         {
-            var result = await _financeRepository.ApproveInvoiceAsync(invoiceHd);
+            var result = await _financeRepository.GetInvoiceListAsync(cusRef);
             return Ok(result);
         }
 

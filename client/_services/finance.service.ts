@@ -68,4 +68,8 @@ approveInvoice(invoiceHd: any) {
   return this.http.post(this.baseUrl + 'Finance/AppInvoice' , invoiceHd , httpOptions);
 }
 
+getInvoiceNoList(cusRef: string) {
+  return this.http.get<any>(this.baseUrl + 'Finance/InvList/' + cusRef , httpOptions);
+}
+
 }

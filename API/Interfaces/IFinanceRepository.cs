@@ -14,5 +14,6 @@ namespace API.Interfaces
         Task<ReturnDto> SaveInvoiceAsync(SavedInvoiceDto invoiceDto);
         Task<InvoiceDto> GetInvoiceDetailsAsync(string invoiceNo);
         Task<int> ApproveInvoiceAsync(TransInvoiceHeader invoiceHd);
+        Task<IEnumerable<InvoiceNoListDto>> GetInvoiceListAsync(string customerRef);
     }
 }

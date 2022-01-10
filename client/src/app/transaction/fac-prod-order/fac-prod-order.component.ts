@@ -16,10 +16,12 @@ import { SalesorderService } from '_services/salesorder.service';
 export class FacProdOrderComponent implements OnInit {
   fpoHeaderForm: FormGroup;
   fpoDetailForm: FormGroup;
+  fpoListForm: FormGroup;
   user: User;
   pendJobList: any[];
   jobDtList: any[];
   fpoList: any[];
+  fpoNoList: any;
   totPlanQty: number = 0;
   rowId: number = 0;
   isGridDisabled: boolean = false;
@@ -37,19 +39,23 @@ export class FacProdOrderComponent implements OnInit {
   public fpoGrid: IgxGridComponent;
   @ViewChild('pendJobDtGrid', { read: IgxGridComponent, static: true })
   public pendJobDtGrid: IgxGridComponent;
+  @ViewChild('fpoListGrid', { static: true })
+  public fpoListGrid: IgxGridComponent;
 
   @ViewChild('dialog', { read: IgxDialogComponent })
   public dialog: IgxDialogComponent;
+  @ViewChild('savedialog', { read: IgxDialogComponent })
+  public savedialog: IgxDialogComponent;
 
   @ViewChild('jobNo', { read: IgxComboComponent })
   public jobNo: IgxComboComponent;
 
-  ////Date options
-  //  public dateOptions = {
-  //   format: 'yyyy-MM-dd',
-  //   //timezone: 'UTC+0',
-  // };
-  // public formatDateOptions = this.dateOptions;
+   // Date options
+   public dateOptions = {
+    format: 'yyyy-MM-dd',
+    //timezone: 'UTC+0',
+  };
+  public formatDateOptions = this.dateOptions;
 
   constructor(
     private accountService: AccountService,
@@ -86,7 +92,7 @@ export class FacProdOrderComponent implements OnInit {
       fpoId: [0],
       userId: this.user.userId,
       jobHeaderId: ['', [Validators.required, Validators.maxLength(30)]],
-      fPONo: ['', Validators.required],
+      fPONo: [{value: '', disabled: true}, Validators.required],
       startDate: ['', [Validators.required]],
       endDate: ['', Validators.required],
       statusId: [0],      
@@ -113,6 +119,10 @@ export class FacProdOrderComponent implements OnInit {
       jobQty: [{ value: 0, disabled: true }],
       balQty: [{ value: 0, disabled: true }],
     });
+
+    this.fpoListForm = this.fb.group({
+      customerPO: ['', [Validators.maxLength(15)]],
+    })
   }
 
   /// VALIDATE START DATE AND END DATE 
@@ -358,6 +368,12 @@ export class FacProdOrderComponent implements OnInit {
     }
   }
 
+   //// save dialog confirmation to save
+ onSaveSelected(event) {
+  this.savedialog.close();
+  this.saveFPO();
+ }
+
   //// SAVE FPO
   saveFPO() {
     if(this.saveButton == true) {
@@ -402,7 +418,7 @@ export class FacProdOrderComponent implements OnInit {
         FPOList.push(itemdata);
       });
 
-      console.log(FPOList);
+      // console.log(FPOList);
       // // //console.log(JSON.stringify(menuList));
       this.salesOrderServices.saveFPO(FPOList).subscribe((result) => {
         if (result['result'] == 1) {
@@ -569,7 +585,7 @@ export class FacProdOrderComponent implements OnInit {
       };
 
       this.salesOrderServices.deleteFPO(FPOList).subscribe((result) => {
-        console.log(result);
+        // console.log(result);
         if (result == 1) {
           this.toastr.success('Delete FPO Successfully !!!');
           this.clearFPOControls();
@@ -590,5 +606,43 @@ export class FacProdOrderComponent implements OnInit {
   }
 }
 
+/// FILER AND GET JOB CARD DETAILS BY CUSTOMER REF
+public filterByCusRef(term) {
+  if (term != '') {
+    this.salesOrderServices.getFPONoList(term).subscribe(result => {
+      this.fpoNoList = result
+      // console.log(this.fpoNoList);
+    })
+  }
+}
+
+ //// CLICK EVENT OF FPO LIST GRID ROW
+ onViewFPODetails(event, cellId) {
+  this.jobDtList = [];
+  this.fpoList = [];
+  this.fpoHeaderForm.enable();
+  this.isGridDisabled = false;
+
+  this.fpoHeaderForm.get('fpoId').setValue(0);
+  this.fpoHeaderForm.get('jobHeaderId').reset();
+  this.fpoHeaderForm.get('startDate').reset();
+  this.fpoHeaderForm.get('endDate').reset();
+  this.fpoHeaderForm.get('remarks').reset();
+  this.fpoHeaderForm.get('qty').reset();
+
+  this.clearFPODetailControls();
+
+  var headerId = cellId.rowID;
+  const ItemRowData = this.fpoListGrid.data.filter((record) => {
+    return record.fpoId == headerId;
+  });
+
+  // console.log(ItemRowData);
+
+  this.fpoHeaderForm.get('fpoId').setValue(headerId);
+  this.fpoHeaderForm.get('fPONo').setValue(ItemRowData[0]["fpoNo"]);
+
+  this.loadFPODetails();
+}
 
 }

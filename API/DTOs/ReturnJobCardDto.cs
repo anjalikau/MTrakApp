@@ -4,6 +4,7 @@ namespace API.DTOs
 {
     public class ReturnJobCardDto
     {
+        public int JobNo { get; set; }
         public int JobHeaderId { get; set; }
         public string OrderRef { get; set; }
         public string CustomerRef { get; set; }

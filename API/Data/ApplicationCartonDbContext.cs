@@ -81,6 +81,8 @@ namespace API.Data
         public DbSet<MstrTax> MstrTax { get; set;}
         public DbSet<MstrBank> MstrBank { get; set;}
         public DbSet<TransApprovalCenter> TransApprovalCenter { get; set;}
+        public DbSet<TransJobHeader> TransJobHeader { get; set;}
+        public DbSet<TransJobDetail> TransJobDetail { get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

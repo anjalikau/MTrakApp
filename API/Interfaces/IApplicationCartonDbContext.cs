@@ -81,6 +81,8 @@ namespace API.Interfaces
         DbSet<MstrTax> MstrTax { get; set;}
         DbSet<MstrBank> MstrBank { get; set;}
         DbSet<TransApprovalCenter> TransApprovalCenter { get; set;}
+        DbSet<TransJobHeader> TransJobHeader { get; set;}
+        DbSet<TransJobDetail> TransJobDetail { get; set;}
 
     }
 }

@@ -50,6 +50,10 @@ export class SalesorderService {
     return this.http.post(this.baseUrl + 'SalesOrder/SaSO' , model , httpOptions);
   }
 
+  getSalesOrderList(cusRef: string) {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/SOList/' + cusRef , httpOptions);  
+  }
+
   getPendOrderItems(id: number) {
     return this.http.get<any>(this.baseUrl + 'SalesOrder/JobPedItems/' + id , httpOptions)
   }
@@ -74,8 +78,16 @@ export class SalesorderService {
     return this.http.get<any>(this.baseUrl + 'SalesOrder/JobCard/' + id , httpOptions);
   }
 
+  getJobCardList(customerPO: string) {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/JCList/' + customerPO , httpOptions);
+  }
+
   getFPOPendingJobs() {
     return this.http.get<any[]>(this.baseUrl + 'SalesOrder/FPO/JobList' , httpOptions);
+  }
+
+  getFPONoList(cusRef: string) {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/FPOList/' + cusRef , httpOptions);
   }
 
   getFPOPendingJobDt(jobId: number) {
@@ -122,6 +134,10 @@ export class SalesorderService {
     return this.http.get<any>(this.baseUrl + 'SalesOrder/DispatchSite' , httpOptions );
   }
 
+  getDispatchNoList(cusRef: string) {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/DispList/' + cusRef , httpOptions );
+  }
+
   getPendDispatchDetails(prod: any){
     return this.http.post<DispatchProdDt[]>(this.baseUrl + 'SalesOrder/PendDispatch' , prod , httpOptions);
   }
@@ -144,7 +160,7 @@ export class SalesorderService {
 
   getCostHeaderList(custId: number) {
     return this.http.get<any>(this.baseUrl + 'SalesOrder/CostList/' + custId , httpOptions);  
-  }
+  }  
 
   getCostSheetDetails(costHeaderId: number) {
     return this.http.get<any>(this.baseUrl + 'SalesOrder/CSDt/' + costHeaderId , httpOptions );

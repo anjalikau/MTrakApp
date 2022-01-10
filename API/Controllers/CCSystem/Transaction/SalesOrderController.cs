@@ -59,6 +59,24 @@ namespace API.Controllers.CCSystem.Transaction
             return Ok(result);
         }
 
+        [HttpGet("SOList/{customerPO}")]
+        public async Task<IActionResult> GetSalesOrderList(string customerPO) 
+        {
+            var result = await  _context.TransSalesOrderHeader
+                    .Where(x => x.CustomerRef.Contains(customerPO))
+                    .Join(_context.MstrCustomerHeader, s => s.CustomerId , c => c.AutoId , 
+                     (s,c) => new {
+                       autoId = s.AutoId,
+                       customer = c.Name,
+                       trnsDate = s.TrnsDate,
+                       delDate = s.DelDate,
+                       orderRef = s.OrderRef,
+                       customerRef = s.CustomerRef
+                     })       
+                    .ToListAsync();
+            return Ok(result);
+        }
+
         [HttpGet("SOHead/{SOHeaderId}")]
         public async Task<IActionResult> GetPendSalesOrderItem(int SOHeaderId)
         {
@@ -78,6 +96,13 @@ namespace API.Controllers.CCSystem.Transaction
         {
             var pendOrders = await _salesRepository.GetPendDelivOrderAsync(items);
             return Ok(pendOrders);
+        }
+
+        [HttpGet("JCList/{customerPO}")]
+        public async Task<IActionResult> GetJobCardList(string customerPO) 
+        {
+            var result = await _salesRepository.GetJobCardListAsync(customerPO);
+            return Ok(result);
         }
 
         [HttpGet("RefNum/{TransType}")]
@@ -123,6 +148,13 @@ namespace API.Controllers.CCSystem.Transaction
         {
             var jobList = await _salesRepository.GetFPOPendingJobsAsync();
             return Ok(jobList);
+        }
+
+        [HttpGet("FPOList/{customerRef}")]
+        public async Task<IActionResult> GetFPONoList(string customerRef) 
+        {
+            var result = await _salesRepository.GetFPONoListAsync(customerRef);
+            return Ok(result);
         }
 
         [HttpGet("FPO/JobList/{id}")]
@@ -207,6 +239,13 @@ namespace API.Controllers.CCSystem.Transaction
                      siteCode = s.SiteCode
                  }).ToListAsync();
 
+            return Ok(result);
+        }
+
+        [HttpGet("DispList/{customerRef}")]
+        public async Task<IActionResult> GetDispatchList(string customerRef) 
+        {
+            var result = await _salesRepository.GetDispatchListAsync(customerRef);
             return Ok(result);
         }
 

@@ -139,7 +139,7 @@ export class CostingComponent implements OnInit {
   @ViewChild('prodDefiGrid', { static: true })
   public prodDefiGrid: IgxGridComponent;
   @ViewChild('specInstGrid', { static: true })
-  public specInstGrid: IgxGridComponent;
+  public specInstGrid: IgxGridComponent;  
 
   @ViewChild('txtArticle', { read: IgxInputGroupComponent })
   public txtArticle: IgxInputGroupComponent;
@@ -197,6 +197,8 @@ export class CostingComponent implements OnInit {
   public dialogApprove: IgxDialogComponent;
   @ViewChild('approveModal', { read: IgxDialogComponent })
   public approveModal: IgxDialogComponent;
+  @ViewChild('savedialog', { read: IgxDialogComponent })
+  public savedialog: IgxDialogComponent;
 
   //// FORMAT PRICE
   public options = {
@@ -1720,6 +1722,12 @@ export class CostingComponent implements OnInit {
 
     this.updateLineSummary();
   }
+
+      //// save dialog confirmation to save
+ onSaveSelected(event) {
+  this.savedialog.close();
+  this.saveCosting();
+ }
 
   /// SAVE COSTING DEATILS
   saveCosting() {

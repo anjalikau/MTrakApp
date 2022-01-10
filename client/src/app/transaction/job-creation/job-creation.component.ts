@@ -24,6 +24,8 @@ import { SalesorderService } from '_services/salesorder.service';
 export class JobCreationComponent implements OnInit {
   jobHeaderForm: FormGroup;
   jobCardForm: FormGroup;
+  jobListForm: FormGroup;
+  jobCardList: any;
   user: User;
   pendItems: any[];
   articleList: any[];
@@ -67,8 +69,14 @@ export class JobCreationComponent implements OnInit {
   public pendOrderGrid: IgxGridComponent;
   @ViewChild('JobGrid', { read: IgxGridComponent, static: true })
   public JobGrid: IgxGridComponent;
+  @ViewChild('jobListGrid', { static: true })
+  public jobListGrid: IgxGridComponent;
+
   @ViewChild('dialog', { read: IgxDialogComponent })
   public dialog: IgxDialogComponent;
+  @ViewChild('savedialog', { read: IgxDialogComponent })
+  public savedialog: IgxDialogComponent;
+
   @ViewChild('cmbarticle', { read: IgxComboComponent })
   public cmbarticle: IgxComboComponent;
   @ViewChild('cmbcolor', { read: IgxComboComponent })
@@ -117,7 +125,7 @@ export class JobCreationComponent implements OnInit {
     this.jobHeaderForm = this.fb.group({
       headerId: [0],
       userId: this.user.userId,
-      jobNo: ['', [Validators.required, Validators.maxLength(30)]],
+      jobNo: [{value: '', disabled: true}, [Validators.required, Validators.maxLength(30)]],
       customerId: ['', Validators.required],
       articleId: ['', Validators.required],
       customer: [{ value: '', disabled: true }],
@@ -150,6 +158,10 @@ export class JobCreationComponent implements OnInit {
       balQty: [{ value: 0, disabled: true }],
       jobQty: ['', Validators.required],
     });
+
+    this.jobListForm = this.fb.group({
+      customerPO: ['', [Validators.maxLength(15)]],
+    })
   }
 
   singleSelection(event: IComboSelectionChangeEventArgs) {
@@ -191,7 +203,7 @@ export class JobCreationComponent implements OnInit {
       (err) => console.error(err),
       () => {
         //this.cmbcusDelLoc.setSelectedItem(1,true);
-        console.log('observable complete');
+        // console.log('observable complete');
       }
     );
   }
@@ -222,7 +234,7 @@ export class JobCreationComponent implements OnInit {
         sizeId: item,
       };
 
-      console.log(obj);
+      // console.log(obj);
       this.salesOrderServices.getCostComination(obj).subscribe((result) => {
         this.combinationList = result;
       });
@@ -326,7 +338,9 @@ export class JobCreationComponent implements OnInit {
         (this.jobCardForm.get('pjobQty').value +
           this.jobCardForm.get('jobQty').value);
 
-      //console.log(balQty);
+      // console.log(this.jobCardForm.get('orderQty').value);
+      // console.log(this.jobCardForm.get('pjobQty').value);
+      // console.log(this.jobCardForm.get('jobQty').value);
       /// CHECK BALANCE QTY
       if (balQty < 0) {
         this.toastr.warning('Invalid Job Qty !!!');
@@ -337,14 +351,15 @@ export class JobCreationComponent implements OnInit {
           this.jobCardForm.get('pjobQty').value +
           this.jobCardForm.get('jobQty').value;
 
+        //// COMMENTS ON 2022-01-07 NO NEED TO CHECK PLAN QTY SINCE AFTER PLANNING CAN NOT EDIT THE ROW DATA
         //// CHECK FPO IS ATTACHED
-        if (planQty > 0) {
-          // JOB QTY CAN NOT EXCEED PLAN QTY
-          if (totJobQty > planQty) {
-            this.toastr.warning("Job Qty can't exceed plan Qty");
-            return;
-          }
-        }
+        // if (planQty > 0) {
+        //   // JOB QTY CAN NOT EXCEED PLAN QTY
+        //   if (totJobQty > planQty) {
+        //     this.toastr.warning("Job Qty can't exceed plan Qty");
+        //     return;
+        //   }
+        // }
 
         const selectedRowData = this.JobGrid.data.filter((record) => {
           return record.soDelivDtId == soDelivDtId;
@@ -497,7 +512,7 @@ export class JobCreationComponent implements OnInit {
     this.totQty = 0;
     this.planQty = 0;
     const allRows = this.JobGrid.data;
-    console.log(this.JobGrid.data);
+    // console.log(this.JobGrid.data);
 
     allRows.forEach((element) => {
       this.totQty = this.totQty + element['jobQty'];
@@ -511,35 +526,48 @@ export class JobCreationComponent implements OnInit {
   /// JOB DELETE CONFIRMATION DIALOG
   openConfirmDialog(event, cellId) {
     this.rowId = cellId.rowID;
-    console.log(cellId);
+    // console.log(cellId);
     this.dialog.open();
   }
 
   //// DELETE JOB ITEM LINE
   public onDialogOKSelected(event) {
     event.dialog.close();
-    var balQty = 0;
-    console.log(this.rowId);
+    var isDelete = false;
+    // console.log(this.rowId);
 
     if (this.rowId > 0) {
-      //// CHECK FPO IS EXISTS IF SO CAN'T DELETE THE JOB LINE
       const selectedRowData = this.JobGrid.data.filter((record) => {
-        return record.soDelivDtId == this.rowId && record.planQty == 0;
+        return record.soDelivDtId == this.rowId; // && record.planQty > 0;
       });
 
+      ///// IF IT IS A EXISTING JOB CARD CHECK THE PALN QTY TO MAKE SURE JOB IS PLACED OR NOT 
+     if (this.isDisplayMode == true ) {
+         //// CHECK FPO IS EXISTS IF SO CAN'T DELETE THE JOB LINE
+        var PlanQty = selectedRowData[0]["planQty"];
+
+        if (PlanQty > 0 ){
+          this.toastr.warning('Delete Fail. FPO already placed !!!');          
+          return;
+        } else {
+          isDelete = true;
+        }
+     } else {
+        isDelete = true;
+     }   
+
+     if (isDelete == true) {
       if (selectedRowData.length > 0) {
         /// ADJUST THE PENDING DELIVERY ORDERS
         this.adjustPendDelivOrders(selectedRowData);
-
         //// DELETE JOB ITEM AND CALCULATE SUM
         this.JobGrid.deleteRow(this.rowId);
         this.calculateSum();
-        //console.log(this.JobGrid.data);
-      } else {
-        this.toastr.warning('Delete Fail. FPO already placed !!!');
-      }
+        //console.log(this.JobGrid.data);      
     }
   }
+}
+}
 
   //// WHEN DELETE JOB ITEM ADJUST PENDING ORDERS
   adjustPendDelivOrders(selectedRowData) {
@@ -607,6 +635,12 @@ export class JobCreationComponent implements OnInit {
       }
       this.pendOrderGrid.addRow(obj);
     }
+  }
+
+   //// save dialog confirmation to save
+   onSaveSelected(event) {
+    this.savedialog.close();
+    this.saveJobCard();
   }
 
   saveJobCard() {
@@ -684,10 +718,14 @@ export class JobCreationComponent implements OnInit {
           //console.log(result);
           this.toastr.success('Job Card save Successfully !!!');
           this.jobHeaderForm.get('headerId').setValue(result['refNumId']);
-          this.jobHeaderForm.get('orderRef').setValue(result['refNum']);
+          this.jobHeaderForm.get('jobNo').setValue(result['refNum']);          
+          this.refreshJobControls();
+          this.disableControls();
           this.loadJobCardDetails();
         } else if (result['result'] == -1) {
-          this.toastr.success('Job Card update Successfully !!!');
+          this.toastr.success('Job Card update Successfully !!!');          
+          this.refreshJobControls();
+          this.disableControls();
           this.loadJobCardDetails();
         } else {
           this.toastr.warning(
@@ -723,9 +761,6 @@ export class JobCreationComponent implements OnInit {
   // }
 
   loadJobCardDetails() {
-    this.refreshJobControls();
-    this.disableControls();
-
     (this.totQty = 0), (this.planQty = 0);
     var jobNo = this.jobHeaderForm.get('jobNo').value;
     var jobCardList = [];
@@ -922,7 +957,7 @@ export class JobCreationComponent implements OnInit {
         jobCardNo: this.jobHeaderForm.get('headerId').value,
         reportName: "JobDetailsFormat"
       }
-      console.log(this.jobHeaderForm.get('headerId').value);
+      // console.log(this.jobHeaderForm.get('headerId').value);
       /// STORE OBJECT IN LOCAL STORAGE
       localStorage.setItem('params', JSON.stringify(obj));
       window.open('/boldreport', '_blank');
@@ -930,4 +965,31 @@ export class JobCreationComponent implements OnInit {
       this.toastr.error('Print Permission denied !!!');
     }
   }
+
+   /// FILER AND GET JOB CARD DETAILS BY CUSTOMER REF
+   public filterByCusRef(term) {
+    if (term != '') {
+      this.salesOrderServices.getJobCardList(term).subscribe(result => {
+        this.jobCardList = result
+      })
+    }
+  }
+
+   //// CLICK EVENT OF JOB CARD LIST GRID ROW
+   onViewJobDetails(event, cellId) {
+    this.refreshJobControls();
+    this.disableControls();
+
+    var headerId = cellId.rowID;
+    const ItemRowData = this.jobListGrid.data.filter((record) => {
+      return record.jobHeaderId == headerId;
+    });
+
+    this.jobHeaderForm.get('headerId').setValue(headerId);
+    this.jobHeaderForm.get('jobNo').setValue(ItemRowData[0]["jobNo"]);
+
+    this.loadJobCardDetails();
+  }
+
+
 }

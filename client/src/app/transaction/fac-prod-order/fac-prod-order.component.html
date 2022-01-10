@@ -19,7 +19,7 @@
                 <div class="col-md-1">
                     <div class="btn-group">
                         <button type="button" class="btn btn-success mr-1" [disabled]="!fpoHeaderForm.valid"
-                            (click)="saveFPO()" data-toggle="tooltip" data-placement="bottom" title="Save">
+                            (click)="this.savedialog.open()" data-toggle="tooltip" data-placement="bottom" title="Save">
                             <i class="fas fa-save"></i>
                         </button>
                         <button type="button" class="btn btn-danger mr-1" (click)="openConfirmDialog($event)"
@@ -34,7 +34,35 @@
                 </div>
                 <!-- /.col -->
             </div>
-            <div class="row">
+            <div class="row">              
+
+                <!-- <div class="col-md-2">
+                    <div class="form-group">
+                        <label>FPO No *</label>
+                        <igx-input-group type="search">
+                            <input #input1 igxInput placeholder="FPO No" formControlName="fPONo"
+                                (keyup)="onKey($event)" />
+                            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''" (click)="refreshControls()">
+                                <igx-icon>clear</igx-icon>
+                            </igx-suffix>
+                            <igx-prefix (click)="loadFPODetails()">
+                                <igx-icon>search</igx-icon>
+                            </igx-prefix>
+                        </igx-input-group>
+                    </div>
+                </div> -->
+
+                <div class="col-md-2">
+                    <label> FPO No *</label>
+                    <div class="input-group mb-3">                        
+                        <input type="text" placeholder="FPO No" formControlName="fPONo" class="form-control rounded-0">
+                        <span class="input-group-append">
+                          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalFPO" data-placement="bottom" title="View"> 
+                              <i class="fas fa-eye"></i> </button>
+                        </span>
+                      </div>
+                </div>
+
                 <div class="col-md-2">
                     <div class="form-group" *ngIf="!isDisplayMode">
                         <label>Job No *</label>
@@ -49,22 +77,6 @@
                         <igx-input-group>
                             <input igxInput type="text" formControlName="jobHeaderId" />
                             <label igxLabel for="jobHeaderId"> Job No *</label>
-                        </igx-input-group>
-                    </div>
-                </div>
-
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label>FPO No *</label>
-                        <igx-input-group type="search">
-                            <input #input1 igxInput placeholder="FPO No" formControlName="fPONo"
-                                (keyup)="onKey($event)" />
-                            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''" (click)="refreshControls()">
-                                <igx-icon>clear</igx-icon>
-                            </igx-suffix>
-                            <igx-prefix (click)="loadFPODetails()">
-                                <igx-icon>search</igx-icon>
-                            </igx-prefix>
                         </igx-input-group>
                     </div>
                 </div>
@@ -337,6 +349,75 @@
     message="Are you sure you want to delete the record ?">
 </igx-dialog>
 
-
+<igx-dialog #savedialog title="Confirmation" leftButtonLabel="Cancel" (onLeftButtonSelect)="savedialog.close()"
+    rightButtonLabel="OK" (onRightButtonSelect)="onSaveSelected($event)"
+    message="Do you want to save the record ?">
+</igx-dialog>
 <!-- <p> Form Value : {{jobCardForm.value | json }} </p>
 <p> Form Status : {{jobCardForm.status | json }} </p> -->
+
+<!-- FPO LIST  -->
+<div class="modal fade" id="modalFPO">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"> List of FPO </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="fpoListForm" autocomplete="off">
+                    <div class="row">
+                        <div class="col-md-4">            
+                            <div class="form-group">
+                                <igx-input-group>
+                                    <input class="gridSample__filter" igxInput type="text" placeholder="Filter by Customer PO #" 
+                                    (input)="filterByCusRef($event.target.value)" formControlName="customerPO">
+                                    <label igxLabel for="customerPO"> Customer PO </label>
+                                </igx-input-group><br>
+                                <!-- <igx-input-group>
+                                    <input igxInput type="text" formControlName="customerPO" />
+                                    <label igxLabel for="customerPO"> Filter by Customer PO # </label>
+                                </igx-input-group> -->
+                            </div>            
+                        </div>  
+                    </div>
+                    
+                    <div class="row">
+                        <igx-grid #fpoListGrid [data]="fpoNoList" [autoGenerate]="false" [paging]="true" [rowEditable]="false" 
+                        [primaryKey]="'fpoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="50" height="400px" displayDensity="compact"
+                        [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
+                        [rowSelection]="'Single'">
+                            <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                                <ng-template igxCell let-cell="cell">
+                                    <button igxButton="icon" class="fab-compact" (click)="onViewFPODetails($event,cell.cellID)"
+                                        data-dismiss="modal">
+                                        <igx-icon family="material">visibility</igx-icon>
+                                    </button>                                                             
+                                </ng-template>
+                            </igx-column>
+                            <igx-column [field]="'fpoNo'" [header]="'FPO No'" [resizable]="true" [dataType]="'string'"
+                                [sortable]="true" [width]="'150px'" [editable]="false">
+                            </igx-column>
+                            <igx-column [field]="'jobNo'" [header]="'Job No'" [resizable]="true" [dataType]="'string'" [sortable]="true"
+                                [width]="'250px'" [editable]="false">
+                            </igx-column>
+                            <igx-column [field]="'customerRef'" [header]="'Customer PO'" [resizable]="true" [dataType]="'string'"
+                                [sortable]="true" [width]="'150px'" [editable]="false" >
+                            </igx-column>
+                            <igx-column [field]="'startDate'" [header]="'Start Date'" [resizable]="true" [dataType]="'date'"
+                                [sortable]="true" [pipeArgs]="formatDateOptions" [width]="'120px'" [editable]="false">
+                            </igx-column> 
+                            <igx-column [field]="'endDate'" [header]="'End Date'" [resizable]="true" [dataType]="'date'"
+                                [sortable]="true" [pipeArgs]="formatDateOptions" [width]="'120px'" [editable]="false">
+                            </igx-column>                   
+                        </igx-grid>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+            </div>
+        </div>
+    </div>
+</div>

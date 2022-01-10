@@ -206,6 +206,18 @@ namespace API.Repository
             return jobCardDto;
         }
 
+        public async Task<IEnumerable<PendingOrderItemsDto>> GetJobCardListAsync(string CustomerRef)
+        {
+            IEnumerable<PendingOrderItemsDto> jobCardDto;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("CustomerRef" , CustomerRef);  
+
+            jobCardDto = await DbConnection.QueryAsync<PendingOrderItemsDto>("spTransJobCardGetList" , para
+                    , commandType: CommandType.StoredProcedure);
+            return jobCardDto;
+        }
+
         public async Task<ReturnDto> SaveJobCardAsync(List<TransJobDetail> trnsJob)
         {
             DataTable JobHeader = new DataTable();
@@ -278,6 +290,19 @@ namespace API.Repository
                     , commandType: CommandType.StoredProcedure);
             return jobList;
         }
+
+        public async Task<IEnumerable<FPONoListDto>> GetFPONoListAsync(string customerRef)
+        {
+            IEnumerable<FPONoListDto> fpoList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("CustomerRef" , customerRef);
+
+            fpoList = await DbConnection.QueryAsync<FPONoListDto>("spTransFtyProdOrderGetList" , para
+                    , commandType: CommandType.StoredProcedure);
+            return fpoList;
+        }
+
 
         public async Task<IEnumerable<PendJobDetailsDto>> GetFPOPendingJobDtAsync(int JobId)
         {
@@ -479,6 +504,18 @@ namespace API.Repository
             return prodDetails;
         }
 
+        public async Task<IEnumerable<DispatchNoListDto>> GetDispatchListAsync(string customerRef)
+        {
+            IEnumerable<DispatchNoListDto> dispatchList;
+            DynamicParameters para = new DynamicParameters();
+
+            para.Add("CustomerRef" , customerRef);
+
+            dispatchList = await DbConnection.QueryAsync<DispatchNoListDto>("spTransDispatchGetList" , para
+                    , commandType: CommandType.StoredProcedure);
+            return dispatchList;
+        }
+
         public async Task<ReturnDto> SaveDispatchedDtAsync(List<TransDispatchDetails> dispatch)
         {
             DataTable DispatchDT = new DataTable();
@@ -516,7 +553,7 @@ namespace API.Repository
                 , commandType: CommandType.StoredProcedure);            
 
             return result;
-        }
+        }       
 
         public async Task<IEnumerable<DispatchedDetDto>> GetDispatchDetails(string dispatchNo)
         {
