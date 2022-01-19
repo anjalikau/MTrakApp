@@ -54,6 +54,10 @@ export class SalesorderService {
     return this.http.get<any>(this.baseUrl + 'SalesOrder/SOList/' + cusRef , httpOptions);  
   }
 
+  getCostSalesOrderList(costingId: number) {
+    return this.http.get<any>(this.baseUrl + 'SalesOrder/CSOList/' + costingId , httpOptions);  
+  }
+
   getPendOrderItems(id: number) {
     return this.http.get<any>(this.baseUrl + 'SalesOrder/JobPedItems/' + id , httpOptions)
   }
@@ -166,8 +170,8 @@ export class SalesorderService {
     return this.http.get<any>(this.baseUrl + 'SalesOrder/CSDt/' + costHeaderId , httpOptions );
   }
 
-  getCostSheetHeader(artColorSizeId: any) {
-    return this.http.get<any>(this.baseUrl + 'SalesOrder/CostHd/' + artColorSizeId , httpOptions );
+  getCostSheetHeader(costHeader: any) {
+    return this.http.post<any>(this.baseUrl + 'SalesOrder/CostHd' , costHeader , httpOptions );
   }
 
   attachCostSheet(soItem: any) {

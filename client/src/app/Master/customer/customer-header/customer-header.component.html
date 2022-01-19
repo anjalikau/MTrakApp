@@ -17,7 +17,7 @@
     </div> -->
     <div class="row">
         <igx-grid #customerHdGrid [data]="customerHdList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
-            [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="10"
+            [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="100"
             height="500px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
             [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
             <igx-column [width]="'100px'" field="bActive" [header]="' '"  [selectable]="false" [sortable]="false" [resizable]="false">
@@ -44,6 +44,10 @@
             <igx-column [field]="'customerID'" [header]="'CustomerID'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'150px'">
             </igx-column>
             <igx-column [field]="'attention'" [header]="'Attention'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'200px'" >
+            </igx-column>
+            <igx-column [field]="'invoiceType'" [header]="'Invoice Type'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'200px'" >
+            </igx-column>
+            <igx-column [field]="'customerType'" [header]="'Customer Type'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'200px'" >
             </igx-column>
             <igx-column [field]="'name'" [header]="'Name'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'200px'">
             </igx-column>
@@ -81,7 +85,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"> {{formTitle}} </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button #closeModal type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -242,6 +246,31 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Customer Type </label>
+                                    <igx-combo #customerType id="customerType" class="combo" displayKey="details" valueKey="autoId"
+                                        [itemsMaxHeight]="250" [data]="customerTypeList" placeholder="Customer Type"
+                                        (onSelectionChange)="singleSelection($event)" formControlName="customerType"
+                                        searchPlaceholder="Search...">
+                                    </igx-combo>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Invoice Type </label>
+                                    <igx-combo #invoiceType id="invoiceType" class="combo" displayKey="details" valueKey="autoId"
+                                        [itemsMaxHeight]="250" [data]="invoiceTypeList" placeholder="Invoice Type"
+                                        (onSelectionChange)="singleSelection($event)" formControlName="invoiceType"
+                                        searchPlaceholder="Search...">
+                                    </igx-combo>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </form>
             </div>

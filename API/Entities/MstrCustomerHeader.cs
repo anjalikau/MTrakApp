@@ -26,6 +26,8 @@ namespace API.Entities
 	    public int CreditDays {get;set;}
         public bool bActive { get; set; }
         public int LocationId { get; set; }
+        public int InvTypeId { get; set; }
+        public int CusTypeId { get; set; }
         public int ? CreateUserId { get; set; }
         public DateTime ? CreateDateTime { get; set; }
         public int ? UpdateUserId { get; set; }

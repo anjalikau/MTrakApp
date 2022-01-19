@@ -47,6 +47,8 @@ import { CodeDefinition } from 'src/app/_models/codeDefinition';
 import { SequenceSettings } from 'src/app/_models/sequenceSettings';
 import { ArrayType } from '@angular/compiler';
 import { ArticleUOMConv } from 'src/app/_models/articleUOMConv';
+import { CustomerType } from 'src/app/_models/customerType';
+import { InvoiceType } from 'src/app/_models/invoiceType';
 
 var usertoken: any;
 if (localStorage.length > 0) {
@@ -980,4 +982,22 @@ export class MasterService {
   // getCustomerDt(customerId: number) {
   //   return this.http.get<CustomerDt[]>(this.baseUrl + 'Master/CustomerDt/' + customerId , httpOptions);
   // }
+
+  //#region Customer Type
+
+  getCustomerType() {
+    return this.http.get<CustomerType[]>(this.baseUrl + 'Master/CusType' , httpOptions);
+  }
+
+  //#endregion Customer Type
+
+  //#region Invoice Type
+
+  getInvoiceType() {
+    return this.http.get<InvoiceType[]>(this.baseUrl + 'Master/InvType' , httpOptions);
+  }
+
+  //#endregion Invoice Type
+
+
 }

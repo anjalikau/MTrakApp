@@ -25,6 +25,8 @@ namespace API.DTOs
         public int ColorId { get; set; }
         public int SaleOrderId { get; set; }       
         public string Article { get; set; }
+        public int BrandCodeId { get; set; }       
+        public string BrandCode { get; set; }
         public string Color { get; set; }
         public string Size { get; set; }
         public int CostingId { get; set; }

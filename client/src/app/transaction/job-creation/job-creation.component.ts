@@ -181,7 +181,7 @@ export class JobCreationComponent implements OnInit {
     //console.log(user);
     var locationId = this.user.locationId;
     this.masterServices.getCustomer(locationId).subscribe((customer) => {
-      this.customerList = customer;
+      this.customerList = customer.filter(x => x.bActive == true);
     });
   }
 

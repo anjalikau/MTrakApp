@@ -84,6 +84,20 @@ namespace API.Controllers.CCSystem.Transaction
             return Ok(saleOredrList);
         }
 
+        [HttpGet("CSOList/{CostingId}")]
+        public async Task<IActionResult> GetCostSalesOrderList(int CostingId)
+        {
+            var saleOredrList = await _context.TransSalesOrderItemDt
+                .Where(x => x.CostingId == CostingId)
+                .Join(_context.TransSalesOrderHeader , i => i.SOHeaderId , h => h.AutoId 
+                    , (i, h) => new {
+                        autoId = h.AutoId,
+                        customerRef = h.CustomerRef,
+                        orderRef = h.OrderRef
+                    }).ToListAsync();
+            return Ok(saleOredrList);
+        }
+
         [HttpGet("JobPedItems/{id}")]
         public async Task<IActionResult> GetPendOrderItems(int id)
         {
@@ -291,10 +305,10 @@ namespace API.Controllers.CCSystem.Transaction
             return Ok(result);
         }
 
-        [HttpGet("CostHd/{id}")]
-        public async Task<IActionResult> GetCostHeader(int id)
+        [HttpPost("CostHd")]
+        public async Task<IActionResult> GetCostHeader(CostHeaderDto costHead)
         {
-            var result = await _salesRepository.GetCostHeaderAsync(id);
+            var result = await _salesRepository.GetCostHeaderAsync(costHead);
             return Ok(result);
         }  
 

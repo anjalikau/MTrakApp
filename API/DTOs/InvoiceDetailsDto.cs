@@ -28,5 +28,8 @@ namespace API.DTOs
         public decimal DiscountP {get;set;}
         public decimal DiscountA {get;set;}
         public decimal NetAmount {get;set;}
+        public string CustomerRef { get; set; }
+        public string CostNo { get; set; }
+        public int CostingId { get; set; }
     }
 }

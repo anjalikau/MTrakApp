@@ -15,6 +15,7 @@ export interface DispatchNoteDt {
     articleName: string;
     color: string;
     size: string;
+    vehicleNo: string;
     producedQty: number;
     dispatchedQty: number;
     balDispatchQty: number;

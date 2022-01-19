@@ -18,6 +18,9 @@ namespace API.DTOs
         public decimal Price { get; set; }
         public int BalQty { get; set; }
         public decimal Value { get; set; }
+        public string CustomerRef { get; set; }
+        public string CostNo { get; set; }
+        public int CostingId { get; set; }
 
     }
 }

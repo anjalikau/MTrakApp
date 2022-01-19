@@ -83,6 +83,8 @@ namespace API.Interfaces
         DbSet<TransApprovalCenter> TransApprovalCenter { get; set;}
         DbSet<TransJobHeader> TransJobHeader { get; set;}
         DbSet<TransJobDetail> TransJobDetail { get; set;}
+        DbSet<MstrCustomerType> MstrCustomerType { get; set;}
+        DbSet<MstrInvoiceType> MstrInvoiceType { get; set;}
 
     }
 }

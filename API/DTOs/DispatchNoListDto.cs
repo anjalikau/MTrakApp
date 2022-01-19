@@ -8,6 +8,10 @@ namespace API.DTOs
         public string DispatchNo {get;set;}
         public string DispatchSite {get;set;}
         public string CustomerRef {get;set;}
+        public string DeliveryLoc {get;set;}
+        public string VehicleNo {get;set;}
+        public string Reason {get;set;}
+        public bool IsActive {get;set;}
         public DateTime TransDate {get;set;}
     }
 }

@@ -1089,6 +1089,8 @@ namespace API.Repository
             para.Add("CreditDays", mstrCustomerHeader.CreditDays);
             para.Add("Attention", mstrCustomerHeader.Attention.Trim());
             para.Add("UserId", mstrCustomerHeader.CreateUserId);
+            para.Add("InvTypeId", mstrCustomerHeader.InvTypeId);
+            para.Add("CusTypeId", mstrCustomerHeader.CusTypeId);
             para.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output); 
 
             var result = await DbConnection.ExecuteAsync("spMstrCustomerHeaderSave", para

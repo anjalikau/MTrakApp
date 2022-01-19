@@ -12,6 +12,7 @@ export interface DispatchProdDt {
     balQty: number;
     dispatchSiteId: number;
     customerId: number;
+    customerRef: string;
 }
 
 

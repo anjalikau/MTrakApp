@@ -33,6 +33,13 @@ export class ArticleUmoConversionComponent implements OnInit {
   public col: IgxColumnComponent;
   public pWidth: string;
   public nWidth: string;
+
+   //// FORMAT NUMBER
+   public options1 = {
+    digitsInfo: '1.4-4',
+    currencyCode: '',
+  };
+  public formatNumber = this.options1;
   
   constructor(private fb: FormBuilder,
     private accountService: AccountService,
@@ -66,7 +73,7 @@ export class ArticleUmoConversionComponent implements OnInit {
       autoId: [0],     
       uarticle: ['' , Validators.required],     
       unit: ['' , Validators.required],
-      value: [0 ]     
+      value: [0]     
     });   
   }
 

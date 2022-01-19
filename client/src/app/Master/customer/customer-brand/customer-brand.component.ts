@@ -101,7 +101,7 @@ export class CustomerBrandComponent implements OnInit {
     this.masterService
       .getCustomer(this.user.locationId)
       .subscribe((cusList) => {
-        this.customerList = cusList;
+        this.customerList = cusList.filter(x => x.bActive == true);
       });
   }
 

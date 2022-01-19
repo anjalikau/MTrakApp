@@ -23,6 +23,7 @@ namespace API.DTOs
         public int ProducedQty {get;set;}
         public int DispatchedQty {get;set;}
         public int BalDispatchQty {get;set;}
+        public string VehicleNo {get;set;}
        
     }
 }

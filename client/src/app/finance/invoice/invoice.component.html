@@ -166,13 +166,31 @@
                             </ng-template>
                         </ng-template>
                     </igx-column>
-                    <igx-column [field]="'dispatchNo'" [header]="'DispatchNo'" [width]="'150px'" [resizable]="true" [dataType]="'string'" 
+                    <igx-column [field]="'dispatchNo'" [header]="'DispatchNo'" [width]="'120px'" [resizable]="true" [dataType]="'string'" 
                         [sortable]="true">
                     </igx-column>
-                    <igx-column [field]="'orderRef'" [header]="'OrderRef'" [width]="'150px'" [resizable]="true" [dataType]="'string'" 
+                    <igx-column [width]="'120px'" [field]="'orderRef'" [header]="'OrderRef'" [sortable]="true" [resizable]="true"
+                        [dataType]="'string'" [editable]="false">
+                        <ng-template igxCell let-cell="cell">
+                            <a class="truncate" href="" target="_blank" (click)="previewSalesOrder($event,cell.cellID,'P');">{{cell.value}}</a>
+                        </ng-template>
+                    </igx-column>
+                    <!-- <igx-column [field]="'orderRef'" [header]="'OrderRef'" [width]="'120px'" [resizable]="true" [dataType]="'string'" 
                         [sortable]="true">
-                    </igx-column>                   
-                    <igx-column [field]="'articleName'" [header]="'Article'" [width]="'150px'" [resizable]="true" [dataType]="'string'" 
+                    </igx-column>    -->
+                    <igx-column [field]="'customerRef'" [header]="'CustomerRef'" [width]="'130px'" [resizable]="true" [dataType]="'string'"
+                        [sortable]="true">
+                    </igx-column>
+                    <igx-column [width]="'120px'" [field]="'costNo'" [header]="'Cost.Ref'" [sortable]="true" [resizable]="true"
+                        [dataType]="'string'" [editable]="false">
+                        <ng-template igxCell let-cell="cell">
+                            <a class="truncate" href="" target="_blank" (click)="previewCostSheet($event,cell.cellID,'P');">{{cell.value}}</a>
+                        </ng-template>
+                    </igx-column>
+                    <!-- <igx-column [field]="'costNo'" [header]="'Cost No'" [width]="'120px'" [resizable]="true" [dataType]="'string'"
+                        [sortable]="true">
+                    </igx-column> -->
+                    <igx-column [field]="'articleName'" [header]="'Article'" [width]="'200px'" [resizable]="true" [dataType]="'string'" 
                         [sortable]="true">
                     </igx-column>
                     <igx-column field="color" [width]="'120px'" header="Color" [sortable]="true" [resizable]="true" [dataType]="'string'" 
@@ -181,7 +199,7 @@
                     <igx-column [field]="'size'" [header]="'Size'" [width]="'100px'" [resizable]="true" [dataType]="'string'" 
                         [sortable]="true">
                     </igx-column>  
-                    <igx-column [field]="'uom'" [header]="'UOM'" [width]="'100px'" [resizable]="true" [dataType]="'string'" [sortable]="true">
+                    <igx-column [field]="'uom'" [header]="'UOM'" [width]="'90px'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                     </igx-column>                     
                     <igx-column [field]="'balQty'" [header]="'Bal Qty'" [width]="'100px'" [resizable]="true" [dataType]="'number'" [sortable]="true">
                     </igx-column>
@@ -384,9 +402,29 @@
                     <igx-column [field]="'dispatchNo'" [header]="'DispatchNo'" [width]="'150px'" [resizable]="true" [dataType]="'string'" 
                         [sortable]="true" >
                     </igx-column>
-                    <igx-column [field]="'orderRef'" [header]="'OrderRef'" [width]="'150px'" [resizable]="true" [dataType]="'string'" 
+                    <igx-column [width]="'120px'" [field]="'orderRef'" [header]="'OrderRef'" [sortable]="true" [resizable]="true"
+                        [dataType]="'string'" [editable]="false">
+                        <ng-template igxCell let-cell="cell">
+                            <a class="truncate" href="" target="_blank"
+                                (click)="previewSalesOrder($event,cell.cellID,'I');">{{cell.value}}</a>
+                        </ng-template>
+                    </igx-column>
+                    <!-- <igx-column [field]="'orderRef'" [header]="'OrderRef'" [width]="'150px'" [resizable]="true" [dataType]="'string'" 
                         [sortable]="true" >
-                    </igx-column>                   
+                    </igx-column>  -->
+                    <igx-column [field]="'customerRef'" [header]="'CustomerRef'" [width]="'130px'" [resizable]="true" [dataType]="'string'"
+                        [sortable]="true">
+                    </igx-column>
+                    <igx-column [width]="'120px'" [field]="'costNo'" [header]="'Cost.Ref'" [sortable]="true" [resizable]="true"
+                        [dataType]="'string'" [editable]="false">
+                        <ng-template igxCell let-cell="cell">
+                            <a class="truncate" href="" target="_blank"
+                                (click)="previewCostSheet($event,cell.cellID,'I');">{{cell.value}}</a>
+                        </ng-template>
+                    </igx-column>
+                    <!-- <igx-column [field]="'costNo'" [header]="'Cost No'" [width]="'120px'" [resizable]="true" [dataType]="'string'"
+                        [sortable]="true">
+                    </igx-column> -->
                     <igx-column [field]="'articleName'" [header]="'Article'" [width]="'200px'" [resizable]="true" [dataType]="'string'" 
                         [sortable]="true" >
                     </igx-column>

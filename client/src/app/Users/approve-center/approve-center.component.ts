@@ -173,6 +173,7 @@ export class ApproveCenterComponent implements OnInit {
   }
 
   previewCostSheet(event, cellId) {
+    event.preventDefault();
     var ids = cellId.rowID;
     const selectedRowData = this.approveGrid.data.filter((record) => {
       return record.autoId == ids;

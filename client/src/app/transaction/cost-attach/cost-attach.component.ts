@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxComboComponent, IgxGridComponent } from 'igniteui-angular';
+import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxComboComponent, IgxDialogComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerHd } from 'src/app/_models/customerHd';
 import { User } from 'src/app/_models/user';
@@ -23,6 +23,7 @@ export class CostAttachComponent implements OnInit {
   costHeaderList: any[];
   saveButton: boolean = false;
   validationErrors: string[] = [];
+  rowId: number = 0;
 
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -37,6 +38,11 @@ export class CostAttachComponent implements OnInit {
   public salesOrder: IgxComboComponent;
   @ViewChild('customer', { read: IgxComboComponent })
   public customer: IgxComboComponent;
+
+  @ViewChild('savedialog', { read: IgxDialogComponent })
+  public savedialog: IgxDialogComponent;
+
+  @ViewChild('closeModal') closeModal: ElementRef
 
   constructor(
     private fb: FormBuilder,
@@ -86,13 +92,16 @@ export class CostAttachComponent implements OnInit {
   loadCustomer() {
     var locationId = this.user.locationId;
     this.masterServices.getCustomer(locationId).subscribe((customer) => {
-      this.customerList = customer;
+      this.customerList = customer.filter((x) => x.bActive == true);
     });
   }
 
   //// ON SELECT CUSTOMER EVENT
   onSelectCustomer(event) {
     this.pendSOList = [];
+    this.soHeaderList = [];
+    this.costAttachForm.get('salesOrder').setValue(0);
+
     for (const item of event.added) {
       this.loadPendingSalesOrders(item);
     }
@@ -100,8 +109,7 @@ export class CostAttachComponent implements OnInit {
 
   //// LOADS PENDING SALES ORDERS, WHICH ARE NOT ATTACED COST SHEET
   loadPendingSalesOrders(customerId) {
-    this.salesOrderServices
-      .getPendCostSalesOrders(customerId)
+    this.salesOrderServices.getPendCostSalesOrders(customerId)
       .subscribe((result) => {
         this.pendSOList = result;
       });
@@ -117,8 +125,7 @@ export class CostAttachComponent implements OnInit {
 
   ////// LOADS SALES ITEMS DETAILS
   loadSalesOrderHeader(SOHeaderId) {
-    this.salesOrderServices
-      .getPendSalesHeader(SOHeaderId)
+    this.salesOrderServices.getPendSalesHeader(SOHeaderId)
       .subscribe((result) => {
         this.soHeaderList = result;
         // console.log(this.soHeaderList);
@@ -134,21 +141,36 @@ export class CostAttachComponent implements OnInit {
       return record.autoId == ids;
     });
 
-    // console.log(selectedRowData);
-    var artColorSizeId = selectedRowData[0]['articleColorSizeId'];
     this.salesPrice = selectedRowData[0]['price'];
+    // console.log(selectedRowData);
+    // var artColorSizeId = selectedRowData[0]['articleColorSizeId'];
+    var obj = {
+      artColorSizeId: selectedRowData[0]['articleColorSizeId'],
+      brandCodeId: selectedRowData[0]['brandCodeId'],
+    };
 
-    this.salesOrderServices
-      .getCostSheetHeader(artColorSizeId)
-      .subscribe((result) => {
-        this.costHeaderList = result;
-        // console.log(this.costHeaderList);
-      });
+    // console.log(obj);
+    this.salesOrderServices.getCostSheetHeader(obj).subscribe((result) => {
+      this.costHeaderList = result;
+      // console.log(this.costHeaderList);
+    });
   }
 
-  onAttachCostSheet(event, cellId) {
+  //// ATTACH PROCESS CONFIRMATION DIALOG OPEN
+  onConfirmationDialog(event, cellId) {
+    this.savedialog.open();
+    this.rowId = cellId.rowID;
+  }
+
+  //// AT CONFIRM SAVING ATTACH COST SHEET
+  onSaveSelected(event) {
+    this.savedialog.close();
+    this.onAttachCostSheet();
+  }
+
+  onAttachCostSheet() {
     if (this.saveButton == true) {
-      const ids = cellId.rowID;
+      const ids = this.rowId;
 
       //// GET COST PRICE OF SELECTED COST SHEET
       const selectedRowData = this.costDtGrid.data.filter((record) => {
@@ -157,39 +179,40 @@ export class CostAttachComponent implements OnInit {
 
       // console.log(selectedRowData);
       // console.log(this.salesPrice);
-      var costPrice = selectedRowData[0]['totalBoxCost'];
+      // var costPrice = selectedRowData[0]['totalBoxCost'];
       /// PRICE MUST BE SAME TO ATTACH COSTING
-      if (costPrice == this.salesPrice) {
-        var soHeaderId = this.costAttachForm.get('salesOrder').value;
+      // if (costPrice == this.salesPrice) {
+      var soHeaderId = this.costAttachForm.get('salesOrder').value;
 
-        var obj = {
-          autoId: this.costAttachForm.get('soItemId').value,
-          costingId: ids,
-          createUserId: this.user.userId,
-        };
+      var obj = {
+        autoId: this.costAttachForm.get('soItemId').value,
+        costingId: ids,
+        createUserId: this.user.userId,
+      };
 
-        this.salesOrderServices.attachCostSheet(obj).subscribe(
-          (result) => {
-            if (result == 1) {
-              this.toastr.success('Cost Sheet attach Successfully !!!');
-              this.loadSalesOrderHeader(soHeaderId);
-            } else if (result == -2) {
-              this.toastr.warning('Cost sheet already attached !!!');
-            } else {
-              this.toastr.warning(
-                'Contact Admin. Error No:- ' + result.toString()
-              );
-            }
-          }, (error) => {
-            this.validationErrors = error;
-          });
-      } else {
-        this.toastr.error('attach fail, price must be same !!!');
-      }
+      this.salesOrderServices.attachCostSheet(obj).subscribe(
+        (result) => {
+          if (result == 1) {
+            this.toastr.success('Cost Sheet attach Successfully !!!');
+            this.loadSalesOrderHeader(soHeaderId);
+            this.closeModal.nativeElement.click();
+          } else if (result == -2) {
+            this.toastr.warning('Cost sheet already attached !!!');
+          } else {
+            this.toastr.warning(
+              'Contact Admin. Error No:- ' + result.toString()
+            );
+          }
+        },
+        (error) => {
+          this.validationErrors = error;
+        }
+      );
+      // } else {
+      //   this.toastr.error('attach fail, price must be same !!!');
+      // }
     } else {
       this.toastr.error('Save Permission denied !!!');
     }
   }
-
-
 }

@@ -1,6 +1,6 @@
 <div class="card card-default">
     <div class="card-header">
-        <h3 class="card-title">Article UOM Conversion</h3>       
+        <h3 class="card-title">Costing UOM based Consumption</h3>       
     </div>
 
     <div class="card-body">
@@ -75,7 +75,7 @@
                         </igx-column>
                         <igx-column [field]="'unit'" [header]="'Unit'" [width]="'120px'" [resizable]="true" [dataType]="'string'" [sortable]="true">
                         </igx-column>
-                        <igx-column [field]="'value'" [header]="'Value'" [width]="'100px'" [resizable]="true" [dataType]="'number'" [sortable]="true">
+                        <igx-column [field]="'value'" [header]="'Value'"  [pipeArgs]="formatNumber" [width]="'100px'" [resizable]="true" [dataType]="'number'" [sortable]="true">
                         </igx-column>
                         <igx-column [field]="'isActive'" [header]="'IsActive'" [width]="'100px'" [resizable]="true" [dataType]="'boolean'" [sortable]="true">
                         </igx-column>

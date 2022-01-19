@@ -8,7 +8,8 @@ namespace API.DTOs
         public string RefNo { get; set; }  
         public string Combination { get; set; }
 	    public int VersionControl {get;set;}
-        public int NoOfUps {get;set;}
+        public int NoOfUps {get;set;}        
+        public int BrandCodeId {get;set;}
         public string BrandCode {get;set;}
         public int Tollerence  { get; set; }
         public decimal BoardLength {get;set;}
@@ -33,6 +34,9 @@ namespace API.DTOs
         public string Size { get; set; }
         public bool isActive { get; set; }
         public string Status { get; set; }
+        public long ArtColorSizeId { get; set; }
+        // public string OrderRef { get; set; }
+        // public string CustomerRef { get; set; }
 
     }
 }

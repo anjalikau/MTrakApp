@@ -99,7 +99,7 @@ export class CustomerLocationsComponent implements OnInit {
     this.masterService
       .getCustomer(this.user.locationId)
       .subscribe((cardList) => {
-        this.customerHdList = cardList;
+        this.customerHdList = cardList.filter(x => x.bActive == true);
       });
   }
 

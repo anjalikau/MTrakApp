@@ -83,7 +83,7 @@ export class CustomerDivisionComponent implements OnInit {
   loadCustomer() {
     // var user: User = JSON.parse(localStorage.getItem('user'));
     this.masterService.getCustomer(this.user.locationId).subscribe((cusList) => {
-      this.customerList = cusList;
+      this.customerList = cusList.filter(x => x.bActive == true);
       //console.log(this.customerList);
     });
   }

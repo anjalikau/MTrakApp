@@ -115,6 +115,7 @@ export class ProdDispatchComponent implements OnInit {
       cusLocation: ['', Validators.required],
       fromSite: ['', Validators.required],
       reason: ['', Validators.maxLength(50)],
+      vehicleNo: ['',Validators.maxLength(30)],
       transDate: [{ value: date, disabled: true }],
     });
 
@@ -153,7 +154,7 @@ export class ProdDispatchComponent implements OnInit {
     //console.log(user);
     var locationId = this.user.locationId;
     this.masterServices.getCustomer(locationId).subscribe((result) => {
-      this.custometList = result;
+      this.custometList = result.filter(x => x.bActive == true);
     });
   }
 
@@ -205,6 +206,7 @@ export class ProdDispatchComponent implements OnInit {
       this.dispatchForm.get('cusLocation').reset();
       this.dispatchForm.get('fromSite').reset();
       this.dispatchForm.get('reason').reset();
+      this.dispatchForm.get('vehicleNo').reset();
       this.dispatchForm.get('transDate').setValue(date);
 
       this.qtyEditForm.reset();
@@ -233,9 +235,7 @@ export class ProdDispatchComponent implements OnInit {
         customerId: this.dispatchForm.get('customer').value[0],
       };
 
-      this.salesOrderServices
-        .getPendDispatchDetails(obj)
-        .subscribe((result) => {
+      this.salesOrderServices.getPendDispatchDetails(obj).subscribe((result) => {
           this.pendDispatchList = result;
           // console.log(this.pendDispatchList);
         });
@@ -252,21 +252,15 @@ export class ProdDispatchComponent implements OnInit {
     this.qtyEditForm.reset();
     this.qtyEditForm.get('autoId').setValue(selectedRowData[0]['autoId']);
     this.qtyEditForm.get('orderRef').setValue(selectedRowData[0]['orderRef']);
-    this.qtyEditForm
-      .get('deliveryRef')
-      .setValue(selectedRowData[0]['deliveryRef']);
+    this.qtyEditForm.get('deliveryRef').setValue(selectedRowData[0]['deliveryRef']);
     this.qtyEditForm.get('article').setValue(selectedRowData[0]['articleName']);
     this.qtyEditForm.get('color').setValue(selectedRowData[0]['color']);
     this.qtyEditForm.get('size').setValue(selectedRowData[0]['size']);
     this.qtyEditForm.get('soItemId').setValue(selectedRowData[0]['soItemId']);
-    this.qtyEditForm
-      .get('soDelivDtId')
-      .setValue(selectedRowData[0]['soDelivDtId']);
+    this.qtyEditForm.get('soDelivDtId').setValue(selectedRowData[0]['soDelivDtId']);
     this.qtyEditForm.get('prodQty').setValue(selectedRowData[0]['prodQty']);
     this.qtyEditForm.get('balQty').setValue(selectedRowData[0]['balQty']);
-    this.qtyEditForm
-      .get('lastDispQty')
-      .setValue(selectedRowData[0]['dispatchedQty']);
+    this.qtyEditForm.get('lastDispQty').setValue(selectedRowData[0]['dispatchedQty']);
   }
 
   onDispatchEdit(event, cellId) {
@@ -375,6 +369,7 @@ export class ProdDispatchComponent implements OnInit {
               ? ''
               : this.dispatchForm.get('reason').value.trim(),
           locationId: this.user.locationId,
+          vehicleNo: this.dispatchForm.get('vehicleNo').value.trim(),
           createUserId: this.user.userId,
         };
 
@@ -453,6 +448,7 @@ export class ProdDispatchComponent implements OnInit {
     this.dispatchForm.get('cusLocation').reset();
     this.dispatchForm.get('fromSite').reset();
     this.dispatchForm.get('reason').reset();
+    this.dispatchForm.get('vehicleNo').reset();
     this.dispatchForm.get('transDate').setValue(date);
 
     this.qtyEditForm.reset();
@@ -499,6 +495,7 @@ export class ProdDispatchComponent implements OnInit {
           // this.dispatchForm.get('customer').setValue(result[0]['customerId']);
           // this.dispatchForm.get('cusLocation').setValue(result[0]['cusLocationId']);
           // this.dispatchForm.get('fromSite').setValue(result[0]['dispatchSiteId']);
+          this.dispatchForm.get('vehicleNo').setValue(result[0]['vehicleNo']);
           this.dispatchForm.get('reason').setValue(result[0]['reason']);
           this.dispatchForm.get('transDate').setValue(transDate);
 

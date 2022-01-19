@@ -15,6 +15,7 @@ namespace API.DTOs
         public int BalQty {get;set;}
         public int DispatchSiteId {get;set;}
         public int CustomerId {get;set;}
+        public string CustomerRef {get;set;}
 
     }
 }

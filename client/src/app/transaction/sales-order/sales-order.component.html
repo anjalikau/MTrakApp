@@ -70,7 +70,7 @@
                         <igx-combo #customer id="customer" class="combo" displayKey="name" valueKey="autoId"
                             [itemsMaxHeight]="250" [data]="customerList" placeholder="Customer"
                             (onSelectionChange)="singleSelection($event)" 
-                            (onSelectionChange)="loadCustomerDt($event)"
+                            (onSelectionChange)="onSelectCustomer($event)"
                             formControlName="customerId" searchPlaceholder="Search...">
                         </igx-combo>
                     </div>
@@ -177,8 +177,7 @@
                             searchPlaceholder="Search...">
                         </igx-combo>
                     </div>
-                </div>             
-               
+                </div>     
                 
                 <div class="col-md-2">
                     <div class="group">
@@ -196,7 +195,6 @@
                     </div>
                 </div>
             </div>
-
         </form>
 
         <!--Article Items-->
@@ -233,15 +231,6 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label> Article Name *</label>
-
-                        <button igxButton="icon" class="fab-compact" (click)="articleDialog.open()" data-toggle="tooltip" 
-                                data-placement="bottom" title="Search">
-                            <igx-icon family="material">search</igx-icon>
-                        </button>
-                        <!-- <igx-prefix (click)="articleDialog.open()">
-                            <igx-icon> search</igx-icon>
-                        </igx-prefix> -->
-                
                         <igx-combo #article class="combo" displayKey="articleName" valueKey="autoId" [itemsMaxHeight]="250"
                             [data]="allArticleList" placeholder="Article Name" (onSelectionChange)="singleSelection($event)"
                             formControlName="articleName" searchPlaceholder="Search..." (onSelectionChange)="onArticleSelect($event)">
@@ -261,7 +250,14 @@
 
                 <div class="col-md-2">
                     <div class="form-group">
+                        <!-- <button igxButton="icon" class="fab-compact" (click)="articleDialog.open()" data-toggle="tooltip" 
+                                data-placement="bottom" title="Search">
+                            <igx-icon family="material">search</igx-icon>
+                        </button> -->
                         <igx-input-group>
+                            <igx-prefix (click)="articleDialog.open()">
+                                <igx-icon> search</igx-icon>
+                            </igx-prefix>
                             <input igxInput type="text" formControlName="articleCode" />
                             <label igxLabel for="articleCode"> Article Code *</label>
                         </igx-input-group>
@@ -279,7 +275,7 @@
                     <div class="form-group" *ngIf="!showColor">
                         <igx-input-group>
                             <input igxInput type="text" formControlName="colorId" />
-                            <label igxLabel for="colorId"> Color *</label>
+                            <label igxLabel for="colorId"> Color </label>
                         </igx-input-group>
                     </div>
                 </div>
@@ -296,11 +292,28 @@
                     <div class="form-group" *ngIf="!showSize">
                         <igx-input-group>
                             <input igxInput type="text" formControlName="sizeId" />
-                            <label igxLabel for="sizeId"> Size *</label>
+                            <label igxLabel for="sizeId"> Size </label>
                         </igx-input-group>
                     </div>
                 </div>
 
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label> Brand Code *</label>
+                        <igx-input-group type="search">
+                            <input #txtBrandCode igxInput readonly placeholder="Brand Code" formControlName="brandCode" />
+                            <igx-suffix *ngIf="txtBrandCode.value.length > 0" (click)="onCancelBrandCode()">
+                                <igx-icon>clear</igx-icon>
+                            </igx-suffix>
+                            <igx-prefix (click)="openBrandCodeDialog()" >
+                                <igx-icon>search</igx-icon>
+                            </igx-prefix>
+                        </igx-input-group>
+                    </div>
+                </div>                
+            </div>
+
+            <div class="row">
                 <div class="col-md-1">
                     <div class="form-group">
                         <igx-input-group>
@@ -363,7 +376,7 @@
                                 <igx-icon family="material">delete</igx-icon>
                             </button>
                         </ng-template>
-                    </igx-column>
+                    </igx-column>                    
                     <igx-column [field]="'articleName'" [header]="'Article'" [resizable]="true" [dataType]="'string'" [width]="'300px'"
                         [sortable]="true" [editable]="false">
                     </igx-column>
@@ -371,6 +384,9 @@
                         [sortable]="true" [editable]="false">
                     </igx-column>
                     <igx-column [field]="'size'" [header]="'Size'" [resizable]="true" [dataType]="'string'" [width]="'120px'"
+                        [sortable]="true" [editable]="false">
+                    </igx-column>
+                    <igx-column [field]="'brandCode'" [header]="'Brand Code'" [resizable]="true" [dataType]="'string'" [width]="'120px'"
                         [sortable]="true" [editable]="false">
                     </igx-column>
                     <igx-column [field]="'qty'" [header]="'Qty'" [resizable]="true" [dataType]="'number'" [width]="'100px'"
@@ -385,7 +401,7 @@
                     <igx-column [width]="'120px'"  [field]="'costingRef'" [header]="'Cost. Ref'" [sortable]="true" [resizable]="true" [dataType]="'string'"
                             [editable]="false">
                         <ng-template igxCell let-cell="cell">                            
-                            <a class="truncate" href="" target="_blank" (click)="previewCostSheet($event,cell.cellID);event.preventDefault();">{{cell.value}}</a>                            
+                            <a class="truncate" href="" target="_blank" (click)="previewCostSheet($event,cell.cellID);">{{cell.value}}</a>                            
                         </ng-template>
                     </igx-column>
                     <igx-column [width]="'50px'" [field]="'costingId'" [header]="' '" [selectable]="false" [sortable]="false" [resizable]="false">
@@ -402,7 +418,8 @@
                     <igx-column [field]="'isIntendCreated'" [header]="'Intend Created'" [resizable]="true" [width]="'150px'"
                         [dataType]="'boolean'" [sortable]="true" [editable]="false">
                     </igx-column>                   
-
+                    <igx-column [field]="'brandCodeId'" [resizable]="false" [dataType]="'number'" [width]="'0px'" [sortable]="true" [editable]="false">
+                    </igx-column>
                 </igx-grid>
             </div>
         </form>
@@ -646,6 +663,45 @@
                 </igx-row-island>
             </igx-hierarchical-grid>
         </div>
+    </form>
+</igx-dialog>
+
+<igx-dialog #brandCodeDialog [closeOnOutsideSelect]="false">
+    <igx-dialog-title>
+        <h6 class="col-md-11 bg-secondary">
+            Brand Code
+        </h6>
+        <div class="col-md-1" igxButton (click)="brandCodeDialog.close()">
+            <igx-icon fontSet="material">clear</igx-icon>
+        </div>
+    </igx-dialog-title>
+
+    <form [formGroup]="brandCodForm">
+        <div class="row">
+            <div class="form-group">
+                <label>Brand </label>
+                <igx-combo #brand id="brandId" class="combo" displayKey="brand" valueKey="brandId" [itemsMaxHeight]="250"
+                    [data]="brandList" placeholder="Brand" (onSelectionChange)="singleSelection($event)"
+                    searchPlaceholder="Search..." formControlName="brand" (onSelectionChange)="loadBrandCode($event)">
+                </igx-combo>
+            </div>        
+        </div>
+        <div class="row">
+            <igx-grid #brandCodeGrid [data]="brandCodeList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+            [primaryKey]="'autoId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="100" height="300px"
+            displayDensity="compact" width="400px" [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [rowSelection]="'Single'">
+            <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
+                <ng-template igxCell let-cell="cell">
+                    <button igxButton="icon" class="fab-compact" (click)="selectBrandCode($event,cell.cellID)">
+                        <igx-icon family="material">check_circle</igx-icon>
+                    </button>
+                </ng-template>
+            </igx-column>
+            <igx-column [field]="'name'" [header]="'Brand Code'" [resizable]="true" [dataType]="'string'"
+                [sortable]="true">
+            </igx-column>      
+        </igx-grid>
+            </div>  
     </form>
 </igx-dialog>
 

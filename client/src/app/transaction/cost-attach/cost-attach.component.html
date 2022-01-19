@@ -38,6 +38,8 @@
                         </igx-column>
                         <igx-column [field]="'size'" [header]="'Size'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'120px'">
                         </igx-column>
+                        <igx-column [field]="'brandCode'" [header]="'BrandCode'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'120px'">
+                        </igx-column>
                         <igx-column [field]="'refNo'" [header]="'Cost Ref'" [resizable]="true" [dataType]="'string'" [sortable]="true" [width]="'150px'">
                         </igx-column>
                         <igx-column [width]="'50px'" [field]="'refNo'" [header]="' '" [selectable]="false" [sortable]="false" [resizable]="false">
@@ -71,7 +73,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"> Cost Sheet List </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button #closeModal type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -84,7 +86,7 @@
                         [rowSelection]="'Single'">  
                         <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
                             <ng-template igxCell let-cell="cell">
-                                <button igxButton="icon" class="fab-compact" (click)="onAttachCostSheet($event,cell.cellID)">
+                                <button igxButton="icon" class="fab-compact" (click)="onConfirmationDialog($event,cell.cellID)">
                                     <igx-icon family="material">attachment</igx-icon>
                                 </button>
                             </ng-template>
@@ -134,15 +136,20 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="btn-group">
+                <!-- <div class="btn-group">
                     <button type="button" class="btn btn-default mr-3">
                         <i class="fas fa-broom"></i> </button>
                     <button type="button" class="btn btn-success" [disabled]="!(this.costDtGrid.selectedRows.length>0)">
                         <i class="fas fa-save"></i> </button>
-                </div>
+                </div> -->
             </div>
         </div>
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
 </div>
+
+<igx-dialog #savedialog title="Confirmation" leftButtonLabel="Cancel" (onLeftButtonSelect)="savedialog.close()"
+    rightButtonLabel="OK" (onRightButtonSelect)="onSaveSelected($event)"
+    message="Do you want to attach the cost sheet ?">
+</igx-dialog>

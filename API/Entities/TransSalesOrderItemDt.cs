@@ -15,6 +15,7 @@ namespace API.Entities
         public int ArticleId { get; set; }
         public int CostingId { get; set; }
         public int ArticleColorSizeId { get; set; }
+        public int BrandCodeId { get; set; }
 
         [Column(TypeName = "decimal(9,2)")]
         public decimal Price { get; set; }

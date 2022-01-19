@@ -76,6 +76,7 @@ export class CostingComponent implements OnInit {
   unitList: Units[];
   soItemList: any[];
   costNumberList = [];
+  salesOrderList: any;
   user: User;
   customerList: CustomerHd[];
   isArtiHdSel: boolean = false;
@@ -140,9 +141,11 @@ export class CostingComponent implements OnInit {
   public prodDefiGrid: IgxGridComponent;
   @ViewChild('specInstGrid', { static: true })
   public specInstGrid: IgxGridComponent;  
+  @ViewChild('saleOrderGrid', { static: true })
+  public saleOrderGrid: IgxGridComponent;
 
-  @ViewChild('txtArticle', { read: IgxInputGroupComponent })
-  public txtArticle: IgxInputGroupComponent;
+  @ViewChild('txtBrandCode', { read: IgxInputGroupComponent })
+  public txtBrandCode: IgxInputGroupComponent;
 
   @ViewChild('article', { read: IgxComboComponent })
   public article: IgxComboComponent;
@@ -189,8 +192,8 @@ export class CostingComponent implements OnInit {
 
   @ViewChild('articleForm', { read: IgxDialogComponent })
   public articleForm: IgxDialogComponent;
-  @ViewChild('brandCodeForm', { read: IgxDialogComponent })
-  public brandCodeForm: IgxDialogComponent;
+  @ViewChild('brandCodeDialog', { read: IgxDialogComponent })
+  public brandCodeDialog: IgxDialogComponent;
   @ViewChild('dialog', { read: IgxDialogComponent })
   public dialog: IgxDialogComponent;
   @ViewChild('dialogApprove', { read: IgxDialogComponent })
@@ -199,6 +202,8 @@ export class CostingComponent implements OnInit {
   public approveModal: IgxDialogComponent;
   @ViewChild('savedialog', { read: IgxDialogComponent })
   public savedialog: IgxDialogComponent;
+  @ViewChild('salesOrderdialog', { read: IgxDialogComponent })
+  public salesOrderdialog: IgxDialogComponent;
 
   //// FORMAT PRICE
   public options = {
@@ -306,8 +311,8 @@ export class CostingComponent implements OnInit {
       articleName: [{ value: '' }], //, disabled: true
       articleCode: [{ value: '', disabled: true }],
       tollerence: [0, Validators.required],
-      brandCodeId: [0, Validators.required],
-      brandCode: [{ value: '', disabled: true }],
+      brandCodeId: [0],
+      brandCode: ['' , Validators.required],
       colorId: ['', Validators.required],
       sizeId: ['', Validators.required],
       combination: [{ value: '', disabled: true }, Validators.maxLength(30)],
@@ -455,9 +460,47 @@ export class CostingComponent implements OnInit {
       .getCostHeaderList(customerId)
       .subscribe((result) => {
         this.costNumberList = result;
-        // console.log(this.costNumberList);
+        // console.log(result);
+        // this.processCostingData(result);
       });
   }
+
+  // processCostingData(CostingList) {
+  //   var autoId = 0,  flexLine = [];  
+
+  //   ///// Get Unique Cost List
+  //   var uniqeCost = CostingList.filter(
+  //     (arr, index, self) =>
+  //       index === self.findIndex((t) => t.autoId === arr.autoId)
+  //   );
+
+  //   ///// PUSH SALES ORDER LIST
+  //   for (let b = 0; b < uniqeCost.length; b++) {
+  //     autoId = uniqeCost[b]['autoId'];
+  //     var fieldLine: any = uniqeCost[b];
+
+  //     //// GET SALES ORDER LIST ATTACHED IN COST SHEET
+  //     var salesOrderList = CostingList.filter((x) => x.autoId == autoId);
+  //     flexLine = [];
+
+  //     //// CREATE CHILD OBJECT AS FLEX FIELD
+  //     for (let a = 0; a < salesOrderList.length; a++) {
+  //       const element = salesOrderList[a];
+  //       var flexValue = 0;
+
+  //       var obj = {
+  //         salesOrder : element['orderRef'],
+  //         customerPo : element['customerRef']
+  //       };
+  //       flexLine.push(obj);
+  //     }
+
+  //     fieldLine.salesOrders = flexLine;
+  //   }
+  //   this.costNumberList = uniqeCost;
+  //   console.log(this.costNumberList);
+  // }
+  
 
   //// LOADS SPECIAL INSTRUCTIONS
   loadSpecialInstruction() {
@@ -662,7 +705,7 @@ export class CostingComponent implements OnInit {
     //console.log(user);
     var locationId = this.user.locationId;
     this.masterServices.getCustomer(locationId).subscribe((customer) => {
-      this.customerList = customer;
+      this.customerList = customer.filter(x => x.bActive == true);
     });
   }
 
@@ -678,16 +721,29 @@ export class CostingComponent implements OnInit {
     this.articleForm.open();
   }
 
-  loadCustomerBrand() {
-    var customerId = this.costingHdForm.get('customerId').value[0];
+  onCustomerSelect(event) {
     this.brandList = [];
-    this.brandCodeList = [];
+    this.costingHdForm.get("brandCode").setValue("");
+    this.costingHdForm.get("brandCodeId").setValue(0);
 
-    this.masterServices.getCustomerBrand(customerId).subscribe((result) => {
-      this.brandList = result;
-      this.brandCodeForm.open();
-      // console.log(this.brandList);
-    });
+    for (const item of event.added) {
+      this.masterServices.getCustomerBrand(item).subscribe((result) => {
+        this.brandList = result;        
+        // console.log(this.brandList);
+      });
+    }
+  }
+
+  onOpenBrandCodeDialog() {
+    this.brandCodeList = [];
+    this.brandSelForm.get("brand").setValue("");
+    this.brandCodeGrid.deselectAllRows();
+    this.brandCodeDialog.open();    
+  }
+
+  onCancelBrandCode() {
+    this.costingHdForm.get("brandCode").setValue("");
+    this.costingHdForm.get("brandCodeId").setValue(0);
   }
 
   ///// loads brand code
@@ -926,7 +982,7 @@ export class CostingComponent implements OnInit {
       .setValue(selectedRowData[0]['autoId']);
     this.costingHdForm.get('brandCode').setValue(selectedRowData[0]['name']);
 
-    this.brandCodeForm.close();
+    this.brandCodeDialog.close();
   }
 
   /// tollerance lost focus event
@@ -1286,12 +1342,10 @@ export class CostingComponent implements OnInit {
     // console.log(totCostMOQ);
     this.subTotalForm.get('totCostBox').setValue(totCostPcs);
     this.subTotalForm.get('totCostMoq').setValue(this.roundTo(totCostMOQ, 4));
-    this.subTotalForm
-      .get('profitMarkup')
+    this.subTotalForm.get('profitMarkup')
       .setValue(this.roundTo(profitMarkup, 4));
     this.subTotalForm.get('sellPrice').setValue(this.roundTo(sellPrice, 4));
-    this.subTotalForm
-      .get('sellPriceCom')
+    this.subTotalForm.get('sellPriceCom')
       .setValue(this.roundTo(sellPriceCom, 4));
   }
 
@@ -1936,6 +1990,20 @@ export class CostingComponent implements OnInit {
     // console.log("C");
   }
 
+  //// open sales order list dialog 
+  onSalesDialogOpen(event, cellId) {
+    var costingId = cellId.rowID;
+    this.salesOrderdialog.open();
+    this.loadCostAttachSOList(costingId);
+  }
+
+  /// GET COST ATTACH SALES ORDER LIST
+  loadCostAttachSOList(costingId) {
+    this.salesOrderServices.getCostSalesOrderList(costingId).subscribe(result => {
+      this.salesOrderList = result
+    });
+  }
+
   ///// LOADS EXISTING COST SHEET
   getCostSheetDetails(costHeaderId, option) {
     this.salesOrderServices.getCostSheetDetails(costHeaderId).subscribe(
@@ -2224,6 +2292,22 @@ export class CostingComponent implements OnInit {
     } else {
       this.toastr.error('Approve permission denied !!!');
     }
+  }
+
+  previewSalesOrder(event, cellId) {
+    event.preventDefault();
+    var ids = cellId.rowID;
+    const selectedRowData = this.saleOrderGrid.data.filter((record) => {
+      return record.autoId == ids;
+    });
+
+    var obj = {
+      salesOrderHdId: ids,
+      salesOrder: selectedRowData[0]["orderRef"],
+    };
+    /// STORE OBJECT IN LOCAL STORAGE
+    localStorage.setItem('SO', JSON.stringify(obj));
+    window.open('/SalesOrder', '_blank');
   }
 
 

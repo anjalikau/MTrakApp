@@ -87,6 +87,7 @@ namespace API.Repository
             SOItem.Columns.Add("costingId", typeof(int));
             SOItem.Columns.Add("isIntendCreated", typeof(bool));
             SOItem.Columns.Add("price", typeof(decimal));
+            SOItem.Columns.Add("brandCodeId", typeof(int));
 
             SODelivery.Columns.Add("autoId", typeof(int));
             SODelivery.Columns.Add("deliveryDate", typeof(string));
@@ -127,7 +128,8 @@ namespace API.Repository
                         , dt.Qty
                         , dt.CostingId
                         , dt.IsIntendCreated
-                        , dt.Price);
+                        , dt.Price
+                        , dt.BrandCodeId);
                     }
                 }
                 else
@@ -535,6 +537,7 @@ namespace API.Repository
                     para.Add("CusLocationId", item.DispatchHeader.CusLocationId);
                     para.Add("DispatchSiteId", item.DispatchHeader.DispatchSiteId);
                     para.Add("Reason", item.DispatchHeader.Reason);
+                    para.Add("VehicleNo", item.DispatchHeader.VehicleNo);
                     para.Add("LoactionId", item.DispatchHeader.LocationId);
                     para.Add("UserId", item.DispatchHeader.CreateUserId);
                 } else {
@@ -738,12 +741,13 @@ namespace API.Repository
             return costSheet;
         }
 
-        public async Task<IEnumerable<CostHeaderDto>> GetCostHeaderAsync(long ArticleColorSizeId)
+        public async Task<IEnumerable<CostHeaderDto>> GetCostHeaderAsync(CostHeaderDto costHead)
         {   
             IEnumerable<CostHeaderDto> costHeaderList;
             DynamicParameters para = new DynamicParameters();
 
-            para.Add("ArticleColorSizeId" , ArticleColorSizeId);
+            para.Add("ArticleColorSizeId" , costHead.ArtColorSizeId);
+            para.Add("BrandCodeId" , costHead.BrandCodeId);
 
             costHeaderList = await DbConnection.QueryAsync<CostHeaderDto>("spTransCostingGetHeader" , para
                     , commandType: CommandType.StoredProcedure);

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 // Report viewer
 import '@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min';
@@ -24,6 +24,8 @@ export class BoldreportViewerComponent implements OnInit {
   public reportFolder: any;
   paraObj: any;
   
+  // @ViewChild('viewer') viewer: ElementRef
+  
   constructor() {
     // this.serviceUrl = 'https://localhost:5001/api/ReportViewer';
     // this.reportPath = '~/Resources/sales-order-detail.rdl';
@@ -32,6 +34,7 @@ export class BoldreportViewerComponent implements OnInit {
     this.reportFolder =  "/CCSReport" 
     this.processMode = "Remote";
     this.isPrintMode = true;
+    // this.pageSettings = { orientation: ej.ReportViewer.Orientation.Landscape }
     // this.printOption = ej.ReportViewer.PrintOptions.NewTab;
     this.parameterSettings =  { hideParameterBlock: true} ;  
     // console.log(this.router.getCurrentNavigation().extras.state);
@@ -54,9 +57,7 @@ export class BoldreportViewerComponent implements OnInit {
     var reportName = this.paraObj["reportName"];
     this.reportPath = this.reportFolder + "/" + reportName;
 
-    if(reportName == "DispatchNoteFormat") {      
-      console.log(this.paraObj["dispatchNo"]);
-
+    if(reportName == "DispatchNoteFormat") { 
       /// set parameters
       this.parameters = [{
       name: 'DispatchNo',
@@ -65,8 +66,6 @@ export class BoldreportViewerComponent implements OnInit {
       nullable: false     
       }]; 
     } else if (reportName == "JobDetailsFormat") {
-      console.log(this.paraObj["jobCardNo"]);
-
       /// set parameters
       this.parameters = [{
       name: 'JobHeaderId',
@@ -75,8 +74,6 @@ export class BoldreportViewerComponent implements OnInit {
       nullable: false     
       }]; 
     } else if (reportName == "CostSheetFormat") {
-      console.log(this.paraObj["costingHdId"]);
-
       /// set parameters
       this.parameters = [{
       name: 'CostHeaderId',
@@ -84,9 +81,30 @@ export class BoldreportViewerComponent implements OnInit {
       values: [this.paraObj["costingHdId"]],
       nullable: false     
       }]; 
-    } else if (reportName == "InvoiceFormat") {
-      console.log(this.paraObj["invoiceHdId"]);
+    } else if (reportName == "CommercialInvoice") {
+      // console.log(this.paraObj["invoiceHdId"]);
+    //   this.pageSettings =  {
+    //     orientation: this.viewer.ReportViewer.Orientation.Portrait,
+    //     paperSize: ej.ReportViewer.PaperSize.A3,
+    // };
 
+      /// set parameters
+      this.parameters = [{
+      name: 'InvoiceHdId',
+      labels: ['Invoice Hd Id'],
+      values: [this.paraObj["invoiceHdId"]],
+      nullable: false     
+      }]; 
+    } else if (reportName == "TaxInvoice") {
+      // console.log(this.paraObj["invoiceHdId"]);
+      /// set parameters
+      this.parameters = [{
+      name: 'InvoiceHdId',
+      labels: ['Invoice Hd Id'],
+      values: [this.paraObj["invoiceHdId"]],
+      nullable: false     
+      }]; 
+    } else if (reportName == "InternalInvoice") {
       /// set parameters
       this.parameters = [{
       name: 'InvoiceHdId',

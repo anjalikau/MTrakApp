@@ -17,6 +17,7 @@ namespace API.Entities
         public string Reason {get;set;}
         public int LocationId {get;set;}
         public bool IsActive {get;set;}
+        public string VehicleNo { get; set; }
         public int ? CreateUserId {get;set;}
         public DateTime ? CreateDateTime {get;set;}
         public int ? UpdateUserId {get;set;}

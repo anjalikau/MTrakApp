@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   IComboSelectionChangeEventArgs,
@@ -8,6 +8,7 @@ import {
   IgxComboComponent,
   IgxDialogComponent,
   IgxGridComponent,
+  IgxInputGroupComponent,
 } from 'igniteui-angular';
 import { Toast, ToastrService } from 'ngx-toastr';
 import { Article } from 'src/app/_models/article';
@@ -22,6 +23,7 @@ import { SalesorderService } from '_services/salesorder.service';
 import { ProductType } from 'src/app/_models/productType';
 import { Category } from 'src/app/_models/category';
 import { ProductGroup } from 'src/app/_models/productGroup';
+import { BrandCode } from 'src/app/_models/brandCode';
 
 @Component({
   selector: 'app-sales-order',
@@ -34,6 +36,7 @@ export class SalesOrderComponent implements OnInit {
   soDeliveyForm: FormGroup;
   salesListForm: FormGroup;
   articleForm: FormGroup;
+  brandCodForm: FormGroup;
   soDelivList: any[];
   delRef = [];
   transferItem: any;
@@ -75,6 +78,9 @@ export class SalesOrderComponent implements OnInit {
   cusUserId: number = 0;
   cuscusCurrencyId: number = 0;
   cusDivisionId: number = 0;
+  brandList: any[];
+  brandCodeList: BrandCode[];
+  salesObj: any;
 
   public col: IgxColumnComponent;
   public pWidth: string;
@@ -88,6 +94,11 @@ export class SalesOrderComponent implements OnInit {
   public articleGrid: IgxGridComponent;
   @ViewChild('salesListGrid', { static: true })
   public salesListGrid: IgxGridComponent;
+  @ViewChild('brandCodeGrid', { static: true })
+  public brandCodeGrid: IgxGridComponent;
+
+  @ViewChild('txtBrandCode', { read: IgxInputGroupComponent })
+  public txtBrandCode: IgxInputGroupComponent;
 
   @ViewChild('article', { read: IgxComboComponent })
   public article: IgxComboComponent;
@@ -125,6 +136,10 @@ export class SalesOrderComponent implements OnInit {
   public prodType: IgxComboComponent;
   @ViewChild('prodGroup', { read: IgxComboComponent })
   public prodGroup: IgxComboComponent;
+  @ViewChild('brandCode', { read: IgxComboComponent })
+  public brandCode: IgxComboComponent;
+  @ViewChild('brand', { read: IgxComboComponent })
+  public brand: IgxComboComponent;
 
   @ViewChild('chkIsCharge', { read: IgxCheckboxComponent })
   public chkIsCharge: IgxCheckboxComponent;
@@ -135,8 +150,8 @@ export class SalesOrderComponent implements OnInit {
   public dialog: IgxDialogComponent;
   @ViewChild('savedialog', { read: IgxDialogComponent })
   public savedialog: IgxDialogComponent;
-  // @ViewChild('form', { read: IgxDialogComponent })
-  // public form: IgxDialogComponent;
+  @ViewChild('brandCodeDialog', { read: IgxDialogComponent })
+  public brandCodeDialog: IgxDialogComponent;
 
   //// FORMAT PRICE
   public options = {
@@ -163,18 +178,22 @@ export class SalesOrderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.initilizeForm();
-    this.getSalesOrderRefNo();
+    this.initilizeForm();    
     this.loadCustomer();
-    this.loadSalesCategory();
-    // this.loadCountries();
+    this.loadSalesCategory();   
     this.loadPaymentTerms();
     this.loadSalesAgent();
     this.loadCategory();
     this.loadArticle();
-    //this.LoadDelRef();
+    this.checkLocalStorage();
+    // console.log("1");     
   }
 
+  // ngAfterViewInit() {
+  //   this.checkLocalStorage();    
+  //   console.log("12");
+  // }
+   
   initilizeForm() {
     var date: Date = new Date(Date.now());
     this.accountService.currentUser$.forEach((element) => {
@@ -197,7 +216,7 @@ export class SalesOrderComponent implements OnInit {
       createUserId: this.user.userId,
       orderRef: [{ value: '', disabled: true }, [Validators.maxLength(15)]],
       customerRef: ['', [Validators.required, Validators.maxLength(20)]],
-      customerId: ['', Validators.required],
+      customerId: ['', Validators.required],      
       customerLocId: [''],
       customerUserId: [''],
       salesCategoryId: [''],
@@ -225,6 +244,8 @@ export class SalesOrderComponent implements OnInit {
       articleCode: [{ value: '', disabled: true }],
       colorId: ['', Validators.required],
       sizeId: ['', Validators.required],
+      brandCodeId: [0],
+      brandCode: ['' , Validators.required],
       qty: ['', Validators.required],
       price: [{ value: 0, decimalScale: 2 }, Validators.required],
     });
@@ -244,7 +265,27 @@ export class SalesOrderComponent implements OnInit {
 
     this.salesListForm = this.fb.group({
       customerPO: ['', [Validators.maxLength(15)]],
-    })
+    });
+
+    this.brandCodForm = this.fb.group({
+      brand: ['', Validators.required],
+    });
+  }
+
+  checkLocalStorage() {    
+    //// get sales order from local storage and assign to object
+    this.salesObj = JSON.parse(localStorage.getItem('SO'));    
+    localStorage.removeItem('SO');
+    /// CHECK LOCAL STORAGE IF NOT EXISTS GET NEW NUMBER
+    if (this.salesObj != null) {
+      // console.log(this.salesObj);
+      this.soHeaderForm.get('headerId').setValue(this.salesObj["salesOrderHdId"]);
+      this.soHeaderForm.get('orderRef').setValue(this.salesObj["salesOrder"]);      
+
+      this.loadSalesOrderDt();
+    } else {
+      this.getSalesOrderRefNo();
+    }   
   }
 
   //// ALOW SINGLE SILECTION ONLY COMBO EVENT
@@ -279,6 +320,32 @@ export class SalesOrderComponent implements OnInit {
       this.loadColor(item);
       this.loadSize(item);
     }
+  }  
+
+  ///// loads brand code
+  loadBrandCode(event) {
+    this.brandCodeList = [];
+    this.brandCodeGrid.deselectAllRows();
+    for (const item of event.added) {
+      this.masterServices.getBrandCode(item).subscribe((result) => {
+        this.brandCodeList = result;
+        // console.log(this.brandCodeList);
+      });
+    }
+  }
+
+  //// SELECT BRAND CODE FROM BRAND CODE LIST
+  selectBrandCode(event, cellId) {
+    /// CLEAR CONTROLS AND GRIDS
+    const ids = cellId.rowID;
+    const selectedRowData = this.brandCodeGrid.data.filter((record) => {
+      return record.autoId == ids;
+    });
+    console.log(selectedRowData);
+    this.soItemForm.get('brandCodeId').setValue(selectedRowData[0]['autoId']);
+    this.soItemForm.get('brandCode').setValue(selectedRowData[0]['name']);
+
+    this.brandCodeDialog.close();
   }
 
   // deliveryFormEnable() {
@@ -500,6 +567,11 @@ export class SalesOrderComponent implements OnInit {
     this.salesOrderServices.getSalesOrderRef().subscribe((refNo) => {
       //console.log(refNo.orderRef);
       this.soHeaderForm.get('orderRef').setValue(refNo.orderRef.toString());
+      // console.log("1");
+    },
+    (err) => console.error(err),
+    () => {
+      // this.checkLocalStorage();         
     });
   }
 
@@ -512,7 +584,32 @@ export class SalesOrderComponent implements OnInit {
     });
   }
 
-  loadCustomerDt(event) {
+  openBrandCodeDialog() {
+    this.brandCodeList = [];
+    this.brandCodForm.get('brand').setValue("");  
+    this.brandCodeDialog.open();  
+  }
+
+  onCancelBrandCode() {
+    this.soItemForm.get('brandCode').setValue("");
+    this.soItemForm.get('brandCodeId').setValue(0);
+  }
+
+  onSelectCustomer(event) {
+    this.customerUserList = [];
+    this.customerCurrList = [];
+    this.customerDtList = [];
+    this.divisionList = [];
+    this.brandList = [];
+
+    this.soHeaderForm.get('customerLocId').setValue("");  
+    this.soHeaderForm.get('customerUserId').setValue(""); 
+    this.soHeaderForm.get('cusCurrencyId').setValue("");
+    this.soHeaderForm.get('customerDivId').setValue("");    
+    this.brandCodForm.get('brand').setValue("");  
+    this.soItemForm.get('brandCode').setValue("");
+    this.soItemForm.get('brandCodeId').setValue(0);
+
     for (const item of event.added) {
       /// loads CUSTOMER LOACTION
       this.masterServices.getCustomerLocation(item).subscribe(
@@ -539,12 +636,16 @@ export class SalesOrderComponent implements OnInit {
       });
 
       //// LOADS CUSTOMER DIVISION
-      this.masterServices
-        .getCustomerDivision(item)
-        .subscribe((customerDivi) => {
+      this.masterServices.getCustomerDivision(item).subscribe((customerDivi) => {
           this.divisionList = customerDivi;
         });
       //console.log(this.divisionList);
+
+      //// LOAD CUSTOMER BRAND 
+      this.masterServices.getCustomerBrand(item).subscribe((result) => {
+        this.brandList = result;        
+        // console.log(this.brandList);
+      });
     }
   }
 
@@ -603,12 +704,14 @@ export class SalesOrderComponent implements OnInit {
   /// ADD NEW ITEM TO GRID / UPDATE
   addItemRow() {
     if (this.checkIsEditable()) {
-      //console.log(this.soItemForm.value);
+      // console.log(this.soItemForm.get('brandCodeId').value);
       var status = true;
       var itemId = this.soItemForm.get('itemId').value;
       var qty = this.soItemForm.get('qty').value;
       var price = this.soItemForm.get('price').value;
       var soHeaderId = this.soHeaderForm.get('headerId').value;
+      var brandCodeId = this.soItemForm.get('brandCodeId').value;
+      var brandCode = this.soItemForm.get('brandCode').value;
 
       // console.log(itemId);
       //// EXISTING ITEM IN ITEM GRID
@@ -621,7 +724,9 @@ export class SalesOrderComponent implements OnInit {
             return;
           }
         }
-
+        // console.log(brandCodeId);
+        this.itemGrid.updateCell(brandCodeId, itemId, 'brandCodeId');
+        this.itemGrid.updateCell(brandCode , itemId, 'brandCode');
         this.itemGrid.updateCell(qty, itemId, 'qty');
         this.itemGrid.updateCell(price, itemId, 'price');
       } else {
@@ -659,6 +764,8 @@ export class SalesOrderComponent implements OnInit {
             articleId: articleId,
             articleName: this.article.value,
             articleCode: this.soItemForm.get('articleCode').value,
+            brandCodeId: brandCodeId,
+            brandCode: brandCode,
             costingId: 0,
             costingRef: ' ',
             qty: qty,
@@ -666,7 +773,7 @@ export class SalesOrderComponent implements OnInit {
             isIntendCreated: false,
             status: status,
           };
-          // console.log(obj);
+          
           this.itemGrid.addRow(obj);
         }
       }
@@ -738,8 +845,8 @@ export class SalesOrderComponent implements OnInit {
   clearItemControls() {
     //this.masterColor.reset();
     this.soItemForm.get('itemId').setValue(0);
-    // this.soItemForm.get('articleId').setValue('');
-    // this.soItemForm.get('articleName').setValue('');
+    this.soItemForm.get('brandCodeId').setValue(0);
+    this.soItemForm.get('brandCode').setValue('');
     // this.soItemForm.get('articleCode').setValue('');
     this.soItemForm.get('colorId').setValue('');
     this.soItemForm.get('sizeId').setValue('');
@@ -902,28 +1009,33 @@ export class SalesOrderComponent implements OnInit {
       });
 
       var isIntendCreated = selectedRowData[0]['isIntendCreated'];
+      var costingId = selectedRowData[0]["costingId"];
 
-      //// CHECK IF INTENT IS CREATED OR NOT
-      if (isIntendCreated == false) {
+      if (costingId == 0) {
         // console.log(selectedRowData);
-        this.soItemForm.get('itemId').setValue(selectedRowData[0]['itemId']);
-        // this.soItemForm
-        //   .get('articleId')
-        //   .setValue(selectedRowData[0]['articleId']);
-        this.soItemForm
-          .get('articleCode')
-          .setValue(selectedRowData[0]['articleCode']);
-        this.article.setSelectedItem(selectedRowData[0]['articleId'], true);
-        // this.soItemForm
-        //   .get('articleName')
-        //   .setValue(selectedRowData[0]['articleName']);
-        this.soItemForm.get('colorId').setValue(selectedRowData[0]['color']);
-        this.soItemForm.get('sizeId').setValue(selectedRowData[0]['size']);
-        this.soItemForm.get('qty').setValue(selectedRowData[0]['qty']);
-        this.soItemForm.get('price').setValue(selectedRowData[0]['price']);
+        //// CHECK IF INTENT IS CREATED OR NOT
+        if (isIntendCreated == false) {
+          // console.log(selectedRowData);
+          this.soItemForm.get('itemId').setValue(selectedRowData[0]['itemId']);
+          // this.soItemForm
+          //   .get('articleId')
+          //   .setValue(selectedRowData[0]['articleId']);
+          this.soItemForm
+            .get('articleCode')
+            .setValue(selectedRowData[0]['articleCode']);
+          this.article.setSelectedItem(selectedRowData[0]['articleId'], true);
+          this.soItemForm.get('brandCode').setValue(selectedRowData[0]['brandCode']);
+          this.soItemForm.get('brandCodeId').setValue(selectedRowData[0]['brandCodeId']);
+          this.soItemForm.get('colorId').setValue(selectedRowData[0]['color']);
+          this.soItemForm.get('sizeId').setValue(selectedRowData[0]['size']);
+          this.soItemForm.get('qty').setValue(selectedRowData[0]['qty']);
+          this.soItemForm.get('price').setValue(selectedRowData[0]['price']);
+        } else {
+          this.toastr.warning('Intent already created !!!');
+        }
       } else {
-        this.toastr.warning('Intent already created !!!');
-      }
+        this.toastr.warning('Costing already attached !!!');
+      }      
       // this.cmbarticle.setSelectedItem(selectedRowData[0]["article"], true);
       // this.cmbcolor.setSelectedItem(selectedRowData[0]["color"], true);
       // this.cmbsize.setSelectedItem(selectedRowData[0]["size"], true);
@@ -1136,12 +1248,15 @@ export class SalesOrderComponent implements OnInit {
             sizeId: items.sizeId,
             colorId: items.colorId,
             costingId: items.costingId,
+            brandCodeId: items.brandCodeId,
             qty: items.qty,
             isIntendCreated: items.isIntendCreated,
             price: items.price,
           };
           itemOrderList.push(itemdata);
         });
+
+        // console.log(itemRows);
 
         var objItem = {
           SalesItemDt: itemOrderList,
@@ -1241,18 +1356,20 @@ export class SalesOrderComponent implements OnInit {
 
   /// LOADS EXISTING SALES ORDER DETAILS
   loadSalesOrderDt() {
+    // console.log(this.soHeaderForm.get('orderRef').value);
     this.clearDeliveryControls();
     this.clearItemControls();
     this.soItemList = [];
     this.soDelivList = [];
     this.isView = true;
     //var locationId = 0;
+    // console.log(this.soHeaderForm.get('orderRef').value);
 
     //// validate sales order number is exists
     if (this.soHeaderForm.get('orderRef').value != '') {
       // this.deliveryFormDisable();
       var salesOrderRef = this.soHeaderForm.get('orderRef').value;
-
+      // console.log(this.soHeaderForm.get('orderRef').value);
       this.salesOrderServices.getSalesOrderDT(salesOrderRef).subscribe(
         (orderDt) => {
           // console.log(orderDt);
@@ -1367,6 +1484,8 @@ export class SalesOrderComponent implements OnInit {
                   articleName: orderDt[index]['article'],
                   articleCode: orderDt[index]['stockCode'],
                   costingId: orderDt[index]['costingId'],
+                  brandCodeId: orderDt[index]['brandCodeId'],
+                  brandCode: orderDt[index]['brandCode'],
                   costingRef: orderDt[index]['costingRef'],
                   qty: orderDt[index]['itemQty'],
                   price: orderDt[index]['price'],
@@ -1608,6 +1727,7 @@ export class SalesOrderComponent implements OnInit {
 
   //// preview cost sheet report
   previewCostSheet(event, cellId) {
+    event.preventDefault();
     var ids = cellId.rowID;
     const selectedRowData = this.itemGrid.data.filter((record) => {
       return record.itemId == ids;

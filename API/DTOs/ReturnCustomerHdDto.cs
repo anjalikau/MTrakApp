@@ -22,5 +22,9 @@ namespace API.DTOs
 	    public int CreditDays {get;set;}
         public bool bActive { get; set; }
         public int LocationId { get; set; }
+        public int InvTypeId { get; set; }
+        public int CusTypeId { get; set; }
+        public string InvoiceType {get;set;}
+        public string CustomerType {get;set;}
     }
 }

@@ -109,6 +109,14 @@
             </div>
 
             <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <igx-input-group>
+                            <input igxInput type="text" formControlName="vehicleNo" />
+                            <label igxLabel for="vehicleNo"> Vehicle No </label>
+                        </igx-input-group>
+                    </div>
+                </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <igx-input-group>
@@ -153,6 +161,9 @@
                         </ng-template>
                     </igx-column>
                     <igx-column [field]="'orderRef'" [header]="'Sale Order'" [width]="'150px'" [resizable]="true"
+                    [dataType]="'string'" [sortable]="true">
+                    </igx-column>
+                    <igx-column [field]="'customerRef'" [header]="'Customer PO'" [width]="'150px'" [resizable]="true"
                     [dataType]="'string'" [sortable]="true">
                     </igx-column>
                     <igx-column [field]="'deliveryRef'" [header]="'Delivery Ref'" [width]="'150px'" [resizable]="true"
@@ -374,30 +385,47 @@
                     </div>
                     
                     <div class="row">
-                        <igx-grid #dispListGrid [data]="dispatchNoList" [autoGenerate]="false" [paging]="true" [rowEditable]="false" 
-                        [primaryKey]="'dispatchHdId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="50" height="400px" displayDensity="compact"
-                        [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [allowAdvancedFiltering]="true"
-                        [rowSelection]="'Single'">
+                        <igx-grid #dispListGrid [data]="dispatchNoList" [autoGenerate]="false" [paging]="true" [rowEditable]="false"
+                            [primaryKey]="'dispatchHdId'" cellSelection="none" (onColumnResized)="onResize($event)" [perPage]="50"
+                            height="400px" displayDensity="compact" [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
+                            [allowAdvancedFiltering]="true" [rowSelection]="'Single'">
                             <igx-column [width]="'50px'" [selectable]="false" [sortable]="false" [resizable]="false">
                                 <ng-template igxCell let-cell="cell">
                                     <button igxButton="icon" class="fab-compact" (click)="onViewDispatchDetails($event,cell.cellID)"
                                         data-dismiss="modal">
                                         <igx-icon family="material">visibility</igx-icon>
-                                    </button>                                                             
+                                    </button>
                                 </ng-template>
                             </igx-column>
                             <igx-column [field]="'dispatchNo'" [header]="'Dispatch No'" [resizable]="true" [dataType]="'string'"
                                 [sortable]="true" [width]="'150px'" [editable]="false">
                             </igx-column>
-                            <!-- <igx-column [field]="'customerRef'" [header]="'Customer PO'" [resizable]="true" [dataType]="'string'"
-                                [sortable]="true" [width]="'150px'" [editable]="false" >
-                            </igx-column> -->
                             <igx-column [field]="'dispatchSite'" [header]="'Dispatch Site'" [resizable]="true" [dataType]="'string'"
-                                [sortable]="true" [pipeArgs]="formatDateOptions" [width]="'200px'" [editable]="false">
-                            </igx-column> 
+                                [sortable]="true" [pipeArgs]="formatDateOptions" [width]="'180px'" [editable]="false">
+                            </igx-column>
+                            <igx-column [field]="'deliveryLoc'" [header]="'Delivery Loc'" [resizable]="true" [dataType]="'string'"
+                                [sortable]="true" [width]="'150px'" [editable]="false">
+                            </igx-column>
+                            <igx-column [field]="'vehicleNo'" [header]="'Vehicle No'" [resizable]="true" [dataType]="'string'"
+                                [sortable]="true" [width]="'120px'" [editable]="false">
+                            </igx-column>
+                            <igx-column [field]="'reason'" [header]="'Reason'" [resizable]="true" [dataType]="'string'"
+                                [sortable]="true" [width]="'150px'" [editable]="false">
+                            </igx-column>
                             <igx-column [field]="'transDate'" [header]="'Trans Date'" [resizable]="true" [dataType]="'date'"
                                 [sortable]="true" [pipeArgs]="formatDateOptions" [width]="'120px'" [editable]="false">
-                            </igx-column>                   
+                            </igx-column>
+                            <igx-column [width]="'100px'" field="isActive" [header]="'Status'"  [selectable]="false" [sortable]="false" [resizable]="false">
+                                <ng-template igxCell let-cell="cell">                                    
+                                    <div *ngIf="!cell.value; then thenBlock else elseBlock"></div>
+                                    <ng-template #thenBlock>
+                                        <span class="badge bg-danger">Cancel</span>
+                                    </ng-template>
+                                    <ng-template #elseBlock>
+                                        <span class="badge bg-success">Active</span>
+                                    </ng-template>
+                                </ng-template>
+                            </igx-column>
                         </igx-grid>
                     </div>
                 </form>

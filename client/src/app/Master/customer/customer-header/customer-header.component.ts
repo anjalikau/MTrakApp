@@ -1,9 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IComboSelectionChangeEventArgs, IgxColumnComponent, IgxComboComponent, IgxGridComponent } from 'igniteui-angular';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerHd } from 'src/app/_models/customerHd';
+import { CustomerType } from 'src/app/_models/customerType';
+import { InvoiceType } from 'src/app/_models/invoiceType';
 import { User } from 'src/app/_models/user';
 import { AccountService } from '_services/account.service';
 import { MasterService } from '_services/master.service';
@@ -17,6 +19,8 @@ export class CustomerHeaderComponent implements OnInit {
   customerHdForm: FormGroup;
   currencyList: any[];
   countryList: any[];
+  invoiceTypeList: InvoiceType[];
+  customerTypeList: CustomerType[];
   user: User;
   customerHdList: CustomerHd[];
   validationErrors: string[] = [];
@@ -35,6 +39,12 @@ export class CustomerHeaderComponent implements OnInit {
   public country: IgxComboComponent;
   @ViewChild('currency', { read: IgxComboComponent })
   public currency: IgxComboComponent;
+  @ViewChild('customerType', { read: IgxComboComponent })
+  public customerType: IgxComboComponent;
+  @ViewChild('invoiceType', { read: IgxComboComponent })
+  public invoiceType: IgxComboComponent;
+
+  @ViewChild('closeModal') closeModal: ElementRef
 
   constructor(
     private fb: FormBuilder,
@@ -48,6 +58,8 @@ export class CustomerHeaderComponent implements OnInit {
     this.loadCountries();
     this.loadCurrency();
     this.loadCustomerheader();
+    this.loadCustomerType();
+    this.loadInvoiceType();
   }
 
   initilizeForm() {
@@ -74,6 +86,8 @@ export class CustomerHeaderComponent implements OnInit {
       city: ['', Validators.maxLength(30)],
       countryId: [''],
       currencyId: ['', Validators.required],
+      invoiceType:['', Validators.required],
+      customerType: ['', Validators.required],
       name: ['', [Validators.required, Validators.maxLength(200)]],
       address: [''],
       email: ['', [Validators.maxLength(30), Validators.email]],
@@ -110,6 +124,18 @@ export class CustomerHeaderComponent implements OnInit {
     this.masterService.getCountries().subscribe((country) => {
       this.countryList = country;
     });
+  }
+
+  loadInvoiceType() {
+    this.masterService.getInvoiceType().subscribe(result => {
+      this.invoiceTypeList = result
+    })
+  }
+
+  loadCustomerType() {
+    this.masterService.getCustomerType().subscribe(result => {
+      this.customerTypeList = result
+    })
   }
 
   public onResize(event) {
@@ -181,6 +207,12 @@ export class CustomerHeaderComponent implements OnInit {
         this.customerHdForm.get('creditDays').value == null
           ? 0
           : this.customerHdForm.get('creditDays').value,
+      invTypeId: this.customerHdForm.get('invoiceType').value == null 
+          ? 0 
+          : this.customerHdForm.get('invoiceType').value[0],
+      cusTypeId: this.customerHdForm.get('customerType').value == null  
+          ? 0
+          : this.customerHdForm.get('customerType').value[0],
       locationId: this.user.locationId,
     };
 
@@ -192,9 +224,11 @@ export class CustomerHeaderComponent implements OnInit {
           this.toastr.success('Customer save successfully !!!');
           this.loadCustomerheader();
           this.clearCustomerHd();
+          // this.closeModal.nativeElement.click();
         } else if (result == 2) {
           this.toastr.success('Customer update successfully !!!');
           this.loadCustomerheader();
+          this.closeModal.nativeElement.click();
           //this.clearCustomerHd();
         } else if (result == -1) {
           this.toastr.warning('Customer already exists !!!');
@@ -315,6 +349,8 @@ export class CustomerHeaderComponent implements OnInit {
       .setValue(selectedRowData[0]['creditDays']);
     this.currency.setSelectedItem(selectedRowData[0]['currencyId'], true);
     this.country.setSelectedItem(selectedRowData[0]['countryId'], true);
+    this.customerType.setSelectedItem(selectedRowData[0]['cusTypeId'], true);
+    this.invoiceType.setSelectedItem(selectedRowData[0]['invTypeId'], true);
 
     /// disabled fileds
     this.customerHdForm.get('name').disable();

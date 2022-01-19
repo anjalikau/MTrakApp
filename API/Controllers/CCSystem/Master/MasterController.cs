@@ -1506,5 +1506,31 @@ namespace API.Controllers.CCSystem.Master
 
         #endregion Reject Reason
 
+        #region Customer Type
+
+        [HttpGet("CusType")]
+        public async Task<IActionResult> GetCustomerType()
+        {
+            var result = await _context.MstrCustomerType
+                    .Select(x => new { x.AutoId , x.Details })
+                    .ToListAsync();
+            return Ok(result);
+        }
+
+        #endregion Customer Type
+
+        #region Invoice Type
+
+        [HttpGet("InvType")]
+        public async Task<IActionResult> GetInvoiceType()
+        {
+            var result = await _context.MstrInvoiceType
+                    .Select(x => new {x.AutoId , x.Details , x.FormatName})
+                    .ToListAsync();
+            return Ok(result);
+        }
+
+        #endregion Invoice Type
+
     }
 }
